@@ -2,10 +2,6 @@
 
 一款用于 ```JNDI注入``` 利用的工具，大量参考/引用了 ```Rogue JNDI``` 项目的代码，支持直接```植入内存shell```，并集成了常见的```bypass 高版本JDK```的方式，适用于与自动化工具配合使用。
 
-对大佬的项目https://github.com/WhiteHSBG/JNDIExploit 做了一点点些微的优化，加了CC6，RMI，还对回显做了一点优化。
-
-后面学习到了新的链子，也会往里面加进去。
-
 ---
 
 ## 👮免责声明
@@ -262,3 +258,4 @@ public void doFilter(ServletRequest servletRequest, ServletResponse servletRespo
  * https://github.com/veracode-research/rogue-jndi
  * https://github.com/welk1n/JNDI-Injection-Exploit
  * https://github.com/welk1n/JNDI-Injection-Bypass
+ * https://github.com/WhiteHSBG/JNDIExploit
