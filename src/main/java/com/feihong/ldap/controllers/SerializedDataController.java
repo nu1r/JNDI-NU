@@ -37,6 +37,18 @@ public class SerializedDataController implements LdapController {
             case commonsbeanutils2:
                 bytes = CommonsBeanutils2.getBytes(payloadType, params);
                 break;
+            case CommonsBeanutils3:
+                bytes = CommonsBeanutils3.getBytes(payloadType, params);
+                break;
+            case CommonsBeanutils2NOCC:
+                bytes = CommonsBeanutils2NOCC.getBytes(payloadType, params);
+                break;
+            case CommonsBeanutils3183:
+                bytes = CommonsBeanutils3183.getBytes(payloadType, params);
+                break;
+            case CommonsBeanutils1183NOCC:
+                bytes = CommonsBeanutils1183NOCC.getBytes(payloadType, params);
+                break;
             case commonscollections1:
                 bytes = CommonsCollections1.getBytes(payloadType, params);
                 break;
@@ -81,6 +93,21 @@ public class SerializedDataController implements LdapController {
                 break;
             case c3p0:
                 bytes = C3P0.getBytes(payloadType, params);
+                break;
+            case AspectJWeaver:
+                bytes = AspectJWeaver.getBytes(payloadType, params);
+                break;
+            case BeanShell1:
+                bytes = BeanShell1.getBytes(payloadType, params);
+                break;
+            case C3P092:
+                bytes = C3P092.getBytes(payloadType, params);
+                break;
+            case Click1:
+                bytes = Click1.getBytes(payloadType, params);
+                break;
+            case Clojure:
+                bytes = Clojure.getBytes(payloadType, params);
                 break;
             case cve_2020_2555:
                 bytes = CVE_2020_2555.getBytes(payloadType, params);

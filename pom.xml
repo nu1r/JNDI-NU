@@ -6,7 +6,7 @@
 
     <groupId>org.example</groupId>
     <artifactId>JNDI-NU</artifactId>
-    <version>1.4.5</version>
+    <version>1.4.6</version>
     <build>
         <plugins>
             <plugin>
@@ -209,6 +209,11 @@
             <artifactId>reflections</artifactId>
             <version>0.9.10</version>
         </dependency>
+        <dependency>
+            <groupId>org.beanshell</groupId>
+            <artifactId>bsh</artifactId>
+            <version>2.0b5</version>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/io.undertow/undertow-core -->
         <dependency>
             <groupId>io.undertow</groupId>
@@ -238,12 +243,6 @@
             <artifactId>groovy</artifactId>
             <version>2.4.5</version>
         </dependency>
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
-            <version>5.7.7</version>
-        </dependency>
-
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-text</artifactId>
@@ -275,6 +274,25 @@
             <artifactId>javassist</artifactId>
             <version>3.27.0-GA</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.click</groupId>
+            <artifactId>click-nodeps</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.clojure</groupId>
+            <artifactId>clojure</artifactId>
+            <version>1.8.0</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.7.7</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.9.2</version>
+        </dependency>
     </dependencies>
 </project>
