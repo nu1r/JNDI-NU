@@ -37,7 +37,7 @@ public class Jdk7u21 {
 
         //序列化
         ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(baous);
+        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
         oos.writeObject(set);
         byte[] bytes = baous.toByteArray();
         oos.close();

