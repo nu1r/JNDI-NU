@@ -1,19 +1,3 @@
-import com.feihong.ldap.gadgets.utils.ClassFiles;
-import org.apache.tomcat.util.buf.HexUtils;
-import weblogic.utils.encoders.Base64Bytes;
-
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Array;
-import java.lang.reflect.Constructor;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
-
 public class Test {
 
 //    @org.junit.Test
