@@ -6,7 +6,7 @@
 
     <groupId>org.example</groupId>
     <artifactId>JNDI-NU</artifactId>
-    <version>1.4.6</version>
+    <version>1.5</version>
     <build>
         <plugins>
             <plugin>
@@ -55,7 +55,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.feihong.ldap.Starter</mainClass>
+                            <mainClass>com.nu1r.jndi.Starter</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
