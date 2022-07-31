@@ -140,8 +140,6 @@ Supported LADP Queries：
 * 内存马已适配冰蝎4.0,AES加密, 添加后访问```/nu1r```即可, 暂时只写了冰蝎4的shell,冰蝎4.0使用时，需要先设置key为 ```f90ec6fa47af4bda```
   - 支持引用类远程加载方式打入（Basic路由）
   - 支持本地工厂类方式打入 （TomcatBypass路由）
-    * ```tomcatFilter```: 通过类加载器获取指定上下文向系统内植入 Tomcat Filter 型内存马
-    * ```tomcatFilterhead```: 通过类加载器获取指定上下文向系统内植入 Tomcat Filter 型内存马, 使用时需要添加额外的```HTTP Header``` ```Shell: true```, **推荐**使用此方式
     * ```SpringInterceptor```: 向系统内植入 Spring Interceptor 类型的内存马
       * 前提条件：Referer: https://nu1r.cn/
       * 冰蝎4.0使用时，需要先设置key为 ```f90ec6fa47af4bda```
