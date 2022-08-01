@@ -42,7 +42,7 @@ public class LdapServer extends InMemoryOperationInterceptor {
             ds.startListening();
             System.out.println(ansi().eraseScreen().render(
                     "   @|green █████\\|@ @|red ██\\   ██\\|@ @|yellow ███████\\|@  @|MAGENTA ██████\\|@       @|CYAN ██\\   ██\\ ██\\   ██\\|@ \n" +
-                            "   @|green \\__██ ||@@|red ███\\  ██ ||@@|yellow ██  __██\\|@ @|MAGENTA \\_██  _||@      @|CYAN ███\\  ██ |██ |  ██ ||@ @|BG_GREEN v1.5|@\n" +
+                            "   @|green \\__██ ||@@|red ███\\  ██ ||@@|yellow ██  __██\\|@ @|MAGENTA \\_██  _||@      @|CYAN ███\\  ██ |██ |  ██ ||@ @|BG_GREEN v1.5.1|@\n" +
                             "      @|green ██ ||@@|red ████\\ ██ ||@@|yellow ██ |  ██ ||@  @|MAGENTA ██ ||@        @|CYAN ████\\ ██ |██ |  ██ ||@ @|BG_CYAN JNDIExploit-Nu1r|@\n" +
                             "      @|green ██ ||@@|red ██ ██\\██ ||@@|yellow ██ |  ██ ||@  @|MAGENTA ██ ||@██████\\ @|CYAN ██ ██\\██ |██ |  ██ ||@\n" +
                             "@|green ██\\   ██ ||@@|red ██ \\████ ||@@|yellow ██ |  ██ ||@  @|MAGENTA ██ ||@\\______|@|CYAN ██ \\████ |██ |  ██ ||@\n" +
@@ -67,10 +67,10 @@ public class LdapServer extends InMemoryOperationInterceptor {
             LdapController instance = (LdapController) cons.newInstance();
             String[]       mappings = controller.getAnnotation(LdapMapping.class).uri();
             for (String mapping : mappings) {
-                if (mapping.startsWith("/"))
+                if (mapping.startsWith("/")) {
                     mapping = mapping.substring(1); //remove first forward slash
-
-                routes.put(mapping, instance);
+                    routes.put(mapping, instance);
+                }
             }
         }
     }
@@ -88,7 +88,7 @@ public class LdapServer extends InMemoryOperationInterceptor {
         //收到ldap请求
         System.out.println(ansi().eraseScreen().render(
                 "   @|green █████\\|@ @|red ██\\   ██\\|@ @|yellow ███████\\|@  @|MAGENTA ██████\\|@       @|CYAN ██\\   ██\\ ██\\   ██\\|@ \n" +
-                        "   @|green \\__██ ||@@|red ███\\  ██ ||@@|yellow ██  __██\\|@ @|MAGENTA \\_██  _||@      @|CYAN ███\\  ██ |██ |  ██ ||@ @|BG_GREEN v1.5|@\n" +
+                        "   @|green \\__██ ||@@|red ███\\  ██ ||@@|yellow ██  __██\\|@ @|MAGENTA \\_██  _||@      @|CYAN ███\\  ██ |██ |  ██ ||@ @|BG_GREEN v1.5.1|@\n" +
                         "      @|green ██ ||@@|red ████\\ ██ ||@@|yellow ██ |  ██ ||@  @|MAGENTA ██ ||@        @|CYAN ████\\ ██ |██ |  ██ ||@ @|BG_CYAN JNDIExploit-Nu1r|@\n" +
                         "      @|green ██ ||@@|red ██ ██\\██ ||@@|yellow ██ |  ██ ||@  @|MAGENTA ██ ||@██████\\ @|CYAN ██ ██\\██ |██ |  ██ ||@\n" +
                         "@|green ██\\   ██ ||@@|red ██ \\████ ||@@|yellow ██ |  ██ ||@  @|MAGENTA ██ ||@\\______|@|CYAN ██ \\████ |██ |  ██ ||@\n" +
@@ -107,6 +107,7 @@ public class LdapServer extends InMemoryOperationInterceptor {
                 break;
             }
         }
+
 
         if (controller == null) {
             System.out.println(ansi().render("@|red [!] Invalid LDAP Query >> |@" + base));

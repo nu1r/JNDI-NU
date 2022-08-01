@@ -5,8 +5,6 @@ import com.nu1r.jndi.gadgets.utils.Reflections;
 import com.nu1r.jndi.template.Weblogic.WeblogicMemshellTemplate1;
 import com.nu1r.jndi.template.Weblogic.WeblogicMemshellTemplate2;
 import com.nu1r.jndi.template.Websphere.WebsphereMemshellTemplate;
-import com.nu1r.jndi.template.jboss.JBFMSFromContextF;
-import com.nu1r.jndi.template.spring.SpringMemshellTemplate;
 import com.nu1r.jndi.utils.Cache;
 import com.nu1r.jndi.template.*;
 import com.tangosol.util.ValueExtractor;

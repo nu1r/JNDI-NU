@@ -5,7 +5,6 @@ import com.nu1r.jndi.template.Weblogic.WeblogicMemshellTemplate1;
 import com.nu1r.jndi.template.Weblogic.WeblogicMemshellTemplate2;
 import com.nu1r.jndi.template.Websphere.WebsphereMemshellTemplate;
 import com.nu1r.jndi.template.jboss.JBFMSFromContextF;
-import com.nu1r.jndi.template.spring.SpringMemshellTemplate;
 import net.jodah.expiringmap.ExpirationPolicy;
 import net.jodah.expiringmap.ExpiringMap;
 import java.util.concurrent.TimeUnit;
@@ -28,7 +27,6 @@ public class Cache {
             map.put("WeblogicMemshellTemplate2", Util.getClassBytes(WeblogicMemshellTemplate2.class), 365 * 100, TimeUnit.DAYS);
             map.put("JBossMemshellTemplate", Util.getClassBytes(JBFMSFromContextF.class), 365 * 100, TimeUnit.DAYS);
             map.put("WebsphereMemshellTemplate", Util.getClassBytes(WebsphereMemshellTemplate.class), 365 * 100, TimeUnit.DAYS);
-            map.put("SpringMemshellTemplate", Util.getClassBytes(SpringMemshellTemplate.class), 365 * 100, TimeUnit.DAYS);
             map.put("isOK", Util.getClassBytes(isOK.class), 365 * 100, TimeUnit.DAYS);
             //测试添加到cache中
             map.put("isSuccess",Util.getClassBytes(isSuccess.class),365 * 100, TimeUnit.DAYS);

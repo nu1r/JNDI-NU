@@ -280,13 +280,6 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
 
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @see com.unboundid.ldap.listener.interceptor.InMemoryOperationInterceptor#processSearchResult(com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchResult)
-     * 关键在这个类里进行了处理
-     * 官方说明：在提供的搜索结果返回给客户端之前，调用应该对其执行的任何处理。
-     */
     private boolean handleRMI(ObjectInputStream ois, DataOutputStream out) throws Exception {
         int method = ois.readInt(); // method
         ois.readLong(); // hash
@@ -310,7 +303,7 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
 
         System.out.println(ansi().eraseScreen().render(
                 "   @|green █████\\|@ @|red ██\\   ██\\|@ @|yellow ███████\\|@  @|MAGENTA ██████\\|@       @|CYAN ██\\   ██\\ ██\\   ██\\|@ \n" +
-                        "   @|green \\__██ ||@@|red ███\\  ██ ||@@|yellow ██  __██\\|@ @|MAGENTA \\_██  _||@      @|CYAN ███\\  ██ |██ |  ██ ||@ @|BG_GREEN v1.5|@\n" +
+                        "   @|green \\__██ ||@@|red ███\\  ██ ||@@|yellow ██  __██\\|@ @|MAGENTA \\_██  _||@      @|CYAN ███\\  ██ |██ |  ██ ||@ @|BG_GREEN v1.5.1|@\n" +
                         "      @|green ██ ||@@|red ████\\ ██ ||@@|yellow ██ |  ██ ||@  @|MAGENTA ██ ||@        @|CYAN ████\\ ██ |██ |  ██ ||@ @|BG_CYAN JNDIExploit-Nu1r|@\n" +
                         "      @|green ██ ||@@|red ██ ██\\██ ||@@|yellow ██ |  ██ ||@  @|MAGENTA ██ ||@██████\\ @|CYAN ██ ██\\██ |██ |  ██ ||@\n" +
                         "@|green ██\\   ██ ||@@|red ██ \\████ ||@@|yellow ██ |  ██ ||@  @|MAGENTA ██ ||@\\______|@|CYAN ██ \\████ |██ |  ██ ||@\n" +

