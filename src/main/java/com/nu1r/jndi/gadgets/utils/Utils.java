@@ -13,7 +13,7 @@ public class Utils {
     }
 
 
-    public static String base64DecodeShell(String bs) throws Exception {
+    public static String base64Decode(String bs) throws Exception {
         Class  base64;
         byte[] value = null;
         try {

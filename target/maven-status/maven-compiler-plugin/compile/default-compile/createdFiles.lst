@@ -62,7 +62,6 @@ com\nu1r\jndi\gadgets\utils\Reflections.class
 com\nu1r\jndi\gadgets\CommonsBeanutils2NOCC.class
 com\nu1r\jndi\gadgets\AspectJWeaver.class
 com\nu1r\jndi\exceptions\UnSupportedPayloadTypeException.class
-com\nu1r\jndi\gadgets\C3P0$1.class
 com\nu1r\jndi\enumtypes\WebsphereActionType.class
 com\nu1r\jndi\controllers\BasicController$1.class
 com\nu1r\jndi\gadgets\utils\beanshell\BeanShellUtil.class

