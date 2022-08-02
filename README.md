@@ -1,10 +1,6 @@
-![JNDI-NU](https://socialify.git.ci/nu1r/JNDI-NU/image?description=1&descriptionEditable=&font=Inter&forks=1&issues=1&language=1&name=1&owner=1&pulls=1&stargazers=1&theme=Light)
+![JNDI-NU](https://socialify.git.ci/nu1r/JNDI-NU/image?description=1&descriptionEditable=%E4%B8%80%E6%AC%BE%E7%94%A8%E4%BA%8E%20JNDI%E6%B3%A8%E5%85%A5%20%E5%88%A9%E7%94%A8%E7%9A%84%E5%B7%A5%E5%85%B7%EF%BC%8C%E9%80%82%E7%94%A8%E4%BA%8E%E4%B8%8E%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B7%A5%E5%85%B7%E9%85%8D%E5%90%88%E4%BD%BF%E7%94%A8&font=KoHo&forks=1&language=1&logo=https%3A%2F%2Fs1.328888.xyz%2F2022%2F08%2F02%2FOESvy.png&name=1&owner=1&pattern=Circuit%20Board&stargazers=1&theme=Light)
 
-一款用于 ```JNDI注入``` 利用的工具，大量参考/引用了 ```Rogue JNDI``` 项目的代码，支持直接```植入内存shell```，并集成了常见的```bypass 高版本JDK```的方式，适用于与自动化工具配合使用。
-
----
-
-## 👮免责声明
+# 👮免责声明
 
 该工具仅用于安全自查检测
 
@@ -12,11 +8,11 @@
 
 本人拥有对此工具的修改和解释权。未经网络安全部门及相关部门允许，不得善自使用本工具进行任何攻击活动，不得以任何方式将其用于商业目的。
 
-## 👾下载
+# 👾下载
 
 [下载点此处](https://github.com/nu1r/JNDI-NU/releases)
 
-## 😈使用说明
+# 😈使用说明
 
 使用 ```java -jar JNDI-NU.jar -h``` 查看参数说明，其中 ```--ip``` 参数为必选参数
 
@@ -197,7 +193,7 @@ Supported LADP Queries：
   * ```upload```：基于```XXE```的```jar协议```将恶意```jar包```上传至目标服务器的临时目录
   * ```rce```：加载已上传至目标服务器临时目录的```jar包```，从而达到远程代码执行的效果（这一步本地未复现成功，抛```java.lang.IllegalStateException: For application client runtime, the client factory execute on a managed server thread is not allowed.```异常，有复现成功的小伙伴麻烦指导下）
 
-## 🥎```内存shell```说明
+# 🥎```内存shell```说明
 * 采用动态添加 ```Filter/Controller```的方式，并将添加的```Filter```移动至```FilterChain```的第一位
 * ```内存shell``` 的兼容性测试结果请参考 [memshell](https://github.com/feihong-cs/memShell) 项目
 * ```Basic cmd shell``` 的访问方式为 ```/anything?type=basic&pass=[cmd]```
@@ -216,7 +212,7 @@ Supported LADP Queries：
 
 ---
 
-## 🏓TODO
+# 🏓TODO
 
 1. 本地ClassPath反序列化漏洞利用方式
 2. 支持自定义内存马密码
@@ -224,10 +220,10 @@ Supported LADP Queries：
 
 ---
 
-## 🐲建议
+# 🐲建议
 不推荐用高版本JDK
 
- ## 📷参考
+# 📷参考
  * https://github.com/veracode-research/rogue-jndi
  * https://github.com/welk1n/JNDI-Injection-Exploit
  * https://github.com/welk1n/JNDI-Injection-Bypass
