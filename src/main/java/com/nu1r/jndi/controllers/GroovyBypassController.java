@@ -60,7 +60,6 @@ public class GroovyBypassController implements LdapController {
             int secondIndex = base.indexOf("/", firstIndex + 1);
             if(secondIndex < 0) secondIndex = base.length();
 
-            //因为我对 grovvy 的语法完全不懂，所以目前只支持执行命令这一种形式的 PayloadType
             String payloadType = base.substring(firstIndex + 1, secondIndex);
             if(payloadType.equalsIgnoreCase("command")){
                 type = PayloadType.valueOf("command");
