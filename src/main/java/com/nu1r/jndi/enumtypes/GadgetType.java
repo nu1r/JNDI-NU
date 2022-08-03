@@ -12,6 +12,7 @@ public enum GadgetType {
     commonscollections5,
     commonscollections6,
     commonscollections7,
+    commonscollections7lite_4,
     commonscollectionsk1,
     commonscollectionsk2,
     commonscollectionsk3,
@@ -28,6 +29,19 @@ public enum GadgetType {
     commonsbeanutils3,
     commonsbeanutils1183nocc,
     commonsbeanutils3183,
+    jython1,
+    json,
+    groovy1,
+    hibernate1,
+    hibernate2,
+    javassistweld1,
+    jbossinterceptors1,
+    jdk7u21variant,
+    jrmpclient,
+    jrmpclient_activator,
+    jrmpclient_obj,
+    jrmplistener,
     cve_2020_2555,
     cve_2020_2883;
+
 }

