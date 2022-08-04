@@ -226,7 +226,6 @@ Supported LADP Queries：
 * 采用动态添加 ```Filter/Controller```的方式，并将添加的```Filter```移动至```FilterChain```的第一位
 * ```内存shell``` 的兼容性测试结果请参考 [memshell](https://github.com/feihong-cs/memShell) 项目
 * ```Basic cmd shell``` 的访问方式为 ```/anything?type=basic&pass=[cmd]```
-* ```tomcatFilter和tomcatFilterhead``` 的访问方式需要修改```冰蝎```客户端（请参考 [冰蝎改造之适配基于tomcat Filter的无文件webshell](https://mp.weixin.qq.com/s/n1wrjep4FVtBkOxLouAYfQ) 的方式二自行修改），并在访问时需要添加 ```X-Options-Ai``` 头部，密码为```rebeyond```
 
 
 **MSF上线支持**
