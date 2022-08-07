@@ -23,5 +23,6 @@ public enum PayloadType {
     jettyfilter,
     jettyservlet,
     wsfilter,
+    tomcatexecutor,
     meterpreter;
 }
