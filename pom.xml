@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
-    <artifactId>JNDI-NU</artifactId>
-    <version>1.5.2</version>
+    <artifactId>JNDI</artifactId>
+    <version>1.5.3-NU</version>
     <build>
         <plugins>
             <plugin>
@@ -87,6 +87,12 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-websocket</artifactId>
+            <version>9.0.62</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-core</artifactId>
