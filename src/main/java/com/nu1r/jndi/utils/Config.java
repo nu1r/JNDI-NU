@@ -23,6 +23,9 @@ public class Config {
     @Parameter(names = {"-h", "--help"}, help = true, description = "Show this help")
     private static boolean help = false;
 
+    @Parameter(names = {"-c", "--command"}, help = true, description = "RMI this command")
+    public static String command = "whoami";
+
     public static String rhost;
     public static String rport;
 

