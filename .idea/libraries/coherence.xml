@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="coherence">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/coherence.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

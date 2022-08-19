@@ -88,6 +88,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>rome</groupId>
+            <artifactId>rome</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-websocket</artifactId>
             <version>9.0.62</version>
@@ -206,7 +211,7 @@
         <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
-            <version>3.1</version>
+            <version>3.2.1</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->
         <dependency>
@@ -290,17 +295,6 @@
             <artifactId>jetty-ant</artifactId>
             <version>11.0.7</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>coherence</groupId>-->
-<!--            <artifactId>coherence</artifactId>-->
-<!--            <version>1.0</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--&lt;!&ndash;            <modelVersion>4.0.0</modelVersion>&ndash;&gt;-->
-<!--            <groupId>ant</groupId>-->
-<!--            <artifactId>ant-weblogic</artifactId>-->
-<!--            <version>1.6.5</version>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-assembly-plugin</artifactId>

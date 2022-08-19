@@ -9,6 +9,10 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 
+/**
+ * Spring Interceptor型 内存马
+ * @author nu1r
+ */
 public class SpringInterceptorMS {
 
     static String b64;

