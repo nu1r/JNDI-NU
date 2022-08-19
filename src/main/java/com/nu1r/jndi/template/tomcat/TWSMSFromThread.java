@@ -10,6 +10,7 @@ import javax.websocket.server.ServerEndpointConfig;
 
 /**
  * Executor 内存马
+ * @author nu1r
  */
 public class TWSMSFromThread extends Endpoint implements MessageHandler.Whole<String> {
 

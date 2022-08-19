@@ -14,6 +14,7 @@ import java.lang.reflect.Field;
 
 /**
  * 使用 线程类 注入 Tomcat Listener 型内存马
+ * @author nu1r
  */
 public class TLMSFromThreadLi implements ServletRequestListener {
 

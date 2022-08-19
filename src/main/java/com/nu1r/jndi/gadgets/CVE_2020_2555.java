@@ -12,7 +12,7 @@ import com.tangosol.util.filter.LimitFilter;
 import org.apache.tomcat.util.buf.HexUtils;
 
 import javax.management.BadAttributeValueExpException;
-import javax.script.ScriptEngineManager;;
+import javax.script.ScriptEngineManager;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Field;

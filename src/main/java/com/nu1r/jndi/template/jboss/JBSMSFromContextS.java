@@ -23,6 +23,7 @@ import static org.fusesource.jansi.Ansi.ansi;
 
 /**
  * jboss Servlet 内存马
+ * @author nu1r
  */
 public class JBSMSFromContextS implements Servlet {
 

