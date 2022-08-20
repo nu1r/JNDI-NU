@@ -129,10 +129,10 @@ Supported LADP Queries：
 - 密码：`nu1ryyds`
 
 内存马说明：
-* ```SpringInterceptor```: 向系统内植入 Spring Interceptor 类型的内存马
-  * X-nu1r-TOKEN 如果为 ce 则执行命令 , ?X-Token-Data=cmd
-  * X-nu1r-TOKEN 如果为 bx 则为冰蝎马 密码 nu1ryyds
-  * X-nu1r-TOKEN 如果为 gz 则为哥斯拉马 pass nu1r key nu1ryyds
+  * ```SpringInterceptor```: 向系统内植入 Spring Interceptor 类型的内存马
+    - X-nu1r-TOKEN 如果为 ce 则执行命令 , ?X-Token-Data=cmd
+    - X-nu1r-TOKEN 如果为 bx 则为冰蝎马 密码 nu1ryyds
+    - X-nu1r-TOKEN 如果为 gz 则为哥斯拉马 pass nu1r key nu1ryyds
   * ```JettyFilter```: 利用 JMX MBeans 向系统内植入 Jetty Filter 型内存马
   * ```JettyServlet```: 利用 JMX MBeans 向系统内植入 Jetty Servlet 型内存马
   * ```JBossFilter```: 通过全局上下文向系统内植入 JBoss/Wildfly Filter 型内存马
