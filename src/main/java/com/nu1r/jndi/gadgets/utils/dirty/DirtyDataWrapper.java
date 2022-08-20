@@ -54,21 +54,21 @@ public class DirtyDataWrapper {
                 break;
             case 2:
                 HashMap<String, Object> map = new HashMap<String, Object>();
-                map.put("su18", dirtyData);
-                map.put("su19", gadget);
+                map.put("nu1r", dirtyData);
+                map.put("nu2r", gadget);
                 wrapper = map;
                 break;
             case 3:
                 LinkedHashMap<String, Object> linkedHashMap = new LinkedHashMap<String, Object>();
-                linkedHashMap.put("su18", dirtyData);
-                linkedHashMap.put("su19", gadget);
+                linkedHashMap.put("nu1r", dirtyData);
+                linkedHashMap.put("nu2r", gadget);
                 wrapper = linkedHashMap;
                 break;
             default:
             case 4:
                 TreeMap<String, Object> treeMap = new TreeMap<String, Object>();
-                treeMap.put("su18", dirtyData);
-                treeMap.put("su19", gadget);
+                treeMap.put("nu1r", dirtyData);
+                treeMap.put("nu2r", gadget);
                 wrapper = treeMap;
                 break;
         }

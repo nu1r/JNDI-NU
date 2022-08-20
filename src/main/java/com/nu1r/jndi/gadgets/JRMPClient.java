@@ -13,10 +13,10 @@ import java.rmi.server.ObjID;
 import java.rmi.server.RemoteObjectInvocationHandler;
 import java.util.Random;
 
-public class JRMPClient {
+public class JRMPClient implements ObjectPayload<Registry>{
 
-    public static byte[] getBytes(PayloadType type) throws Exception {
-        String command = String.valueOf(type);
+    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+        String command = param[0];
         String host;
         int    port;
         int    sep = command.indexOf(':');
@@ -43,5 +43,10 @@ public class JRMPClient {
         oos.close();
 
         return bytes;
+    }
+
+    @Override
+    public Registry getObject(String command) throws Exception {
+        return null;
     }
 }

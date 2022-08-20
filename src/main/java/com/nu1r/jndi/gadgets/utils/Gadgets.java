@@ -123,9 +123,6 @@ public class Gadgets {
             case springecho:
                 classBytes = Cache.get("SpringEchoTemplate");
                 break;
-            case weblogicecho:
-                classBytes = Cache.get("WeblogicEchoTemplate");
-                break;
             case jbossfilter:
                 classBytes = Cache.get("JBossMemshellTemplate");
                 break;

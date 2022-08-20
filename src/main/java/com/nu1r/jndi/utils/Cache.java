@@ -1,8 +1,6 @@
 package com.nu1r.jndi.utils;
 
 import com.nu1r.jndi.template.*;
-import com.nu1r.jndi.template.Weblogic.WeblogicMemshellTemplate1;
-import com.nu1r.jndi.template.Weblogic.WeblogicMemshellTemplate2;
 import com.nu1r.jndi.template.Websphere.WebsphereMemshellTemplate;
 import com.nu1r.jndi.template.jboss.JBFMSFromContextF;
 import net.jodah.expiringmap.ExpirationPolicy;
@@ -22,9 +20,6 @@ public class Cache {
             //过期时间100年，永不过期的简单方法
             map.put("TomcatEchoTemplate", Util.getClassBytes(TomcatEchoTemplate.class), 365 * 100, TimeUnit.DAYS);
             map.put("SpringEchoTemplate", Util.getClassBytes(SpringEchoTemplate.class), 365 * 100, TimeUnit.DAYS);
-            map.put("WeblogicEchoTemplate", Util.getClassBytes(WeblogicEchoTemplate.class), 365 * 100, TimeUnit.DAYS);
-            map.put("WeblogicMemshellTemplate1", Util.getClassBytes(WeblogicMemshellTemplate1.class), 365 * 100, TimeUnit.DAYS);
-            map.put("WeblogicMemshellTemplate2", Util.getClassBytes(WeblogicMemshellTemplate2.class), 365 * 100, TimeUnit.DAYS);
             map.put("JBossMemshellTemplate", Util.getClassBytes(JBFMSFromContextF.class), 365 * 100, TimeUnit.DAYS);
             map.put("WebsphereMemshellTemplate", Util.getClassBytes(WebsphereMemshellTemplate.class), 365 * 100, TimeUnit.DAYS);
             map.put("isOK", Util.getClassBytes(isOK.class), 365 * 100, TimeUnit.DAYS);

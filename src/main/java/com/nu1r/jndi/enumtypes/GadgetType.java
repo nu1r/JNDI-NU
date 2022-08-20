@@ -5,7 +5,6 @@ public enum GadgetType {
     commonsbeanutils1,
     commonsbeanutils2,
     commonscollections1,
-    commonscollections1_1,
     commonscollections2,
     commonscollections3,
     commonscollections4,
@@ -34,6 +33,7 @@ public enum GadgetType {
     clojure,
     commonsbeanutils2nocc,
     commonsbeanutils3,
+    commonsbeanutils4,
     commonsbeanutils1183nocc,
     commonsbeanutils3183,
     jython1,
@@ -48,7 +48,15 @@ public enum GadgetType {
     jrmpclient_activator,
     jrmpclient_obj,
     jrmplistener,
-    cve_2020_2555,
-    cve_2020_2883;
-
+    mozillarhino1,
+    mozillarhino2,
+    myfaces1,
+    myfaces2,
+    renderedimage,
+    rome,
+    rome2,
+    spring1,
+    spring2,
+    spring3,
+    vaadin1
 }

