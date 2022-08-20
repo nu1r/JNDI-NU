@@ -6,7 +6,7 @@
 
     <groupId>org.example</groupId>
     <artifactId>JNDI-NU</artifactId>
-    <version>1.5.5</version>
+    <version>1.5.6-P</version>
     <build>
         <plugins>
             <plugin>
@@ -77,16 +77,26 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.6</maven.compiler.source>
         <maven.compiler.target>1.6</maven.compiler.target>
-        <!--    <spring.version>3.0.5.RELEASE</spring.version>-->
         <spring.version>5.2.3.RELEASE</spring.version>
         <custom.lib-path>${project.basedir}/lib</custom.lib-path>
-        <!--    <spring.version>4.0.5.RELEASE</spring.version>-->
-        <!--    <spring.version>4.3.28.RELEASE</spring.version>-->
-        <!--    <spring.version>5.0.8.RELEASE</spring.version>-->
-        <!--    <spring.version>5.2.10.RELEASE</spring.version>-->
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-server</artifactId>
+            <version>7.7.14</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.myfaces.core</groupId>
+            <artifactId>myfaces-impl</artifactId>
+            <version>2.2.9</version>
+        </dependency>
+        <dependency>
+            <groupId>rhino</groupId>
+            <artifactId>js</artifactId>
+            <version>1.7R2</version>
+        </dependency>
         <dependency>
             <groupId>rome</groupId>
             <artifactId>rome</artifactId>

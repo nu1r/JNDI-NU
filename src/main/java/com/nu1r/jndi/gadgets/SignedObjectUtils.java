@@ -7,7 +7,7 @@ import java.security.SignedObject;
 /**
  * 二次反序列化
  *
- * @author su18
+ * @author nu1r
  */
 public class SignedObjectUtils {
     public static SignedObject warpWithSignedObject(Serializable obj) throws Exception {

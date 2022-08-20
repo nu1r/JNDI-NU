@@ -1,6 +1,7 @@
 package com.nu1r.jndi.gadgets;
 
 import com.nu1r.jndi.LdapServer;
+import com.nu1r.jndi.enumtypes.PayloadType;
 import org.reflections.Reflections;
 
 import java.lang.reflect.Modifier;
@@ -12,6 +13,8 @@ public interface ObjectPayload<T> {
      * return armed payload object to be serialized that will execute specified
      * command on deserialization
      */
+    public byte[] getBytes(PayloadType type, String... param) throws Exception;
+
     public T getObject(String command) throws Exception;
 
     public static class Utils {
@@ -50,7 +53,6 @@ public interface ObjectPayload<T> {
             return clazz;
         }
 
-
         public static Object makePayloadObject(String payloadType, String payloadArg) {
             final Class<? extends ObjectPayload> payloadClass = getPayloadClass(payloadType);
             if (payloadClass == null || !ObjectPayload.class.isAssignableFrom(payloadClass)) {
@@ -67,7 +69,6 @@ public interface ObjectPayload<T> {
             }
             return payloadObject;
         }
-
 
         @SuppressWarnings("unchecked")
         public static void releasePayload(ObjectPayload payload, Object object) throws Exception {

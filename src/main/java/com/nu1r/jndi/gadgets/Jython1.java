@@ -15,12 +15,12 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
-public class Jython1 {
+public class Jython1 implements ObjectPayload<PriorityQueue>{
 
-    public static byte[] getBytes(PayloadType type) throws Exception {
-        String command = String.valueOf(type);
+    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+        String command = param[0];
 
-        String[] paths = command.split(";");
+        String[] paths = command.split(":");
         if (paths.length != 2) {
             throw new IllegalArgumentException("Unsupported command " + command + " " + Arrays.toString(paths));
         }
@@ -81,5 +81,10 @@ public class Jython1 {
         oos.close();
 
         return bytes;
+    }
+
+    @Override
+    public PriorityQueue getObject(String command) throws Exception {
+        return null;
     }
 }

