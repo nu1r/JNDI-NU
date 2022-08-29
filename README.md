@@ -320,7 +320,7 @@ jndiNuSig = func(Payload) {
 ```go
 jndiNuSer = func(Payload) {
     Command := str.Split(Payload,"#")
-    cmd := codec.EncodeBase64(Command[1])
+    cmd     := codec.EncodeBase64(Command[1])
     Payload := str.Replace(Command[0],"CommandNew",cmd,1)
     return codec.EncodeUrl(Payload)
 }
