@@ -381,8 +381,9 @@ BC ：BCEL Classloader - 通过 ..bcel...ClassLoader.loadClass().newInstance() �
 
 # 🏓TODO
 
-1. 本地ClassPath反序列化漏洞利用方式
-2. 支持自定义内存马密码
+1. 支持自定义内存马密码
+2. Agent内存马
+3. 更多的Gadget
 
 ---
 
