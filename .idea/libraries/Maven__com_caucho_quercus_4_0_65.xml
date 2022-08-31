@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.caucho:quercus:4.0.65">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/caucho/quercus/4.0.65/quercus-4.0.65.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/caucho/quercus/4.0.65/quercus-4.0.65-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/caucho/quercus/4.0.65/quercus-4.0.65-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

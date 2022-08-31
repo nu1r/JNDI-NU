@@ -1,4 +1,4 @@
-package com.nu1r.jndi;
+package com.nu1r.jndi.gadgets.utils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

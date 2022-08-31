@@ -1,20 +1,18 @@
 package com.nu1r.jndi.enumtypes;
 
 public enum PayloadType {
-    command,
+    tomcatupgrade,
+    nu1r,
     dnslog,
     reverseshell,
     tomcatecho,
     springecho,
-    weblogicecho,
     tomcatfilterjmx,
     tomcatfilterth,
     tomcatlistenerjmx,
     tomcatlistenerth,
     tomcatservletjmx,
     tomcatservletth,
-    weblogicmemshell1,
-    weblogicmemshell2,
     jbossfilter,
     jbossservlet,
     webspherememshell,
@@ -24,5 +22,7 @@ public enum PayloadType {
     jettyservlet,
     wsfilter,
     tomcatexecutor,
-    meterpreter;
+    meterpreter,
+    resinfilterth,
+    resinservletth;
 }

