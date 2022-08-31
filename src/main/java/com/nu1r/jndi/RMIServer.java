@@ -30,6 +30,7 @@ import javax.net.ServerSocketFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.nu1r.jndi.gadgets.utils.Ltime;
 import com.nu1r.jndi.utils.Config;
 import com.nu1r.jndi.gadgets.utils.Reflections;
 import com.sun.jndi.rmi.registry.ReferenceWrapper;
@@ -259,14 +260,14 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
         String object = (String) ois.readObject();
         System.out.println(ansi().eraseScreen().render(
                 "   @|green █████\\|@ @|red ██\\   ██\\|@ @|yellow ███████\\|@  @|MAGENTA ██████\\|@       @|CYAN ██\\   ██\\ ██\\   ██\\|@ \n" +
-                        "   @|green \\__██ ||@@|red ███\\  ██ ||@@|yellow ██  __██\\|@ @|MAGENTA \\_██  _||@      @|CYAN ███\\  ██ |██ |  ██ ||@ @|BG_GREEN v1.5.6|@\n" +
+                        "   @|green \\__██ ||@@|red ███\\  ██ ||@@|yellow ██  __██\\|@ @|MAGENTA \\_██  _||@      @|CYAN ███\\  ██ |██ |  ██ ||@ @|BG_GREEN v1.5.7|@\n" +
                         "      @|green ██ ||@@|red ████\\ ██ ||@@|yellow ██ |  ██ ||@  @|MAGENTA ██ ||@        @|CYAN ████\\ ██ |██ |  ██ ||@ @|BG_CYAN JNDIExploit-Nu1r|@\n" +
                         "      @|green ██ ||@@|red ██ ██\\██ ||@@|yellow ██ |  ██ ||@  @|MAGENTA ██ ||@██████\\ @|CYAN ██ ██\\██ |██ |  ██ ||@\n" +
                         "@|green ██\\   ██ ||@@|red ██ \\████ ||@@|yellow ██ |  ██ ||@  @|MAGENTA ██ ||@\\______|@|CYAN ██ \\████ |██ |  ██ ||@\n" +
                         "@|green ██ |  ██ ||@@|red ██ |\\███ ||@@|yellow ██ |  ██ ||@  @|MAGENTA ██ ||@        @|CYAN ██ |\\███ |██ |  ██ ||@\n" +
                         "@|green \\██████  ||@@|red ██ | \\██ ||@@|yellow ███████  ||@@|MAGENTA ██████\\|@       @|CYAN ██ | \\██ |\\██████  ||@\n" +
                         "@|green  \\______/|@@|red  \\__|  \\__||@@|yellow \\_______/|@ @|MAGENTA \\______||@      @|CYAN \\__|  \\__| \\______/|@"));
-        System.out.println(ansi().render(Ltime.getLocalTime() + "@|bg_GREEN -----------------------------------------------------------------------------------|@"));
+        System.out.println(ansi().render(Ltime.getLocalTime() + "@|bg_GREEN  RMI--------------------------------------------------------------------------------|@"));
         System.out.println(ansi().render("@|green [+]|@ @|MAGENTA RMI  服务器  >> RMI 查询 |@" + object + " " + method));
         out.writeByte(TransportConstants.Return); // transport op
         try (ObjectOutputStream oos = new MarshalOutputStream(out, this.classpathUrl)) {

