@@ -12,7 +12,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="JNDIExploit-zh" target="1.7" />
+      <module name="JNDIExploit-zh" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

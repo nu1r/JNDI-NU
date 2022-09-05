@@ -6,7 +6,7 @@
 
     <groupId>org.example</groupId>
     <artifactId>JNDI-NU</artifactId>
-    <version>1.5.7-P</version>
+    <version>1.5.8-P</version>
     <build>
         <plugins>
             <plugin>
@@ -14,8 +14,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
                 <configuration>
-                    <source>7</source>
-                    <target>7</target>
+                    <source>8</source>
+                    <target>8</target>
                     <compilerArguments>
                         <extdirs>${project.basedir}/lib</extdirs>
                     </compilerArguments>

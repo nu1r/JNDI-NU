@@ -24,5 +24,7 @@ public enum PayloadType {
     tomcatexecutor,
     meterpreter,
     resinfilterth,
-    resinservletth;
+    resinservletth,
+    linagent,
+    winagent;
 }

