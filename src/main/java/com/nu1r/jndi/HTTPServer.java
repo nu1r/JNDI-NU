@@ -1,7 +1,7 @@
 package com.nu1r.jndi;
 
 import cn.hutool.core.io.file.FileReader;
-import com.nu1r.jndi.gadgets.utils.Ltime;
+import com.nu1r.jndi.utils.Ltime;
 import com.nu1r.jndi.template.CommandTemplate;
 import com.nu1r.jndi.template.DnslogTemplate;
 import com.nu1r.jndi.template.ReverseShellTemplate;
@@ -22,14 +22,11 @@ import java.util.*;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 
+import static com.nu1r.jndi.utils.Util.getVerse;
 import static org.fusesource.jansi.Ansi.ansi;
 
 public class HTTPServer {
     //获取根目录路径
-    public static void main(String[] args) {
-        System.out.println(cwd);
-    }
-
     public static String cwd = System.getProperty("user.dir");
 
     public static void start() throws IOException {
@@ -39,7 +36,7 @@ public class HTTPServer {
             @Override
             public void handle(HttpExchange httpExchange) {
                 try {
-                    System.out.println(ansi().render(Ltime.getLocalTime() + "@|bg_GREEN  HTTP-------------------------------------------------------------------------------|@"));
+                    System.out.println(ansi().eraseScreen().render("@|green [+]|@" + " [" + Ltime.getLocalTime() + "]" + " [HTTP] " + getVerse()));
                     System.out.println(ansi().render("@|green [+]|@ @|MAGENTA New HTTP Request From >> |@" + httpExchange.getRemoteAddress() + "  " + httpExchange.getRequestURI()));
 
                     String path = httpExchange.getRequestURI().getPath();

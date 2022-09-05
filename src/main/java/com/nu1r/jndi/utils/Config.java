@@ -39,8 +39,8 @@ public class Config {
         try {
             jc.parse(args);
         } catch (Exception e) {
-                System.out.println("Error: " + e.getMessage() + "\n");
-                help = true;
+            System.out.println("Error: " + e.getMessage() + "\n");
+            help = true;
         }
 
         //获取当前 Jar 的名称
@@ -63,6 +63,10 @@ public class Config {
     public static String URL_PATTERN = "/nu1r";
 
     public static String Shell_Type = "bx";
+
+    public static Boolean winAgent = false;
+
+    public static Boolean linAgent = false;
 
     // 不同类型内存马的父类/接口与其关键参数的映射
     public static HashMap<String, String> KEY_METHOD_MAP = new HashMap<>();
