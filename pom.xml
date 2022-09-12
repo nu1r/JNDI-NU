@@ -5,8 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
-    <artifactId>JNDI-NU</artifactId>
-    <version>1.5.8-P</version>
+    <artifactId>JNDI</artifactId>
+    <version>1.5.8-NU</version>
+
+    <name>ysuserial</name>
+    <url>https://nu1r.cn</url>
+
     <build>
         <plugins>
             <plugin>

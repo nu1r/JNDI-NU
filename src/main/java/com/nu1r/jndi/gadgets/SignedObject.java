@@ -17,7 +17,6 @@ import org.mozilla.javascript.tools.shell.Environment;
 import org.springframework.beans.factory.ObjectFactory;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
@@ -50,8 +49,8 @@ import static java.lang.Class.forName;
  */
 public class SignedObject implements ObjectPayload<Object> {
 
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
-        String command = param[0];
+    public byte[] getObject(PayloadType type, String... param) throws Exception {
+        String   command  = param[0];
         String[] commands = command.split(":");
 
         if (commands.length < 3) {
@@ -80,11 +79,6 @@ public class SignedObject implements ObjectPayload<Object> {
         }
     }
 
-    @Override
-    public Object getObject(String command) throws Exception {
-        return null;
-    }
-
 
     public Object getOriginal(String[] args) throws Exception {
         final String payloadType = args[0];
@@ -99,7 +93,7 @@ public class SignedObject implements ObjectPayload<Object> {
 
         final Class<? extends ObjectPayload> payloadClass = ObjectPayload.Utils.getPayloadClass(payloadType);
         ObjectPayload                        payload      = payloadClass.newInstance();
-        Object                               object       = payload.getObject(realCmd);
+        Object                               object       = payload.getObject(PayloadType.nu1r, realCmd);
 
         if (args.length >= 3) {
             final String length = args[2];

