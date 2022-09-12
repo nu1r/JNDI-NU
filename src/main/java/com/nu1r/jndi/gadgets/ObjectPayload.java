@@ -13,9 +13,7 @@ public interface ObjectPayload<T> {
      * return armed payload object to be serialized that will execute specified
      * command on deserialization
      */
-    public byte[] getBytes(PayloadType type, String... param) throws Exception;
-
-    public T getObject(String command) throws Exception;
+    public T getObject(PayloadType type, String... param) throws Exception;
 
     public static class Utils {
 
@@ -51,23 +49,6 @@ public interface ObjectPayload<T> {
                 clazz = null;
             }
             return clazz;
-        }
-
-        public static Object makePayloadObject(String payloadType, String payloadArg) {
-            final Class<? extends ObjectPayload> payloadClass = getPayloadClass(payloadType);
-            if (payloadClass == null || !ObjectPayload.class.isAssignableFrom(payloadClass)) {
-                throw new IllegalArgumentException("Invalid payload type '" + payloadType + "'");
-
-            }
-
-            final Object payloadObject;
-            try {
-                final ObjectPayload payload = payloadClass.newInstance();
-                payloadObject = payload.getObject(payloadArg);
-            } catch (Exception e) {
-                throw new IllegalArgumentException("Failed to construct payload", e);
-            }
-            return payloadObject;
         }
 
         @SuppressWarnings("unchecked")

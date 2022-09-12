@@ -23,14 +23,16 @@ import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchResult;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPResult;
 import com.unboundid.ldap.sdk.ResultCode;
-import javassist.*;
+import javassist.ClassClassPath;
+import javassist.ClassPool;
+import javassist.CtClass;
 import org.apache.commons.codec.binary.Base64;
 
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
 import static com.nu1r.jndi.gadgets.utils.ClassNameUtils.generateClassName;
-import static com.nu1r.jndi.gadgets.utils.InjShell.*;
+import static com.nu1r.jndi.gadgets.utils.InjShell.insertLinAgent;
+import static com.nu1r.jndi.gadgets.utils.InjShell.insertWinAgent;
 import static com.nu1r.jndi.utils.Config.*;
 import static org.fusesource.jansi.Ansi.ansi;
 
@@ -414,7 +416,7 @@ public class BasicController implements LdapController {
             if (thirdIndex != -1) {
                 if (thirdIndex < 0) thirdIndex = base.length();
                 try {
-                    gadgetType = gadgetType.valueOf(base.substring(secondIndex + 1, thirdIndex).toLowerCase());
+                    gadgetType = GadgetType.valueOf(base.substring(secondIndex + 1, thirdIndex).toLowerCase());
                 } catch (IllegalArgumentException e) {
                     throw new UnSupportedPayloadTypeException("UnSupportedPayloadType: " + base.substring(secondIndex + 1, thirdIndex));
                 }

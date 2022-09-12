@@ -104,9 +104,9 @@ public class HTTPServer {
             System.out.println(ansi().render("@|green [+] Response Code: |@" + 200));
 //            exchange.getResponseHeaders().set("Content-type","application/octet-stream");
             exchange.sendResponseHeaders(200, bytes.getBytes().length + 1);
-//            exchange.sendResponseHeaders(200, yaml.getBytes().length + 1);
+//            exchange.sendResponseHeaders(200, yaml.getObject().length + 1);
             exchange.getResponseBody().write(bytes.getBytes(StandardCharsets.UTF_8));
-//            exchange.getResponseBody().write(yaml.getBytes("UTF-8"));
+//            exchange.getResponseBody().write(yaml.getObject("UTF-8"));
         } else {
             String pa   = cwd + File.separator + "data";
             File   file = new File(pa + File.separator + YamlName + ".yml");

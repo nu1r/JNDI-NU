@@ -57,15 +57,22 @@ public class Config {
         Config.codeBase = "http://" + Config.ip + ":" + Config.httpPort + "/";
     }
 
+    // 恶意类是否继承 AbstractTranslet
+    public static Boolean IS_INHERIT_ABSTRACT_TRANSLET = false;
+
+    //是否使用反射绕过RASP
     public static Boolean IS_OBSCURE = false;
 
     // 各种方式的内存马映射的路径
     public static String URL_PATTERN = "/nu1r";
 
+    //内存马的类型
     public static String Shell_Type = "bx";
 
+    //是否使用windows下Agent写入
     public static Boolean winAgent = false;
 
+    //是否使用Linux下Agent写入
     public static Boolean linAgent = false;
 
     // 不同类型内存马的父类/接口与其关键参数的映射

@@ -1,8 +1,27 @@
 package com.nu1r.jndi.gadgets.utils;
 
+import javassist.CannotCompileException;
+import javassist.ClassPool;
+import javassist.CtClass;
+
+import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 
 public class Utils {
+
+    public static Class makeClass(String clazzName) {
+        ClassPool classPool = ClassPool.getDefault();
+        CtClass   ctClass   = classPool.makeClass(clazzName);
+        Class     clazz     = null;
+        try {
+            clazz = ctClass.toClass();
+        } catch (CannotCompileException e) {
+            throw new RuntimeException(e);
+        }
+        ctClass.defrost();
+        return clazz;
+    }
 
     public static String[] handlerCommand(String command) {
         String info  = command.split("[-]")[1];
@@ -37,6 +56,15 @@ public class Utils {
         fileOutputStream.write(classBytes);
         fileOutputStream.flush();
         fileOutputStream.close();
+    }
+
+    public static <T> T getByte(T outerMap) throws Exception{
+        ByteArrayOutputStream baous = new ByteArrayOutputStream();
+        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
+        oos.writeObject(outerMap);
+        byte[] bytes = baous.toByteArray();
+        oos.close();
+        return (T) bytes;
     }
 
 }

