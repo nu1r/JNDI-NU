@@ -29,7 +29,7 @@ public class CommonsCollections4 implements ObjectPayload<Queue<Object>>{
 
         // mock method name until armed
         Class[]  paramTypes = new Class[]{String.class};
-        Object[] args       = new Object[]{"su18"};
+        Object[] args       = new Object[]{"nu1r"};
         InstantiateTransformer instantiate = new InstantiateTransformer(
                 paramTypes, args);
 

