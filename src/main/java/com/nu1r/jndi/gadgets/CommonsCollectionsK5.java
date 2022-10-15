@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
-public class CommonsCollections7Lite_4 implements ObjectPayload<Hashtable>{
+public class CommonsCollectionsK5 implements ObjectPayload<Hashtable>{
 
     public Hashtable getObject(PayloadType type, String... param) throws Exception {
         String              command          = param[0];

