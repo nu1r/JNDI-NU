@@ -53,6 +53,9 @@ public class BasicController implements LdapController {
         ClassPool pool;
 
         switch (payloadType) {
+            case meterpreter:
+                className = Meterpreter.class.getName();
+                break;
             case dnslog:
                 DnslogTemplate dnslogTemplate = new DnslogTemplate(params[0]);
                 dnslogTemplate.cache();
@@ -361,9 +364,6 @@ public class BasicController implements LdapController {
                 }
                 className = ctClass.getName();
                 ctClass.writeFile();
-                break;
-            case meterpreter:
-                className = Meterpreter.class.getName();
                 break;
             case tomcatupgrade:
                 Config.init();
