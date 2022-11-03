@@ -440,7 +440,7 @@ public class HTTPServer {
             exchange.getResponseHeaders().set("Content-type", "application/octet-stream");
             exchange.sendResponseHeaders(200, file.length() + 1);
             exchange.getResponseBody().write(bytes);
-            System.out.println(ansi().render("@|green [+] 内存马远程类加载成功(●'◡'●) |@" + 200));
+            System.out.println(ansi().render("@|green [+] 内存马远程类加载成功 |@" + 200));
         } else {
             System.out.println(ansi().render("@|red [!] Response Code: |@" + 404));
             exchange.sendResponseHeaders(404, 0);
