@@ -1,4 +1,4 @@
-package com.nu1r.jndi.utils;
+package com.nu1r.jndi.gadgets.utils;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;

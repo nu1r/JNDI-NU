@@ -30,8 +30,8 @@ import javax.net.ServerSocketFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.nu1r.jndi.utils.Ltime;
-import com.nu1r.jndi.utils.Config;
+import com.nu1r.jndi.gadgets.utils.Ltime;
+import com.nu1r.jndi.gadgets.utils.Config;
 import com.nu1r.jndi.gadgets.utils.Reflections;
 import com.sun.jndi.rmi.registry.ReferenceWrapper;
 
@@ -44,7 +44,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import sun.rmi.server.UnicastServerRef;
 import sun.rmi.transport.TransportConstants;
 
-import static com.nu1r.jndi.utils.Util.getVerse;
+import static com.nu1r.jndi.gadgets.utils.Util.getVerse;
 import static org.fusesource.jansi.Ansi.ansi;
 
 

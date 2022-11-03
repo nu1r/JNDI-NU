@@ -2,15 +2,11 @@ package com.nu1r.jndi.gadgets.utils;
 
 import com.nu1r.jndi.template.DnslogTemplate;
 import com.nu1r.jndi.template.ReverseShellTemplate;
-import com.nu1r.jndi.utils.Cache;
 import com.nu1r.jndi.enumtypes.PayloadType;
 import com.nu1r.jndi.template.CommandTemplate;
 import com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;
 import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
 import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;
-import javassist.ClassClassPath;
-import javassist.ClassPool;
-import javassist.CtClass;
 
 import java.io.Serializable;
 import java.lang.reflect.*;

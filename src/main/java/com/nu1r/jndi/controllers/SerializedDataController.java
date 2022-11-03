@@ -6,15 +6,15 @@ import com.nu1r.jndi.exceptions.IncorrectParamsException;
 import com.nu1r.jndi.exceptions.UnSupportedGadgetTypeException;
 import com.nu1r.jndi.exceptions.UnSupportedPayloadTypeException;
 import com.nu1r.jndi.gadgets.ObjectPayload;
-import com.nu1r.jndi.utils.Util;
+import com.nu1r.jndi.gadgets.utils.Util;
 import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchResult;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPResult;
 import com.unboundid.ldap.sdk.ResultCode;
 
 import static com.nu1r.jndi.gadgets.utils.Utils.getByte;
-import static com.nu1r.jndi.utils.Config.IS_INHERIT_ABSTRACT_TRANSLET;
-import static com.nu1r.jndi.utils.Config.URL_PATTERN;
+import static com.nu1r.jndi.gadgets.utils.Config.IS_INHERIT_ABSTRACT_TRANSLET;
+import static com.nu1r.jndi.gadgets.utils.Config.URL_PATTERN;
 import static org.fusesource.jansi.Ansi.ansi;
 
 @LdapMapping(uri = {"/deserialization"})

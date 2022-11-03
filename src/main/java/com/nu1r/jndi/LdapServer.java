@@ -2,8 +2,8 @@ package com.nu1r.jndi;
 
 import com.nu1r.jndi.controllers.LdapController;
 import com.nu1r.jndi.controllers.LdapMapping;
-import com.nu1r.jndi.utils.Ltime;
-import com.nu1r.jndi.utils.Config;
+import com.nu1r.jndi.gadgets.utils.Ltime;
+import com.nu1r.jndi.gadgets.utils.Config;
 import com.unboundid.ldap.listener.InMemoryDirectoryServer;
 import com.unboundid.ldap.listener.InMemoryDirectoryServerConfig;
 import com.unboundid.ldap.listener.InMemoryListenerConfig;
@@ -19,7 +19,7 @@ import java.net.InetAddress;
 import java.util.Set;
 import java.util.TreeMap;
 
-import static com.nu1r.jndi.utils.Util.getVerse;
+import static com.nu1r.jndi.gadgets.utils.Util.getVerse;
 import static org.fusesource.jansi.Ansi.ansi;
 
 

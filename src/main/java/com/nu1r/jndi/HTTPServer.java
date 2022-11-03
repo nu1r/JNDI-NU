@@ -1,13 +1,13 @@
 package com.nu1r.jndi;
 
 import cn.hutool.core.io.file.FileReader;
-import com.nu1r.jndi.utils.Ltime;
+import com.nu1r.jndi.gadgets.utils.Ltime;
 import com.nu1r.jndi.template.CommandTemplate;
 import com.nu1r.jndi.template.DnslogTemplate;
 import com.nu1r.jndi.template.ReverseShellTemplate;
-import com.nu1r.jndi.utils.Cache;
-import com.nu1r.jndi.utils.Config;
-import com.nu1r.jndi.utils.Util;
+import com.nu1r.jndi.gadgets.utils.Cache;
+import com.nu1r.jndi.gadgets.utils.Config;
+import com.nu1r.jndi.gadgets.utils.Util;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -22,7 +22,7 @@ import java.util.*;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 
-import static com.nu1r.jndi.utils.Util.getVerse;
+import static com.nu1r.jndi.gadgets.utils.Util.getVerse;
 import static org.fusesource.jansi.Ansi.ansi;
 
 public class HTTPServer {

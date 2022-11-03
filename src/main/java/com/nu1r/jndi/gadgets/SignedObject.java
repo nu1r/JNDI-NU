@@ -3,6 +3,7 @@ package com.nu1r.jndi.gadgets;
 import com.nu1r.jndi.enumtypes.PayloadType;
 import com.nu1r.jndi.gadgets.utils.Gadgets;
 import com.nu1r.jndi.gadgets.utils.Reflections;
+import com.nu1r.jndi.gadgets.utils.SignedObjectUtils;
 import com.nu1r.jndi.gadgets.utils.dirty.DirtyDataWrapper;
 import com.sun.syndication.feed.impl.ObjectBean;
 import org.apache.commons.beanutils.BeanComparator;

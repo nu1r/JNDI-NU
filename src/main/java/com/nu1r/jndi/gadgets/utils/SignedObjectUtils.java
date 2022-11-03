@@ -1,4 +1,4 @@
-package com.nu1r.jndi.gadgets;
+package com.nu1r.jndi.gadgets.utils;
 
 import java.io.Serializable;
 import java.security.*;

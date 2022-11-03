@@ -1,10 +1,9 @@
-package com.nu1r.jndi.utils;
+package com.nu1r.jndi.gadgets.utils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static com.nu1r.jndi.utils.Util.getVerse;
 import static org.fusesource.jansi.Ansi.ansi;
 
 public class Ltime {

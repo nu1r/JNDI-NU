@@ -1,4 +1,4 @@
-package com.nu1r.jndi.utils;
+package com.nu1r.jndi.gadgets.utils;
 
 import com.nu1r.jndi.template.*;
 import com.nu1r.jndi.template.Websphere.WebsphereMemshellTemplate;
@@ -24,8 +24,8 @@ public class Cache {
             map.put("WebsphereMemshellTemplate", Util.getClassBytes(WebsphereMemshellTemplate.class), 365 * 100, TimeUnit.DAYS);
             map.put("isOK", Util.getClassBytes(isOK.class), 365 * 100, TimeUnit.DAYS);
             //测试添加到cache中
-            map.put("isSuccess",Util.getClassBytes(isSuccess.class),365 * 100, TimeUnit.DAYS);
-            map.put("Meterpreter",ClassByteChange.update(Meterpreter.class),365 * 100, TimeUnit.DAYS);
+            map.put("isSuccess", Util.getClassBytes(isSuccess.class),365 * 100, TimeUnit.DAYS);
+            map.put("Meterpreter", ClassByteChange.update(Meterpreter.class),365 * 100, TimeUnit.DAYS);
         } catch (Exception e) {
             e.printStackTrace();
         }

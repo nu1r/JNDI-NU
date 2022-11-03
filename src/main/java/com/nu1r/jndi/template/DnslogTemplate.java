@@ -1,7 +1,7 @@
 package com.nu1r.jndi.template;
 
-import com.nu1r.jndi.utils.Cache;
-import com.nu1r.jndi.utils.Util;
+import com.nu1r.jndi.gadgets.utils.Cache;
+import com.nu1r.jndi.gadgets.utils.Util;
 import org.objectweb.asm.*;
 
 import static org.objectweb.asm.Opcodes.*;
