@@ -1,6 +1,6 @@
 package com.nu1r.jndi;
 
-import com.nu1r.jndi.gadgets.utils.Config;
+import com.nu1r.jndi.gadgets.Config.Config;
 
 public class  Starter {
     public static void main(String[] args) throws Exception {

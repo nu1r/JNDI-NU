@@ -88,10 +88,6 @@ public class Gadgets {
                 CommandTemplate commandTemplate = new CommandTemplate(param[0]);
                 classBytes = commandTemplate.getBytes();
                 break;
-            case dnslog:
-                DnslogTemplate dnslogTemplate = new DnslogTemplate(param[0]);
-                classBytes = dnslogTemplate.getBytes();
-                break;
             case reverseshell:
                 ReverseShellTemplate reverseShellTemplate = new ReverseShellTemplate(param[0], param[1]);
                 classBytes = reverseShellTemplate.getBytes();

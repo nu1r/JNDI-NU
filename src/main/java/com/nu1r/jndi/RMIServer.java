@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.nu1r.jndi.gadgets.utils.Ltime;
-import com.nu1r.jndi.gadgets.utils.Config;
+import com.nu1r.jndi.gadgets.Config.Config;
 import com.nu1r.jndi.gadgets.utils.Reflections;
 import com.sun.jndi.rmi.registry.ReferenceWrapper;
 

