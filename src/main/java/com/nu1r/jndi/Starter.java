@@ -1,8 +1,8 @@
 package com.nu1r.jndi;
 
-import com.nu1r.jndi.utils.Config;
+import com.nu1r.jndi.gadgets.utils.Config;
 
-public class Starter {
+public class  Starter {
     public static void main(String[] args) throws Exception {
         Config.applyCmdArgs(args);
         LdapServer.start();

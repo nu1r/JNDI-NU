@@ -3,7 +3,7 @@ package com.nu1r.jndi.controllers;
 import com.nu1r.jndi.enumtypes.PayloadType;
 import com.nu1r.jndi.exceptions.IncorrectParamsException;
 import com.nu1r.jndi.exceptions.UnSupportedPayloadTypeException;
-import com.nu1r.jndi.utils.Util;
+import com.nu1r.jndi.gadgets.utils.Util;
 import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchResult;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPResult;

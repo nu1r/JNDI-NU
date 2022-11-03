@@ -5,15 +5,12 @@ import com.nu1r.jndi.gadgets.utils.Gadgets;
 import com.nu1r.jndi.gadgets.utils.JavaVersion;
 import com.nu1r.jndi.gadgets.utils.Reflections;
 import com.nu1r.jndi.gadgets.utils.cc.TransformerUtil;
-import com.nu1r.jndi.utils.Util;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.functors.ChainedTransformer;
 import org.apache.commons.collections.functors.ConstantTransformer;
 import org.apache.commons.collections.map.LazyMap;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationHandler;
 import java.util.HashMap;
 import java.util.Map;

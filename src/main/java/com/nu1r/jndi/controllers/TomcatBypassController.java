@@ -20,8 +20,8 @@ import com.nu1r.jndi.template.resin.RSMSFromThreadS;
 import com.nu1r.jndi.template.spring.SpringInterceptorMS;
 import com.nu1r.jndi.template.spring.SpringMemshellTemplate;
 import com.nu1r.jndi.template.tomcat.*;
-import com.nu1r.jndi.utils.Config;
-import com.nu1r.jndi.utils.Util;
+import com.nu1r.jndi.gadgets.utils.Config;
+import com.nu1r.jndi.gadgets.utils.Util;
 import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchResult;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPResult;
@@ -37,7 +37,7 @@ import javax.naming.StringRefAddr;
 import static com.nu1r.jndi.gadgets.utils.ClassNameUtils.generateClassName;
 import static com.nu1r.jndi.gadgets.utils.InjShell.TinsertLinAgent;
 import static com.nu1r.jndi.gadgets.utils.InjShell.TinsertWinAgent;
-import static com.nu1r.jndi.utils.Config.*;
+import static com.nu1r.jndi.gadgets.utils.Config.*;
 import static org.fusesource.jansi.Ansi.ansi;
 
 

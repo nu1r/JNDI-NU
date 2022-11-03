@@ -3,13 +3,8 @@ package com.nu1r.jndi.gadgets;
 import com.nu1r.jndi.enumtypes.PayloadType;
 import com.nu1r.jndi.gadgets.utils.Gadgets;
 import com.nu1r.jndi.gadgets.utils.Reflections;
-import com.nu1r.jndi.utils.MyURLClassLoader;
 import org.apache.commons.beanutils.BeanComparator;
 
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
-import java.math.BigInteger;
-import java.util.Comparator;
 import java.util.PriorityQueue;
 
 public class CommonsBeanutils1 implements ObjectPayload<Object> {

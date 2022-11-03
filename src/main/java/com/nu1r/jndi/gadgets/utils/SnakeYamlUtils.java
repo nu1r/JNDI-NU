@@ -3,7 +3,7 @@ package com.nu1r.jndi.gadgets.utils;
 import java.io.*;
 import java.util.zip.Deflater;
 
-import static com.nu1r.jndi.utils.Util.base64Encode;
+import static com.nu1r.jndi.gadgets.utils.Util.base64Encode;
 
 /**
  * SnakeYaml 写入 Jar 包 poc 生成工具类
