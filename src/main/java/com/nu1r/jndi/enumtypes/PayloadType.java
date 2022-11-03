@@ -1,9 +1,9 @@
 package com.nu1r.jndi.enumtypes;
 
 public enum PayloadType {
+    dnslog,
     tomcatupgrade,
     nu1r,
-    dnslog,
     reverseshell,
     tomcatecho,
     springecho,

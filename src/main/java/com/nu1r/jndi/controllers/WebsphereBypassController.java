@@ -5,7 +5,7 @@ import com.nu1r.jndi.enumtypes.WebsphereActionType;
 import com.nu1r.jndi.exceptions.IncorrectParamsException;
 import com.nu1r.jndi.exceptions.UnSupportedActionTypeException;
 import com.nu1r.jndi.exceptions.UnSupportedPayloadTypeException;
-import com.nu1r.jndi.gadgets.utils.Config;
+import com.nu1r.jndi.gadgets.Config.Config;
 import com.nu1r.jndi.gadgets.utils.Util;
 import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchResult;
 import com.unboundid.ldap.sdk.Entry;
@@ -18,8 +18,8 @@ import java.util.Properties;
 import static org.fusesource.jansi.Ansi.ansi;
 
 /*
-     * Requires:
-     * - websphere v6-9 libraries in the classpath
+ * Requires:
+ * - websphere v6-9 libraries in the classpath
  */
 
 @LdapMapping(uri = { "/webspherebypass" })

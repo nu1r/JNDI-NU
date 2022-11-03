@@ -1,5 +1,6 @@
 package com.nu1r.jndi.gadgets.utils;
 
+import com.nu1r.jndi.gadgets.Config.Config;
 import com.nu1r.jndi.template.Meterpreter;
 import javassist.*;
 

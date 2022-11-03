@@ -3,7 +3,7 @@ package com.nu1r.jndi;
 import com.nu1r.jndi.controllers.LdapController;
 import com.nu1r.jndi.controllers.LdapMapping;
 import com.nu1r.jndi.gadgets.utils.Ltime;
-import com.nu1r.jndi.gadgets.utils.Config;
+import com.nu1r.jndi.gadgets.Config.Config;
 import com.unboundid.ldap.listener.InMemoryDirectoryServer;
 import com.unboundid.ldap.listener.InMemoryDirectoryServerConfig;
 import com.unboundid.ldap.listener.InMemoryListenerConfig;
