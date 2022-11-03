@@ -44,7 +44,7 @@ public class LdapServer extends InMemoryOperationInterceptor {
             ds.startListening();
             System.out.println(ansi().eraseScreen().render(
                     "   @|green █████\\|@ @|red ██\\   ██\\|@ @|yellow ███████\\|@  @|MAGENTA ██████\\|@       @|CYAN ██\\   ██\\ ██\\   ██\\|@ \n" +
-                            "   @|green \\__██ ||@@|red ███\\  ██ ||@@|yellow ██  __██\\|@ @|MAGENTA \\_██  _||@      @|CYAN ███\\  ██ |██ |  ██ ||@ @|BG_GREEN v1.5.8|@\n" +
+                            "   @|green \\__██ ||@@|red ███\\  ██ ||@@|yellow ██  __██\\|@ @|MAGENTA \\_██  _||@      @|CYAN ███\\  ██ |██ |  ██ ||@ @|BG_GREEN v2.0 Preview|@\n" +
                             "      @|green ██ ||@@|red ████\\ ██ ||@@|yellow ██ |  ██ ||@  @|MAGENTA ██ ||@        @|CYAN ████\\ ██ |██ |  ██ ||@ @|BG_CYAN JNDIExploit-Nu1r|@\n" +
                             "      @|green ██ ||@@|red ██ ██\\██ ||@@|yellow ██ |  ██ ||@  @|MAGENTA ██ ||@██████\\ @|CYAN ██ ██\\██ |██ |  ██ ||@\n" +
                             "@|green ██\\   ██ ||@@|red ██ \\████ ||@@|yellow ██ |  ██ ||@  @|MAGENTA ██ ||@\\______|@|CYAN ██ \\████ |██ |  ██ ||@\n" +
@@ -89,7 +89,7 @@ public class LdapServer extends InMemoryOperationInterceptor {
         String base = result.getRequest().getBaseDN();
 
         //收到ldap请求
-        System.out.println(ansi().eraseScreen().render("@|green [+]|@" + " [" + Ltime.getLocalTime() + "]" + " [LDAP] " + getVerse()));
+        System.out.println(ansi().render("@|green [+]|@" + " [" + Ltime.getLocalTime() + "]" + " [LDAP] " + getVerse()));
         System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Received LDAP Query >>|@ " + base));
         LdapController controller = null;
         //find controller

