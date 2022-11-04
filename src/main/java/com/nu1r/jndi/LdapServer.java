@@ -89,7 +89,7 @@ public class LdapServer extends InMemoryOperationInterceptor {
         String base = result.getRequest().getBaseDN();
 
         //收到ldap请求
-        System.out.println(ansi().render("@|green [+]|@" + " [" + Ltime.getLocalTime() + "]" + " [LDAP] " + getVerse()));
+        System.out.println(ansi().render("@|green [+]|@" + " [" + Ltime.getLocalTime() + "]" + " [LDAP] " + getVerse() + "@|BG_CYAN --------------------------------------|@"));
         System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Received LDAP Query >>|@ " + base));
         LdapController controller = null;
         //find controller
