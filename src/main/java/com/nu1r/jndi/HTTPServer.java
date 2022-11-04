@@ -36,7 +36,7 @@ public class HTTPServer {
             @Override
             public void handle(HttpExchange httpExchange) {
                 try {
-                    System.out.println(ansi().render("@|green [+]|@" + " [" + Ltime.getLocalTime() + "]" + " [HTTP] " + getVerse()));
+                    System.out.println(ansi().render("@|green [+]|@" + " [" + Ltime.getLocalTime() + "]" + " [HTTP] " + getVerse() + "@|BG_CYAN --------------------------------------|@"));
                     System.out.println(ansi().render("@|green [+]|@ @|MAGENTA New HTTP Request From >> |@" + httpExchange.getRemoteAddress() + "  " + httpExchange.getRequestURI()));
 
                     String path = httpExchange.getRequestURI().getPath();
