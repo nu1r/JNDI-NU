@@ -4,13 +4,17 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.UnixStyleUsageFormatter;
 import com.nu1r.jndi.Starter;
+import com.nu1r.jndi.gadgets.ObjectPayload;
+import com.nu1r.jndi.gadgets.annotation.Authors;
+import com.nu1r.jndi.gadgets.annotation.Dependencies;
+import com.nu1r.jndi.gadgets.utils.Strings;
 
-import java.util.HashMap;
+import java.util.*;
 
 public class Config {
     public static String codeBase;
 
-    @Parameter(names = {"-i", " --ip"}, description = "Local ip address ", required = true, order = 1)
+    @Parameter(names = {"-i", " --ip"}, description = "Local ip address ", order = 1)
     public static String ip = "0.0.0.0";
 
     @Parameter(names = {"-lP", "--ldapPort"}, description = "Ldap bind port", order = 2)
@@ -28,6 +32,9 @@ public class Config {
     @Parameter(names = {"-c", " --command"}, help = true, description = "RMI this command")
     public static String command = "whoami";
 
+    @Parameter(names = {"-g", " --gadgets"}, description = "Show gadgets", order = 5)
+    public static boolean showGadgets;
+
     public static String rhost;
     public static String rport;
 
@@ -41,6 +48,31 @@ public class Config {
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage() + "\n");
             help = true;
+        }
+
+        if(showGadgets){
+            final List<Class<? extends ObjectPayload>> payloadClasses =
+                    new ArrayList<Class<? extends ObjectPayload>>(ObjectPayload.Utils.getPayloadClasses());
+            Collections.sort(payloadClasses, new Strings.ToStringComparator()); // alphabetize
+
+            final List<String[]> rows = new LinkedList<String[]>();
+            rows.add(new String[]{"Payload", "Authors", "Dependencies"});
+            rows.add(new String[]{"-------", "-------", "------------"});
+            for (Class<? extends ObjectPayload> payloadClass : payloadClasses) {
+                rows.add(new String[]{
+                        payloadClass.getSimpleName(),
+                        Strings.join(Arrays.asList(Authors.Utils.getAuthors(payloadClass)), ", ", "@", ""),
+                        Strings.join(Arrays.asList(Dependencies.Utils.getDependenciesSimple(payloadClass)), ", ", "", "")
+                });
+            }
+
+            final List<String> lines = Strings.formatTable(rows);
+
+            for (String line : lines) {
+                System.out.println("     " + line);
+            }
+
+            System.exit(0);
         }
 
         //获取当前 Jar 的名称

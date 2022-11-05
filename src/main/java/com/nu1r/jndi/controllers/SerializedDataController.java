@@ -44,7 +44,7 @@ public class SerializedDataController implements LdapController {
             int firstIndex  = base.indexOf("/");
             int secondIndex = base.indexOf("/", firstIndex + 1);
             try {
-                gadgetType = GadgetType.valueOf(base.substring(firstIndex + 1, secondIndex).toLowerCase());
+                gadgetType = GadgetType.valueOf(base.substring(firstIndex + 1, secondIndex));
                 System.out.println(ansi().render("@|green [+]|@ @|MAGENTA GaddgetType >> |@" + gadgetType));
             } catch (IllegalArgumentException e) {
                 throw new UnSupportedGadgetTypeException("UnSupportGaddgetType >> " + base.substring(firstIndex + 1, secondIndex));
@@ -53,7 +53,7 @@ public class SerializedDataController implements LdapController {
             int thirdIndex = base.indexOf("/", secondIndex + 1);
             if (thirdIndex < 0) thirdIndex = base.length();
             try {
-                payloadType = PayloadType.valueOf(base.substring(secondIndex + 1, thirdIndex).toLowerCase());
+                payloadType = PayloadType.valueOf(base.substring(secondIndex + 1, thirdIndex));
                 //System.out.println("[+] PayloadType >> " + payloadType);
             } catch (IllegalArgumentException e) {
                 throw new UnSupportedPayloadTypeException("UnSupportedPayloadType: " + base.substring(secondIndex + 1, thirdIndex));
