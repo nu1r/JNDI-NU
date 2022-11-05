@@ -11,6 +11,7 @@ Usage: java -jar JNDI-NU.jar [options]
     -rP, --rmiPort  rmi bind port (default: 1099)
     -lP, --ldapPort Ldap bind port (default: 1389)
     -hP, --httpPort Http bind port (default: 3456)
+    -g,  --gadgets   Show gadgets (default: false)
     -c,  --command  RMI this command
     -h,  --help     Show this help
 ```
@@ -187,7 +188,6 @@ WF ：Write File - 通过 FileOutputStream.write() 来写入文件，使用命�
 
 * 利用方式：
 * SignedObjectPayload -> 'CC:CommonsCollections6:b3BlbiAtYSBDYWxjdWxhdG9yLmFwcA==:10000' 20000
-* 类名全小写，否则报错为null
 
 ```
 {{url
@@ -259,6 +259,7 @@ WF ：Write File - 通过 FileOutputStream.write() 来写入文件，使用命�
 | Spring2                  | org.springframework:spring-core:4.1.4.RELEASE<br/>org.springframework:spring-aop:4.1.4.RELEASE<br/>aopalliance:aopalliance:1.0<br/>commons-logging:commons-logging:1.2                                                                                                     |               |
 | Spring3                  | org.springframework:spring-tx:5.2.3.RELEASE<br/>org.springframework:spring-context:5.2.3.RELEASE<br/>javax.transaction:javax.transaction-api:1.2                                                                                                                           |               |
 | Vaadin1                  | com.vaadin:vaadin-server:7.7.14<br/>com.vaadin:vaadin-shared:7.7.14                                                                                                                                                                                                        |               |
+| Wicket1                  | org.apache.wicket:wicket-util:6.23.0<br/>org.slf4j:slf4j-api:1.6.4                                                                                                                                                                                                         |               |
 
 * 使用示例：
 ```
