@@ -39,7 +39,7 @@ import java.util.Map;
  * 		commons-collections
  */
 
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({"rawtypes", "unused"})
 @Dependencies({"commons-collections:commons-collections:3.1"})
 @Authors({Authors.MATTHIASKAISER, Authors.JASINNER})
 public class CommonsCollections5 implements ObjectPayload<BadAttributeValueExpException> {

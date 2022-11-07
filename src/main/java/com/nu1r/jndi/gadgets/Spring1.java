@@ -42,7 +42,7 @@ import static java.lang.Class.forName;
  * 													Pwner*(Javassist-generated).<static init>
  * 														Runtime.exec()
  */
-@SuppressWarnings({"rawtypes"})
+@SuppressWarnings({"rawtypes","unused"})
 @Dependencies({"org.springframework:spring-core:4.1.4.RELEASE", "org.springframework:spring-beans:4.1.4.RELEASE"})
 @Authors({Authors.FROHOFF})
 public class Spring1 implements ObjectPayload<Object>{

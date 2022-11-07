@@ -24,7 +24,7 @@ import java.util.Map;
  * InvokerTransformer.
  */
 
-@SuppressWarnings({"rawtypes", "unchecked", "restriction"})
+@SuppressWarnings({"rawtypes", "unchecked", "restriction","unused"})
 @Dependencies({"commons-collections:commons-collections:3.1"})
 @Authors({Authors.FROHOFF})
 public class CommonsCollections3 implements ObjectPayload<Object> {

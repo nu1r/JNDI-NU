@@ -56,4 +56,6 @@ public enum GadgetType {
     URLDNS,
     Vaadin1,
     Wicket1,
+    JRE8u20,
+    JRE8u20_2,
 }
