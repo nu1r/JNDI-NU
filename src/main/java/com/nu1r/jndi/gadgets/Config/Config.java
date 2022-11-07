@@ -107,6 +107,18 @@ public class Config {
     //是否使用Linux下Agent写入
     public static Boolean linAgent = false;
 
+    //使用脏数据混淆的选项
+    public static Boolean dirtyType = false;
+    public static int Type1 = 1;
+    public static Boolean dirtyLength = false;
+    public static int Length1 = 5000;
+
+    // 是否在序列化数据流中的 TC_RESET 中填充脏数据
+    public static Boolean IS_DIRTY_IN_TC_RESET = false;
+
+    // 填充的脏数据长度
+    public static int DIRTY_LENGTH_IN_TC_RESET = 0;
+
     // 不同类型内存马的父类/接口与其关键参数的映射
     public static HashMap<String, String> KEY_METHOD_MAP = new HashMap<>();
 

