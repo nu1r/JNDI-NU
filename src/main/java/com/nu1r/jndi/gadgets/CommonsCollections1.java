@@ -39,6 +39,7 @@ import java.util.Map;
  * commons-collections
  */
 
+@SuppressWarnings({"rawtypes", "unchecked","unused"})
 @Dependencies({"commons-collections:commons-collections:3.1"})
 @Authors({Authors.FROHOFF})
 public class CommonsCollections1 implements ObjectPayload<InvocationHandler> {

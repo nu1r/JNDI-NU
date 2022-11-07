@@ -49,6 +49,8 @@ import javax.management.BadAttributeValueExpException;
 //                |  TemplatesImpl.getOutputProperties()           |
 //                |                                                |
 //                +------------------------------------------------+
+
+@SuppressWarnings({"unused"})
 @Dependencies({"com.vaadin:vaadin-server:7.7.14", "com.vaadin:vaadin-shared:7.7.14"})
 @Authors({Authors.KULLRICH})
 public class Vaadin1 implements ObjectPayload<Object> {

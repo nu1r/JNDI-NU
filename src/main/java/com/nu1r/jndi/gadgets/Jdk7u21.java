@@ -51,7 +51,7 @@ import java.util.LinkedHashSet;
  *                                 Runtime.exec()
  */
 
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({"rawtypes", "unchecked","unused"})
 @Dependencies()
 @Authors({Authors.FROHOFF})
 public class Jdk7u21 implements ObjectPayload<Object> {
