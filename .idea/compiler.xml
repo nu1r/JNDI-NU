@@ -19,7 +19,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="JNDIExploit" options="-extdirs $PROJECT_DIR$/lib" />
       <module name="JNDIExploit-master" options="-extdirs $PROJECT_DIR$/lib" />
-      <module name="JNDIExploit-zh" options="-extdirs C:\2\JNDI-NU/lib" />
+      <module name="JNDIExploit-zh" options="-extdirs C:\2\JNDI-NU/lib -XDignore.symbol.file" />
     </option>
   </component>
 </project>

