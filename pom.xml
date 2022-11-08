@@ -91,6 +91,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>jboss</groupId>
+            <artifactId>jboss-serialization</artifactId>
+            <version>4.2.2.GA</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-util</artifactId>
             <version>6.23.0</version>

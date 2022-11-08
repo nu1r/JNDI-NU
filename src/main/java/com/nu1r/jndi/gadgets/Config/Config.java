@@ -119,6 +119,9 @@ public class Config {
     // 填充的脏数据长度
     public static int DIRTY_LENGTH_IN_TC_RESET = 0;
 
+    // jboss
+    public static Boolean IS_JBOSS_OBJECT_INPUT_STREAM = false;
+
     // 不同类型内存马的父类/接口与其关键参数的映射
     public static HashMap<String, String> KEY_METHOD_MAP = new HashMap<>();
 

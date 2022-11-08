@@ -190,7 +190,7 @@ public class BasicController implements LdapController {
                 try {
                     gadgetType = GadgetType.valueOf(base.substring(secondIndex + 1, thirdIndex).toLowerCase());
                 } catch (IllegalArgumentException e) {
-                    throw new UnSupportedPayloadTypeException("UnSupportedPayloadType: " + base.substring(secondIndex + 1, thirdIndex));
+                    throw new UnSupportedPayloadTypeException("UnSupportedGadgetType: " + base.substring(secondIndex + 1, thirdIndex));
                 }
             }
 
@@ -230,7 +230,7 @@ public class BasicController implements LdapController {
                 }
             }
 
-            if (gadgetType == GadgetType.Base64) {
+            if (gadgetType == GadgetType.base64) {
                 String cmd = Util.getCmdFromBase(base);
                 System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Command >> |@" + cmd));
                 params = new String[]{cmd};

