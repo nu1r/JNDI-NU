@@ -1,4 +1,4 @@
-![JNDI-NU](https://socialify.git.ci/nu1r/JNDI-NU/image?description=1&descriptionEditable=%E4%B8%80%E6%AC%BE%E7%94%A8%E4%BA%8E%20JNDI%E6%B3%A8%E5%85%A5%20%E5%88%A9%E7%94%A8%E7%9A%84%E5%B7%A5%E5%85%B7%EF%BC%8C%E9%80%82%E7%94%A8%E4%BA%8E%E4%B8%8E%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B7%A5%E5%85%B7%E9%85%8D%E5%90%88%E4%BD%BF%E7%94%A8&font=KoHo&forks=1&language=1&logo=https://s1.ax1x.com/2022/09/12/vXqOUI.jpg&owner=1&pattern=Circuit%20Board&stargazers=1&theme=Light)
+![JNDI-NU](https://socialify.git.ci/nu1r/JNDIExploit/image?description=1&descriptionEditable=%E4%B8%80%E6%AC%BE%E7%94%A8%E4%BA%8E%20JNDI%E6%B3%A8%E5%85%A5%20%E5%88%A9%E7%94%A8%E7%9A%84%E5%B7%A5%E5%85%B7%EF%BC%8C%E9%80%82%E7%94%A8%E4%BA%8E%E4%B8%8E%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B7%A5%E5%85%B7%E9%85%8D%E5%90%88%E4%BD%BF%E7%94%A8&font=KoHo&forks=1&language=1&logo=https://s1.ax1x.com/2022/09/12/vXqOUI.jpg&owner=1&pattern=Circuit%20Board&stargazers=1&theme=Light)
 
 # 😈使用说明
 

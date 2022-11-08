@@ -19,7 +19,6 @@ import java.net.InetAddress;
 import java.util.Set;
 import java.util.TreeMap;
 
-import static com.nu1r.jndi.gadgets.utils.Util.getVerse;
 import static org.fusesource.jansi.Ansi.ansi;
 
 
@@ -42,15 +41,6 @@ public class LdapServer extends InMemoryOperationInterceptor {
             serverConfig.addInMemoryOperationInterceptor(new LdapServer());
             InMemoryDirectoryServer ds = new InMemoryDirectoryServer(serverConfig);
             ds.startListening();
-            System.out.println(ansi().eraseScreen().render(
-                    "   @|green █████\\|@ @|red ██\\   ██\\|@ @|yellow ███████\\|@  @|MAGENTA ██████\\|@       @|CYAN ██\\   ██\\ ██\\   ██\\|@ \n" +
-                            "   @|green \\__██ ||@@|red ███\\  ██ ||@@|yellow ██  __██\\|@ @|MAGENTA \\_██  _||@      @|CYAN ███\\  ██ |██ |  ██ ||@ @|BG_GREEN v2.0|@\n" +
-                            "      @|green ██ ||@@|red ████\\ ██ ||@@|yellow ██ |  ██ ||@  @|MAGENTA ██ ||@        @|CYAN ████\\ ██ |██ |  ██ ||@ @|BG_CYAN JNDIExploit-Nu1r|@\n" +
-                            "      @|green ██ ||@@|red ██ ██\\██ ||@@|yellow ██ |  ██ ||@  @|MAGENTA ██ ||@██████\\ @|CYAN ██ ██\\██ |██ |  ██ ||@\n" +
-                            "@|green ██\\   ██ ||@@|red ██ \\████ ||@@|yellow ██ |  ██ ||@  @|MAGENTA ██ ||@\\______|@|CYAN ██ \\████ |██ |  ██ ||@\n" +
-                            "@|green ██ |  ██ ||@@|red ██ |\\███ ||@@|yellow ██ |  ██ ||@  @|MAGENTA ██ ||@        @|CYAN ██ |\\███ |██ |  ██ ||@\n" +
-                            "@|green \\██████  ||@@|red ██ | \\██ ||@@|yellow ███████  ||@@|MAGENTA ██████\\|@       @|CYAN ██ | \\██ |\\██████  ||@\n" +
-                            "@|green  \\______/|@@|red  \\__|  \\__||@@|yellow \\_______/|@ @|MAGENTA \\______||@      @|CYAN \\__|  \\__| \\______/|@"));
             System.out.println(ansi().render("@|green [+]|@ @|MAGENTA LDAP Server Start Listening on >>|@ " + Config.ldapPort + "..."));
         } catch (Exception e) {
             e.printStackTrace();
@@ -90,7 +80,7 @@ public class LdapServer extends InMemoryOperationInterceptor {
 
         //收到ldap请求
         System.out.println("\n");
-        System.out.println(ansi().render("@|green [+]|@" + " [" + Ltime.getLocalTime() + "]" + " [LDAP] " + getVerse() + "@|BG_CYAN --------------------------------------|@"));
+        System.out.println(ansi().render("@|green [+]|@" + " [" + Ltime.getLocalTime() + "]" + " [LDAP] " + "@|BG_green -----------------------------------------------------------------------------------------------------|@"));
         System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Received LDAP Query >>|@ " + base));
         LdapController controller = null;
         //find controller

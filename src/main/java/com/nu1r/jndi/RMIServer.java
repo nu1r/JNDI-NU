@@ -44,7 +44,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import sun.rmi.server.UnicastServerRef;
 import sun.rmi.transport.TransportConstants;
 
-import static com.nu1r.jndi.gadgets.utils.Util.getVerse;
 import static org.fusesource.jansi.Ansi.ansi;
 
 
@@ -259,7 +258,7 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
         }
 
         String object = (String) ois.readObject();
-        System.out.println(ansi().eraseScreen().render("@|green [+]|@" + " [" + Ltime.getLocalTime() + "]" + " [RMI] " + getVerse()));
+        System.out.println(ansi().render("@|green [+]|@" + " [" + Ltime.getLocalTime() + "]" + " [RMI] " + "@|BG_green -----------------------------------------------------------------------------------------------------|@"));
         System.out.println(ansi().render("@|green [+]|@ @|MAGENTA RMI  服务器  >> RMI 查询 |@" + object + " " + method));
         out.writeByte(TransportConstants.Return); // transport op
         try (ObjectOutputStream oos = new MarshalOutputStream(out, this.classpathUrl)) {

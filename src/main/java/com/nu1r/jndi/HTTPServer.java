@@ -22,7 +22,6 @@ import java.util.*;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 
-import static com.nu1r.jndi.gadgets.utils.Util.getVerse;
 import static org.fusesource.jansi.Ansi.ansi;
 
 public class HTTPServer {
@@ -36,7 +35,7 @@ public class HTTPServer {
             @Override
             public void handle(HttpExchange httpExchange) {
                 try {
-                    System.out.println(ansi().render("@|green [+]|@" + " [" + Ltime.getLocalTime() + "]" + " [HTTP] " + getVerse() + "@|BG_CYAN --------------------------------------|@"));
+                    System.out.println(ansi().render("@|green [+]|@" + " [" + Ltime.getLocalTime() + "]" + " [LDAP] " + "@|BG_green -----------------------------------------------------------------------------------------------------|@"));
                     System.out.println(ansi().render("@|green [+]|@ @|MAGENTA New HTTP Request From >> |@" + httpExchange.getRemoteAddress() + "  " + httpExchange.getRequestURI()));
 
                     String path = httpExchange.getRequestURI().getPath();
