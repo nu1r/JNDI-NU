@@ -30,7 +30,4 @@ public class TCString extends ReferencableObject implements SerializedElement {
         out.writeByte(116);
         out.writeUTF(this.content);
     }
-
-    public static void main(String[] args) throws Exception {
-    }
 }

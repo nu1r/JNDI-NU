@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: jboss:jboss-serialization:4.2.2.GA">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/jboss/jboss-serialization/4.2.2.GA/jboss-serialization-4.2.2.GA.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/jboss/jboss-serialization/4.2.2.GA/jboss-serialization-4.2.2.GA-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/jboss/jboss-serialization/4.2.2.GA/jboss-serialization-4.2.2.GA-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

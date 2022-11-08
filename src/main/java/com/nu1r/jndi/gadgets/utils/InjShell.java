@@ -259,6 +259,7 @@ public class InjShell {
 
     //路由器中内存马主要执行方法
     public static String structureShell(Class<?> payload) throws Exception {
+        //初始化全局配置
         Config.init();
         String    className = "";
         ClassPool pool;
