@@ -178,18 +178,4 @@ public class Util {
         return false;
     }
 
-    public static String getVerse(){
-        String[] strs = {
-                "竹杖芒鞋轻胜马，谁怕，一蓑烟雨任平生。",
-                "醉后不知天在水，满船清梦压星河。",
-                "气蒸云梦泽，波撼岳阳城。",
-                "欲买桂花同载酒，终不似，少年游。",
-                "人生天地间，忽如远行客",
-                "人生如逆旅，我亦是行人。",
-                "应是天仙狂醉，乱把白云揉碎。",
-                "行到云穷处，坐看云起时。",
-                "莫愁前路无知己，天下谁人不识君？"};
-        int random_index = (int) (Math.random()*strs.length);
-        return strs[random_index];
-    }
 }

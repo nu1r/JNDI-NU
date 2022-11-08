@@ -11,6 +11,8 @@ import com.nu1r.jndi.gadgets.utils.Strings;
 
 import java.util.*;
 
+import static org.fusesource.jansi.Ansi.ansi;
+
 public class Config {
     public static String codeBase;
 
@@ -31,6 +33,9 @@ public class Config {
 
     @Parameter(names = {"-c", " --command"}, help = true, description = "RMI this command")
     public static String command = "whoami";
+
+    @Parameter(names = {"-v", " --version"}, description = "Show version", order = 5)
+    public static boolean showVersion;
 
     @Parameter(names = {"-g", " --gadgets"}, description = "Show gadgets", order = 5)
     public static boolean showGadgets;
@@ -72,6 +77,22 @@ public class Config {
                 System.out.println("     " + line);
             }
 
+            System.exit(0);
+        }
+
+        if (showVersion){
+            System.out.println(ansi().eraseScreen().render("" +
+                    "    /█████ /██   /██ /███████  /██████ /████████                     /██           /██   /██    \n" +
+                    "   |__  ██| ███ | ██| ██__  ██|_  ██_/| ██_____/                    | ██          |__/  | ██    @|BG_GREEN V2.0|@\n" +
+                    "      | ██| ████| ██| ██  \\ ██  | ██  | ██       /██   /██  /██████ | ██  /██████  /██ /██████  @|BG_CYAN Author Nu1r|@\n" +
+                    "      | ██| ██ ██ ██| ██  | ██  | ██  | █████   |  ██ /██/ /██__  ██| ██ /██__  ██| ██|_  ██_/  \n" +
+                    " /██  | ██| ██  ████| ██  | ██  | ██  | ██__/    \\  ████/ | ██  \\ ██| ██| ██  \\ ██| ██  | ██    \n" +
+                    "| ██  | ██| ██\\  ███| ██  | ██  | ██  | ██        >██  ██ | ██  | ██| ██| ██  | ██| ██  | ██ /██\n" +
+                    "|  ██████/| ██ \\  ██| ███████/ /██████| ████████ /██/\\  ██| ███████/| ██|  ██████/| ██  |  ████/\n" +
+                    " \\______/ |__/  \\__/|_______/ |______/|________/|__/  \\__/| ██____/ |__/ \\______/ |__/   \\___/  \n" +
+                    "                                                          | ██                                  \n" +
+                    "                                                          | ██                                  \n" +
+                    "                                                          |__/                                  "));
             System.exit(0);
         }
 
