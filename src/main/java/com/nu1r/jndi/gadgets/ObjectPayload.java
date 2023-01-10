@@ -2,6 +2,7 @@ package com.nu1r.jndi.gadgets;
 
 import com.nu1r.jndi.LdapServer;
 import com.nu1r.jndi.enumtypes.PayloadType;
+import com.nu1r.jndi.gadgets.utils.JavaVersion;
 import org.reflections.Reflections;
 
 import java.lang.reflect.Modifier;
@@ -14,6 +15,10 @@ public interface ObjectPayload<T> {
      * command on deserialization
      */
     public T getObject(PayloadType type, String... param) throws Exception;
+
+    public static boolean isApplicableJavaVersion() {
+        return JavaVersion.isAnnInvHUniversalMethodImpl();
+    }
 
     public static class Utils {
 

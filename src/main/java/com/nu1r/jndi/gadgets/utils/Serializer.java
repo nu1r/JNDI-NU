@@ -31,14 +31,7 @@ public class Serializer implements Callable<byte[]> {
 
     public static byte[] serialize(final Object obj, final ByteArrayOutputStream out) throws IOException {
         final ObjectOutputStream objOut;
-
-        if (IS_JBOSS_OBJECT_INPUT_STREAM) {
-            objOut = new JBossObjectOutputStream(out);
-        } else if (IS_DIRTY_IN_TC_RESET) {
-            objOut = new SuObjectOutputStream(out);
-        } else {
-            objOut = new ObjectOutputStream(out);
-        }
+        objOut = new ObjectOutputStream(out);
         objOut.writeObject(obj);
         byte[] bytes = out.toByteArray();
         objOut.close();

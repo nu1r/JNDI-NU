@@ -60,4 +60,10 @@ public enum GadgetType {
     Wicket1,
     JRE8u20,
     JRE8u20_2,
+    CommonsBeanutilsAttrCompare,
+    CommonsBeanutilsAttrCompare183,
+    CommonsBeanutilsObjectToStringComparator,
+    CommonsBeanutilsObjectToStringComparator183,
+    CommonsBeanutilsPropertySource,
+    CommonsBeanutilsPropertySource183,
 }

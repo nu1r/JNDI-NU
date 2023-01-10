@@ -17,6 +17,7 @@ public enum PayloadType {
     jbossservlet,
     webspherememshell,
     springinterceptor,
+    springcontroller,
     issuccess,
     jettyfilter,
     jettyservlet,
