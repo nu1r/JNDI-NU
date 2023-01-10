@@ -61,8 +61,4 @@ public class CommonsCollections1 implements ObjectPayload<InvocationHandler> {
 
         return handler;
     }
-
-    public static boolean isApplicableJavaVersion() {
-        return JavaVersion.isAnnInvHUniversalMethodImpl();// arm with actual transformer chain
-    }
 }

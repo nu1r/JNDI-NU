@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
-public class JRE8u20_2 implements ObjectPayload<Object> {
+public class  JRE8u20_2 implements ObjectPayload<Object> {
     public static Class newInvocationHandlerClass() throws Exception {
         ClassPool pool  = ClassPool.getDefault();
         CtClass   clazz = pool.get(Gadgets.ANN_INV_HANDLER_CLASS);

