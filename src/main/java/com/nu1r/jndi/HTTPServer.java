@@ -35,8 +35,7 @@ public class HTTPServer {
             @Override
             public void handle(HttpExchange httpExchange) {
                 try {
-                    System.out.println(ansi().render("@|green [+]|@" + " [" + Ltime.getLocalTime() + "]" + " [LDAP] " + "@|BG_green -----------------------------------------------------------------------------------------------------|@"));
-                    System.out.println(ansi().render("@|green [+]|@ @|MAGENTA New HTTP Request From >> |@" + httpExchange.getRemoteAddress() + "  " + httpExchange.getRequestURI()));
+                    System.out.println(ansi().render("@|green [+]|@ New HTTP Request From >>" + httpExchange.getRemoteAddress() + "  " + httpExchange.getRequestURI()));
 
                     String path = httpExchange.getRequestURI().getPath();
                     if (path.endsWith(".class")) {
@@ -68,7 +67,7 @@ public class HTTPServer {
 
         httpServer.setExecutor(null);
         httpServer.start();
-        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA HTTP Server Start Listening on >> |@" + Config.httpPort + "..."));
+        System.out.println(ansi().render("@|green [+]|@ HTTP Server Start Listening on >>" + Config.httpPort + "..."));
     }
 
     private static void handleFileRequest(HttpExchange exchange) throws Exception {

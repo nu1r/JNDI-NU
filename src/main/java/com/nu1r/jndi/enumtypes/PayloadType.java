@@ -26,6 +26,5 @@ public enum PayloadType {
     meterpreter,
     resinfilterth,
     resinservletth,
-    linagent,
-    winagent;
+    jbossecho,
 }

