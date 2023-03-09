@@ -41,7 +41,7 @@ public class LdapServer extends InMemoryOperationInterceptor {
             serverConfig.addInMemoryOperationInterceptor(new LdapServer());
             InMemoryDirectoryServer ds = new InMemoryDirectoryServer(serverConfig);
             ds.startListening();
-            System.out.println(ansi().render("@|green [+]|@ @|MAGENTA LDAP Server Start Listening on >>|@ " + Config.ldapPort + "..."));
+            System.out.println(ansi().render("@|green [+]|@ LDAP Server Start Listening on >>" + Config.ldapPort + "..."));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,8 +80,7 @@ public class LdapServer extends InMemoryOperationInterceptor {
 
         //收到ldap请求
         System.out.println("\n");
-        System.out.println(ansi().render("@|green [+]|@" + " [" + Ltime.getLocalTime() + "]" + " [LDAP] " + "@|BG_green -----------------------------------------------------------------------------------------------------|@"));
-        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Received LDAP Query >>|@ " + base));
+        System.out.println(ansi().render("@|green [+]|@ Received LDAP Query >> " + base));
         LdapController controller = null;
         //find controller
         //根据请求的路径从route中匹配相应的controller
