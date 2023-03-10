@@ -1,0 +1,70 @@
+package com.nu1r.jndi.gadgets.utils;
+
+import javassist.CannotCompileException;
+import javassist.ClassPool;
+import javassist.CtClass;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
+
+public class Utils {
+
+    public static Class makeClass(String clazzName) {
+        ClassPool classPool = ClassPool.getDefault();
+        CtClass   ctClass   = classPool.makeClass(clazzName);
+        Class     clazz     = null;
+        try {
+            clazz = ctClass.toClass();
+        } catch (CannotCompileException e) {
+            throw new RuntimeException(e);
+        }
+        ctClass.defrost();
+        return clazz;
+    }
+
+    public static String[] handlerCommand(String command) {
+        String info  = command.split("[-]")[1];
+        int    index = info.indexOf("#");
+        String par1  = info.substring(0, index);
+        String par2  = info.substring(index + 1);
+        return new String[]{par1, par2};
+    }
+
+
+    public static String base64Decode(String bs) throws Exception {
+        Class  base64;
+        byte[] value = null;
+        try {
+            base64 = Class.forName("java.util.Base64");
+            Object decoder = base64.getMethod("getDecoder", null).invoke(base64, null);
+            value = (byte[]) decoder.getClass().getMethod("decode", new Class[]{String.class}).invoke(decoder, new Object[]{bs});
+        } catch (Exception e) {
+            try {
+                base64 = Class.forName("sun.misc.BASE64Decoder");
+                Object decoder = base64.newInstance();
+                value = (byte[]) decoder.getClass().getMethod("decodeBuffer", new Class[]{String.class}).invoke(decoder, new Object[]{bs});
+            } catch (Exception ignored) {
+            }
+        }
+
+        return new String(value);
+    }
+
+    public static void writeClassToFile(String fileName, byte[] classBytes) throws Exception {
+        FileOutputStream fileOutputStream = new FileOutputStream(fileName+".class");
+        fileOutputStream.write(classBytes);
+        fileOutputStream.flush();
+        fileOutputStream.close();
+    }
+
+    public static <T> T getByte(T outerMap) throws Exception{
+        ByteArrayOutputStream baous = new ByteArrayOutputStream();
+        ObjectOutputStream    oos   = new ObjectOutputStream(baous);
+        oos.writeObject(outerMap);
+        byte[] bytes = baous.toByteArray();
+        oos.close();
+        return (T) bytes;
+    }
+
+}
