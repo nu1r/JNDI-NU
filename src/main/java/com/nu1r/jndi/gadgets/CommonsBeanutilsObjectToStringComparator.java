@@ -5,9 +5,12 @@ import com.nu1r.jndi.gadgets.annotation.Authors;
 import com.nu1r.jndi.gadgets.annotation.Dependencies;
 import com.nu1r.jndi.gadgets.utils.Gadgets;
 import com.nu1r.jndi.gadgets.utils.Reflections;
+import com.nu1r.jndi.gadgets.utils.Serializer;
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.lang3.compare.ObjectToStringComparator;
 
+import java.io.ByteArrayOutputStream;
+import java.util.Arrays;
 import java.util.PriorityQueue;
 
 @Dependencies({"commons-beanutils:commons-beanutils:1.9.2", "org.apache.commons:commons-lang3:3.10"})
@@ -31,4 +34,5 @@ public class CommonsBeanutilsObjectToStringComparator implements ObjectPayload<O
 
         return queue;
     }
+
 }

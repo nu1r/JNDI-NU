@@ -35,4 +35,5 @@ public class CommonsBeanutilsPropertySource implements ObjectPayload<Object>{
 
         return queue;
     }
+
 }

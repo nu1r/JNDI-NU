@@ -7,6 +7,7 @@ public enum PayloadType {
     reverseshell,
     tomcatecho,
     springecho,
+    AllEcho,
     tomcatfilterjmx,
     tomcatfilterth,
     tomcatlistenerjmx,

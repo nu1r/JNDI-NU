@@ -5,6 +5,7 @@ import com.nu1r.jndi.gadgets.annotation.Authors;
 import com.nu1r.jndi.gadgets.annotation.Dependencies;
 import com.nu1r.jndi.gadgets.utils.Gadgets;
 import com.nu1r.jndi.gadgets.utils.Reflections;
+import com.nu1r.jndi.gadgets.utils.Serializer;
 import com.nu1r.jndi.gadgets.utils.SuClassLoader;
 import com.sun.org.apache.xerces.internal.dom.AttrNSImpl;
 import com.sun.org.apache.xerces.internal.dom.CoreDocumentImpl;
@@ -14,6 +15,8 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtField;
 
+import java.io.ByteArrayOutputStream;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
