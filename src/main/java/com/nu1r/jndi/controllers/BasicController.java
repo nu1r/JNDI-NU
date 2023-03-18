@@ -72,6 +72,9 @@ public class BasicController implements LdapController {
                 case springecho:
                     className = SpringEchoTemplate.class.getName();
                     break;
+                case AllEcho:
+                    className = AllEcho.class.getName();
+                    break;
                 case tomcatfilterjmx:
                     className = structureShell(TFJMX.class);
                     break;

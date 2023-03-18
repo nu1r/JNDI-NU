@@ -5,11 +5,15 @@ import com.nu1r.jndi.gadgets.annotation.Authors;
 import com.nu1r.jndi.gadgets.annotation.Dependencies;
 import com.nu1r.jndi.gadgets.utils.Gadgets;
 import com.nu1r.jndi.gadgets.utils.Reflections;
+import com.nu1r.jndi.gadgets.utils.Serializer;
 import com.sun.org.apache.xerces.internal.dom.AttrNSImpl;
 import com.sun.org.apache.xerces.internal.dom.CoreDocumentImpl;
 import com.sun.org.apache.xml.internal.security.c14n.helper.AttrCompare;
 import org.apache.commons.beanutils.BeanComparator;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.util.Arrays;
 import java.util.PriorityQueue;
 
 @Dependencies({"commons-beanutils:commons-beanutils:1.9.2"})

