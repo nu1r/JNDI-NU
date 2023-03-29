@@ -92,7 +92,7 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
         String url = "http://" + Config.ip + ":" + Config.rmiPort;
 
         try {
-            System.out.println(ansi().render("@|green [+]|@RMI  Server Start Listening on >>" + Config.rmiPort + "..."));
+            System.out.println(ansi().render("@|green [+]|@ RMI  Server Start Listening on >>" + Config.rmiPort + "..."));
             RMIServer c = new RMIServer(Config.rmiPort, new URL(url));
             c.run();
         } catch (Exception e) {
