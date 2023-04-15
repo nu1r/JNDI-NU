@@ -25,7 +25,7 @@ import static org.fusesource.jansi.Ansi.ansi;
 
 @LdapMapping(uri = {"/deserialization"})
 public class SerializedDataController implements LdapController {
-    private              GadgetType  gadgetType;
+    private              String  gadgetType;
     private              PayloadType payloadType;
     private              String[]    params;
     public static        CommandLine cmdLine;
@@ -60,8 +60,8 @@ public class SerializedDataController implements LdapController {
             int firstIndex  = base.indexOf("/");
             int secondIndex = base.indexOf("/", firstIndex + 1);
             try {
-                gadgetType = GadgetType.valueOf(base.substring(firstIndex + 1, secondIndex));
-                //System.out.println(ansi().render("@|green [+]|@ @|MAGENTA GaddgetType >> |@" + gadgetType));
+                gadgetType = base.substring(firstIndex + 1, secondIndex);
+                System.out.println("[+] GaddgetType >> " + gadgetType);
             } catch (IllegalArgumentException e) {
                 throw new UnSupportedGadgetTypeException("UnSupportGaddgetType >> " + base.substring(firstIndex + 1, secondIndex));
             }

