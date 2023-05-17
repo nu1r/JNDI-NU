@@ -12,44 +12,45 @@ import com.vaadin.data.util.PropertysetItem;
 
 import javax.management.BadAttributeValueExpException;
 
-//  +-------------------------------------------------+
-//  |                                                 |
-//  |  BadAttributeValueExpException                  |
-//  |                                                 |
-//  |  val ==>  PropertysetItem                       |
-//  |                                                 |
-//  |  readObject() ==> val.toString()                |
-//  |          +                                      |
-//  +----------|--------------------------------------+
-//             |
-//             |
-//             |
-//        +----|-----------------------------------------+
-//        |    v                                         |
-//        |  PropertysetItem                             |
-//        |                                              |
-//        |  toString () => getPropertyId().getValue ()  |
-//        |                                       +      |
-//        +---------------------------------------|------+
-//                                                |
-//                  +-----------------------------+
-//                  |
-//            +-----|----------------------------------------------+
-//            |     v                                              |
-//            |  NestedMethodProperty                              |
-//            |                                                    |
-//            |  getValue() => java.lang.reflect.Method.invoke ()  |
-//            |                                           |        |
-//            +-------------------------------------------|--------+
-//                                                        |
-//                    +-----------------------------------+
-//                    |
-//                +---|--------------------------------------------+
-//                |   v                                            |
-//                |  TemplatesImpl.getOutputProperties()           |
-//                |                                                |
-//                +------------------------------------------------+
-
+/**
+  +-------------------------------------------------+
+  |                                                 |
+  |  BadAttributeValueExpException                  |
+  |                                                 |
+  |  val ==>  PropertysetItem                       |
+  |                                                 |
+  |  readObject() ==> val.toString()                |
+  |          +                                      |
+  +----------|--------------------------------------+
+             |
+             |
+             |
+        +----|-----------------------------------------+
+        |    v                                         |
+        |  PropertysetItem                             |
+        |                                              |
+        |  toString () => getPropertyId().getValue ()  |
+        |                                       +      |
+        +---------------------------------------|------+
+                                                |
+                  +-----------------------------+
+                  |
+            +-----|----------------------------------------------+
+            |     v                                              |
+            |  NestedMethodProperty                              |
+            |                                                    |
+            |  getValue() => java.lang.reflect.Method.invoke ()  |
+            |                                           |        |
+            +-------------------------------------------|--------+
+                                                        |
+                    +-----------------------------------+
+                    |
+                +---|--------------------------------------------+
+                |   v                                            |
+                |  TemplatesImpl.getOutputProperties()           |
+                |                                                |
+                +------------------------------------------------+
+*/
 @SuppressWarnings({"unused"})
 @Dependencies({"com.vaadin:vaadin-server:7.7.14", "com.vaadin:vaadin-shared:7.7.14"})
 @Authors({Authors.KULLRICH})

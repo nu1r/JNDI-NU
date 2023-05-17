@@ -8,7 +8,6 @@
         <outputRelativeToContentRoot value="true" />
         <module name="JNDIExploit" />
         <module name="JNDIExploit-master" />
-        <module name="JNDIExploit-zh" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -17,7 +16,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="JNDIExploit" options="-extdirs $PROJECT_DIR$/lib" />
+      <module name="JNDIExploit" options="-extdirs C:\lang\JAVA\JNDIExploit/lib -XDignore.symbol.file" />
       <module name="JNDIExploit-master" options="-extdirs $PROJECT_DIR$/lib" />
       <module name="JNDIExploit-zh" options="-extdirs C:\lang\JAVA\JNDIExploit/lib -XDignore.symbol.file" />
     </option>
