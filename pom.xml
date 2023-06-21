@@ -99,8 +99,6 @@
             <groupId>com.teradata.jdbc</groupId>
             <artifactId>terajdbc</artifactId>
             <version>20.00.00.06</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/terajdbc-20.00.00.06.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>jboss</groupId>
