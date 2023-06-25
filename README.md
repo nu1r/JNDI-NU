@@ -4,10 +4,10 @@
 
 ```所有使用示例，用的是Yakit的FUZZ语法```
 
-使用 ```java -jar JNDI-NU.jar -h``` 查看参数说明，其中 ```--ip``` 参数为必选参数
+使用 ```java -jar JNDIExploit-2.4.6.jar -h``` 查看参数说明，其中 ```--ip``` 参数为必选参数
 
 ```
-Usage: java -jar JNDI-NU.jar [options]
+Usage: java -jar JNDIExploit-2.4.6.jar [options]
   Options:
   * -i,  --ip       Local ip address  (default: 0.0.0.0)
     -rP, --rmiPort  rmi bind port (default: 1099)
