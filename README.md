@@ -113,7 +113,7 @@ Usage: java -jar JNDIExploit-[version].jar [options]
 
 对于 `BeanShell1` 及 `Clojure` 这两个基于脚本语言解析的漏利用方式。
 
-本项目为这两条利用链拓展了除了 Runtime 执行命令意外的多种利用方式，具体如下：
+本项目为这两条利用链拓展了除了 Runtime 执行命令以外的多种利用方式，具体如下：
 
 `Base64/`后的内容需要base64编码
 
