@@ -1,5 +1,11 @@
 ![](https://socialify.git.ci/nu1r/JNDIExploit/image?font=KoHo&forks=1&issues=1&language=1&logo=https%3A%2F%2Fs1.ax1x.com%2F2022%2F09%2F12%2FvXqOUI.jpg&name=1&owner=1&pattern=Signal&pulls=1&stargazers=1&theme=Auto)
 
+# ✨404StarLink 2.0 - Galaxy
+
+JNDIExploit 是 404Team [星链计划2.0](https://github.com/knownsec/404StarLink) 中的一环，如果对JNDIExploit 有任何疑问又或是想要找小伙伴交流，可以参考星链计划的加群方式。
+
++ https://github.com/knownsec/404StarLink2.0-Galaxy#community
+
 # 😈使用说明
 
 ```所有使用示例，用的是Yakit的FUZZ语法```
@@ -509,12 +515,6 @@ BC ：BCEL Classloader - 通过 ..bcel...ClassLoader.loadClass().newInstance() �
 由于传播、利用此工具所提供的信息而造成的任何直接或者间接的后果及损失，均由使用者本人负责，作者不为此承担任何责任。
 
 本人拥有对此工具的修改和解释权。未经网络安全部门及相关部门允许，不得善自使用本工具进行任何攻击活动，不得以任何方式将其用于商业目的。
-
-# ✨404StarLink 2.0 - Galaxy
-
-JNDIExploit 是 404Team [星链计划2.0](https://github.com/knownsec/404StarLink) 中的一环，如果对JNDIExploit 有任何疑问又或是想要找小伙伴交流，可以参考星链计划的加群方式。
-
-+ https://github.com/knownsec/404StarLink2.0-Galaxy#community
 
 # 🦚TODO
 
