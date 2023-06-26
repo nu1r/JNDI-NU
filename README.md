@@ -510,6 +510,12 @@ BC ：BCEL Classloader - 通过 ..bcel...ClassLoader.loadClass().newInstance() �
 
 本人拥有对此工具的修改和解释权。未经网络安全部门及相关部门允许，不得善自使用本工具进行任何攻击活动，不得以任何方式将其用于商业目的。
 
+# ✨404StarLink 2.0 - Galaxy
+
+JNDIExploit 是 404Team [星链计划2.0](https://github.com/knownsec/404StarLink) 中的一环，如果对JNDIExploit 有任何疑问又或是想要找小伙伴交流，可以参考星链计划的加群方式。
+
++ https://github.com/knownsec/404StarLink2.0-Galaxy#community
+
 # 🦚TODO
 
 GroovyBypass路由与WebsphereBypass路由的具体实现功能还在思考中
