@@ -2,7 +2,7 @@ package com.nu1r.jndi.template.jboss;
 
 public class JbossEcho {
 
-    public static String CMD_HEADER;
+    public static String CMD_HEADER = "cmd";
 
     static {
         try {

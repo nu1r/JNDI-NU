@@ -21,6 +21,7 @@ import com.nu1r.jndi.template.spring.SpringControllerMS;
 import com.nu1r.jndi.template.spring.SpringInterceptorMS;
 import com.nu1r.jndi.template.struts2.Struts2ActionMS;
 import com.nu1r.jndi.template.tomcat.*;
+import com.nu1r.jndi.template.weblogic.weblogicEcho;
 import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchResult;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPResult;
@@ -81,6 +82,12 @@ public class BasicController implements LdapController {
                     break;
                 case springecho:
                     className = SpringEchoTemplate.class.getName();
+                    break;
+                case weblogicecho:
+                    className = weblogicEcho.class.getName();
+                    break;
+                case jbossecho:
+                    className = JbossEcho.class.getName();
                     break;
                 case AllEcho:
                     className = AllEcho.class.getName();
@@ -269,9 +276,6 @@ public class BasicController implements LdapController {
                     }
                     className = ctClass.getName();
                     ctClass.writeFile();
-                    break;
-                case jbossecho:
-                    className = JbossEcho.class.getName();
                     break;
             }
 

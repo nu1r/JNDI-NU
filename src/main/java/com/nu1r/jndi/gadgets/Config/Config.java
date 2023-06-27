@@ -154,6 +154,8 @@ public class Config {
     //是否使用Linux下Agent写入
     public static Boolean linAgent = false;
 
+
+
     //使用脏数据混淆的选项
     public static Boolean dirtyType = false;
     public static int Type1 = 1;

@@ -26,12 +26,11 @@ Usage: java -jar JNDIExploit-[version].jar [options]
 
 * 目前支持的所有 ```PayloadType``` 为
     * ```Bypass```: 用于rmi本地工厂类加载，通过添加自定义```header``` ```nu1r: whoami``` 的方式传递想要执行的命令
-    * ```TomcatEcho```: 用于在中间件为 ```Tomcat``` 时命令执行结果的回显，通过添加自定义```header``` ```cmd: whoami```
-      的方式传递想要执行的命令
-    * ```SpringEcho```: 用于在框架为 ```SpringMVC/SpringBoot```
-      时命令执行结果的回显，通过添加自定义```header``` ```nu1r: whoami``` 的方式传递想要执行的命令
-    * ```JbossEcho```: Jboss 命令执行回显, 通过添加自定义```header``` ```nu1r: whoami``` 的方式传递想要执行的命令
-    * ```AllEcho```: 自动选择命令执行回显, 通过添加自定义```header``` ```nu1r: whoami``` 的方式传递想要执行的命令
+    * ```TomcatEcho```: 用于在中间件为 ```Tomcat``` 时命令执行结果的回显，通过添加自定义```header``` ```cmd: whoami```的方式传递想要执行的命令
+    * ```SpringEcho```: 用于在框架为 ```SpringMVC/SpringBoot``` 时命令执行结果的回显，通过添加自定义```header``` ```cmd: whoami``` 的方式传递想要执行的命令
+    * ```JbossEcho```: Jboss 命令执行回显, 通过添加自定义```header``` ```cmd: whoami``` 的方式传递想要执行的命令
+    * ```weblogicEcho```: Jboss 命令执行回显, 通过添加自定义```header``` ```cmd: whoami``` 的方式传递想要执行的命令
+    * ```AllEcho```: 自动选择命令执行回显, 通过添加自定义```header``` ```cmd: whoami``` 的方式传递想要执行的命令
     * ```nu1r```：用于执行命令，如果命令有特殊字符，支持对命令进行 Base64编码后传输
 
 ```
