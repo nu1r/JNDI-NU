@@ -2,7 +2,8 @@
 
 # ✨404StarLink 2.0 - Galaxy
 
-JNDIExploit 是 404Team [星链计划2.0](https://github.com/knownsec/404StarLink) 中的一环，如果对JNDIExploit 有任何疑问又或是想要找小伙伴交流，可以参考星链计划的加群方式。
+JNDIExploit 是 404Team [星链计划2.0](https://github.com/knownsec/404StarLink) 中的一环，如果对JNDIExploit
+有任何疑问又或是想要找小伙伴交流，可以参考星链计划的加群方式。
 
 + https://github.com/knownsec/404StarLink2.0-Galaxy#community
 
@@ -26,10 +27,13 @@ Usage: java -jar JNDIExploit-[version].jar [options]
 
 * 目前支持的所有 ```PayloadType``` 为
     * ```Bypass```: 用于rmi本地工厂类加载，通过添加自定义```header``` ```nu1r: whoami``` 的方式传递想要执行的命令
-    * ```TomcatEcho```: 用于在中间件为 ```Tomcat``` 时命令执行结果的回显，通过添加自定义```header``` ```cmd: whoami```的方式传递想要执行的命令
-    * ```SpringEcho```: 用于在框架为 ```SpringMVC/SpringBoot``` 时命令执行结果的回显，通过添加自定义```header``` ```cmd: whoami``` 的方式传递想要执行的命令
+    * ```TomcatEcho```: 用于在中间件为 ```Tomcat``` 时命令执行结果的回显，通过添加自定义```header``` ```cmd: whoami```
+      的方式传递想要执行的命令
+    * ```SpringEcho```: 用于在框架为 ```SpringMVC/SpringBoot```
+      时命令执行结果的回显，通过添加自定义```header``` ```cmd: whoami``` 的方式传递想要执行的命令
     * ```JbossEcho```: Jboss 命令执行回显, 通过添加自定义```header``` ```cmd: whoami``` 的方式传递想要执行的命令
-    * ```weblogicEcho```: Jboss 命令执行回显, 通过添加自定义```header``` ```cmd: whoami``` 的方式传递想要执行的命令
+    * ```WeblogicEcho```: weblogicEcho 命令执行回显, 通过添加自定义```header``` ```cmd: whoami``` 的方式传递想要执行的命令
+    * ```WebsphereEcho```: websphereecho 命令执行回显, 通过添加自定义```header``` ```cmd: whoami``` 的方式传递想要执行的命令
     * ```AllEcho```: 自动选择命令执行回显, 通过添加自定义```header``` ```cmd: whoami``` 的方式传递想要执行的命令
     * ```nu1r```：用于执行命令，如果命令有特殊字符，支持对命令进行 Base64编码后传输
 
@@ -288,6 +292,7 @@ WF ：Write File - 通过 FileOutputStream.write() 来写入文件，使用命�
 - o：使用反射绕过
   ~~- j：使用 ObjectInputStream/ObjectOutputStream 来构造序列化流~~（这个构造的流有BUG，还在思考修复）
 - 需要参数时，在命令后面添加，#参数
+
 * 使用示例：
 
 ```
@@ -463,20 +468,20 @@ BC ：BCEL Classloader - 通过 ..bcel...ClassLoader.loadClass().newInstance() �
 
 ![](https://gallery-1304405887.cos.ap-nanjing.myqcloud.com/markdownQQ截图20221107151444.png)
 
-| DNSLOG 关键字                               | 对应链                  | 关键类                                                       | 备注                                                         |
-| ------------------------------------------- | ----------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| cc31or321<br />cc322                        | CommonsCollections13567 | org.apache.commons.collections.functors.ChainedTransformer<br />org.apache.commons.collections.ExtendedProperties$1 | CommonsCollections1/3/5/6/7<br />需要<=3.2.1版本             |
-| cc40<br />cc41                              | CommonsCollections24    | org.apache.commons.collections4.functors.ChainedTransformer<br />org.apache.commons.collections4.FluentIterable | CommonsCollections2/4链<br />需要4-4.0版本                   |
-| cb17<br />cb18x<br />cb19x                  | CommonsBeanutils2       | org.apache.commons.beanutils.MappedPropertyDescriptor\$1<br />org.apache.commons.beanutils.DynaBeanMapDecorator\$MapEntry<br />org.apache.commons.beanutils.BeanIntrospectionData | 1.7x-1.8x为-3490850999041592962<br />1.9x为-2044202215314119608 |
-| c3p092x<br />c3p095x                        | C3P0                    | com.mchange.v2.c3p0.impl.PoolBackedDataSourceBase<br />com.mchange.v2.c3p0.test.AlwaysFailDataSource | 0.9.2pre2-0.9.5pre8为7387108436934414104<br />0.9.5pre9-0.9.5.5为7387108436934414104 |
-| ajw                                         | AspectJWeaver           | org.aspectj.weaver.tools.cache.SimpleCache                   | AspectJWeaver,需要cc31                                       |
-| bsh20b4<br />bsh20b5<br />bsh20b6           | bsh                     | bsh.CollectionManager\$1<br />bsh.engine.BshScriptEngine<br />bsh.collection.CollectionIterator\$1 | 2.0b4为4949939576606791809<br />2.0b5为4041428789013517368<br />2.0.b6无法反序列化 |
-| groovy1702311<br />groovy24x<br />groovy244 | Groovy                  | org.codehaus.groovy.reflection.ClassInfo\$ClassInfoSet<br />groovy.lang.Tuple2<br />org.codehaus.groovy.runtime.dgm\$1170 | 2.4.x为-8137949907733646644<br />2.3.x为1228988487386910280  |
-| becl                                        | Becl                    | com.sun.org.apache.bcel.internal.util.ClassLoader            | JDK<8u251                                                    |
-| Jdk7u21                                     | Jdk7u21                 | com.sun.corba.se.impl.orbutil.ORBClassLoader                 | JDK<=7u21                                                    |
-| JRE8u20                                     | JRE8u20                 | javax.swing.plaf.metal.MetalFileChooserUI\$DirectoryComboBoxModel\$1 | 7u25<=JDK<=8u20<br />这个检测不完美,8u25版本以及JDK<=7u21会误报<br />可综合Jdk7u21来看 |
-| linux<br />windows                          | winlinux                | sun.awt.X11.AwtGraphicsConfigData<br />sun.awt.windows.WButtonPeer | windows/linux版本判断                                        |
-|                                             | all                     |                                                              | 全部检测                                                     |
+| DNSLOG 关键字                                  | 对应链                     | 关键类                                                                                                                                                                               | 备注                                                                                 |
+|---------------------------------------------|-------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------|
+| cc31or321<br />cc322                        | CommonsCollections13567 | org.apache.commons.collections.functors.ChainedTransformer<br />org.apache.commons.collections.ExtendedProperties$1                                                               | CommonsCollections1/3/5/6/7<br />需要<=3.2.1版本                                       |
+| cc40<br />cc41                              | CommonsCollections24    | org.apache.commons.collections4.functors.ChainedTransformer<br />org.apache.commons.collections4.FluentIterable                                                                   | CommonsCollections2/4链<br />需要4-4.0版本                                              |
+| cb17<br />cb18x<br />cb19x                  | CommonsBeanutils2       | org.apache.commons.beanutils.MappedPropertyDescriptor\$1<br />org.apache.commons.beanutils.DynaBeanMapDecorator\$MapEntry<br />org.apache.commons.beanutils.BeanIntrospectionData | 1.7x-1.8x为-3490850999041592962<br />1.9x为-2044202215314119608                      |
+| c3p092x<br />c3p095x                        | C3P0                    | com.mchange.v2.c3p0.impl.PoolBackedDataSourceBase<br />com.mchange.v2.c3p0.test.AlwaysFailDataSource                                                                              | 0.9.2pre2-0.9.5pre8为7387108436934414104<br />0.9.5pre9-0.9.5.5为7387108436934414104 |
+| ajw                                         | AspectJWeaver           | org.aspectj.weaver.tools.cache.SimpleCache                                                                                                                                        | AspectJWeaver,需要cc31                                                               |
+| bsh20b4<br />bsh20b5<br />bsh20b6           | bsh                     | bsh.CollectionManager\$1<br />bsh.engine.BshScriptEngine<br />bsh.collection.CollectionIterator\$1                                                                                | 2.0b4为4949939576606791809<br />2.0b5为4041428789013517368<br />2.0.b6无法反序列化         |
+| groovy1702311<br />groovy24x<br />groovy244 | Groovy                  | org.codehaus.groovy.reflection.ClassInfo\$ClassInfoSet<br />groovy.lang.Tuple2<br />org.codehaus.groovy.runtime.dgm\$1170                                                         | 2.4.x为-8137949907733646644<br />2.3.x为1228988487386910280                          |
+| becl                                        | Becl                    | com.sun.org.apache.bcel.internal.util.ClassLoader                                                                                                                                 | JDK<8u251                                                                          |
+| Jdk7u21                                     | Jdk7u21                 | com.sun.corba.se.impl.orbutil.ORBClassLoader                                                                                                                                      | JDK<=7u21                                                                          |
+| JRE8u20                                     | JRE8u20                 | javax.swing.plaf.metal.MetalFileChooserUI\$DirectoryComboBoxModel\$1                                                                                                              | 7u25<=JDK<=8u20<br />这个检测不完美,8u25版本以及JDK<=7u21会误报<br />可综合Jdk7u21来看                |
+| linux<br />windows                          | winlinux                | sun.awt.X11.AwtGraphicsConfigData<br />sun.awt.windows.WButtonPeer                                                                                                                | windows/linux版本判断                                                                  |
+|                                             | all                     |                                                                                                                                                                                   | 全部检测                                                                               |
 
 # 🐳自定义
 

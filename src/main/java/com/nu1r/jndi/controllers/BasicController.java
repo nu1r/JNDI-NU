@@ -10,6 +10,7 @@ import com.nu1r.jndi.gadgets.utils.Util;
 import com.nu1r.jndi.template.*;
 import com.nu1r.jndi.template.Websphere.WSFMSFromThread;
 import com.nu1r.jndi.template.Websphere.WebsphereMemshellTemplate;
+import com.nu1r.jndi.template.Websphere.websphereEcho;
 import com.nu1r.jndi.template.jboss.JBFMSFromContextF;
 import com.nu1r.jndi.template.jboss.JBSMSFromContextS;
 import com.nu1r.jndi.template.jboss.JbossEcho;
@@ -83,16 +84,16 @@ public class BasicController implements LdapController {
                 case springecho:
                     className = SpringEchoTemplate.class.getName();
                     break;
-<<<<<<< HEAD
                 case weblogicecho:
                     className = weblogicEcho.class.getName();
+                    break;
+                case websphereecho:
+                    className = websphereEcho.class.getName();
                     break;
                 case jbossecho:
                     className = JbossEcho.class.getName();
                     break;
-=======
->>>>>>> a1031f3461815c3f17adf15618ebda66c9327d7f
-                case AllEcho:
+                case allecho:
                     className = AllEcho.class.getName();
                     break;
                 case tomcatfilterjmx:

