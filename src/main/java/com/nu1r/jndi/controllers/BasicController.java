@@ -83,12 +83,15 @@ public class BasicController implements LdapController {
                 case springecho:
                     className = SpringEchoTemplate.class.getName();
                     break;
+<<<<<<< HEAD
                 case weblogicecho:
                     className = weblogicEcho.class.getName();
                     break;
                 case jbossecho:
                     className = JbossEcho.class.getName();
                     break;
+=======
+>>>>>>> a1031f3461815c3f17adf15618ebda66c9327d7f
                 case AllEcho:
                     className = AllEcho.class.getName();
                     break;

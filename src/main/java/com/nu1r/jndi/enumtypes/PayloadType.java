@@ -7,7 +7,10 @@ public enum PayloadType {
     reverseshell,
     tomcatecho,
     springecho,
+<<<<<<< HEAD
     weblogicecho,
+=======
+>>>>>>> a1031f3461815c3f17adf15618ebda66c9327d7f
     AllEcho,
     tomcatfilterjmx,
     tomcatfilterth,

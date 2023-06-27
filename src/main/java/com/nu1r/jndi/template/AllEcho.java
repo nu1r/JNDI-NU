@@ -1,7 +1,11 @@
 package com.nu1r.jndi.template;
 
 public class AllEcho {
+<<<<<<< HEAD
     public static String CMD_HEADER = "cmd";
+=======
+    public static String CMD_HEADER = "nu1r";
+>>>>>>> a1031f3461815c3f17adf15618ebda66c9327d7f
 
     public static java.util.HashSet<Object> h = new java.util.HashSet<Object>();
 

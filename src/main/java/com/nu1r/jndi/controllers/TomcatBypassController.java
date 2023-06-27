@@ -337,10 +337,13 @@ public class TomcatBypassController implements LdapController {
             return injectClass(SpringEchoTemplate.class);
         }
 
+<<<<<<< HEAD
         public String injectWeblogicEcho() {
             return injectClass(weblogicEcho.class);
         }
 
+=======
+>>>>>>> a1031f3461815c3f17adf15618ebda66c9327d7f
         public String injectAllEcho() {
             return injectClass(AllEcho.class);
         }
