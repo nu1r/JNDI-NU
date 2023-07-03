@@ -2,7 +2,7 @@
 
 # ✨404StarLink 2.0 - Galaxy
 
-JNDIExploit is 404Team [404StarLink 2.0](https://github.com/knownsec/404StarLink) One of the components，If you have any questions or would like to find companions to discuss JNDIExploit, you can refer to the joining group method provided by the StarChain Project.
+JNDIExploit is 404Team [404StarLink 2.0](https://github.com/knownsec/404StarLink) One of the components, If you have any questions about JNDIExploit or want to find partners to communicate, you can refer to the way of joining the group of Starlink Project.
 
 + https://github.com/knownsec/404StarLink2.0-Galaxy#community
 
