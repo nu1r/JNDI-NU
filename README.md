@@ -36,5 +36,6 @@ This project was developed using JDK 1.8.0_332, and it is not recommended to use
 - https://github.com/welk1n/JNDI-Injection-Bypass
 - https://github.com/WhiteHSBG/JNDIExploit
 - https://github.com/su18/ysoserial
+- https://github.com/rebeyond/Behinder
 
 </details>
