@@ -8,7 +8,7 @@ JNDIExploit is 404Team [404StarLink 2.0](https://github.com/knownsec/404StarLink
 
 # 🦜Help!
 
-Please check out the[wiki](https://github.com/qi4L/JNDIExploit/wiki). 
+Please check out the [wiki](https://github.com/qi4L/JNDIExploit/wiki). 
 
 You can download the latest version of [releases](https://github.com/qi4L/JNDIExploit/releases) from here.
 
