@@ -40,6 +40,12 @@ public class Config {
     @Parameter(names = {"-g", " --gadgets"}, description = "Show gadgets", order = 5)
     public static boolean showGadgets;
 
+    @Parameter(names = {"--jndi"}, description = "Show gadgets", order = 5)
+    public static boolean jndi = false;
+
+    @Parameter(names = {" --ser"}, description = "Show gadgets", order = 5)
+    public static boolean ser = false;
+
     public static String rhost;
     public static String rport;
 

