@@ -2,14 +2,29 @@
 
 # ✨404StarLink 2.0 - Galaxy
 
-JNDIExploit 是 404Team [星链计划2.0](https://github.com/knownsec/404StarLink) 中的一环，如果对JNDIExploit
-有任何疑问又或是想要找小伙伴交流，可以参考星链计划的加群方式。
+JNDIExploit is 404Team [404StarLink 2.0](https://github.com/knownsec/404StarLink) One of the components，If you have any questions or would like to find companions to discuss JNDIExploit, you can refer to the joining group method provided by the StarChain Project.
 
 + https://github.com/knownsec/404StarLink2.0-Galaxy#community
 
 # 🦜Help!
 
 Please checkout the[wiki](https://github.com/qi4L/JNDIExploit/wiki)。
+
+# 👮Disclaimer
+
+This tool is only intended for self-check and security purposes.
+
+The user is solely responsible for any direct or indirect consequences and losses arising from the dissemination or use of the information provided by this tool. The author shall not be held liable for any such consequences.
+
+I have the right to modify and interpret this tool. Without permission from the cybersecurity department or relevant authorities, it is prohibited to misuse this tool for any attack activities, and it must not be used for commercial purposes in any way.
+
+# 🤖TODO
+
+Is there a possibility of incorporating machine learning?
+
+# 🐲建议
+
+This project was developed using JDK 1.8.0_332, and it is not recommended to use a JDK version higher than 11 as it may result in errors.
 
 # 📷reference project
 
