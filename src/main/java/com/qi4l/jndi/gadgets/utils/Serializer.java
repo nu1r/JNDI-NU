@@ -8,6 +8,8 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.concurrent.Callable;
 
+import static com.qi4l.jndi.gadgets.Config.Config.IS_DIRTY_IN_TC_RESET;
+
 public class Serializer implements Callable<byte[]> {
     private final Object object;
 
@@ -33,6 +35,19 @@ public class Serializer implements Callable<byte[]> {
         objOut.close();
         return bytes;
     }
+
+    public static void qiserialize(Object obj, final OutputStream out) throws Exception {
+        final ObjectOutputStream objOut;
+
+        if (IS_DIRTY_IN_TC_RESET) {
+            objOut = new SuObjectOutputStream(out);
+        } else {
+            objOut = new ObjectOutputStream(out);
+        }
+
+        objOut.writeObject(obj);
+    }
+
 
     public static class SuObjectOutputStream extends ObjectOutputStream {
 

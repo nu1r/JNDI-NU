@@ -98,7 +98,7 @@ public class SerializedDataController implements LdapController {
             }
 
             // 如果载荷类型为 nu1r，则执行以下语句块
-            if (payloadType == PayloadType.qi4l) {
+            if (payloadType == PayloadType.command) {
                 String cmd11 = Util.getCmdFromBase(base);
                 if (cmd11.contains("#")) {
                     String[] cmd11s    = cmd11.split("#");

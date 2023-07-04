@@ -1,4 +1,4 @@
-package com.qi4l.jndi.template.resin;
+package com.qi4l.jndi.template.echo;
 
 public class resinEcho {
     static {

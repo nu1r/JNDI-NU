@@ -90,7 +90,7 @@ public class SignedObject implements ObjectPayload<Object> {
 
         final Class<? extends ObjectPayload> payloadClass = ObjectPayload.Utils.getPayloadClass(payloadType);
         ObjectPayload                        payload      = payloadClass.newInstance();
-        Object                               object       = payload.getObject(PayloadType.qi4l, realCmd);
+        Object                               object       = payload.getObject(PayloadType.command, realCmd);
 
         if (args.length >= 3) {
             final String type   = args[2];

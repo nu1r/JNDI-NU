@@ -1,4 +1,4 @@
-package com.qi4l.jndi.template.jetty;
+package com.qi4l.jndi.template.echo;
 
 public class jettyEcho {
 

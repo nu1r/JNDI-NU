@@ -1,4 +1,4 @@
-package com.qi4l.jndi.template.weblogic;
+package com.qi4l.jndi.template.echo;
 
 public class weblogicEcho {
 

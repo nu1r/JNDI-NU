@@ -8,6 +8,7 @@ import com.qi4l.jndi.gadgets.ObjectPayload;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Strings;
+import javassist.ClassPool;
 
 import java.util.*;
 
@@ -28,7 +29,7 @@ public class Config {
     @Parameter(names = {"-hP", "--httpPort"}, description = "Http bind port", order = 3)
     public static int httpPort = 3456;
 
-    @Parameter(names = {"-h", " --help"}, help = true, description = "Show this help")
+    @Parameter(names = {"-he", " --help"}, help = true, description = "Show this help")
     private static boolean help = false;
 
     @Parameter(names = {"-c", " --command"}, help = true, description = "RMI this command")
@@ -37,14 +38,11 @@ public class Config {
     @Parameter(names = {"-v", " --version"}, description = "Show version", order = 5)
     public static boolean showVersion;
 
-    @Parameter(names = {"-g", " --gadgets"}, description = "Show gadgets", order = 5)
+    @Parameter(names = {"-ga", " --gadgets"}, description = "Show gadgets", order = 5)
     public static boolean showGadgets;
 
     @Parameter(names = {"--jndi"}, description = "Show gadgets", order = 5)
     public static boolean jndi = false;
-
-    @Parameter(names = {" --ser"}, description = "Show gadgets", order = 5)
-    public static boolean ser = false;
 
     public static String rhost;
     public static String rport;
@@ -61,7 +59,7 @@ public class Config {
             help = true;
         }
 
-        if(showGadgets){
+        if (showGadgets) {
             final List<Class<? extends ObjectPayload>> payloadClasses =
                     new ArrayList<Class<? extends ObjectPayload>>(ObjectPayload.Utils.getPayloadClasses());
             Collections.sort(payloadClasses, new Strings.ToStringComparator()); // alphabetize
@@ -86,7 +84,7 @@ public class Config {
             System.exit(0);
         }
 
-        if (showVersion){
+        if (showVersion) {
             System.out.println("" +
                     "     ██╗███╗   ██╗██████╗ ██╗███████╗██╗  ██╗██████╗ ██╗      ██████╗ ██╗████████╗\n" +
                     "     ██║████╗  ██║██╔══██╗██║██╔════╝╚██╗██╔╝██╔══██╗██║     ██╔═══██╗██║╚══██╔══╝\n" +
@@ -161,12 +159,11 @@ public class Config {
     public static Boolean linAgent = false;
 
 
-
     //使用脏数据混淆的选项
-    public static Boolean dirtyType = false;
-    public static int Type1 = 1;
+    public static Boolean dirtyType   = false;
+    public static int     Type1       = 1;
     public static Boolean dirtyLength = false;
-    public static int Length1 = 5000;
+    public static int     Length1     = 5000;
 
     // 是否在序列化数据流中的 TC_RESET 中填充脏数据
     public static Boolean IS_DIRTY_IN_TC_RESET = false;
@@ -177,8 +174,28 @@ public class Config {
     // jboss
     public static Boolean IS_JBOSS_OBJECT_INPUT_STREAM = false;
 
+    // DefineClassFromParameter 的路径
+    public static String PARAMETER = "dc";
+
+    // 将输入直接写在文件里
+    public static String FILE = "out.ser";
+
+    public static Boolean WRITE_FILE = false;
+
+    // 是否强制使用 org.apache.XXX.TemplatesImpl
+    public static Boolean FORCE_USING_ORG_APACHE_TEMPLATESIMPL = false;
+
+    // 在 Transformer[] 中使用 org.mozilla.javascript.DefiningClassLoader
+    public static Boolean USING_MOZILLA_DEFININGCLASSLOADER = false;
+
+    // ScriptEngineManager 是否为 RHINO 引擎
+    public static boolean USING_RHINO = false;
+
+    public static ClassPool POOL = ClassPool.getDefault();
+
     // 不同类型内存马的父类/接口与其关键参数的映射
     public static HashMap<String, String> KEY_METHOD_MAP = new HashMap<>();
+
 
     public static void init() {
         // Servlet 型内存马，关键方法 service
@@ -195,5 +212,24 @@ public class Config {
         KEY_METHOD_MAP.put("org.apache.tomcat.util.threads.ThreadPoolExecutor", "execute");
         // Spring Interceptor 型内存马，关键方法 preHandle
         KEY_METHOD_MAP.put("org.springframework.web.servlet.handler.HandlerInterceptorAdapter", "preHandle");
+    }
+
+    static {
+        // Servlet 型内存马，关键方法 service
+        KEY_METHOD_MAP.put("javax.servlet.Servlet", "service");
+        // Filter 型内存马，关键方法 doFilter
+        KEY_METHOD_MAP.put("javax.servlet.Filter", "doFilter");
+        // Listener 型内存马，通常使用 ServletRequestListener， 关键方法 requestInitializedHandle
+        KEY_METHOD_MAP.put("javax.servlet.ServletRequestListener", "requestInitializedHandle");
+        // Websocket 型内存马，关键方法 onMessage
+        KEY_METHOD_MAP.put("javax.websocket.MessageHandler$Whole", "onMessage");
+        // Tomcat Upgrade 型内存马，关键方法 accept
+        KEY_METHOD_MAP.put("org.apache.coyote.UpgradeProtocol", "accept");
+        // Tomcat Executor 型内存马，关键方法 execute
+        KEY_METHOD_MAP.put("org.apache.tomcat.util.threads.ThreadPoolExecutor", "execute");
+        // Spring Interceptor 型内存马，关键方法 preHandle
+        KEY_METHOD_MAP.put("org.springframework.web.servlet.handler.HandlerInterceptorAdapter", "preHandle");
+        // Webflux 内存马
+        KEY_METHOD_MAP.put("org.springframework.web.server.WebFilter", "executePayload");
     }
 }

