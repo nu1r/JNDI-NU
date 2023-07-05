@@ -1,10 +1,10 @@
 package com.qi4l.jndi.gadgets.utils;
 
 import com.qi4l.jndi.template.*;
-import com.qi4l.jndi.template.Websphere.WebsphereMemshellTemplate;
+import com.qi4l.jndi.template.memshell.Websphere.WebsphereMemshellTemplate;
 import com.qi4l.jndi.template.echo.SpringEcho;
 import com.qi4l.jndi.template.echo.TomcatEcho;
-import com.qi4l.jndi.template.jboss.JBFMSFromContextF;
+import com.qi4l.jndi.template.memshell.jboss.JBFMSFromContextF;
 import net.jodah.expiringmap.ExpirationPolicy;
 import net.jodah.expiringmap.ExpiringMap;
 import java.util.concurrent.TimeUnit;

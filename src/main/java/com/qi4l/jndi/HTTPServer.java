@@ -36,6 +36,12 @@ public class HTTPServer {
                 try {
                     System.out.println(ansi().render("@|green [+]|@ New HTTP Request From >>" + httpExchange.getRemoteAddress() + "  " + httpExchange.getRequestURI()));
 
+                    String qi = String.valueOf(httpExchange.getRequestURI());
+                    if (qi.contains("setPathAlias")) {
+                        Config.BCEL1 = qi.substring(qi.indexOf("=") + 1);
+                        System.out.println(ansi().render("@|green [+]|@ 获取参数成功 >> " + Config.BCEL1));
+                    }
+
                     String path = httpExchange.getRequestURI().getPath();
                     if (path.endsWith(".class")) {
                         handleClassRequest(httpExchange);

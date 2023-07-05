@@ -12,8 +12,6 @@ import javassist.ClassPool;
 
 import java.util.*;
 
-import static org.fusesource.jansi.Ansi.ansi;
-
 public class Config {
     public static String codeBase;
 
@@ -40,6 +38,9 @@ public class Config {
 
     @Parameter(names = {"-ga", " --gadgets"}, description = "Show gadgets", order = 5)
     public static boolean showGadgets;
+
+    @Parameter(names = {"-ak", " --AESkey"}, description = "AES+BAse64 decryption of routes", order = 5)
+    public static String AESkey = "123";
 
     @Parameter(names = {"--jndi"}, description = "Show gadgets", order = 5)
     public static boolean jndi = false;
@@ -110,6 +111,9 @@ public class Config {
         Config.codeBase = "http://" + Config.ip + ":" + Config.httpPort + "/";
     }
 
+    // 从HTTP外部获取参数值
+    public static String BCEL1 = "";
+
     // 恶意类是否继承 AbstractTranslet
     public static Boolean IS_INHERIT_ABSTRACT_TRANSLET = false;
 
@@ -158,12 +162,6 @@ public class Config {
     //是否使用Linux下Agent写入
     public static Boolean linAgent = false;
 
-
-    //使用脏数据混淆的选项
-    public static Boolean dirtyType   = false;
-    public static int     Type1       = 1;
-    public static Boolean dirtyLength = false;
-    public static int     Length1     = 5000;
 
     // 是否在序列化数据流中的 TC_RESET 中填充脏数据
     public static Boolean IS_DIRTY_IN_TC_RESET = false;

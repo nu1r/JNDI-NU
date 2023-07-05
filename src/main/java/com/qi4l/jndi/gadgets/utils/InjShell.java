@@ -3,7 +3,7 @@ package com.qi4l.jndi.gadgets.utils;
 import com.qi4l.jndi.gadgets.Config.Config;
 import com.qi4l.jndi.template.Agent.LinMenshell;
 import com.qi4l.jndi.template.Agent.WinMenshell;
-import com.qi4l.jndi.template.tomcat.TFJMX;
+import com.qi4l.jndi.template.memshell.tomcat.TFJMX;
 import javassist.*;
 import org.apache.commons.codec.binary.Base64;
 
@@ -11,8 +11,8 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.qi4l.jndi.template.shell.MemShellPayloads.*;
-import static com.qi4l.jndi.template.shell.MemShellPayloads.SUO5.CMD_SHELL_FOR_WEBFLUX;
+import static com.qi4l.jndi.gadgets.Config.MemShellPayloads.*;
+import static com.qi4l.jndi.template.memshell.shell.MemShellPayloads.SUO5.CMD_SHELL_FOR_WEBFLUX;
 
 public class InjShell {
     public static void insertKeyMethod(CtClass ctClass, String type) throws Exception {

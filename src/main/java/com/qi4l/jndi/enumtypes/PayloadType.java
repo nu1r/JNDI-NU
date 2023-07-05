@@ -1,6 +1,7 @@
 package com.qi4l.jndi.enumtypes;
 
 public enum PayloadType {
+    sethttp,
     dnslog,
     tomcatupgrade,
     command,
@@ -14,7 +15,6 @@ public enum PayloadType {
     allecho,
     websphereecho,
     resinecho,
-    struts2echo,
     tomcatfilterjmx,
     tomcatfilterth,
     tomcatlistenerjmx,
