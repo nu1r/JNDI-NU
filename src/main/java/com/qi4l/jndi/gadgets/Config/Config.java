@@ -42,6 +42,12 @@ public class Config {
     @Parameter(names = {"-ak", " --AESkey"}, description = "AES+BAse64 decryption of routes", order = 5)
     public static String AESkey = "123";
 
+    @Parameter(names = {"-u", " --user"}, description = "ldap bound account", order = 5)
+    public static String USER = "";
+
+    @Parameter(names = {"-p", " --PASSWD"}, description = "ldap binding password", order = 5)
+    public static String PASSWD = "";
+
     @Parameter(names = {"--jndi"}, description = "Show gadgets", order = 5)
     public static boolean jndi = false;
 
@@ -110,6 +116,9 @@ public class Config {
         // 特别注意：最后一个反斜杠不能少啊
         Config.codeBase = "http://" + Config.ip + ":" + Config.httpPort + "/";
     }
+
+    // 从HTTP外部获取路由值
+    public static String ROUTE = "";
 
     // 从HTTP外部获取参数值
     public static String BCEL1 = "";

