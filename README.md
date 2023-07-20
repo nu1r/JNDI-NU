@@ -14,7 +14,7 @@ Please check out the [wiki](https://github.com/qi4L/JYso/wiki/JYso%E2%80%90EN).
 
 You can download the latest version of [releases](https://github.com/qi4L/JNDIExploit/releases) from here.
 
-# Features
+# 🐲Features
 
 It can be either a JNDIExploit or a ysoserial.
 
