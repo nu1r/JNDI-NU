@@ -1,4 +1,4 @@
-![](https://socialify.git.ci/nu1r/JNDIExploit/image?font=KoHo&forks=1&issues=1&language=1&logo=https%3A%2F%2Fs1.ax1x.com%2F2022%2F09%2F12%2FvXqOUI.jpg&name=1&owner=1&pattern=Signal&pulls=1&stargazers=1&theme=Auto)
+![](https://socialify.git.ci/qi4L/JYso/image?font=Raleway&forks=1&language=1&logo=https%3A%2F%2Fs1.ax1x.com%2F2022%2F09%2F12%2FvXqOUI.jpg&name=1&owner=1&pattern=Charlie%20Brown&stargazers=1&theme=Dark)
 
 # ✨404StarLink 2.0 - Galaxy
 
@@ -8,27 +8,19 @@ JNDIExploit is 404Team [404StarLink 2.0](https://github.com/knownsec/404StarLink
 
 # 🦜Help!
 
-Please check out the [wiki](https://github.com/qi4L/JNDIExploit/wiki/JNDIExploitEN). 
+Please check out the [wiki](https://github.com/qi4L/JYso/wiki/JYso%E2%80%90EN). 
 
-[中文文档](https://github.com/qi4L/JNDIExploit/wiki/JNDIExploitCN)
+[中文文档](https://github.com/qi4L/JYso/wiki/JYso%E2%80%90CN)
 
 You can download the latest version of [releases](https://github.com/qi4L/JNDIExploit/releases) from here.
 
-# 👮Disclaimer
+# Features
 
-This tool is only intended for self-check and security purposes.
-
-The user is solely responsible for any direct or indirect consequences and losses arising from the dissemination or use of the information provided by this tool. The author shall not be held liable for any such consequences.
-
-I have the right to modify and interpret this tool. Without permission from the cybersecurity department or relevant authorities, it is prohibited to misuse this tool for any attack activities, and it must not be used for commercial purposes in any way.
+It can be either a JNDIExploit or a ysoserial.
 
 # 🤖TODO
 
 Is there a possibility of incorporating machine learning?
-
-# 🐲建议
-
-This project was developed using JDK 1.8.0_332, and it is not recommended to use a JDK version higher than 11 as it may result in errors.
 
 # 📷reference project
 
