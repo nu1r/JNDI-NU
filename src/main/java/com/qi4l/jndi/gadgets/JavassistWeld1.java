@@ -24,6 +24,7 @@ import org.jboss.weld.interceptor.spi.model.InterceptionType;
 import java.lang.reflect.Constructor;
 import java.util.*;
 
+import static com.qi4l.jndi.Starter.JYsoMode;
 import static com.qi4l.jndi.Starter.cmdLine;
 
 /*
@@ -38,7 +39,7 @@ public class JavassistWeld1 implements ObjectPayload<Object> {
 
     public Object getObject(PayloadType type, String... param) throws Exception {
         final Object tpl;
-        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+        if (JYsoMode.contains("yso")) {
             tpl = GadgetsYso.createTemplatesImpl(param[0]);
         } else {
             tpl = Gadgets.createTemplatesImpl(type, param);

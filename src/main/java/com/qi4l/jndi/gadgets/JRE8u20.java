@@ -17,6 +17,7 @@ import java.io.DataOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.qi4l.jndi.Starter.JYsoMode;
 import static com.qi4l.jndi.Starter.cmdLine;
 
 @SuppressWarnings({"unused"})
@@ -26,7 +27,7 @@ public class JRE8u20 implements ObjectPayload<Object> {
 
     public static Object makeTemplates(PayloadType type, String... param) throws Exception {
         final Object templates;
-        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+        if (JYsoMode.contains("yso")) {
             templates = GadgetsYso.createTemplatesImpl(param[0]);
         } else {
             templates = Gadgets.createTemplatesImpl(type, param);

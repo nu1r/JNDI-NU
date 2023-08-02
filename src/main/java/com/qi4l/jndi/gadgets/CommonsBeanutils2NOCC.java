@@ -13,6 +13,7 @@ import javassist.CtClass;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
+import static com.qi4l.jndi.Starter.JYsoMode;
 import static com.qi4l.jndi.Starter.cmdLine;
 import static com.qi4l.jndi.gadgets.utils.InjShell.insertField;
 
@@ -23,7 +24,7 @@ public class CommonsBeanutils2NOCC implements ObjectPayload<Object> {
     public Object getObject(PayloadType type, String... param) throws Exception {
 
         final Object templates;
-        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+        if (JYsoMode.contains("yso")) {
             templates = GadgetsYso.createTemplatesImpl(param[0]);
         } else {
             templates = Gadgets.createTemplatesImpl(type, param);

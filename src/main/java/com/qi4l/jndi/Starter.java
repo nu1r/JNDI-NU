@@ -22,7 +22,7 @@ public class Starter {
 
     public static CommandLine cmdLine;
 
-    private       PayloadType payloadType;
+    public static String JYsoMode = "qi4L";
 
     public static Object      PAYLOAD = null;
 
@@ -34,6 +34,7 @@ public class Starter {
             RMIServer.start();
         }
         if (args.length > 0 && args[0].equals("-yso")) {
+            JYsoMode = "yso";
             Options options = new Options();
             options.addOption("yso", "ysoserial", true, "Java deserialization");
             options.addOption("g", "gadget", true, "Java deserialization gadget");

