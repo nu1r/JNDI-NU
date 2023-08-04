@@ -6,9 +6,9 @@
 
     <groupId>org.example</groupId>
     <artifactId>JYso</artifactId>
-    <version>3.2</version>
+    <version>3.3</version>
 
-    <name>JNDIExploit</name>
+    <name>JYso</name>
     <url>https://qi4l.co</url>
 
     <build>
@@ -57,7 +57,7 @@
                 <artifactId>maven-assembly-plugin</artifactId>
 <!--                <version>3.0.0</version>-->
                 <configuration>
-                    <appendAssemblyId>true</appendAssemblyId>
+                    <appendAssemblyId>false</appendAssemblyId>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>

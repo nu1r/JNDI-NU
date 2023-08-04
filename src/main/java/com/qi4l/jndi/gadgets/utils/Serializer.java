@@ -1,5 +1,6 @@
 package com.qi4l.jndi.gadgets.utils;
 
+import com.qi4l.jndi.controllers.SerializedDataController;
 import com.qi4l.jndi.gadgets.Config.Config;
 
 import java.io.ByteArrayOutputStream;

