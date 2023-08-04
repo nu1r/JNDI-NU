@@ -31,11 +31,16 @@ public class Jackson implements ObjectPayload<Object> {
 
         ClassPool pool = ClassPool.getDefault();
         //pool.insertClassPath(new ClassClassPath(Class.forName("com.fasterxml.jackson.databind.node.BaseJsonNode")));
-        CtClass ctClass = pool.get("com.fasterxml.jackson.databind.node.BaseJsonNode");
-        CtMethod writeReplace = ctClass.getDeclaredMethod("writeReplace");
-        ctClass.removeMethod(writeReplace);
-        // 将修改后的CtClass加载至当前线程的上下文类加载器中
-        ctClass.toClass();
+        try {
+            CtClass ctClass = pool.get("com.fasterxml.jackson.databind.node.BaseJsonNode");
+            CtMethod writeReplace = ctClass.getDeclaredMethod("writeReplace");
+            ctClass.removeMethod(writeReplace);
+            // 将修改后的CtClass加载至当前线程的上下文类加载器中
+            ctClass.toClass();
+        } catch (Exception EE) {
+
+        }
+
 
         POJONode node = new POJONode(template);
 
