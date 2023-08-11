@@ -6,7 +6,7 @@
 
     <groupId>org.example</groupId>
     <artifactId>JYso</artifactId>
-    <version>3.3</version>
+    <version>3.4</version>
 
     <name>JYso</name>
     <url>https://qi4l.co</url>
@@ -90,6 +90,21 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.ibm.websphere.appserver.api</groupId>
+            <artifactId>com.ibm.websphere.appserver.api.wsoc</artifactId>
+            <version>1.0.10</version>
+        </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/org.glassfish.tyrus/tyrus-server -->
+        <dependency>
+            <groupId>org.glassfish.tyrus</groupId>
+            <artifactId>tyrus-server</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+
+
         <!-- https://mvnrepository.com/artifact/javax.media.jai/jai-core -->
         <dependency>
             <groupId>javax.media.jai</groupId>

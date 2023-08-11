@@ -36,5 +36,12 @@ public enum PayloadType {
     resinfilterth,
     resinservletth,
     jbossecho,
-    jettyecho, Struts2ActionMS,
+    jettyecho,
+    cmsmsbync,
+    proxymsbync,
+    wsresin,
+    mstsjproxy,
+    mstsjser,
+    wsweblogic,
+    wswebsphereproxy,
 }
