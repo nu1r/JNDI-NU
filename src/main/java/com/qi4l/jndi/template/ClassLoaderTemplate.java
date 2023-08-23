@@ -73,4 +73,7 @@ public class ClassLoaderTemplate {
         }
         return value;
     }
+
+    public static void initClassBytes() {
+    }
 }

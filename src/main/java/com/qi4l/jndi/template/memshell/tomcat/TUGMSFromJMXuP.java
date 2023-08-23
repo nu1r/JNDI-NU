@@ -23,9 +23,6 @@ import java.util.HashMap;
 public class TUGMSFromJMXuP implements UpgradeProtocol {
     public static String pattern;
 
-    public TUGMSFromJMXuP() {
-    }
-
     static {
         try {
             MBeanServer mbeanServer = Registry.getRegistry(null, null).getMBeanServer();

@@ -25,6 +25,9 @@ public class ClassMethodHandler {
      * @throws Exception 抛出异常
      */
     public static void insertMethod(CtClass ctClass, String method, String payload) throws Exception {
+        System.out.println(ctClass);
+        System.out.println(method);
+        System.out.println(payload);
         CtMethod cm = ctClass.getDeclaredMethod(method);
         cm.insertBefore(payload);
     }
@@ -35,11 +38,7 @@ public class ClassMethodHandler {
         // 动态为 Echo回显类 添加执行命令功能
         if (className.endsWith("Echo")) {
             insertCMD(ctClass);
-            try {
-                ctClass.getDeclaredMethod("q").setBody("{return execCmd($1);}");
-            } catch (Exception e11) {
-
-            }
+            ctClass.getDeclaredMethod("q").setBody("{return execCmd($1);}");
             return;
         }
 
