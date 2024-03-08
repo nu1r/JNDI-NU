@@ -149,7 +149,7 @@ public class Config {
     public static String PASSWORD = "0f359740bd1cda99";
 
     // Referer 校验
-    public static String HEADER_KEY = "https://QI4L.cn/";
+    public static String HEADER_KEY = "Referer";
 
     // 用于额外校验的 Http Header 值，默认值 https://QI4L.cn/
     public static String HEADER_VALUE = "https://QI4L.cn/";
