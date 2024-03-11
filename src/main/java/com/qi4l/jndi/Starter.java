@@ -9,7 +9,6 @@ import com.qi4l.jndi.gadgets.utils.Serializer;
 import com.qi4l.jndi.gadgets.utils.Strings;
 import com.qi4l.jndi.gadgets.utils.dirty.DirtyDataWrapper;
 import org.apache.commons.cli.*;
-import com.qi4l.jndi.gadgets.utils.utf8OverlongEncoding.CustomObjectOutputStream;
 
 
 import java.io.FileOutputStream;

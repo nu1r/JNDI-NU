@@ -49,5 +49,7 @@ I have the right to modify and interpret this tool. Without permission from the 
 - https://archive.conference.hitb.org/hitbsecconf2021sin/sessions/make-jdbc-attacks-brilliant-again/
 - https://tttang.com/archive/1405/#toc_0x03-jdbc-rce
 - https://xz.aliyun.com/t/10656?time__1311=mq%2BxBDy7G%3DLOD%2FD0DoYg0%3DDR0HG8KeD&alichlgref=https%3A%2F%2Ftttang.com%2F#toc-7
+- https://whoopsunix.com/docs/PPPYSO/advance/UTFMIX/
+- https://github.com/Whoopsunix/utf-8-overlong-encoding
 
 </details>
