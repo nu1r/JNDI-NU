@@ -1,6 +1,7 @@
 package com.qi4l.jndi.gadgets.utils;
 
 import com.qi4l.jndi.template.*;
+import com.qi4l.jndi.template.echo.Meterpreter;
 import com.qi4l.jndi.template.memshell.Websphere.WebsphereMemshellTemplate;
 import com.qi4l.jndi.template.echo.SpringEcho;
 import com.qi4l.jndi.template.echo.TomcatEcho;

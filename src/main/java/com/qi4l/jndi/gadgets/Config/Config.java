@@ -48,7 +48,7 @@ public class Config {
     @Parameter(names = {"-p", " --PASSWD"}, description = "ldap binding password", order = 5)
     public static String PASSWD = "";
 
-    @Parameter(names = {"--jndi"}, description = "Show gadgets", order = 5)
+    @Parameter(names = {"-j","--jndi"}, description = "starter", order = 5)
     public static boolean jndi = false;
 
     public static String rhost;

@@ -41,6 +41,8 @@ public @interface Authors {
     String JANG = "Jang";
 
     String ARTSPLOIT = "artsploit";
+    String CCKUAILONG = "CCKUAILONG";
+    String QI4L          = "QI4L";
 
     String[] value() default {};
 

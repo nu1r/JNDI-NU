@@ -98,7 +98,6 @@ public class LdapServer extends InMemoryOperationInterceptor {
         }
 
         //收到ldap请求
-        System.out.println("\n");
         System.out.println(ansi().render("@|green [+]|@ Received LDAP Query >> " + base));
         LdapController controller = null;
         //find controller

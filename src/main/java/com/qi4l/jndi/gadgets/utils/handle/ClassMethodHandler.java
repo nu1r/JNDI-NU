@@ -25,9 +25,9 @@ public class ClassMethodHandler {
      * @throws Exception 抛出异常
      */
     public static void insertMethod(CtClass ctClass, String method, String payload) throws Exception {
-        System.out.println(ctClass);
-        System.out.println(method);
-        System.out.println(payload);
+        //System.out.println(ctClass);
+        //System.out.println(method);
+        //System.out.println(payload);
         CtMethod cm = ctClass.getDeclaredMethod(method);
         cm.insertBefore(payload);
     }

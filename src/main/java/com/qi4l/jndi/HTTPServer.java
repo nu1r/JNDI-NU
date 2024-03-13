@@ -433,7 +433,6 @@ public class HTTPServer {
         String className = path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf("."));
         System.out.println(ansi().render("@|green [+] Receive ClassRequest: |@" + className + ".class"));
 
-        //先从Cache中加载
         if (Cache.contains(className)) {
             System.out.println(ansi().render("@|green [+] Response Code: |@" + 200));
 

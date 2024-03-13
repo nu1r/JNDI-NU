@@ -3,7 +3,7 @@ package com.qi4l.jndi.gadgets.utils.handle;
 import com.qi4l.jndi.gadgets.Config.Config;
 import com.qi4l.jndi.gadgets.Config.HookPointConfig;
 import com.qi4l.jndi.gadgets.Config.MemShellPayloads;
-import com.qi4l.jndi.gadgets.utils.GadgetsYso;
+import com.qi4l.jndi.gadgets.utils.Gadgets;
 import com.qi4l.jndi.gadgets.utils.Utils;
 import javassist.CtClass;
 import javassist.bytecode.*;
@@ -56,7 +56,7 @@ public class GlassHandler {
 
             String result = ClassNameHandler.searchClassByName(memShellName);
             if (result != null) {
-                memShellClazz = Class.forName(result, false, GadgetsYso.class.getClassLoader());
+                memShellClazz = Class.forName(result, false, Gadgets.class.getClassLoader());
             } else {
                 throw new IllegalArgumentException("Input Error,Please Check Your MemShell Name!");
             }

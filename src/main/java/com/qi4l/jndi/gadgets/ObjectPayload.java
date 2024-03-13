@@ -15,7 +15,7 @@ public interface ObjectPayload<T> {
      * return armed payload object to be serialized that will execute specified
      * command on deserialization
      */
-    public T getObject(PayloadType type, String... param) throws Exception;
+    public T getObject(String command) throws Exception;
 
     public static boolean isApplicableJavaVersion() {
         return JavaVersion.isAnnInvHUniversalMethodImpl();
@@ -56,6 +56,7 @@ public interface ObjectPayload<T> {
             }
             return clazz;
         }
+
 
         @SuppressWarnings("unchecked")
         public static void releasePayload(ObjectPayload payload, Object object) throws Exception {

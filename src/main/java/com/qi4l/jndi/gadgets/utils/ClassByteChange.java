@@ -1,7 +1,7 @@
 package com.qi4l.jndi.gadgets.utils;
 
 import com.qi4l.jndi.gadgets.Config.Config;
-import com.qi4l.jndi.template.Meterpreter;
+import com.qi4l.jndi.template.echo.Meterpreter;
 import javassist.*;
 
 import java.io.*;

@@ -7,9 +7,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.util.Base64;
 import java.util.concurrent.Callable;
 
 import static com.qi4l.jndi.gadgets.Config.Config.IS_DIRTY_IN_TC_RESET;
+import static com.qi4l.jndi.gadgets.Config.Config.IS_UTF_Bypass;
 
 public class Serializer implements Callable<byte[]> {
     private final Object object;
@@ -42,14 +44,11 @@ public class Serializer implements Callable<byte[]> {
 
         if (IS_DIRTY_IN_TC_RESET) {
             objOut = new SuObjectOutputStream(out);
+        } else if (IS_UTF_Bypass) {
+            objOut = new UTF8OverlongObjectOutputStream(out);
         } else {
             objOut = new ObjectOutputStream(out);
         }
-        objOut.writeObject(obj);
-    }
-
-    public static void qiserialize4l(Object obj, final OutputStream out) throws Exception {
-        final ObjectOutputStream objOut = new UTF8OverlongObjectOutputStream(out);
         objOut.writeObject(obj);
     }
 
