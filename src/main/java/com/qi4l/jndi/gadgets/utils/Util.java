@@ -166,12 +166,12 @@ public class Util {
     }
 
 
-    public static boolean isHave(String[] strs,String s){
+    public static boolean isHave(String[] strs, String s) {
 
         /*此方法有两个参数，第一个是要查找的字符串数组，第二个是要查找的字符或字符串*/
         int i = strs.length;
-        while (i-- > 0){
-            if(strs[i] == s){
+        while (i-- > 0) {
+            if (strs[i] == s) {
                 return true;
             }
         }

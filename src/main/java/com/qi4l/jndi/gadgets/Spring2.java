@@ -1,6 +1,5 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
@@ -11,7 +10,6 @@ import org.springframework.aop.target.SingletonTargetSource;
 import javax.xml.transform.Templates;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Type;
-
 
 import static java.lang.Class.forName;
 
@@ -36,7 +34,7 @@ import static java.lang.Class.forName;
         "aopalliance:aopalliance:1.0", "commons-logging:commons-logging:1.2"
 })
 @Authors({Authors.MBECHLER})
-public class Spring2 implements ObjectPayload<Object>{
+public class Spring2 implements ObjectPayload<Object> {
     @Override
     public Object getObject(String command) throws Exception {
         final Object templates;

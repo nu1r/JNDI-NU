@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-
 @Dependencies({"commons-collections:commons-collections:4.0"})
 public class CommonsCollectionsK6 implements ObjectPayload<Object> {
 

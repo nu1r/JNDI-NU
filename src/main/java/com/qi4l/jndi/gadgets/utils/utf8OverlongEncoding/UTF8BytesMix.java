@@ -1,35 +1,30 @@
 package com.qi4l.jndi.gadgets.utils.utf8OverlongEncoding;
 
 public class UTF8BytesMix {
-    public static byte[] resultBytes = new byte[0];
+    final static byte TC_CLASSDESC      = (byte) 0x72;
+    final static byte TC_PROXYCLASSDESC = (byte) 0x7d;
+    final static byte TC_STRING         = (byte) 0x74;
+    final static byte TC_REFERENCE      = (byte) 0x71;
+    final static byte TC_LONGSTRING     = (byte) 0x7C;
+    final static byte TC_ARRAY          = (byte) 0x75;
+    final static byte TC_ENDBLOCKDATA   = (byte) 0x78;
+    final static byte TC_NULL           = (byte) 0x70;
+    final static byte Byte     = (byte) 0x42;
+    final static byte Char     = (byte) 0x43;
+    final static byte Double   = (byte) 0x44;
+    final static byte Float    = (byte) 0x46;
+    final static byte Integer  = (byte) 0x49;
+    final static byte Long     = (byte) 0x4a;
+    final static byte Object_L = (byte) 0x4c;
+    final static byte Short    = (byte) 0x53;
+    final static byte Boolean  = (byte) 0x5a;
+    final static byte Array    = (byte) 0x5b;
+    public static byte[] resultBytes   = new byte[0];
     public static byte[] originalBytes = new byte[0];
-
     // 加密字节位数
     public static int type = 2; //3
-
     // 原 byte[] 坐标
     public static int index = 0;
-
-    final static byte TC_CLASSDESC = (byte) 0x72;
-    final static byte TC_PROXYCLASSDESC = (byte) 0x7d;
-    final static byte TC_STRING = (byte) 0x74;
-    final static byte TC_REFERENCE = (byte) 0x71;
-    final static byte TC_LONGSTRING = (byte) 0x7C;
-    final static byte TC_ARRAY = (byte) 0x75;
-    final static byte TC_ENDBLOCKDATA = (byte) 0x78;
-    final static byte TC_NULL = (byte) 0x70;
-
-
-    final static byte Byte = (byte) 0x42;
-    final static byte Char = (byte) 0x43;
-    final static byte Double = (byte) 0x44;
-    final static byte Float = (byte) 0x46;
-    final static byte Integer = (byte) 0x49;
-    final static byte Long = (byte) 0x4a;
-    final static byte Object_L = (byte) 0x4c;
-    final static byte Short = (byte) 0x53;
-    final static byte Boolean = (byte) 0x5a;
-    final static byte Array = (byte) 0x5b;
 
 
     public UTF8BytesMix(byte[] originalBytes) {
@@ -67,7 +62,7 @@ public class UTF8BytesMix {
             index++;
         }
 
-        int length = ((originalBytes[index + 1] & 0xFF) << 8) | (originalBytes[index + 2] & 0xFF);
+        int    length        = ((originalBytes[index + 1] & 0xFF) << 8) | (originalBytes[index + 2] & 0xFF);
         byte[] originalValue = new byte[length];
         System.arraycopy(originalBytes, index + 3, originalValue, 0, length);
         index += 3 + length;
@@ -128,7 +123,7 @@ public class UTF8BytesMix {
                 byteAdd(originalBytes[index]);
                 index++;
 
-                int fieldLength = ((originalBytes[index] & 0xFF) << 8) | (originalBytes[index + 1] & 0xFF);
+                int    fieldLength       = ((originalBytes[index] & 0xFF) << 8) | (originalBytes[index + 1] & 0xFF);
                 byte[] originalFieldName = new byte[fieldLength];
                 System.arraycopy(originalBytes, index + 2, originalFieldName, 0, fieldLength);
                 index += 2 + fieldLength;
@@ -151,7 +146,7 @@ public class UTF8BytesMix {
                 byteAdd(originalBytes[index]);
                 index++;
 
-                int classLength = ((originalBytes[index] & 0xFF) << 8) | (originalBytes[index + 1] & 0xFF);
+                int    classLength       = ((originalBytes[index] & 0xFF) << 8) | (originalBytes[index + 1] & 0xFF);
                 byte[] originalClassName = new byte[classLength];
                 System.arraycopy(originalBytes, index + 2, originalClassName, 0, classLength);
                 index += 2 + classLength;

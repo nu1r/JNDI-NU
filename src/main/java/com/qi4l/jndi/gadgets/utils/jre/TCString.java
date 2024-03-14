@@ -5,12 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TCString extends ReferencableObject implements SerializedElement {
-    public Object getHandleObject() {
-        return this.content;
-    }
-
     private static Map<String, TCString> instances = new HashMap<String, TCString>();
-
     private String content;
 
     private TCString(String content) {
@@ -24,6 +19,10 @@ public class TCString extends ReferencableObject implements SerializedElement {
         ins = new TCString(content);
         instances.put(content, ins);
         return ins;
+    }
+
+    public Object getHandleObject() {
+        return this.content;
     }
 
     public void doWrite(DataOutputStream out, HandleContainer handles) throws Exception {

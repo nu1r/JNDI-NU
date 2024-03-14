@@ -28,31 +28,6 @@ public class LdapServer extends InMemoryOperationInterceptor {
 
     public static TreeMap<String, LdapController> routes = new TreeMap<>();
 
-    public static void start() {
-        try {
-            InMemoryDirectoryServerConfig serverConfig = new InMemoryDirectoryServerConfig("dc=example,dc=com");
-            serverConfig.setListenerConfigs(new InMemoryListenerConfig(
-                    "listen",
-                    InetAddress.getByName("0.0.0.0"),
-                    Config.ldapPort,
-                    ServerSocketFactory.getDefault(),
-                    SocketFactory.getDefault(),
-                    (SSLSocketFactory) SSLSocketFactory.getDefault()));
-            if (!USER.equals("")||!PASSWD.equals("")) {
-                serverConfig.addAdditionalBindCredentials(USER,PASSWD);
-            }
-
-            //添加操作拦截器
-            //将提供的操作拦截器添加到操作拦截器列表中，该列表可用于在请求被内存目录服务器处理之前转换请求，和/或在响应返回给客户端之前转换响应。
-            serverConfig.addInMemoryOperationInterceptor(new LdapServer());
-            InMemoryDirectoryServer ds = new InMemoryDirectoryServer(serverConfig);
-            ds.startListening();
-            System.out.println(ansi().render("@|green [+]|@ LDAP Server Start Listening on >>" + Config.ldapPort + "..."));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public LdapServer() throws Exception {
 
         //find all classes annotated with @LdapMapping
@@ -70,6 +45,31 @@ public class LdapServer extends InMemoryOperationInterceptor {
                     routes.put(mapping, instance);
                 }
             }
+        }
+    }
+
+    public static void start() {
+        try {
+            InMemoryDirectoryServerConfig serverConfig = new InMemoryDirectoryServerConfig("dc=example,dc=com");
+            serverConfig.setListenerConfigs(new InMemoryListenerConfig(
+                    "listen",
+                    InetAddress.getByName("0.0.0.0"),
+                    Config.ldapPort,
+                    ServerSocketFactory.getDefault(),
+                    SocketFactory.getDefault(),
+                    (SSLSocketFactory) SSLSocketFactory.getDefault()));
+            if (!USER.equals("") || !PASSWD.equals("")) {
+                serverConfig.addAdditionalBindCredentials(USER, PASSWD);
+            }
+
+            //添加操作拦截器
+            //将提供的操作拦截器添加到操作拦截器列表中，该列表可用于在请求被内存目录服务器处理之前转换请求，和/或在响应返回给客户端之前转换响应。
+            serverConfig.addInMemoryOperationInterceptor(new LdapServer());
+            InMemoryDirectoryServer ds = new InMemoryDirectoryServer(serverConfig);
+            ds.startListening();
+            System.out.println(ansi().render("@|green [+]|@ LDAP Server Start Listening on >>" + Config.ldapPort + "..."));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -98,7 +98,7 @@ public class LdapServer extends InMemoryOperationInterceptor {
         }
 
         //收到ldap请求
-        System.out.println(ansi().render("@|green [+]|@ Received LDAP Query >> " + base));
+        System.out.println(ansi().render("@|green [+] Received LDAP Query : |@" + base));
         LdapController controller = null;
         //find controller
         //根据请求的路径从route中匹配相应的controller

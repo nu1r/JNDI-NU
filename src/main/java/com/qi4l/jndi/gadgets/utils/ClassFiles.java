@@ -24,14 +24,14 @@ public class ClassFiles {
 
     public static byte[] classAsBytes(final Class<?> clazz) {
         try {
-            final byte[] buffer = new byte[1024];
-            final String file = classAsFile(clazz);
-            final InputStream in = ClassFiles.class.getClassLoader().getResourceAsStream(file);
+            final byte[]      buffer = new byte[1024];
+            final String      file   = classAsFile(clazz);
+            final InputStream in     = ClassFiles.class.getClassLoader().getResourceAsStream(file);
             if (in == null) {
                 throw new IOException("couldn't find '" + file + "'");
             }
             final ByteArrayOutputStream out = new ByteArrayOutputStream();
-            int len;
+            int                         len;
             while ((len = in.read(buffer)) != -1) {
                 out.write(buffer, 0, len);
             }

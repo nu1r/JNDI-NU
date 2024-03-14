@@ -12,14 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 public class SuURLConnection extends URLConnection {
-    private static List FILES = new ArrayList();
-
-    // 当前 SuURLConnection 对应的对象
-    private final byte[] DATA;
-
-    private final String contentType;
-
     public static String STREAM_HANDLER_CLASSNAME;
+    private static List FILES = new ArrayList();
 
     static {
         try {
@@ -52,21 +46,10 @@ public class SuURLConnection extends URLConnection {
         }
     }
 
+    // 当前 SuURLConnection 对应的对象
+    private final byte[] DATA;
+    private final String contentType;
 
-    /**
-     * 将一个 URL 对象 （byte[]）存放在 FILES 中
-     *
-     * @param data        jar 包字节码数组
-     * @param contentType 原本是文件路径，这里因为是虚拟的，所以随便写一个标识位就可以
-     * @return 返回 URL 对象
-     * @throws MalformedURLException 抛出异常
-     */
-    public static URL createURL(byte[] data, String contentType) throws MalformedURLException {
-        synchronized (FILES) {
-            FILES.add(data);
-            return new URL("ysuserial", "", FILES.size() - 1 + "/" + contentType);
-        }
-    }
 
     /**
      * 构造方法，根据指定的 URL 格式将 DATA 进行指定赋值
@@ -82,6 +65,21 @@ public class SuURLConnection extends URLConnection {
         }
 
         this.contentType = file.substring(pos + 1);
+    }
+
+    /**
+     * 将一个 URL 对象 （byte[]）存放在 FILES 中
+     *
+     * @param data        jar 包字节码数组
+     * @param contentType 原本是文件路径，这里因为是虚拟的，所以随便写一个标识位就可以
+     * @return 返回 URL 对象
+     * @throws MalformedURLException 抛出异常
+     */
+    public static URL createURL(byte[] data, String contentType) throws MalformedURLException {
+        synchronized (FILES) {
+            FILES.add(data);
+            return new URL("ysuserial", "", FILES.size() - 1 + "/" + contentType);
+        }
     }
 
     public void connect() throws IOException {

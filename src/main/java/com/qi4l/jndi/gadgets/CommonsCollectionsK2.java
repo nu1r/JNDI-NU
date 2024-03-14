@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Dependencies({"commons-collections:commons-collections:4.0"})
-public class CommonsCollectionsK2 implements ReleaseableObjectPayload<Object>{
+public class CommonsCollectionsK2 implements ReleaseableObjectPayload<Object> {
 
     public Object getObject(String command) throws Exception {
         final Object templates;

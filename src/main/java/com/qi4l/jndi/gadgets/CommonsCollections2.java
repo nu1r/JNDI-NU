@@ -1,6 +1,5 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
@@ -10,7 +9,6 @@ import org.apache.commons.collections4.functors.InvokerTransformer;
 
 import java.util.PriorityQueue;
 import java.util.Queue;
-
 
 
 @SuppressWarnings({"rawtypes", "unchecked"})

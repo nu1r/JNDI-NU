@@ -27,6 +27,17 @@ public class Serialization {
         }
     }
 
+    private static void setFieldValue(Object obj, String fieldName, Object value) throws Exception {
+        Field f = obj.getClass().getDeclaredField(fieldName);
+        f.setAccessible(true);
+        if (Modifier.isFinal(f.getModifiers())) {
+            Field modifiersField = Field.class.getDeclaredField("modifiers");
+            modifiersField.setAccessible(true);
+            modifiersField.setInt(f, f.getModifiers() & 0xFFFFFFEF);
+        }
+        f.set(obj, value);
+    }
+
     public void addObject(Object obj) throws Exception {
         addObject(obj, false);
     }
@@ -110,17 +121,6 @@ public class Serialization {
             TCJavaObject          o       = new TCJavaObject(obj, byteout, objout);
             o.write(out, handles);
         }
-    }
-
-    private static void setFieldValue(Object obj, String fieldName, Object value) throws Exception {
-        Field f = obj.getClass().getDeclaredField(fieldName);
-        f.setAccessible(true);
-        if (Modifier.isFinal(f.getModifiers())) {
-            Field modifiersField = Field.class.getDeclaredField("modifiers");
-            modifiersField.setAccessible(true);
-            modifiersField.setInt(f, f.getModifiers() & 0xFFFFFFEF);
-        }
-        f.set(obj, value);
     }
 
     private ObjectOutputStream getPatchedOutputStream(ByteArrayOutputStream out) throws Exception {

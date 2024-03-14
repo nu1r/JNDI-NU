@@ -1,7 +1,7 @@
 package com.qi4l.jndi.gadgets.utils.beanshell;
 
-import com.qi4l.jndi.gadgets.utils.Utils;
 import com.qi4l.jndi.gadgets.utils.Strings;
+import com.qi4l.jndi.gadgets.utils.Utils;
 
 import java.util.Arrays;
 

@@ -27,6 +27,7 @@ public class Starter {
     public static void main(String[] args) throws Exception {
         if (args.length > 0 && args[0].equals("-j")) {
             Config.applyCmdArgs(args);
+
             LdapServer.start();
             HTTPServer.start();
             RMIServer.start();
@@ -130,8 +131,8 @@ public class Starter {
                 }
             }
 
-            final String payloadType  = cmdLine.getOptionValue("gadget");
-            final String command      = cmdLine.getOptionValue("parameters");
+            final String payloadType = cmdLine.getOptionValue("gadget");
+            final String command     = cmdLine.getOptionValue("parameters");
 
             final Class<? extends ObjectPayload> payloadClass = ObjectPayload.Utils.getPayloadClass(payloadType);
             if (payloadClass == null) {

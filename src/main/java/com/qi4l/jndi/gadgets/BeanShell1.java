@@ -2,7 +2,6 @@ package com.qi4l.jndi.gadgets;
 
 import bsh.Interpreter;
 import bsh.XThis;
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Reflections;
@@ -10,7 +9,8 @@ import com.qi4l.jndi.gadgets.utils.beanshell.BeanShellUtil;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
-import java.util.*;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 
 /**
  * Credits: Alvaro Munoz (@pwntester) and Christian Schneider (@cschneider4711)

@@ -1,6 +1,5 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
@@ -17,7 +16,6 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 
 
-
 /**
  * Variation on CommonsCollections2 that uses InstantiateTransformer instead of
  * InvokerTransformer.
@@ -25,7 +23,7 @@ import java.util.Queue;
 
 @Dependencies({"org.apache.commons:commons-collections4:4.0"})
 @Authors({Authors.FROHOFF})
-public class CommonsCollections4 implements ObjectPayload<Queue<Object>>{
+public class CommonsCollections4 implements ObjectPayload<Queue<Object>> {
 
     public Queue<Object> getObject(String command) throws Exception {
         final Object templates;

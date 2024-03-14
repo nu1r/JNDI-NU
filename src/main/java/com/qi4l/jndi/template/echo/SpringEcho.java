@@ -8,6 +8,8 @@ import com.sun.org.apache.xml.internal.serializer.SerializationHandler;
 
 public class SpringEcho extends AbstractTranslet {
 
+    public static String CMD_HEADER;
+
     public SpringEcho() {
 
         try {
@@ -24,7 +26,7 @@ public class SpringEcho extends AbstractTranslet {
             e.printStackTrace();
         }
     }
-    public static String CMD_HEADER;
+
     public static java.io.ByteArrayOutputStream q(String cmd) {
         return null;
     }

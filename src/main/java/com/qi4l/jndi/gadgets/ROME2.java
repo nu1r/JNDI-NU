@@ -1,6 +1,5 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
 import com.qi4l.jndi.gadgets.utils.Reflections;
@@ -8,7 +7,6 @@ import com.sun.syndication.feed.impl.EqualsBean;
 
 import javax.xml.transform.Templates;
 import java.util.Map;
-
 
 
 @Dependencies("rome:rome:1.0")

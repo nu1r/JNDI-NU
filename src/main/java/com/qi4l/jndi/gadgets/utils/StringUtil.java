@@ -1,10 +1,5 @@
 package com.qi4l.jndi.gadgets.utils;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
 public class StringUtil {
 
     public static String getClassName(String url) {

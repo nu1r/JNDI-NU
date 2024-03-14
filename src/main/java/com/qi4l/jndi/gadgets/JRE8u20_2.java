@@ -1,7 +1,9 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
-import com.qi4l.jndi.gadgets.utils.*;
+import com.qi4l.jndi.gadgets.utils.ByteUtil;
+import com.qi4l.jndi.gadgets.utils.Gadgets;
+import com.qi4l.jndi.gadgets.utils.Reflections;
+import com.qi4l.jndi.gadgets.utils.Serializer;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
@@ -13,7 +15,6 @@ import java.lang.reflect.InvocationHandler;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
-
 
 
 public class JRE8u20_2 implements ObjectPayload<Object> {

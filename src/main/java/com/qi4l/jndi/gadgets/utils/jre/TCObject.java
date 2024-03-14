@@ -88,20 +88,7 @@ public class TCObject extends ReferencableObject implements SerializedElement {
 
     public static class ObjectData implements SerializedElement {
 
-        private class Data {
-
-            private boolean block;
-
-            private Object data;
-
-            public Data(boolean block, Object data) {
-                this.block = block;
-                this.data = data;
-            }
-        }
-
         private List<Data> data = new ArrayList<Data>();
-
         private Serialization ser;
 
         public void setSer(Serialization ser) {
@@ -125,6 +112,18 @@ public class TCObject extends ReferencableObject implements SerializedElement {
         public ObjectData addData(Object obj, boolean block) {
             this.data.add(new Data(block, obj));
             return this;
+        }
+
+        private class Data {
+
+            private boolean block;
+
+            private Object data;
+
+            public Data(boolean block, Object data) {
+                this.block = block;
+                this.data = data;
+            }
         }
     }
 }

@@ -10,15 +10,12 @@ import org.apache.commons.lang.StringUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.Random;
 import java.util.zip.GZIPOutputStream;
 
 import static com.qi4l.jndi.gadgets.Config.Config.*;
-import static com.qi4l.jndi.gadgets.utils.Util.base64Encode;
 import static com.qi4l.jndi.gadgets.utils.handle.ClassMethodHandler.insertMethod;
 import static com.qi4l.jndi.gadgets.utils.handle.ClassNameHandler.generateClassName;
 import static com.qi4l.jndi.gadgets.utils.handle.GlassHandler.shrinkBytes;
@@ -140,10 +137,10 @@ public class Utils {
     }
 
     public static void writeClassToFile(String fileName, byte[] classBytes) throws Exception {
-        File file = new File(fileName.replace(".",File.separator)+".class");
+        File file      = new File(fileName.replace(".", File.separator) + ".class");
         File parentDir = file.getParentFile();
-        if (!parentDir.exists()){
-            if(!parentDir.mkdirs()){
+        if (!parentDir.exists()) {
+            if (!parentDir.mkdirs()) {
                 // 创建文件夹失败
                 return;
             }
@@ -168,6 +165,7 @@ public class Utils {
         }
         return result;
     }
+
     public static String base64Encode(byte[] bs) throws Exception {
         Class  base64;
         String value = null;

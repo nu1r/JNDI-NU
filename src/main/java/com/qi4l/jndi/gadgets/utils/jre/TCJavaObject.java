@@ -11,14 +11,14 @@ public class TCJavaObject extends ReferencableObject implements SerializedElemen
 
     private Object obj;
 
-    public Object getHandleObject() {
-        return this.obj;
-    }
-
     public TCJavaObject(Object obj, ByteArrayOutputStream byteOut, ObjectOutputStream objOut) {
         this.obj = obj;
         this.byteOut = byteOut;
         this.objOut = objOut;
+    }
+
+    public Object getHandleObject() {
+        return this.obj;
     }
 
     public void doWrite(DataOutputStream out, HandleContainer handles) throws Exception {

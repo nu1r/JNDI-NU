@@ -18,7 +18,6 @@ import java.util.Comparator;
 import java.util.PriorityQueue;
 
 
-
 @Dependencies({"commons-beanutils:commons-beanutils:1.8.3"})
 @Authors({"SummerSec"})
 public class CommonsBeanutilsAttrCompare183 implements ObjectPayload<Object> {

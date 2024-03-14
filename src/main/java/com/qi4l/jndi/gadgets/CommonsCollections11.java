@@ -1,6 +1,5 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
 import com.qi4l.jndi.gadgets.utils.Reflections;
 import org.apache.commons.collections.functors.ConstantTransformer;
@@ -10,7 +9,6 @@ import org.apache.commons.collections.map.LazyMap;
 
 import java.util.HashMap;
 import java.util.Map;
-
 
 
 /**

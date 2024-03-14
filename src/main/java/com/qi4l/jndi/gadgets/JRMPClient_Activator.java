@@ -13,7 +13,7 @@ import java.rmi.server.RemoteObjectInvocationHandler;
 import java.util.Random;
 
 @Authors({"mbechler"})
-public class JRMPClient_Activator implements ObjectPayload<Activator>{
+public class JRMPClient_Activator implements ObjectPayload<Activator> {
     @Override
     public Activator getObject(String command) throws Exception {
         String host;

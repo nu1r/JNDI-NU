@@ -1,7 +1,6 @@
 package com.qi4l.jndi.gadgets;
 
 import com.qi4l.jndi.LdapServer;
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.utils.JavaVersion;
 import org.reflections.Reflections;
 
@@ -11,15 +10,15 @@ import java.util.Random;
 import java.util.Set;
 
 public interface ObjectPayload<T> {
+    public static boolean isApplicableJavaVersion() {
+        return JavaVersion.isAnnInvHUniversalMethodImpl();
+    }
+
     /*
      * return armed payload object to be serialized that will execute specified
      * command on deserialization
      */
     public T getObject(String command) throws Exception;
-
-    public static boolean isApplicableJavaVersion() {
-        return JavaVersion.isAnnInvHUniversalMethodImpl();
-    }
 
     public static class Utils {
 

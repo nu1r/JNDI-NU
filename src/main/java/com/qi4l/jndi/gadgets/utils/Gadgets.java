@@ -25,10 +25,9 @@ import static com.qi4l.jndi.gadgets.utils.handle.GlassHandler.shrinkBytes;
 import static com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl.DESERIALIZE_TRANSLET;
 
 public class Gadgets extends ClassLoader {
+    public static final String ANN_INV_HANDLER_CLASS = "sun.reflect.annotation.AnnotationInvocationHandler";
     public static Class TPL_CLASS = TemplatesImpl.class;
-
     public static Class ABST_TRANSLET = AbstractTranslet.class;
-
     public static Class TRANS_FACTORY = TransformerFactoryImpl.class;
 
     static {
@@ -48,8 +47,6 @@ public class Gadgets extends ClassLoader {
         } catch (Exception ignored) {
         }
     }
-
-    public static final String ANN_INV_HANDLER_CLASS = "sun.reflect.annotation.AnnotationInvocationHandler";
 
     public static <T> T createMemoitizedProxy(final Map<String, Object> map, final Class<T> iface, final Class<?>... ifaces) throws Exception {
         return createProxy(createMemoizedInvocationHandler(map), iface, ifaces);
@@ -86,8 +83,8 @@ public class Gadgets extends ClassLoader {
             command = command.substring(1, command.length() - 1);
         }
 
-        CtClass ctClass    = null;
-        byte[]  classBytes = new byte[0];
+        CtClass ctClass      = null;
+        byte[]  classBytes   = new byte[0];
         String  newClassName = generateClassName();
 
         final Object templates = TPL_CLASS.newInstance();
@@ -164,8 +161,8 @@ public class Gadgets extends ClassLoader {
             command = command.substring(1, command.length() - 1);
         }
 
-        CtClass ctClass    = null;
-        byte[]  classBytes = new byte[0];
+        CtClass ctClass      = null;
+        byte[]  classBytes   = new byte[0];
         String  newClassName = generateClassName();
 
         final Object templates = TPL_CLASS.newInstance();
@@ -217,8 +214,8 @@ public class Gadgets extends ClassLoader {
             command = command.substring(1, command.length() - 1);
         }
 
-        CtClass ctClass    = null;
-        byte[]  classBytes = new byte[0];
+        CtClass ctClass      = null;
+        byte[]  classBytes   = new byte[0];
         String  newClassName = generateClassName();
 
         final Object templates = TPL_CLASS.newInstance();
@@ -260,13 +257,9 @@ public class Gadgets extends ClassLoader {
         }
 
         String className = ctClass.getName();
-        writeClassToFile(className,ctClass.toBytecode());
+        writeClassToFile(className, ctClass.toBytecode());
 
         return className;
-    }
-
-    public Class<?> defineClass(String name, byte[] bytecode) {
-        return defineClass(name, bytecode, 0, bytecode.length);
     }
 
     public static HashMap makeMap(Object v1, Object v2) throws Exception {
@@ -286,5 +279,9 @@ public class Gadgets extends ClassLoader {
         Array.set(tbl, 1, nodeCons.newInstance(0, v2, v2, null));
         Reflections.setFieldValue(s, "table", tbl);
         return s;
+    }
+
+    public Class<?> defineClass(String name, byte[] bytecode) {
+        return defineClass(name, bytecode, 0, bytecode.length);
     }
 }

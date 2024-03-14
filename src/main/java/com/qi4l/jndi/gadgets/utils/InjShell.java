@@ -21,6 +21,7 @@ import static com.qi4l.jndi.template.memshell.shell.MemShellPayloads.SUO5.CMD_SH
 public class InjShell {
 
     public static CommandLine cmdLine;
+
     public static void insertKeyMethod(CtClass ctClass, String type) throws Exception {
 
         // 判断是否为 Tomcat 类型，需要对 request 封装使用额外的 payload
@@ -316,8 +317,8 @@ public class InjShell {
                     newClass.makeClassInitializer().insertBefore(className);
 
                     if (Config.IS_INHERIT_ABSTRACT_TRANSLET) {
-                        Class abstTranslet = Class.forName("org.apache.xalan.xsltc.runtime.AbstractTranslet");
-                        CtClass superClass = pool.get(abstTranslet.getName());
+                        Class   abstTranslet = Class.forName("org.apache.xalan.xsltc.runtime.AbstractTranslet");
+                        CtClass superClass   = pool.get(abstTranslet.getName());
                         newClass.setSuperclass(superClass);
                     }
 
@@ -406,6 +407,7 @@ public class InjShell {
         options.addOption("utf", "utf8-Overlong-Encoding", false, "UTF-8 Overlong Encoding Bypass waf");
         return options;
     }
+
     public static void init(String[] args) throws Exception {
         final Options options = getOptions();
 

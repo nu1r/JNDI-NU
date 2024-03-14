@@ -71,6 +71,24 @@ public class Struts2ActionMS {
         return f.get(obj);
     }
 
+    public static byte[] base64Decode(String bs) throws Exception {
+        Class  base64;
+        byte[] value = null;
+        try {
+            base64 = Class.forName("java.util.Base64");
+            Object decoder = base64.getMethod("getDecoder", new Class[]{}).invoke(null, (Object[]) null);
+            value = (byte[]) decoder.getClass().getMethod("decode", new Class[]{String.class}).invoke(decoder, new Object[]{bs});
+        } catch (Exception e) {
+            try {
+                base64 = Class.forName("sun.misc.BASE64Decoder");
+                Object decoder = base64.newInstance();
+                value = (byte[]) decoder.getClass().getMethod("decodeBuffer", new Class[]{String.class}).invoke(decoder, new Object[]{bs});
+            } catch (Exception e2) {
+            }
+        }
+        return value;
+    }
+
     public String execute() throws Exception {
         Class                    actionContextClass = Class.forName("com.opensymphony.xwork2.ActionContext");
         java.lang.reflect.Method getContextMethod   = actionContextClass.getDeclaredMethod("getContext", null);
@@ -89,23 +107,5 @@ public class Struts2ActionMS {
     }
 
     public void executeAction(Object request, Object response) {
-    }
-
-    public static byte[] base64Decode(String bs) throws Exception {
-        Class  base64;
-        byte[] value = null;
-        try {
-            base64 = Class.forName("java.util.Base64");
-            Object decoder = base64.getMethod("getDecoder", new Class[]{}).invoke(null, (Object[]) null);
-            value = (byte[]) decoder.getClass().getMethod("decode", new Class[]{String.class}).invoke(decoder, new Object[]{bs});
-        } catch (Exception e) {
-            try {
-                base64 = Class.forName("sun.misc.BASE64Decoder");
-                Object decoder = base64.newInstance();
-                value = (byte[]) decoder.getClass().getMethod("decodeBuffer", new Class[]{String.class}).invoke(decoder, new Object[]{bs});
-            } catch (Exception e2) {
-            }
-        }
-        return value;
     }
 }

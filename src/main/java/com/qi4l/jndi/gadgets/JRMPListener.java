@@ -1,6 +1,5 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.utils.Reflections;
 import sun.rmi.server.ActivationGroupImpl;
@@ -32,7 +31,7 @@ import java.rmi.server.UnicastRemoteObject;
         "restriction"
 })
 @Authors({Authors.MBECHLER})
-public class JRMPListener implements ObjectPayload<UnicastRemoteObject>{
+public class JRMPListener implements ObjectPayload<UnicastRemoteObject> {
     @Override
     public UnicastRemoteObject getObject(String command) throws Exception {
         int jrmpPort = Integer.parseInt(command);

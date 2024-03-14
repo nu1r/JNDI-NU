@@ -66,6 +66,11 @@ public class JRE8u20 implements ObjectPayload<Object> {
         return obj;
     }
 
+    public static boolean isApplicableJavaVersion() {
+        JavaVersion v = JavaVersion.getLocalVersion();
+        return (v != null && (v.major < 8 || (v.major == 8 && v.update <= 20)));
+    }
+
     public Object getObject(String command) throws Exception {
         Serialization           ser       = new Serialization();
         Object                  templates = makeTemplates(command);
@@ -97,11 +102,6 @@ public class JRE8u20 implements ObjectPayload<Object> {
         ser.write(out);
         byte[] bytes = out.toByteArray();
         return bytes;
-    }
-
-    public static boolean isApplicableJavaVersion() {
-        JavaVersion v = JavaVersion.getLocalVersion();
-        return (v != null && (v.major < 8 || (v.major == 8 && v.update <= 20)));
     }
 
 }

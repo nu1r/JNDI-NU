@@ -5,7 +5,6 @@ import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.exceptions.IncorrectParamsException;
 import com.qi4l.jndi.exceptions.UnSupportedGadgetTypeException;
 import com.qi4l.jndi.exceptions.UnSupportedPayloadTypeException;
-import com.qi4l.jndi.gadgets.Config.Config;
 import com.qi4l.jndi.gadgets.ObjectPayload;
 import com.qi4l.jndi.gadgets.utils.Serializer;
 import com.qi4l.jndi.gadgets.utils.Util;
@@ -14,9 +13,6 @@ import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPResult;
 import com.unboundid.ldap.sdk.ResultCode;
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Options;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Base64;
@@ -29,13 +25,13 @@ public class SerializedDataController implements LdapController {
     public static String      gadgetType;
     public static String      cmd11;
     public static GadgetType  gadgetType1;
+    public static CommandLine cmdLine;
     private       PayloadType payloadType;
     private       String      params;
-    public static CommandLine cmdLine;
 
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
-        System.out.println(ansi().render("@|green [+]|@ Send LDAP result for" + base + " with javaSerializedData attribute"));
+        System.out.println(ansi().render("@|green [+] Send LDAP result for|@" + base + " @|green with javaSerializedData attribute|@"));
         System.out.println("-------------------------------------- JNDI Remote Refenrence Links --------------------------------------");
         Entry e = new Entry(base);
 
@@ -71,7 +67,7 @@ public class SerializedDataController implements LdapController {
             int secondIndex = base.indexOf("/", firstIndex + 1);
             try {
                 gadgetType = base.substring(firstIndex + 1, secondIndex);
-                System.out.println(ansi().render("@|green [+]|@ GaddgetType : " + gadgetType));
+                System.out.println(ansi().render("@|green [+] GaddgetType : |@" + gadgetType));
             } catch (IllegalArgumentException e) {
                 throw new UnSupportedGadgetTypeException("UnSupportGaddgetType >> " + base.substring(firstIndex + 1, secondIndex));
             }
@@ -91,7 +87,7 @@ public class SerializedDataController implements LdapController {
 
             if (payloadType == PayloadType.sethttp) {
                 params = BCEL1;
-                System.out.println(ansi().render("@|green [+]|@ command：" + BCEL1));
+                System.out.println(ansi().render("@|green [+] command：|@" + BCEL1));
             }
 
             if (payloadType == PayloadType.command) {
@@ -109,7 +105,7 @@ public class SerializedDataController implements LdapController {
                 }
 
                 params = cmd11;
-                System.out.println(ansi().render("@|green [+]|@ command：" + cmd11));
+                System.out.println(ansi().render("@|green [+] command：|@" + cmd11));
             }
 
         } catch (Exception e) {

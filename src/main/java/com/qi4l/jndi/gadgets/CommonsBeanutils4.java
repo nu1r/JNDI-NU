@@ -1,6 +1,5 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.utils.Reflections;
 import org.apache.commons.beanutils.BeanComparator;
 
@@ -8,7 +7,7 @@ import javax.naming.CompositeName;
 import java.lang.reflect.Constructor;
 import java.util.PriorityQueue;
 
-public class CommonsBeanutils4 implements ObjectPayload<Object>{
+public class CommonsBeanutils4 implements ObjectPayload<Object> {
     @Override
     public Object getObject(String command) throws Exception {
         if (command.toLowerCase().startsWith("jndi:")) {

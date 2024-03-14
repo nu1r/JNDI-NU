@@ -13,7 +13,6 @@ import org.apache.commons.beanutils.BeanComparator;
 import java.util.PriorityQueue;
 
 
-
 @Dependencies({"commons-beanutils:commons-beanutils:1.9.2"})
 @Authors({"水滴"})
 public class CommonsBeanutilsAttrCompare implements ObjectPayload<Object> {

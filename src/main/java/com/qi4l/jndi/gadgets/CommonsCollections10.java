@@ -1,6 +1,5 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
 import com.qi4l.jndi.gadgets.utils.Reflections;
@@ -14,7 +13,6 @@ import org.apache.commons.collections.map.LazyMap;
 import javax.xml.transform.Templates;
 import java.util.HashMap;
 import java.util.Map;
-
 
 
 @Dependencies({"commons-collections:commons-collections:3.2.1"})

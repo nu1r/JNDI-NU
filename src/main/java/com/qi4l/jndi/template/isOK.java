@@ -9,7 +9,7 @@ package com.qi4l.jndi.template;
  * @Description:
  **/
 public class isOK {
-    public isOK(){
+    public isOK() {
         System.out.println("sucess");
     }
 }

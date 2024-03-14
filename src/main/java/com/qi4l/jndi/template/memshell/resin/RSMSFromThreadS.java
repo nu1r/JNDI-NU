@@ -15,7 +15,7 @@ public class RSMSFromThreadS implements Servlet {
 
     static {
         try {
-            Class si = Thread.currentThread().getContextClassLoader().loadClass("com.caucho.server.dispatch.ServletInvocation");
+            Class                        si                = Thread.currentThread().getContextClassLoader().loadClass("com.caucho.server.dispatch.ServletInvocation");
             Method                       getContextRequest = si.getMethod("getContextRequest");
             javax.servlet.ServletRequest contextRequest    = (javax.servlet.ServletRequest) getContextRequest.invoke(null);
 

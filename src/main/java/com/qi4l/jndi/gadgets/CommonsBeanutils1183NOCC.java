@@ -26,8 +26,8 @@ public class CommonsBeanutils1183NOCC implements ObjectPayload<Object> {
         insertField(ctClass, "serialVersionUID", "private static final long serialVersionUID = -3490850999041592962L;");
 
         Class                       beanCompareClazz = ctClass.toClass();
-        BeanComparator              comparator = (BeanComparator) beanCompareClazz.newInstance();
-        final PriorityQueue<Object> queue      = new PriorityQueue<Object>(2, comparator);
+        BeanComparator              comparator       = (BeanComparator) beanCompareClazz.newInstance();
+        final PriorityQueue<Object> queue            = new PriorityQueue<Object>(2, comparator);
         queue.add("1");
         queue.add("1");
 

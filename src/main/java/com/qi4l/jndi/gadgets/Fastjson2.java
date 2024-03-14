@@ -1,7 +1,6 @@
 package com.qi4l.jndi.gadgets;
 
 import com.alibaba.fastjson2.JSONArray;
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
 import com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;
 import javassist.ClassPool;
@@ -11,7 +10,6 @@ import javassist.CtConstructor;
 import javax.management.BadAttributeValueExpException;
 import java.lang.reflect.Field;
 import java.util.HashMap;
-
 
 
 public class Fastjson2 implements ObjectPayload<Object> {

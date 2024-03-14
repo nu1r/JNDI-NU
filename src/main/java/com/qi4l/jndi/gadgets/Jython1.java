@@ -1,6 +1,5 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Reflections;
@@ -41,10 +40,10 @@ import java.util.PriorityQueue;
 @SuppressWarnings({"rawtypes", "unchecked", "restriction"})
 @Dependencies({"org.python:jython-standalone:2.5.2"})
 @Authors({Authors.PWNTESTER, Authors.CSCHNEIDER4711})
-public class Jython1 implements ObjectPayload<PriorityQueue>{
+public class Jython1 implements ObjectPayload<PriorityQueue> {
 
     public PriorityQueue getObject(String command) throws Exception {
-        
+
 
         String[] paths = command.split(":");
         if (paths.length != 2) {

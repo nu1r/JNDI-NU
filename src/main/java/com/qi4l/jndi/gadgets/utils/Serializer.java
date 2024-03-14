@@ -7,7 +7,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.util.Base64;
 import java.util.concurrent.Callable;
 
 import static com.qi4l.jndi.gadgets.Config.Config.IS_DIRTY_IN_TC_RESET;
@@ -18,10 +17,6 @@ public class Serializer implements Callable<byte[]> {
 
     public Serializer(Object object) {
         this.object = object;
-    }
-
-    public byte[] call() throws Exception {
-        return serialize(object);
     }
 
     public static byte[] serialize(final Object obj) throws IOException {
@@ -52,6 +47,9 @@ public class Serializer implements Callable<byte[]> {
         objOut.writeObject(obj);
     }
 
+    public byte[] call() throws Exception {
+        return serialize(object);
+    }
 
     public static class SuObjectOutputStream extends ObjectOutputStream {
 

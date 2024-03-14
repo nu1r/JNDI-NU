@@ -1,6 +1,5 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
@@ -11,10 +10,9 @@ import org.apache.logging.log4j.util.PropertySource;
 import java.util.PriorityQueue;
 
 
-
 @Dependencies({"commons-beanutils:commons-beanutils:1.9.2", "org.apache.logging.log4j:log4j-core:2.17.1"})
 @Authors({"SummerSec"})
-public class CommonsBeanutilsPropertySource implements ObjectPayload<Object>{
+public class CommonsBeanutilsPropertySource implements ObjectPayload<Object> {
     @Override
     public Object getObject(String command) throws Exception {
         final Object template;

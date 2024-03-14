@@ -1,14 +1,9 @@
 package com.qi4l.jndi.gadgets.utils;
 
-import com.mchange.v2.reflect.ReflectUtils;
 import com.nqzero.permit.Permit;
-import net.sf.cglib.core.CodeGenerationException;
 import sun.reflect.ReflectionFactory;
 
 import java.lang.reflect.*;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.security.ProtectionDomain;
 
 @SuppressWarnings("restriction")
 public class Reflections extends ClassLoader {

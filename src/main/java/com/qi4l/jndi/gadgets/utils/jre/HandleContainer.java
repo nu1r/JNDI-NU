@@ -4,15 +4,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class HandleContainer {
-    private Object handle;
-
     private static Method lookup;
-
     private static Method assign;
-
-    public HandleContainer(Object handle) {
-        this.handle = handle;
-    }
 
     static {
         try {
@@ -24,6 +17,12 @@ public class HandleContainer {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private Object handle;
+
+    public HandleContainer(Object handle) {
+        this.handle = handle;
     }
 
     public int getHandle(Object obj) {

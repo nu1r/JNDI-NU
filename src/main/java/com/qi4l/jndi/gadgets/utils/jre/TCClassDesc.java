@@ -20,10 +20,6 @@ public class TCClassDesc extends ReferencableObject implements SerializedElement
     protected TCClassDesc() {
     }
 
-    public int getFieldsCount() {
-        return this.fields.size();
-    }
-
     public TCClassDesc(String className) throws Exception {
         this(className, -1L, (byte) 0);
     }
@@ -40,6 +36,10 @@ public class TCClassDesc extends ReferencableObject implements SerializedElement
         this.className = className;
         this.serialVersionUID = (serialVersionUID != -1L) ? serialVersionUID : getSerialVersionUID();
         this.classDescFlags = (classDescFlags != 0) ? classDescFlags : getClassDescFlags();
+    }
+
+    public int getFieldsCount() {
+        return this.fields.size();
     }
 
     private long getSerialVersionUID() throws Exception {

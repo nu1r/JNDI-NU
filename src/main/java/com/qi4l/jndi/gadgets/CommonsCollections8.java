@@ -1,6 +1,5 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
@@ -13,11 +12,10 @@ import org.apache.commons.collections4.functors.InvokerTransformer;
 import java.util.Comparator;
 
 
-
 @Dependencies({"org.apache.commons:commons-collections4:4.0"})
 @Authors({"navalorenzo"})
 
-public class CommonsCollections8 implements ObjectPayload<TreeBag>{
+public class CommonsCollections8 implements ObjectPayload<TreeBag> {
 
 
     public TreeBag getObject(String command) throws Exception {

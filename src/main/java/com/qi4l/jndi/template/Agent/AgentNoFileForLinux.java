@@ -13,13 +13,10 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 public class AgentNoFileForLinux {
-    public static Unsafe unsafe = getUnsafe();
-
     private static final int SHT_DYNSYM = 11;
-
     private static final int STT_FUNC = 2;
-
     private static final int STT_GNU_IFUNC = 10;
+    public static Unsafe unsafe = getUnsafe();
 
     private static int ELF_ST_TYPE(int x) {
         return (x & 0xf);
@@ -74,8 +71,8 @@ public class AgentNoFileForLinux {
 //		modifiersField.setInt(field1, field1.getModifiers() & ~Modifier.FINAL);
 //		field1.setBoolean(null, true);
 
-        FileReader     fin    = new FileReader("/proc/self/maps");
-        BufferedReader reader = new BufferedReader(fin);
+        FileReader     fin                     = new FileReader("/proc/self/maps");
+        BufferedReader reader                  = new BufferedReader(fin);
         String         line;
         long           RandomAccessFile_length = 0, JNI_GetCreatedJavaVMs = 0;
         while ((line = reader.readLine()) != null) {

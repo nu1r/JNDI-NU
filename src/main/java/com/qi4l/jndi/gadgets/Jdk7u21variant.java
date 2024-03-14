@@ -1,6 +1,5 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.utils.Gadgets;
 import com.qi4l.jndi.gadgets.utils.Reflections;
@@ -12,9 +11,8 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 
 
-
 @Authors({"potats0"})
-public class Jdk7u21variant implements ObjectPayload<Object>{
+public class Jdk7u21variant implements ObjectPayload<Object> {
 
     public Object getObject(String command) throws Exception {
         final Object templates;

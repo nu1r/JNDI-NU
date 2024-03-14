@@ -2,7 +2,6 @@ package com.qi4l.jndi.gadgets.utils;
 
 import java.io.Serializable;
 import java.security.*;
-import java.security.SignedObject;
 
 /**
  * 二次反序列化

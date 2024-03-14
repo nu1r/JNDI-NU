@@ -1,12 +1,12 @@
 package com.qi4l.jndi;
 
 import cn.hutool.core.io.file.FileReader;
+import com.qi4l.jndi.gadgets.Config.Config;
+import com.qi4l.jndi.gadgets.utils.Cache;
+import com.qi4l.jndi.gadgets.utils.Util;
 import com.qi4l.jndi.template.CommandTemplate;
 import com.qi4l.jndi.template.DnslogTemplate;
 import com.qi4l.jndi.template.ReverseShellTemplate;
-import com.qi4l.jndi.gadgets.utils.Cache;
-import com.qi4l.jndi.gadgets.Config.Config;
-import com.qi4l.jndi.gadgets.utils.Util;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -14,13 +14,15 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.jar.JarOutputStream;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 
 import static org.fusesource.jansi.Ansi.ansi;
@@ -80,6 +82,7 @@ public class HTTPServer {
     }
 
     private static void handleFileRequest(HttpExchange exchange) throws Exception {
+        System.out.println("[-] 请求的后缀不对");
         String path     = exchange.getRequestURI().getPath();
         String filename = cwd + File.separator + "data" + File.separator + path.substring(path.lastIndexOf("/") + 1);
         File   file     = new File(filename);

