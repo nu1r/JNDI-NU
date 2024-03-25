@@ -9,6 +9,8 @@ import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
 
+import static com.qi4l.jndi.Starter.caseInsensitiveObjectPayloadMap;
+
 public interface ObjectPayload<T> {
     public static boolean isApplicableJavaVersion() {
         return JavaVersion.isAnnInvHUniversalMethodImpl();
@@ -45,9 +47,12 @@ public interface ObjectPayload<T> {
             }
             if (clazz == null) {
                 try {
-                    return clazz = (Class<? extends ObjectPayload>) Class
-                            .forName(LdapServer.class.getPackage().getName() + ".gadgets." + className);
-                } catch (Exception ignored) {
+                    return clazz = (Class<? extends ObjectPayload>) Class.forName(LdapServer.class.getPackage().getName() + ".gadgets." + className);
+                }catch (NoClassDefFoundError e) {
+                    clazz = caseInsensitiveObjectPayloadMap.get(LdapServer.class.getPackage().getName() + ".gadgets." + className);
+                }
+                catch (Exception ignored) {
+                    clazz = caseInsensitiveObjectPayloadMap.get(LdapServer.class.getPackage().getName() + ".gadgets." + className);
                 }
             }
             if (clazz != null && !ObjectPayload.class.isAssignableFrom(clazz)) {

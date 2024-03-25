@@ -7,7 +7,7 @@ import com.qi4l.jndi.Starter;
 import com.qi4l.jndi.gadgets.ObjectPayload;
 import com.qi4l.jndi.gadgets.annotation.Authors;
 import com.qi4l.jndi.gadgets.annotation.Dependencies;
-import com.qi4l.jndi.gadgets.utils.Strings;
+import com.qi4l.jndi.gadgets.utils.StringUtil;
 import javassist.ClassPool;
 
 import java.util.*;
@@ -124,12 +124,13 @@ public class Config {
     }
 
     public static void applyCmdArgs(String[] args) {
-        System.out.println("     ██╗██╗   ██╗███████╗ ██████╗ \n" +
-                "     ██║╚██╗ ██╔╝██╔════╝██╔═══██╗\n" +
-                "     ██║ ╚████╔╝ ███████╗██║   ██║\n" +
-                "██   ██║  ╚██╔╝  ╚════██║██║   ██║\n" +
-                "╚█████╔╝   ██║   ███████║╚██████╔╝\n" +
-                " ╚════╝    ╚═╝   ╚══════╝ ╚═════╝ ");
+        System.out.println("     ██╗███╗   ██╗██████╗ ██╗\n" +
+                "     ██║████╗  ██║██╔══██╗██║\n" +
+                "     ██║██╔██╗ ██║██║  ██║██║\n" +
+                "██   ██║██║╚██╗██║██║  ██║██║\n" +
+                "╚█████╔╝██║ ╚████║██████╔╝██║\n" +
+                " ╚════╝ ╚═╝  ╚═══╝╚═════╝ ╚═╝\n" +
+                "                             ");
         //process cmd args
         JCommander jc = JCommander.newBuilder()
                 .addObject(new Config())
@@ -144,7 +145,7 @@ public class Config {
         if (showGadgets) {
             final List<Class<? extends ObjectPayload>> payloadClasses =
                     new ArrayList<Class<? extends ObjectPayload>>(ObjectPayload.Utils.getPayloadClasses());
-            Collections.sort(payloadClasses, new Strings.ToStringComparator()); // alphabetize
+            Collections.sort(payloadClasses, new StringUtil.ToStringComparator()); // alphabetize
 
             final List<String[]> rows = new LinkedList<String[]>();
             rows.add(new String[]{"Payload", "Authors", "Dependencies"});
@@ -152,12 +153,12 @@ public class Config {
             for (Class<? extends ObjectPayload> payloadClass : payloadClasses) {
                 rows.add(new String[]{
                         payloadClass.getSimpleName(),
-                        Strings.join(Arrays.asList(Authors.Utils.getAuthors(payloadClass)), ", ", "@", ""),
-                        Strings.join(Arrays.asList(Dependencies.Utils.getDependenciesSimple(payloadClass)), ", ", "", "")
+                        StringUtil.join(Arrays.asList(Authors.Utils.getAuthors(payloadClass)), ", ", "@", ""),
+                        StringUtil.join(Arrays.asList(Dependencies.Utils.getDependenciesSimple(payloadClass)), ", ", "", "")
                 });
             }
 
-            final List<String> lines = Strings.formatTable(rows);
+            final List<String> lines = StringUtil.formatTable(rows);
 
             for (String line : lines) {
                 System.out.println("     " + line);
