@@ -5,6 +5,7 @@ import com.qi4l.JYso.gadgets.ObjectPayload;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
 
 import static com.qi4l.JYso.controllers.ysoserial.ysoserial;
+import static com.qi4l.JYso.gadgets.Config.Config.logo;
 
 public class Starter {
 
@@ -19,11 +20,7 @@ public class Starter {
     public static boolean JYsoMode = false;
 
     public static void main(String[] args) throws Exception {
-        String logo = "" +
-                " ┏┳┓┏    \n" +
-                "  ┃┗┫┏┏┓ \n" +
-                " ┗┛┗┛┛┗┛ ";
-        System.out.println(logo);
+        logo();
 
         // 如果参数中包含-j，则启动LDAP、HTTP、RMI服务
         if (args.length > 0 && args[0].equals("-j")) {

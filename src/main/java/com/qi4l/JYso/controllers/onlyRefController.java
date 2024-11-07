@@ -36,7 +36,7 @@ public class onlyRefController implements LdapController{
     private       String      params;
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
-        System.out.println("[LDAP] Sending Reference object (onlyRef)");
+        System.out.println("- Sending Reference object (onlyRef)");
         Entry e = new Entry(base);
         try {
             final Class<? extends ObjectPayload> payloadClass = ObjectPayload.Utils.getPayloadClass(gadgetType);

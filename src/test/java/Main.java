@@ -1,13 +1,22 @@
+import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.AnsiConsole;
+
+import java.util.Random;
+
+
 public class Main {
+
     public static void main(String[] args) {
-        String input = "org/apache/myfaces/core/service/IoServiceListenerSupport";
-        int lastIndex = input.lastIndexOf('/');
-        if (lastIndex != -1) {
-            String result = input.substring(lastIndex + 1);
-            System.out.println(result);
-        } else {
-            // 如果没有'/'字符，则直接打印原字符串
-            System.out.println(input);
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder(5);
+
+        for (int i = 0; i < 5; i++) {
+            char letter = (char) (random.nextInt(26) + 'a');
+            sb.append(letter);
         }
+
+        String randomLetters = sb.toString();
+        System.out.println("随机字母: " + randomLetters);
     }
+
 }

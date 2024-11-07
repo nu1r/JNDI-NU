@@ -92,7 +92,7 @@ public class LdapServer extends InMemoryOperationInterceptor {
         }
 
         //收到ldap请求
-        System.out.println(ansi().render("@|green [+] Received LDAP Query : |@" + base));
+        //System.out.println(ansi().render("@|green [+] Received LDAP Query : |@" + base));
         LdapController controller = null;
         //find controller
         //根据请求的路径从route中匹配相应的controller

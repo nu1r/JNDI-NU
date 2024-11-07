@@ -9,6 +9,7 @@ import com.qi4l.JYso.gadgets.annotation.Authors;
 import com.qi4l.JYso.gadgets.annotation.Dependencies;
 import com.qi4l.JYso.gadgets.utils.StringUtil;
 import javassist.ClassPool;
+import org.fusesource.jansi.Ansi;
 
 import java.util.*;
 
@@ -215,5 +216,40 @@ public class Config {
         KEY_METHOD_MAP.put("org.apache.tomcat.util.threads.ThreadPoolExecutor", "execute");
         // Spring Interceptor 型内存马，关键方法 preHandle
         KEY_METHOD_MAP.put("org.springframework.web.servlet.handler.HandlerInterceptorAdapter", "preHandle");
+    }
+
+    public static void logo() {
+        String logo = "" +
+                " ┏┳┓┏    \n" +
+                "  ┃┗┫┏┏┓ \n" +
+                " ┗┛┗┛┛┗┛ ";
+
+        // 高亮颜色代码（不包括黑色）
+        Ansi.Color[] colors = {
+                Ansi.Color.RED,
+                Ansi.Color.GREEN,
+                Ansi.Color.YELLOW,
+                Ansi.Color.BLUE,
+                Ansi.Color.MAGENTA,
+                Ansi.Color.CYAN,
+                Ansi.Color.WHITE
+        };
+
+        Random random = new Random();
+
+        StringBuilder coloredLogo = new StringBuilder();
+
+        for (char c : logo.toCharArray()) {
+            if (c != ' ' && c != '\n') {
+                // 选择一个随机的高亮颜色
+                Ansi.Color color = colors[random.nextInt(colors.length)];
+                coloredLogo.append(Ansi.ansi().fgBright(color).a(c).reset());
+            } else {
+                // 保持空格和换行符
+                coloredLogo.append(c);
+            }
+        }
+
+        System.out.println(coloredLogo);
     }
 }
