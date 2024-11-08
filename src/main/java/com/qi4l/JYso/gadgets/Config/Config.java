@@ -42,8 +42,6 @@ public class Config {
     public static String  USER     = "";
     @Parameter(names = {"-tP", " --TLSProxy"}, help = true, description = "TLS port forwarding", order = 5)
     public static boolean TLSProxy = false;
-    @Parameter(names = {"-cR", " --CloseRMI"}, help = true, description = "TLS port forwarding", order = 5)
-    public static boolean CloseRMI = false;
     @Parameter(names = {"-p", " --PASSWD"}, help = true, description = "ldap binding password", order = 5)
     public static String  PASSWD   = "";
     @Parameter(names = {"-kF", " --keyFile"}, help = true, description = "Path to the TLS private key file", order = 5)

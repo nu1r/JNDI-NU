@@ -77,7 +77,7 @@ public class TomcatBypassController implements LdapController {
 
     @Override
     public void process(String base) throws UnSupportedPayloadTypeException, IncorrectParamsException {
-        System.out.println("- JNDI Local Refenrence Links ");
+        System.out.println("- JNDI LDAP Local Refenrence Links ");
         try {
             base = base.replace('\\', '/');
             int fistIndex   = base.indexOf("/");

