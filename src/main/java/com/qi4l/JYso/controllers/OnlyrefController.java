@@ -17,9 +17,11 @@ import com.unboundid.ldap.sdk.ResultCode;
 import org.apache.naming.ResourceRef;
 import org.fusesource.jansi.Ansi;
 
+import javax.naming.RefAddr;
 import javax.naming.StringRefAddr;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.Enumeration;
 
 @LdapMapping(uri = {"/Onlyref"})
 public class OnlyrefController implements LdapController {
@@ -67,6 +69,13 @@ public class OnlyrefController implements LdapController {
         e.addAttribute("objectClass", "javaNamingReference");
         e.addAttribute("javaClassName", ref.getClassName());
         e.addAttribute("javaFactory", ref.getFactoryClassName());
+        Enumeration<RefAddr> enumeration = ref.getAll();
+        int  posn        = 0;
+        while (enumeration.hasMoreElements()) {
+            StringRefAddr addr = (StringRefAddr) enumeration.nextElement();
+            e.addAttribute("javaReferenceAddress", "#" + posn + "#" + addr.getType() + "#" + addr.getContent());
+            posn ++;
+        }
         result.sendSearchEntry(e);
         result.setResult(new LDAPResult(0, ResultCode.SUCCESS));
     }
