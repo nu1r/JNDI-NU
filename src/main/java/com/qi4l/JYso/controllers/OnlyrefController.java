@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Enumeration;
 
-@LdapMapping(uri = {"/Onlyref"})
+@LdapMapping(uri = {"/onlyref"})
 public class OnlyrefController implements LdapController {
     private String     payloadType;
     private String[]   params;
