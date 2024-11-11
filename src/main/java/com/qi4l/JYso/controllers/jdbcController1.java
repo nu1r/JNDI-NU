@@ -43,7 +43,7 @@ public class jdbcController1 implements LdapController {
 
     @Override
     public void process(String base) throws UnSupportedPayloadTypeException, IncorrectParamsException {
-        System.out.println("- JNDI JDBC Refenrence Links Target <= JDK17");
+        System.out.println("- JNDI JDBC Refenrence Links Target < JDK20");
         try {
             base = base.replace('\\', '/');
             int fistIndex   = base.indexOf("/");
