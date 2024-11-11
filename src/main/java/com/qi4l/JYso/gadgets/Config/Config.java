@@ -122,7 +122,7 @@ public class Config {
     public static  ClassPool               POOL                                 = ClassPool.getDefault();
     // 不同类型内存马的父类/接口与其关键参数的映射
     public static  HashMap<String, String> KEY_METHOD_MAP                       = new HashMap<>();
-    @Parameter(names = {"-he", " --help"}, help = true, description = "Show this help")
+    @Parameter(names = {"-h", " --help"}, help = true, description = "Show this help")
     private static boolean                 help                                 = false;
 
     static {

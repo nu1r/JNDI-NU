@@ -17,6 +17,7 @@ repositories {
 }
 
 shadowJar {
+    archiveClassifier.set('pre')
     manifest {
         attributes 'Main-Class': 'com.qi4l.JYso.Starter'
     }

