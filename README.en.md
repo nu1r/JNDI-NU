@@ -71,6 +71,8 @@ JYso is a member of the 404Team [404StarLink 2.0](https://github.com/knownsec/40
 - https://github.com/WhiteHSBG/JNDIExploit
 - https://github.com/su18/ysoserial
 - https://github.com/rebeyond/Behinder
+- https://github.com/Whoopsunix/utf-8-overlong-encoding
+- https://github.com/mbechler/marshalsec
 - https://t.zsxq.com/17LkqCzk8
 - https://mp.weixin.qq.com/s/fcuKNfLXiFxWrIYQPq7OCg
 - https://xz.aliyun.com/t/11640?time__1311=mqmx0DBDuDnQ340vo4%2BxCwg%3DQai%3DYzaq4D&alichlgref=https%3A%2F%2Fxz.aliyun.com%2Fu%2F8697
@@ -78,9 +80,8 @@ JYso is a member of the 404Team [404StarLink 2.0](https://github.com/knownsec/40
 - https://tttang.com/archive/1405/#toc_0x03-jdbc-rce
 - https://xz.aliyun.com/t/10656?time__1311=mq%2BxBDy7G%3DLOD%2FD0DoYg0%3DDR0HG8KeD&alichlgref=https%3A%2F%2Ftttang.com%2F#toc-7
 - https://whoopsunix.com/docs/PPPYSO/advance/UTFMIX/
-- https://github.com/Whoopsunix/utf-8-overlong-encoding
 - https://tttang.com/archive/1405/#toc_groovyclassloader
 - https://xz.aliyun.com/t/10656?time__1311=mq%2BxBDy7G%3DLOD%2FD0DoY4AKqiKD%3DOQjqx&alichlgref=https%3A%2F%2Ftttang.com%2F
 - https://www.leavesongs.com/PENETRATION/use-tls-proxy-to-exploit-ldaps.html
-- https://github.com/mbechler/marshalsec
+- https://tttang.com/archive/1405/#toc_druid
 

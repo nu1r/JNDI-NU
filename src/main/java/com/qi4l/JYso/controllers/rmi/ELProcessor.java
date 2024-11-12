@@ -15,7 +15,7 @@ import javax.naming.StringRefAddr;
 import java.io.IOException;
 import java.lang.reflect.Field;
 
-public class rmiTomcatBypass {
+public class ELProcessor {
     static String     payloadType;
     static String[]   params;
     static GadgetType gadgetType = null;

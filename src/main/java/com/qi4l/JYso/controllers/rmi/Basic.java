@@ -16,7 +16,7 @@ import javax.naming.Reference;
 import java.net.URL;
 import java.util.Base64;
 
-public class rmiBasic {
+public class Basic {
     static String     payloadType;
     //最后的反斜杠不能少
     static String     codebase = Config.codeBase;
