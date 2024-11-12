@@ -22,8 +22,8 @@ import java.lang.reflect.Field;
 import static org.fusesource.jansi.Ansi.ansi;
 
 
-@LdapMapping(uri = {"/tomcatbypass"})
-public class TomcatBypassController implements LdapController {
+@LdapMapping(uri = {"/ELProcessor"})
+public class ELProcessorController implements LdapController {
     private String     payloadType;
     private String[]   params;
     private GadgetType gadgetType;
@@ -78,7 +78,7 @@ public class TomcatBypassController implements LdapController {
 
     @Override
     public void process(String base) throws UnSupportedPayloadTypeException, IncorrectParamsException {
-        System.out.println("- JNDI LDAP Local Refenrence Links ");
+        System.out.println("- JNDI LDAP Local Refenrence Links + ELProcessor");
         try {
             base = base.replace('\\', '/');
             int fistIndex   = base.indexOf("/");
@@ -87,7 +87,7 @@ public class TomcatBypassController implements LdapController {
 
             try {
                 payloadType = base.substring(fistIndex + 1, secondIndex);
-                System.out.println(Ansi.ansi().fgBrightMagenta().a("  PaylaodType: " + payloadType).reset());
+                System.out.println(Ansi.ansi().fgBrightMagenta().a("  Paylaod: " + payloadType).reset());
             } catch (IllegalArgumentException e) {
                 throw new UnSupportedPayloadTypeException("UnSupportedPayloadType : " + base.substring(fistIndex + 1, secondIndex));
             }

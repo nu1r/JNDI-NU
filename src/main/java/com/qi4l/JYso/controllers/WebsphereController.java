@@ -23,8 +23,8 @@ import static org.fusesource.jansi.Ansi.ansi;
  * - websphere v6-9 libraries in the classpath
  */
 
-@LdapMapping(uri = {"/webspherebypass"})
-public class WebsphereBypassController implements LdapController {
+@LdapMapping(uri = {"/websphere"})
+public class WebsphereController implements LdapController {
     private WebsphereActionType actionType;
     private String              localJarPath;
     private String              injectUrl;
